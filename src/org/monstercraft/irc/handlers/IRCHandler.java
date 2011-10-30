@@ -7,11 +7,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.monstercraft.irc.Constants;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.Variables;
+import org.monstercraft.irc.util.Constants;
+import org.monstercraft.irc.util.Timer;
+import org.monstercraft.irc.util.Variables;
 
 public class IRCHandler extends IRC {
 
@@ -19,6 +23,9 @@ public class IRCHandler extends IRC {
 	private static Socket connection = null;
 	private static BufferedReader reader = null;
 	private static Thread watch = null;
+	private static Map<String, Integer> sender = new HashMap<String, Integer>();
+	private static Map<String, Timer> timer = new HashMap<String, Timer>();
+	private static ArrayList<String> warn = new ArrayList<String>();
 
 	public static void connect() {
 		if (!isConnected()) {
@@ -56,7 +63,7 @@ public class IRCHandler extends IRC {
 				writer.flush();
 				watch = new Thread(KEEP_ALIVE);
 				watch.setDaemon(true);
-				watch.setPriority(Thread.MIN_PRIORITY);
+				watch.setPriority(Thread.MAX_PRIORITY);
 				watch.start();
 				System.out.println("[IRC] Connected to chat as "
 						+ Variables.name + ".");
@@ -144,6 +151,9 @@ public class IRCHandler extends IRC {
 								.contains("PRIVMSG " + Constants.CHANNEL)) {
 							name = line.substring(1, line.indexOf("!"));
 							msg = line.substring(line.indexOf(":", 1) + 1);
+						} else if (line.contains("PRIVMSG " + Variables.name)) {
+							name = line.substring(1, line.indexOf("!"));
+							msg = line.substring(line.indexOf(":", 1) + 1);
 						} else if (line.contains("NICK :")) {
 							final String _name = line.substring(1,
 									line.indexOf("!"));
@@ -180,11 +190,33 @@ public class IRCHandler extends IRC {
 							msg = _name + " has been kicked from"
 									+ Constants.CHANNEL + ".";
 						}
-						if (msg != null) {
-							if (msg.startsWith("IRC")) {
+						if (msg != null
+								&& msg.toLowerCase().startsWith(
+										Variables.name.toLowerCase())) {
+							if (timer.containsKey(name)) {
+								if (timer.get(name).getRemaining() == 0) {
+									sender.remove(name);
+								}
+							}
+							if (sender.containsKey(name)) {
+								if (sender.get(name) < Variables.amount) {
+									server.broadcastMessage("[IRC] "
+											+ (name != null ? name + ": " : "")
+											+ msg.substring(name.length() + 1));
+									sender.put(name, sender.get(name) + 1);
+								} else {
+									timer.put(name, new Timer(60000));
+									if (!warn.contains(name)) {
+										sendMessage(name
+												+ " you have sent over " + Variables.amount + " messages in the past minute. Please wait 1 minute to send another. This is your only warning!");
+										warn.add(name);
+									} 
+								}
+							} else {
 								server.broadcastMessage("[IRC] "
 										+ (name != null ? name + ": " : "")
 										+ msg.substring(4));
+								sender.put(name, 1);
 							}
 						}
 					} catch (final Exception ignored) {
@@ -225,6 +257,18 @@ public class IRCHandler extends IRC {
 			try {
 				writer.write("PRIVMSG " + Constants.CHANNEL + " :" + Message
 						+ "\r\n");
+				writer.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void sendPrivateMessage(final String Person,
+			final String Message) {
+		if (isConnected()) {
+			try {
+				writer.write("PRIVMSG " + Person + " :" + Message + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();

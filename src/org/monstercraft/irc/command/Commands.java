@@ -4,8 +4,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.Variables;
 import org.monstercraft.irc.handlers.IRCHandler;
+import org.monstercraft.irc.util.Variables;
 
 public class Commands {
 
@@ -39,6 +39,17 @@ public class Commands {
 				}
 				IRCHandler.sendMessage(s);
 				IRC.server.broadcastMessage("[IRC] " + ": " + s);
+				return true;
+			}
+			
+			if (split[0].equalsIgnoreCase("irc")
+					&& split[1].equalsIgnoreCase("pm")) {
+				String s = "";
+				for (int i = 3; i < split.length; i++) {
+					s = s + split[i] + " ";
+				}
+				IRCHandler.sendPrivateMessage(split[2], s);
+				sender.sendMessage("[IRC]<to: " + split[2] + ">: " + s);
 				return true;
 			}
 

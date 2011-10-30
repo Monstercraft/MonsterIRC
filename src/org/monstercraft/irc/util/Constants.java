@@ -1,4 +1,4 @@
-package org.monstercraft.irc;
+package org.monstercraft.irc.util;
 
 public class Constants {
 	
