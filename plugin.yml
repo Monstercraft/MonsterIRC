@@ -1,3 +1,6 @@
 name: IRC
 main: org.monstercraft.irc.IRC
 version: 1.0
+commands:
+    irc:
+        description: All IRC related commands.
