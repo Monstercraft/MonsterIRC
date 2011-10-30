@@ -21,4 +21,4 @@ Keep your source up to date with:
 
 ## Legal 
 
-The entire source code is freely available under the GPLv3 terms. Contrary to bogus and automated DMCA claims, no content is under the copyright of Minecraft. The code is provided purely for educational purposes by the authors as freedom of expression.
+The entire source code is freely available under the GPLv3 terms. No content is under the copyright of Minecraft. The code is provided purely for educational purposes by the authors as freedom of expression.
