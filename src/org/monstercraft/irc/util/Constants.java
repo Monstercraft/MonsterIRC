@@ -2,12 +2,8 @@ package org.monstercraft.irc.util;
 
 public class Constants {
 	
-	public static int PORT = 6667;
+	public static String SETTINGS_PATH = "plugins/MonsterCraft/IRC/";
 	
-	public static String SERVER = "irc.esper.net";
-	
-	public static String CHANNEL = "#monstercraft";
-	
-	public static String LOGIN = "MC";
+	public static String SETTINGS_FILE = "Config.yml";
 
 }

@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.util.Constants;
 import org.monstercraft.irc.util.Timer;
 import org.monstercraft.irc.util.Variables;
 
@@ -31,13 +30,13 @@ public class IRCHandler extends IRC {
 		if (!isConnected()) {
 			String line = null;
 			try {
-				connection = new Socket(Constants.SERVER, Constants.PORT);
+				connection = new Socket(Variables.server, Variables.port);
 				writer = new BufferedWriter(new OutputStreamWriter(
 						connection.getOutputStream()));
 				reader = new BufferedReader(new InputStreamReader(
 						connection.getInputStream()));
 				System.out.println("[IRC] Attempting to connect to chat.");
-				writer.write("USER " + Constants.LOGIN + " 8 * :"
+				writer.write("USER " + Variables.login + " 8 * :"
 						+ Variables.name + "\r\n");
 				writer.write("NICK " + Variables.name + "\r\n");
 				writer.flush();
@@ -59,7 +58,7 @@ public class IRCHandler extends IRC {
 						continue;
 					}
 				}
-				writer.write("JOIN " + Constants.CHANNEL + "\r\n");
+				writer.write("JOIN " + Variables.channel + "\r\n");
 				writer.flush();
 				watch = new Thread(KEEP_ALIVE);
 				watch.setDaemon(true);
@@ -80,7 +79,7 @@ public class IRCHandler extends IRC {
 	public static void disconnect() {
 		if (isConnected()) {
 			try {
-				writer.write("QUIT " + Constants.CHANNEL + "\n");
+				writer.write("QUIT " + Variables.channel + "\n");
 				writer.flush();
 			} catch (IOException e) {
 			}
@@ -148,7 +147,7 @@ public class IRCHandler extends IRC {
 									+ " "
 									+ line.substring(line.indexOf(": ACTION ") + 1);
 						} else if (line
-								.contains("PRIVMSG " + Constants.CHANNEL)) {
+								.contains("PRIVMSG " + Variables.channel)) {
 							name = line.substring(1, line.indexOf("!"));
 							msg = line.substring(line.indexOf(":", 1) + 1);
 						} else if (line.contains("PRIVMSG " + Variables.name)) {
@@ -160,35 +159,35 @@ public class IRCHandler extends IRC {
 							msg = _name
 									+ " is now known as "
 									+ line.substring(line.indexOf("NICK :") + 6);
-						} else if (line.contains("JOIN :" + Constants.CHANNEL)) {
+						} else if (line.contains("JOIN :" + Variables.channel)) {
 							final String _name = line.substring(1,
 									line.indexOf("!"));
-							msg = _name + " has joined " + Constants.CHANNEL
+							msg = _name + " has joined " + Variables.channel
 									+ ".";
-						} else if (line.contains("PART " + Constants.CHANNEL)) {
+						} else if (line.contains("PART " + Variables.channel)) {
 							final String _name = line.substring(1,
 									line.indexOf("!"));
-							msg = _name + " has left " + Constants.CHANNEL
+							msg = _name + " has left " + Variables.channel
 									+ ".";
 						} else if (line.contains("QUIT :")) {
 							final String _name = line.substring(1,
 									line.indexOf("!"));
-							msg = _name + " has quit " + Constants.CHANNEL
+							msg = _name + " has quit " + Variables.channel
 									+ " ("
 									+ line.substring(line.indexOf(":", 1) + 1)
 									+ ").";
-						} else if (line.contains("MODE " + Constants.CHANNEL)) {
+						} else if (line.contains("MODE " + Variables.channel)) {
 							final String _name = line.substring(1,
 									line.indexOf("!"));
 							final String comm = line
 									.substring(line.indexOf("MODE "
-											+ Constants.CHANNEL + " ") + 14);
+											+ Variables.channel + " ") + 14);
 							msg = _name + " sets mode " + comm + ".";
-						} else if (line.contains("KICK " + Constants.CHANNEL)) {
+						} else if (line.contains("KICK " + Variables.channel)) {
 							final String _name = line.substring(1,
 									line.indexOf("!"));
 							msg = _name + " has been kicked from"
-									+ Constants.CHANNEL + ".";
+									+ Variables.channel + ".";
 						}
 						if (msg != null
 								&& msg.toLowerCase().startsWith(
@@ -255,7 +254,7 @@ public class IRCHandler extends IRC {
 	public static void sendMessage(final String Message) {
 		if (isConnected()) {
 			try {
-				writer.write("PRIVMSG " + Constants.CHANNEL + " :" + Message
+				writer.write("PRIVMSG " + Variables.channel + " :" + Message
 						+ "\r\n");
 				writer.flush();
 			} catch (IOException e) {
