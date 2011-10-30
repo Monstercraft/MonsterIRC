@@ -8,14 +8,10 @@
 /*.iws
 /*.jar
 /.classpath
-/.file_store_32
 /.idea
-/.jagex_cache_32
 /.project
 /.settings
 /bin
-/lib/*.jar
-/scripts/*.class
 /temp/*
 /scripts/
 /devscripts/
