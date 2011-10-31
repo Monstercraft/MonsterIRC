@@ -3,7 +3,6 @@ package org.monstercraft.irc.util;
 /**
  * A Timer utility.
  *
- * @author Jacmob
  */
 public class Timer {
 	private long end;
