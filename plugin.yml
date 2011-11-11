@@ -1,6 +1,3 @@
-name: IRC
-main: org.monstercraft.irc.IRC
+name: SIG
+main: org.monstercraft.signature.Signature
 version: 1.0
-commands:
-    irc:
-        description: All IRC related commands.
