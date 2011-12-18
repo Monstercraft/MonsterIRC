@@ -11,8 +11,10 @@ public class Settings {
 			IRC.config.set("irc.port", 6667);
 			IRC.config.set("irc.server", "irc.esper.net");
 			IRC.config.set("irc.channel", "#Monstercraft");
-			IRC.config.set("irc.name", "MonsterCraft");
-			IRC.config.set("irc.login", "MC");
+			IRC.config.set("irc.name", "MonsterIRC");
+			IRC.config.set("irc.login", "MonsterIRC");
+			IRC.config.set("irc.herochatchan", "IRC");
+			IRC.config.set("irc.auto", false);
 			IRC.config.set("irc.messagelimit", 5);
 			IRC.config.save(new File(Constants.SETTINGS_PATH
 					+ Constants.SETTINGS_FILE));
@@ -35,6 +37,8 @@ public class Settings {
 				Variables.channel = IRC.config.getString("irc.channel");
 				Variables.name = IRC.config.getString("irc.name");
 				Variables.login = IRC.config.getString("irc.login");
+				Variables.hc = IRC.config.getString("irc.herochatchan");
+				Variables.autoJoin = IRC.config.getBoolean("irc.auto");
 				Variables.amount = IRC.config.getInt("irc.messagelimit");
 			} catch (Exception e) {
 				GenConfig();

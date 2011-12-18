@@ -18,15 +18,21 @@ import org.monstercraft.irc.util.Variables;
 
 public class IRCHandler extends IRC {
 
-	private static BufferedWriter writer = null;
-	private static Socket connection = null;
-	private static BufferedReader reader = null;
-	private static Thread watch = null;
-	private static Map<String, Integer> sender = new HashMap<String, Integer>();
-	private static Map<String, Timer> timer = new HashMap<String, Timer>();
-	private static ArrayList<String> warn = new ArrayList<String>();
+	private BufferedWriter writer = null;
+	private Socket connection = null;
+	private BufferedReader reader = null;
+	private Thread watch = null;
+	private Map<String, Integer> sender = new HashMap<String, Integer>();
+	private Map<String, Timer> timer = new HashMap<String, Timer>();
+	private ArrayList<String> warn = new ArrayList<String>();
+	private boolean avalible = true;
+	private IRC plugin;
 
-	public static boolean connect() {
+	public IRCHandler(IRC plugin) {
+		this.plugin = plugin;
+	}
+
+	public boolean connect() {
 		if (!isConnected()) {
 			String line = null;
 			try {
@@ -44,12 +50,14 @@ public class IRCHandler extends IRC {
 				while ((line = reader.readLine()) != null) {
 					if (line.contains("004")) {
 						break;
-					} else if (line.contains("433")) {
+					} else if (line.contains("432")) {
 						System.out
 								.println("[IRC] Your nickname is already in use, please switch it");
 						System.out
 								.println("[IRC] using \"nick [NAME]\" and try to connect again.");
 						disconnect();
+						avalible = false;
+						break;
 					} else if (line.toLowerCase().startsWith("ping ")) {
 						// We must respond to PINGs to avoid being disconnected.
 						writer.write("PONG " + line.substring(5) + "\r\n");
@@ -57,14 +65,20 @@ public class IRCHandler extends IRC {
 						continue;
 					}
 				}
-				writer.write("JOIN " + Variables.channel + "\r\n");
-				writer.flush();
-				watch = new Thread(KEEP_ALIVE);
-				watch.setDaemon(true);
-				watch.setPriority(Thread.MAX_PRIORITY);
-				watch.start();
-				System.out.println("[IRC] Connected to chat as "
-						+ Variables.name + ".");
+				if (avalible) {
+					System.out.println("[IRC] Connecting to channel....");
+					writer.write("JOIN " + Variables.channel + "\r\n");
+					writer.flush();
+					// writer.write("PRIVMSG nickserv identify" + Variables.name
+					// + Variables.pass);
+					// writer.flush();
+					watch = new Thread(KEEP_ALIVE);
+					watch.setDaemon(true);
+					watch.setPriority(Thread.MAX_PRIORITY);
+					watch.start();
+					System.out.println("[IRC] Connected to chat as "
+							+ Variables.name + ".");
+				}
 			} catch (Exception e) {
 				System.out.println("[IRC] Failed to connect to IRC!");
 				System.out
@@ -76,8 +90,9 @@ public class IRCHandler extends IRC {
 		return isConnected();
 	}
 
-	public static boolean disconnect() {
+	public boolean disconnect() {
 		if (isConnected()) {
+			avalible = true;
 			try {
 				writer.write("QUIT " + Variables.channel + "\n");
 				writer.flush();
@@ -103,17 +118,16 @@ public class IRCHandler extends IRC {
 		return !isConnected();
 	}
 
-	public static boolean isConnected() {
+	public boolean isConnected() {
 		return connection != null && connection.isConnected();
 	}
 
-	private final static Runnable KEEP_ALIVE = new Runnable() {
+	private final Runnable KEEP_ALIVE = new Runnable() {
 		public void run() {
 			String line;
 			try {
 				while ((line = reader.readLine()) != null) {
 					if (line.toLowerCase().startsWith("ping ")) {
-						// We must respond to PINGs to avoid being disconnected.
 						writer.write("PONG " + line.substring(5) + "\r\n");
 						writer.flush();
 						continue;
@@ -138,93 +152,86 @@ public class IRCHandler extends IRC {
 						}
 						continue;
 					}
-					try {
-						String name = null;
-						String msg = null;
-						if (line.contains(": ACTION")) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							msg = _name
-									+ " "
-									+ line.substring(line.indexOf(": ACTION ") + 1);
-						} else if (line
-								.contains("PRIVMSG " + Variables.channel)) {
-							name = line.substring(1, line.indexOf("!"));
-							msg = line.substring(line.indexOf(":", 1) + 1);
-						} else if (line.contains("NICK :")) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							msg = _name
-									+ " is now known as "
-									+ line.substring(line.indexOf("NICK :") + 6);
-						} else if (line.contains("JOIN :" + Variables.channel)) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							msg = _name + " has joined " + Variables.channel
-									+ ".";
-						} else if (line.contains("PART " + Variables.channel)) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							msg = _name + " has left " + Variables.channel
-									+ ".";
-						} else if (line.contains("QUIT :")) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							msg = _name + " has quit " + Variables.channel
-									+ " ("
-									+ line.substring(line.indexOf(":", 1) + 1)
-									+ ").";
-						} else if (line.contains("MODE " + Variables.channel)) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							final String comm = line
-									.substring(line.indexOf("MODE "
-											+ Variables.channel + " ") + 14);
-							msg = _name + " sets mode " + comm + ".";
-						} else if (line.contains("KICK " + Variables.channel)) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							msg = _name + " has been kicked from"
-									+ Variables.channel + ".";
+					String name = null;
+					String msg = null;
+					if (line.contains(": ACTION")) {
+						final String _name = line.substring(1,
+								line.indexOf("!"));
+						msg = _name + " "
+								+ line.substring(line.indexOf(": ACTION ") + 1);
+					} else if (line.contains("PRIVMSG " + Variables.channel)) {
+						name = line.substring(1, line.indexOf("!"));
+						msg = line.substring(line.indexOf(":", 1) + 1);
+					} else if (line.contains("NICK :")) {
+						final String _name = line.substring(1,
+								line.indexOf("!"));
+						msg = _name + " is now known as "
+								+ line.substring(line.indexOf("NICK :") + 6);
+						if (_name.equals(Variables.name)) {
+							Variables.name = line.substring(line
+									.indexOf("NICK :") + 6);
 						}
-
-						if (msg != null
-								&& msg.toLowerCase().startsWith(
-										Variables.name.toLowerCase())) {
-							if (timer.containsKey(name)) {
-								if (timer.get(name).getRemaining() == 0) {
-									sender.remove(name);
-								}
+					} else if (line.contains("JOIN :" + Variables.channel)) {
+						final String _name = line.substring(1,
+								line.indexOf("!"));
+						msg = _name + " has joined " + Variables.channel + ".";
+					} else if (line.contains("PART " + Variables.channel)) {
+						final String _name = line.substring(1,
+								line.indexOf("!"));
+						msg = _name + " has left " + Variables.channel + ".";
+					} else if (line.contains("QUIT :")) {
+						final String _name = line.substring(1,
+								line.indexOf("!"));
+						msg = _name + " has quit " + Variables.channel + " ("
+								+ line.substring(line.indexOf(":", 1) + 1)
+								+ ").";
+					} else if (line.contains("MODE " + Variables.channel)) {
+						final String _name = line.substring(1,
+								line.indexOf("!"));
+						final String comm = line.substring(line.indexOf("MODE "
+								+ Variables.channel + " ") + 14);
+						msg = _name + " sets mode " + comm + ".";
+					} else if (line.contains("KICK " + Variables.channel)) {
+						final String _name = line.substring(1,
+								line.indexOf("!"));
+						msg = _name + " has been kicked from"
+								+ Variables.channel + ".";
+					}
+					if (msg != null
+							&& msg.toLowerCase().startsWith(
+									Variables.name.toLowerCase())) {
+						if (timer.containsKey(name)) {
+							if (timer.get(name).getRemaining() == 0) {
+								sender.remove(name);
 							}
-							if (sender.containsKey(name)) {
-								if (sender.get(name) < Variables.amount) {
-									server.broadcastMessage("[IRC] "
-											+ (name != null ? name + ": " : "")
-											+ msg.substring(Variables.name
-													.length() + 1));
-									sender.put(name, sender.get(name) + 1);
-								} else {
-									timer.put(name, new Timer(60000));
-									if (!warn.contains(name)) {
-										sendMessage(name
-												+ " you have sent over "
-												+ Variables.amount
-												+ " messages in the past minute. Please wait 1 minute to send another. This is your only warning!");
-										warn.add(name);
-									}
-								}
-							} else {
+						} else if (sender.containsKey(name)) {
+							if (sender.get(name) < Variables.amount) {
 								server.broadcastMessage("[IRC] "
 										+ (name != null ? name + ": " : "")
 										+ msg.substring(Variables.name.length() + 1));
-								sender.put(name, 1);
+								sender.put(name, sender.get(name) + 1);
+							} else {
+								timer.put(name, new Timer(60000));
+								if (!warn.contains(name)) {
+									sendMessage(name
+											+ " you have sent over "
+											+ Variables.amount
+											+ " messages in the past minute. Please wait 1 minute to send another. This is your only warning!");
+									warn.add(name);
+								}
 							}
+						} else {
+							plugin.HeroChat.getChannel(Variables.hc)
+									.sendMessage(
+											"<" + name + ">",
+											msg.substring(Variables.name
+													.length() + 1));
+							sender.put(name, 1);
 						}
-					} catch (final Exception ignored) {
 					}
 				}
-			} catch (final IOException ignored) {
-			} catch (final NullPointerException ignored) {
+			} catch (final Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -253,7 +260,7 @@ public class IRCHandler extends IRC {
 		}
 	};
 
-	public static void sendMessage(final String Message) {
+	public void sendMessage(final String Message) {
 		if (isConnected()) {
 			try {
 				writer.write("PRIVMSG " + Variables.channel + " :" + Message
@@ -265,7 +272,7 @@ public class IRCHandler extends IRC {
 		}
 	}
 
-	public static void changeNick(final String Nick) {
+	public void changeNick(final String Nick) {
 		if (isConnected()) {
 			try {
 				writer.write("NICK " + Nick + "\r\n");

@@ -10,8 +10,12 @@ public class Variables {
 	
 	public static String login = "MC";
 
-	public static String name = "MonsterCraft";
+	public static String name = "MonsterIRC";
 	
 	public static int amount = 5;
+	
+	public static boolean autoJoin = false;
+
+	public static String hc = "IRC";
 
 }
