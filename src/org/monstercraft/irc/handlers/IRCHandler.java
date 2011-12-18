@@ -220,7 +220,8 @@ public class IRCHandler extends IRC {
 									warn.add(name);
 								}
 							}
-						} else {
+						} else if (plugin.HeroChat
+								.getChannel(Variables.hc) != null) {
 							plugin.HeroChat.getChannel(Variables.hc)
 									.sendMessage(
 											"<" + name + ">",

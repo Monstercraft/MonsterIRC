@@ -28,8 +28,10 @@ public class Say extends Command {
 		}
 
 		plugin.handle.sendMessage(result.toString());
-		plugin.HeroChat.getChannel(Variables.hc).sendMessage(sender.getName(),
-				result2.toString());
+		if (this.plugin.HeroChat.getChannel(Variables.hc) != null) {
+			plugin.HeroChat.getChannel(Variables.hc).sendMessage(
+					sender.getName(), result2.toString());
+		}
 		return true;
 	}
 
