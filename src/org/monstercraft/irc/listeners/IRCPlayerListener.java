@@ -13,9 +13,6 @@ public class IRCPlayerListener extends PlayerListener {
 
 	@Override
 	public void onPlayerChat(PlayerChatEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
 		try {
 			Player player = event.getPlayer();
 			StringBuffer result = new StringBuffer();
@@ -26,5 +23,4 @@ public class IRCPlayerListener extends PlayerListener {
 			e.printStackTrace();
 		}
 	}
-
 }

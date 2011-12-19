@@ -71,6 +71,6 @@ public class IRC extends JavaPlugin {
 	private void registerEvents() {
 		playerListener = new IRCPlayerListener(this);
 		getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT,
-				playerListener, Priority.High, this);
+				playerListener, Priority.Highest, this);
 	}
 }

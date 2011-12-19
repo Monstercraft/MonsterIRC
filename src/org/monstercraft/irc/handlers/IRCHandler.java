@@ -25,7 +25,6 @@ public class IRCHandler extends IRC {
 	private static Map<String, Integer> sender = new HashMap<String, Integer>();
 	private static Map<String, Timer> timer = new HashMap<String, Timer>();
 	private static ArrayList<String> warn = new ArrayList<String>();
-	private static boolean avalible = true;
 
 	public static boolean connect() {
 		if (!isConnected()) {
@@ -51,8 +50,6 @@ public class IRCHandler extends IRC {
 						System.out
 								.println("[IRC] using \"nick [NAME]\" and try to connect again.");
 						disconnect();
-						avalible = false;
-						break;
 					} else if (line.toLowerCase().startsWith("ping ")) {
 						// We must respond to PINGs to avoid being disconnected.
 						writer.write("PONG " + line.substring(5) + "\r\n");
@@ -60,17 +57,14 @@ public class IRCHandler extends IRC {
 						continue;
 					}
 				}
-				if (avalible) {
-					System.out.println("[IRC] Connecting to channel....");
-					writer.write("JOIN " + Variables.channel + "\r\n");
-					writer.flush();
-					watch = new Thread(KEEP_ALIVE);
-					watch.setDaemon(true);
-					watch.setPriority(Thread.MAX_PRIORITY);
-					watch.start();
-					System.out.println("[IRC] Connected to chat as "
-							+ Variables.name + ".");
-				}
+				writer.write("JOIN " + Variables.channel + "\r\n");
+				writer.flush();
+				watch = new Thread(KEEP_ALIVE);
+				watch.setDaemon(true);
+				watch.setPriority(Thread.MAX_PRIORITY);
+				watch.start();
+				System.out.println("[IRC] Connected to chat as "
+						+ Variables.name + ".");
 			} catch (Exception e) {
 				System.out.println("[IRC] Failed to connect to IRC!");
 				System.out
@@ -84,7 +78,6 @@ public class IRCHandler extends IRC {
 
 	public static boolean disconnect() {
 		if (isConnected()) {
-			avalible = true;
 			try {
 				writer.write("QUIT " + Variables.channel + "\n");
 				writer.flush();
@@ -120,6 +113,7 @@ public class IRCHandler extends IRC {
 			try {
 				while ((line = reader.readLine()) != null) {
 					if (line.toLowerCase().startsWith("ping ")) {
+						// We must respond to PINGs to avoid being disconnected.
 						writer.write("PONG " + line.substring(5) + "\r\n");
 						writer.flush();
 						continue;
@@ -144,86 +138,93 @@ public class IRCHandler extends IRC {
 						}
 						continue;
 					}
-					String name = null;
-					String msg = null;
-					if (line.contains(": ACTION")) {
-						final String _name = line.substring(1,
-								line.indexOf("!"));
-						msg = _name + " "
-								+ line.substring(line.indexOf(": ACTION ") + 1);
-					} else if (line.contains("PRIVMSG " + Variables.channel)) {
-						name = line.substring(1, line.indexOf("!"));
-						msg = line.substring(line.indexOf(":", 1) + 1);
-					} else if (line.contains("NICK :")) {
-						final String _name = line.substring(1,
-								line.indexOf("!"));
-						msg = _name + " is now known as "
-								+ line.substring(line.indexOf("NICK :") + 6);
-						if (_name.equals(Variables.name)) {
-							Variables.name = line.substring(line
-									.indexOf("NICK :") + 6);
+					try {
+						String name = null;
+						String msg = null;
+						if (line.contains(": ACTION")) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							msg = _name
+									+ " "
+									+ line.substring(line.indexOf(": ACTION ") + 1);
+						} else if (line
+								.contains("PRIVMSG " + Variables.channel)) {
+							name = line.substring(1, line.indexOf("!"));
+							msg = line.substring(line.indexOf(":", 1) + 1);
+						} else if (line.contains("NICK :")) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							msg = _name
+									+ " is now known as "
+									+ line.substring(line.indexOf("NICK :") + 6);
+						} else if (line.contains("JOIN :" + Variables.channel)) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							msg = _name + " has joined " + Variables.channel
+									+ ".";
+						} else if (line.contains("PART " + Variables.channel)) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							msg = _name + " has left " + Variables.channel
+									+ ".";
+						} else if (line.contains("QUIT :")) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							msg = _name + " has quit " + Variables.channel
+									+ " ("
+									+ line.substring(line.indexOf(":", 1) + 1)
+									+ ").";
+						} else if (line.contains("MODE " + Variables.channel)) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							final String comm = line
+									.substring(line.indexOf("MODE "
+											+ Variables.channel + " ") + 14);
+							msg = _name + " sets mode " + comm + ".";
+						} else if (line.contains("KICK " + Variables.channel)) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							msg = _name + " has been kicked from"
+									+ Variables.channel + ".";
 						}
-					} else if (line.contains("JOIN :" + Variables.channel)) {
-						final String _name = line.substring(1,
-								line.indexOf("!"));
-						msg = _name + " has joined " + Variables.channel + ".";
-					} else if (line.contains("PART " + Variables.channel)) {
-						final String _name = line.substring(1,
-								line.indexOf("!"));
-						msg = _name + " has left " + Variables.channel + ".";
-					} else if (line.contains("QUIT :")) {
-						final String _name = line.substring(1,
-								line.indexOf("!"));
-						msg = _name + " has quit " + Variables.channel + " ("
-								+ line.substring(line.indexOf(":", 1) + 1)
-								+ ").";
-					} else if (line.contains("MODE " + Variables.channel)) {
-						final String _name = line.substring(1,
-								line.indexOf("!"));
-						final String comm = line.substring(line.indexOf("MODE "
-								+ Variables.channel + " ") + 14);
-						msg = _name + " sets mode " + comm + ".";
-					} else if (line.contains("KICK " + Variables.channel)) {
-						final String _name = line.substring(1,
-								line.indexOf("!"));
-						msg = _name + " has been kicked from"
-								+ Variables.channel + ".";
-					}
-					if (msg != null
-							&& msg.toLowerCase().startsWith(
-									Variables.name.toLowerCase())) {
-						if (timer.containsKey(name)) {
-							if (timer.get(name).getRemaining() == 0) {
-								sender.remove(name);
+
+						if (msg != null
+								&& msg.toLowerCase().startsWith(
+										Variables.name.toLowerCase())) {
+							if (timer.containsKey(name)) {
+								if (timer.get(name).getRemaining() == 0) {
+									sender.remove(name);
+								}
 							}
-						} else if (sender.containsKey(name)) {
-							if (sender.get(name) < Variables.amount) {
+							if (sender.containsKey(name)) {
+								if (sender.get(name) < Variables.amount) {
+									server.broadcastMessage("[IRC] "
+											+ (name != null ? name + ": " : "")
+											+ msg.substring(Variables.name
+													.length() + 1));
+									sender.put(name, sender.get(name) + 1);
+								} else {
+									timer.put(name, new Timer(60000));
+									if (!warn.contains(name)) {
+										sendMessage(name
+												+ " you have sent over "
+												+ Variables.amount
+												+ " messages in the past minute. Please wait 1 minute to send another. This is your only warning!");
+										warn.add(name);
+									}
+								}
+							} else {
 								server.broadcastMessage("[IRC] "
 										+ (name != null ? name + ": " : "")
 										+ msg.substring(Variables.name.length() + 1));
-								sender.put(name, sender.get(name) + 1);
-							} else {
-								timer.put(name, new Timer(60000));
-								if (!warn.contains(name)) {
-									sendMessage(name
-											+ " you have sent over "
-											+ Variables.amount
-											+ " messages in the past minute. Please wait 1 minute to send another. This is your only warning!");
-									warn.add(name);
-								}
+								sender.put(name, 1);
 							}
-						} else {
-							server.broadcastMessage("[IRC]<"
-									+ name
-									+ ">"
-									+ msg.substring(Variables.name.length() + 1));
-							sender.put(name, 1);
 						}
+					} catch (final Exception ignored) {
 					}
 				}
-				System.out.println(line);
-			} catch (final Exception e) {
-				e.printStackTrace();
+			} catch (final IOException ignored) {
+			} catch (final NullPointerException ignored) {
 			}
 		}
 
