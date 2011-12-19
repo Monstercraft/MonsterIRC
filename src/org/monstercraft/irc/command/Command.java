@@ -4,12 +4,6 @@ import org.bukkit.command.CommandSender;
 import org.monstercraft.irc.IRC;
 
 public abstract class Command extends IRC {
-	
-	protected IRC plugin;
-
-	public Command(IRC plugin) {
-		this.plugin = plugin;
-	}
 
 	public abstract boolean canExecute(CommandSender sender, String[] split);
 

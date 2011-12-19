@@ -1,18 +1,13 @@
 package org.monstercraft.irc.command.commands;
 
 import org.bukkit.command.CommandSender;
-import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.Command;
-import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.handlers.IRCHandler;
 
 public class Say extends Command {
 
-	public Say(IRC plugin) {
-		super(plugin);
-	}
-
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return plugin.handle.isConnected() && split[0].equalsIgnoreCase("irc")
+		return IRCHandler.isConnected() && split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("say");
 	}
 
@@ -27,11 +22,8 @@ public class Say extends Command {
 			result2.append(" ");
 		}
 
-		plugin.handle.sendMessage(result.toString());
-		if (this.plugin.HeroChat.getChannel(Variables.hc) != null) {
-			plugin.HeroChat.getChannel(Variables.hc).sendMessage(
-					sender.getName(), result2.toString());
-		}
+		IRCHandler.sendMessage(result.toString());
+		server.broadcastMessage(result.toString());
 		return true;
 	}
 

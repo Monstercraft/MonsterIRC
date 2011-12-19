@@ -18,21 +18,16 @@ import org.monstercraft.irc.util.Variables;
 
 public class IRCHandler extends IRC {
 
-	private BufferedWriter writer = null;
-	private Socket connection = null;
-	private BufferedReader reader = null;
-	private Thread watch = null;
-	private Map<String, Integer> sender = new HashMap<String, Integer>();
-	private Map<String, Timer> timer = new HashMap<String, Timer>();
-	private ArrayList<String> warn = new ArrayList<String>();
-	private boolean avalible = true;
-	private IRC plugin;
+	private static BufferedWriter writer = null;
+	private static Socket connection = null;
+	private static BufferedReader reader = null;
+	private static Thread watch = null;
+	private static Map<String, Integer> sender = new HashMap<String, Integer>();
+	private static Map<String, Timer> timer = new HashMap<String, Timer>();
+	private static ArrayList<String> warn = new ArrayList<String>();
+	private static boolean avalible = true;
 
-	public IRCHandler(IRC plugin) {
-		this.plugin = plugin;
-	}
-
-	public boolean connect() {
+	public static boolean connect() {
 		if (!isConnected()) {
 			String line = null;
 			try {
@@ -69,9 +64,6 @@ public class IRCHandler extends IRC {
 					System.out.println("[IRC] Connecting to channel....");
 					writer.write("JOIN " + Variables.channel + "\r\n");
 					writer.flush();
-					// writer.write("PRIVMSG nickserv identify" + Variables.name
-					// + Variables.pass);
-					// writer.flush();
 					watch = new Thread(KEEP_ALIVE);
 					watch.setDaemon(true);
 					watch.setPriority(Thread.MAX_PRIORITY);
@@ -90,7 +82,7 @@ public class IRCHandler extends IRC {
 		return isConnected();
 	}
 
-	public boolean disconnect() {
+	public static boolean disconnect() {
 		if (isConnected()) {
 			avalible = true;
 			try {
@@ -118,11 +110,11 @@ public class IRCHandler extends IRC {
 		return !isConnected();
 	}
 
-	public boolean isConnected() {
+	public static boolean isConnected() {
 		return connection != null && connection.isConnected();
 	}
 
-	private final Runnable KEEP_ALIVE = new Runnable() {
+	private final static Runnable KEEP_ALIVE = new Runnable() {
 		public void run() {
 			String line;
 			try {
@@ -220,17 +212,16 @@ public class IRCHandler extends IRC {
 									warn.add(name);
 								}
 							}
-						} else if (plugin.HeroChat
-								.getChannel(Variables.hc) != null) {
-							plugin.HeroChat.getChannel(Variables.hc)
-									.sendMessage(
-											"<" + name + ">",
-											msg.substring(Variables.name
-													.length() + 1));
+						} else {
+							server.broadcastMessage("[IRC]<"
+									+ name
+									+ ">"
+									+ msg.substring(Variables.name.length() + 1));
 							sender.put(name, 1);
 						}
 					}
 				}
+				System.out.println(line);
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
@@ -261,7 +252,7 @@ public class IRCHandler extends IRC {
 		}
 	};
 
-	public void sendMessage(final String Message) {
+	public static void sendMessage(final String Message) {
 		if (isConnected()) {
 			try {
 				writer.write("PRIVMSG " + Variables.channel + " :" + Message
@@ -273,7 +264,7 @@ public class IRCHandler extends IRC {
 		}
 	}
 
-	public void changeNick(final String Nick) {
+	public static void changeNick(final String Nick) {
 		if (isConnected()) {
 			try {
 				writer.write("NICK " + Nick + "\r\n");
