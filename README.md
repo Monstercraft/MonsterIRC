@@ -6,7 +6,7 @@ Monstercraft is an immensely popular and successful minecraft server. The plugin
 
 Download the latest source code with:
 
-    git clone git://github.com/Monstercraft/Monstercraft.git
+    git clone git://github.com/Monstercraft/MonsterIRC.git
 	
 Keep your source up to date with:
 

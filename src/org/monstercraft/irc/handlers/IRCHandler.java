@@ -25,6 +25,7 @@ public class IRCHandler extends IRC {
 	private static Map<String, Integer> sender = new HashMap<String, Integer>();
 	private static Map<String, Timer> timer = new HashMap<String, Timer>();
 	private static ArrayList<String> warn = new ArrayList<String>();
+	private static boolean avalible = true;
 
 	public static boolean connect() {
 		if (!isConnected()) {
@@ -41,15 +42,23 @@ public class IRCHandler extends IRC {
 				writer.write("NICK " + Variables.name + "\r\n");
 				writer.flush();
 				System.out.println("[IRC] Processing connection....");
+				if (Variables.ident) {
+					System.out.println("[IRC] Identifying....");
+					writer.write("NICKSERV IDENTIFY " + Variables.password
+							+ "\r\n");
+					writer.flush();
+				}
 				while ((line = reader.readLine()) != null) {
 					if (line.contains("004")) {
 						break;
-					} else if (line.contains("432")) {
+					} else if (line.contains("433")) {
 						System.out
 								.println("[IRC] Your nickname is already in use, please switch it");
 						System.out
 								.println("[IRC] using \"nick [NAME]\" and try to connect again.");
 						disconnect();
+						avalible = false;
+						break;
 					} else if (line.toLowerCase().startsWith("ping ")) {
 						// We must respond to PINGs to avoid being disconnected.
 						writer.write("PONG " + line.substring(5) + "\r\n");
@@ -57,14 +66,16 @@ public class IRCHandler extends IRC {
 						continue;
 					}
 				}
-				writer.write("JOIN " + Variables.channel + "\r\n");
-				writer.flush();
-				watch = new Thread(KEEP_ALIVE);
-				watch.setDaemon(true);
-				watch.setPriority(Thread.MAX_PRIORITY);
-				watch.start();
-				System.out.println("[IRC] Connected to chat as "
-						+ Variables.name + ".");
+				if (avalible) {
+					writer.write("JOIN " + Variables.channel + "\r\n");
+					writer.flush();
+					watch = new Thread(KEEP_ALIVE);
+					watch.setDaemon(true);
+					watch.setPriority(Thread.MAX_PRIORITY);
+					watch.start();
+					System.out.println("[IRC] Connected to chat as "
+							+ Variables.name + ".");
+				}
 			} catch (Exception e) {
 				System.out.println("[IRC] Failed to connect to IRC!");
 				System.out
@@ -78,6 +89,7 @@ public class IRCHandler extends IRC {
 
 	public static boolean disconnect() {
 		if (isConnected()) {
+			avalible = true;
 			try {
 				writer.write("QUIT " + Variables.channel + "\n");
 				writer.flush();
@@ -141,14 +153,9 @@ public class IRCHandler extends IRC {
 					try {
 						String name = null;
 						String msg = null;
-						if (line.contains(": ACTION")) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							msg = _name
-									+ " "
-									+ line.substring(line.indexOf(": ACTION ") + 1);
-						} else if (line
-								.contains("PRIVMSG " + Variables.channel)) {
+						System.out.println(line);
+						if (line.contains("PRIVMSG " + Variables.channel)) {
+							System.out.println(line);
 							name = line.substring(1, line.indexOf("!"));
 							msg = line.substring(line.indexOf(":", 1) + 1);
 						} else if (line.contains("NICK :")) {
@@ -214,17 +221,18 @@ public class IRCHandler extends IRC {
 									}
 								}
 							} else {
-								server.broadcastMessage("[IRC] "
-										+ (name != null ? name + ": " : "")
+								server.broadcastMessage("[IRC]<"
+										+ (name != null ? name + ">:" : "")
 										+ msg.substring(Variables.name.length() + 1));
 								sender.put(name, 1);
 							}
 						}
-					} catch (final Exception ignored) {
+					} catch (final Exception e) {
+						e.printStackTrace();
 					}
 				}
-			} catch (final IOException ignored) {
-			} catch (final NullPointerException ignored) {
+			} catch (final Exception e) {
+				e.printStackTrace();
 			}
 		}
 
