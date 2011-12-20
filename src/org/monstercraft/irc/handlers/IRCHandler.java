@@ -93,6 +93,7 @@ public class IRCHandler extends IRC {
 			try {
 				writer.write("QUIT " + Variables.channel + "\n");
 				writer.flush();
+				connection.close();
 			} catch (IOException e) {
 			}
 		}
@@ -110,7 +111,6 @@ public class IRCHandler extends IRC {
 			}
 		} catch (final IOException ignored) {
 		}
-		connection = null;
 		System.out.println("[IRC] Successfully disconnected from IRC.");
 		return !isConnected();
 	}
