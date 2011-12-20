@@ -155,7 +155,6 @@ public class IRCHandler extends IRC {
 						String msg = null;
 						System.out.println(line);
 						if (line.contains("PRIVMSG " + Variables.channel)) {
-							System.out.println(line);
 							name = line.substring(1, line.indexOf("!"));
 							msg = line.substring(line.indexOf(":", 1) + 1);
 						} else if (line.contains("NICK :")) {

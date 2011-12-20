@@ -9,7 +9,6 @@ import org.monstercraft.irc.handlers.IRCHandler;
 import org.monstercraft.irc.util.Variables;
 
 import com.herocraftonline.dthielke.herochat.HeroChat;
-import com.herocraftonline.dthielke.herochat.channels.Channel;
 
 public class IRCPlayerListener extends PlayerListener {
 	private HeroChat hook;
@@ -24,19 +23,13 @@ public class IRCPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		try {
 			Player player = event.getPlayer();
-			for (Channel c : hook.getChannelManager().getChannels()) {
-				if (c.getName().equals(Variables.hc)) {
-					if (c.getPlayers().contains(player.getName())) {
-						System.out.print(hook.getChannelManager()
-								.getActiveChannel(Variables.hc).getName());
+				if (hook.getChannelManager().getActiveChannel(player.getName()).getCName().equals(Variables.hc)) {
 						StringBuffer result = new StringBuffer();
 						result.append("<" + player.getName() + ">" + ":");
 						result.append(event.getMessage());
 						IRCHandler.sendMessage(result.toString());
 						System.out.print(player.getDisplayName());
-					}
 				}
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
