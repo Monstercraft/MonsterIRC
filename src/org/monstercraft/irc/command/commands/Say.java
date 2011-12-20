@@ -14,7 +14,7 @@ public class Say extends Command {
 	public boolean execute(CommandSender sender, String[] split) {
 		StringBuffer result = new StringBuffer();
 		StringBuffer result2 = new StringBuffer();
-		result.append("<" + sender.getName() + ">" + ":");
+		result.append("[IRC]<" + sender.getName() + ">" + ":");
 		for (int i = 2; i < split.length; i++) {
 			result.append(split[i]);
 			result.append(" ");

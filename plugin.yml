@@ -1,6 +1,6 @@
 name: MonsterIRC
 main: org.monstercraft.irc.IRC
-version: 2.13
+version: 1.0
 commands:
   irc:
     description: Sends a message to all IRC channels

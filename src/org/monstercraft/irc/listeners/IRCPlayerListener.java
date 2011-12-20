@@ -23,7 +23,7 @@ public class IRCPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		try {
 			Player player = event.getPlayer();
-				if (hook.getChannelManager().getActiveChannel(player.getName()).getCName().equals(Variables.hc)) {
+				if (hook.getChannelManager().getActiveChannel(player.getName()).getName().equals(Variables.hc)) {
 						StringBuffer result = new StringBuffer();
 						result.append("<" + player.getName() + ">" + ":");
 						result.append(event.getMessage());
