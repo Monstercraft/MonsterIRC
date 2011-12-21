@@ -3,6 +3,8 @@
 *.patch
 /.svn
 .DS_Store
+pom.xml
+/target/
 /*.iml
 /*.ipr
 /*.iws
