@@ -16,7 +16,7 @@ public class Settings {
 			IRC.config.set("irc.channel", "#default");
 			IRC.config.set("irc.name", "default");
 			IRC.config.set("irc.login", "default");
-			IRC.config.set("irc.herochatchan", "[IRC]");
+			IRC.config.set("irc.herochatchan", "IRC");
 			IRC.config.set("irc.messagelimit", 5);
 			IRC.config.save(new File(Constants.SETTINGS_PATH
 					+ Constants.SETTINGS_FILE));

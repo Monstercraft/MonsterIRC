@@ -3,5 +3,5 @@ main: org.monstercraft.irc.IRC
 version: 1.0
 commands:
   irc:
-    description: Sends a message to all IRC channels
-    usage: /<command> [msg]
+    description: Console only command.
+    usage: You don't have permission.
