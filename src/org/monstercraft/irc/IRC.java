@@ -2,17 +2,18 @@ package org.monstercraft.irc;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Server;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.monstercraft.irc.command.commands.Connect;
 import org.monstercraft.irc.command.commands.Disconnect;
+import org.monstercraft.irc.command.commands.Mute;
 import org.monstercraft.irc.command.commands.Nick;
 import org.monstercraft.irc.command.commands.Say;
+import org.monstercraft.irc.command.commands.Unmute;
 import org.monstercraft.irc.handlers.IRCHandler;
 import org.monstercraft.irc.hooks.HeroChatHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
@@ -22,9 +23,7 @@ import org.monstercraft.irc.util.Variables;
 
 public class IRC extends JavaPlugin {
 
-	public static Server server;
 	public Settings settings;
-	public static FileConfiguration config;
 	public List<org.monstercraft.irc.command.Command> commands;
 	public IRCPlayerListener playerListener;
 	public HeroChatHook herochat;
@@ -32,11 +31,8 @@ public class IRC extends JavaPlugin {
 	public IRCHandler IRC;
 
 	public void onEnable() {
-		server = getServer();
-		config = getConfig();
-		settings = new Settings();
 		commands = new ArrayList<org.monstercraft.irc.command.Command>();
-		settings.LoadConfigs();
+		settings = new Settings(this);
 		registerHooks();
 		registerHandles();
 		registerEvents();
@@ -73,6 +69,8 @@ public class IRC extends JavaPlugin {
 	}
 
 	private void registerCommands() {
+		commands.add(new Mute(this));
+		commands.add(new Unmute(this));
 		commands.add(new Connect(this));
 		commands.add(new Disconnect(this));
 		commands.add(new Nick(this));

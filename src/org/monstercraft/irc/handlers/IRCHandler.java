@@ -203,17 +203,20 @@ public class IRCHandler extends IRC {
 							}
 
 							if (msg != null && name != null) {
-								plugin.herochat.HeroChatHook
-										.getChannelManager()
-										.getChannel(Variables.hc)
-										.sendMessage(
-												"<" + name + ">",
-												msg,
-												plugin.herochat.HeroChatHook
-														.getChannelManager()
-														.getChannel(
-																Variables.hc)
-														.getMsgFormat(), false);
+								if (!Variables.muted.contains(name.toLowerCase())) {
+									plugin.herochat.HeroChatHook
+											.getChannelManager()
+											.getChannel(Variables.hc)
+											.sendMessage(
+													"<" + name + ">",
+													msg,
+													plugin.herochat.HeroChatHook
+															.getChannelManager()
+															.getChannel(
+																	Variables.hc)
+															.getMsgFormat(),
+													false);
+								}
 							}
 						} catch (final Exception e) {
 						}

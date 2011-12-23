@@ -1,5 +1,8 @@
 package org.monstercraft.irc.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Variables {
 	
 	public static boolean ident = false;
@@ -14,12 +17,12 @@ public class Variables {
 
 	public static String name = "MonsterIRC";
 	
-	public static int amount = 5;
-	
 	public static boolean autoJoin = false;
 
 	public static String hc = "IRC";
 
 	public static String password = "Default";
+	
+	public static List<String> muted = new ArrayList<String>();
 
 }
