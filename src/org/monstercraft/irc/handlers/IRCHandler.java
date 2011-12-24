@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.util.Variables;
 
@@ -210,7 +211,7 @@ public class IRCHandler extends IRC {
 											.getChannel(Variables.hc)
 											.sendMessage(
 													"<" + name + ">",
-													msg,
+													removeColors(msg),
 													plugin.herochat.HeroChatHook
 															.getChannelManager()
 															.getChannel(
@@ -278,8 +279,7 @@ public class IRCHandler extends IRC {
 	public void ban(final String Nick) {
 		if (isConnected()) {
 			try {
-				writer.write("KICK " + Variables.channel + " " +  Nick
-						+ "\r\n");
+				writer.write("KICK " + Variables.channel + " " + Nick + "\r\n");
 				writer.flush();
 				writer.write("MODE " + Variables.channel + " +b" + Nick
 						+ "\r\n");
@@ -288,5 +288,13 @@ public class IRCHandler extends IRC {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public String removeColors(String msg) {
+		String ns = msg;
+		if (msg.toLowerCase().contains("&")) {
+			ns = msg.replace("&", "");
+		}
+		return ns;
 	}
 }
