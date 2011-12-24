@@ -1,6 +1,7 @@
 package org.monstercraft.irc.command.commands;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.monstercraft.irc.command.Command;
 import org.monstercraft.irc.util.Variables;
 
@@ -12,6 +13,12 @@ public class Mute extends Command {
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
+		if (sender instanceof Player) {
+			if (!plugin.perms.hasCommandPerms(((Player) sender),
+					this)) {
+				return false;
+			}
+		}
 		return split[0].contains("irc") && split[1].equalsIgnoreCase("mute");
 	}
 
@@ -28,6 +35,11 @@ public class Mute extends Command {
 			return false;
 		}
 		return Variables.muted.contains(split[2].toString().toLowerCase());
+	}
+
+	@Override
+	public String getPermissions() {
+		return "irc.mute";
 	}
 
 }

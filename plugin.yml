@@ -1,7 +1,29 @@
 name: MonsterIRC
 main: org.monstercraft.irc.IRC
-version: 1.0
+version: 1.01
+author: Fletch_to_99
+description: Using your servers IRC channel we allow communication between IRC and Ingame.
 commands:
   irc:
-    description: Console only command.
+    description: All irc related commands. ban, mute, unmute, connect, disconnect, nick, say
     usage: You don't have permission.
+    permission: irc.*
+permissions:
+  irc.*:
+    description: Implies all MonsterIRC permissions.
+  irc.admin:
+    description: Implies all MonsterIRC permissions.
+  irc.ban:
+    description: Allows ingame user to ban a user from the IRC channel.
+  irc.mute:
+    description: Stops a IRC user's message from appearing ingame.
+  irc.unmute:
+    description: Allows a IRC user's message from appearing ingame.
+  irc.connect:
+    description: Connects the IRC bot the the IRC channel.
+  irc.disconnect:
+    description: Disconnects the IRC bot from the IRC channel.
+  irc.nick:
+    description: Changes the Nickname of the IRC bot.
+  irc.say:
+    description: Relays a message from the ingame user to the IRC channel.

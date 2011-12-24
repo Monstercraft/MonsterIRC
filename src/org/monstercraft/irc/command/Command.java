@@ -11,6 +11,8 @@ public abstract class Command extends IRC {
 		this.plugin = plugin;
 	}
 
+	public abstract String getPermissions();
+	
 	public abstract boolean canExecute(CommandSender sender, String[] split);
 
 	public abstract boolean execute(CommandSender sender, String[] split);

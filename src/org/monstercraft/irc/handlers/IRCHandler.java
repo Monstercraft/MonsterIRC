@@ -203,7 +203,8 @@ public class IRCHandler extends IRC {
 							}
 
 							if (msg != null && name != null) {
-								if (!Variables.muted.contains(name.toLowerCase())) {
+								if (!Variables.muted.contains(name
+										.toLowerCase())) {
 									plugin.herochat.HeroChatHook
 											.getChannelManager()
 											.getChannel(Variables.hc)
@@ -267,6 +268,21 @@ public class IRCHandler extends IRC {
 		if (isConnected()) {
 			try {
 				writer.write("NICK " + Nick + "\r\n");
+				writer.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void ban(final String Nick) {
+		if (isConnected()) {
+			try {
+				writer.write("KICK " + Variables.channel + " " +  Nick
+						+ "\r\n");
+				writer.flush();
+				writer.write("MODE " + Variables.channel + " +b" + Nick
+						+ "\r\n");
 				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -12,7 +12,13 @@ public class Disconnect extends Command {
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return (!(sender instanceof Player)) && split[0].contains("irc")
+		if (sender instanceof Player) {
+			if (!plugin.perms.hasCommandPerms(((Player) sender),
+					this)) {
+				return false;
+			}
+		}
+		return split[0].contains("irc")
 				&& split[1].equalsIgnoreCase("disconnect")
 				&& plugin.IRC.isConnected();
 	}
@@ -20,6 +26,11 @@ public class Disconnect extends Command {
 	@Override
 	public boolean execute(CommandSender sender, String[] split) {
 		return plugin.IRC.disconnect();
+	}
+
+	@Override
+	public String getPermissions() {
+		return "irc.disconnect";
 	}
 
 }

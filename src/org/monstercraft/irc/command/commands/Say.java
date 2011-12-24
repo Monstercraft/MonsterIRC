@@ -12,9 +12,14 @@ public class Say extends Command {
 	}
 
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return (!(sender instanceof Player) && plugin.IRC.isConnected()
-				&& split[0].equalsIgnoreCase("irc") && split[1]
-					.equalsIgnoreCase("say"));
+		if (sender instanceof Player) {
+			if (!plugin.perms.hasCommandPerms(((Player) sender),
+					this)) {
+				return false;
+			}
+		}
+		return plugin.IRC.isConnected() && split[0].equalsIgnoreCase("irc")
+				&& split[1].equalsIgnoreCase("say");
 	}
 
 	public boolean execute(CommandSender sender, String[] split) {
@@ -38,6 +43,11 @@ public class Say extends Command {
 						plugin.herochat.HeroChatHook.getChannelManager()
 								.getChannel(Variables.hc).getMsgFormat(), false);
 		return true;
+	}
+
+	@Override
+	public String getPermissions() {
+		return "irc.say";
 	}
 
 }

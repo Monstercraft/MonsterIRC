@@ -7,7 +7,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.monstercraft.irc.command.commands.Ban;
 import org.monstercraft.irc.command.commands.Connect;
 import org.monstercraft.irc.command.commands.Disconnect;
 import org.monstercraft.irc.command.commands.Mute;
@@ -18,14 +20,22 @@ import org.monstercraft.irc.handlers.IRCHandler;
 import org.monstercraft.irc.hooks.HeroChatHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
 import org.monstercraft.irc.listeners.IRCPlayerListener;
+import org.monstercraft.irc.listeners.IRCServerListener;
+import org.monstercraft.irc.util.PermissionsManager;
 import org.monstercraft.irc.util.Settings;
 import org.monstercraft.irc.util.Variables;
+
+import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class IRC extends JavaPlugin {
 
 	public Settings settings;
 	public List<org.monstercraft.irc.command.Command> commands;
 	public IRCPlayerListener playerListener;
+	public PermissionHandler permissionManager;
+	public IRCServerListener serverListener;
+	public PermissionsManager perms;
 	public HeroChatHook herochat;
 	public mcMMOHook mcmmo;
 	public IRCHandler IRC;
@@ -33,6 +43,7 @@ public class IRC extends JavaPlugin {
 	public void onEnable() {
 		commands = new ArrayList<org.monstercraft.irc.command.Command>();
 		settings = new Settings(this);
+		detectPermissions();
 		registerHooks();
 		registerHandles();
 		registerEvents();
@@ -69,6 +80,7 @@ public class IRC extends JavaPlugin {
 	}
 
 	private void registerCommands() {
+		commands.add(new Ban(this));
 		commands.add(new Mute(this));
 		commands.add(new Unmute(this));
 		commands.add(new Connect(this));
@@ -81,6 +93,9 @@ public class IRC extends JavaPlugin {
 		playerListener = new IRCPlayerListener(this);
 		getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT,
 				playerListener, Priority.Highest, this);
+		serverListener = new IRCServerListener(this);
+		getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
+				serverListener, Priority.Normal, this);
 	}
 
 	private void registerHooks() {
@@ -90,5 +105,19 @@ public class IRC extends JavaPlugin {
 
 	private void registerHandles() {
 		IRC = new IRCHandler(this);
+	}
+
+	public void detectPermissions() {
+		Plugin plugin = this.getServer().getPluginManager()
+				.getPlugin("Permissions");
+		if (plugin != null) {
+			if (plugin.isEnabled()) {
+				permissionManager = ((Permissions) plugin).getHandler();
+				perms = new PermissionsManager(permissionManager);
+				System.out.println("[IRC] Detected Permissions "
+						+ ((Permissions) plugin).getDescription().getVersion()
+						+ ".");
+			}
+		}
 	}
 }

@@ -13,8 +13,13 @@ public class Nick extends Command {
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return (!(sender instanceof Player))
-				&& split[0].equalsIgnoreCase("irc")
+		if (sender instanceof Player) {
+			if (!plugin.perms.hasCommandPerms(((Player) sender),
+					this)) {
+				return false;
+			}
+		}
+		return split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("nick");
 	}
 
@@ -33,6 +38,11 @@ public class Nick extends Command {
 			return true;
 
 		}
+	}
+
+	@Override
+	public String getPermissions() {
+		return "irc.nick";
 	}
 
 }
