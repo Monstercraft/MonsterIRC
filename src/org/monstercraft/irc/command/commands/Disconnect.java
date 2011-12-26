@@ -12,12 +12,6 @@ public class Disconnect extends Command {
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		if (sender instanceof Player) {
-			if (!plugin.perms.hasCommandPerms(((Player) sender),
-					this)) {
-				return false;
-			}
-		}
 		return split[0].contains("irc")
 				&& split[1].equalsIgnoreCase("disconnect")
 				&& plugin.IRC.isConnected();
@@ -25,6 +19,12 @@ public class Disconnect extends Command {
 
 	@Override
 	public boolean execute(CommandSender sender, String[] split) {
+		if (sender instanceof Player) {
+			if (!plugin.perms.hasCommandPerms(((Player) sender), this)) {
+				sender.sendMessage("[IRC] You don't have permission to preform that command.");
+				return false;
+			}
+		}
 		return plugin.IRC.disconnect();
 	}
 

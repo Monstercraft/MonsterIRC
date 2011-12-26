@@ -6,7 +6,7 @@ description: Using your servers IRC channel we allow communication between IRC a
 commands:
   irc:
     description: All irc related commands. ban, mute, unmute, connect, disconnect, nick, say
-    usage: You don't have permission.
+    usage: /irc [command] [msg]
     permission: irc.*
 permissions:
   irc.*:

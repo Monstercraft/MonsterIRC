@@ -12,17 +12,17 @@ public class Say extends Command {
 	}
 
 	public boolean canExecute(CommandSender sender, String[] split) {
-		if (sender instanceof Player) {
-			if (!plugin.perms.hasCommandPerms(((Player) sender),
-					this)) {
-				return false;
-			}
-		}
 		return plugin.IRC.isConnected() && split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("say");
 	}
 
 	public boolean execute(CommandSender sender, String[] split) {
+		if (sender instanceof Player) {
+			if (!plugin.perms.hasCommandPerms(((Player) sender), this)) {
+				sender.sendMessage("[IRC] You don't have permission to preform that command.");
+				return false;
+			}
+		}
 		StringBuffer result = new StringBuffer();
 		StringBuffer result2 = new StringBuffer();
 		result.append("<" + sender.getName() + "> ");

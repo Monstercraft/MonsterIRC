@@ -21,12 +21,26 @@ public class IRCPlayerListener extends PlayerListener {
 					.getAdminChatMode()) {
 				if (plugin.herochat.HeroChatHook.getChannelManager()
 						.getActiveChannel(player.getName()).getName()
-						.equals(Variables.hc)) {
-					StringBuffer result = new StringBuffer();
-					result.append("<" + player.getName() + ">" + " ");
-					result.append(event.getMessage());
-					plugin.IRC.sendMessage(result.toString());
-					System.out.print(player.getDisplayName());
+						.equals(Variables.hc)
+						&& plugin.herochat.HeroChatHook.getChannelManager()
+								.getChannel(Variables.hc).isEnabled()
+						&& !plugin.herochat.HeroChatHook.getChannelManager()
+								.getMutelist().contains(player.getName())
+						&& !plugin.herochat.HeroChatHook.getChannelManager()
+								.getChannel(Variables.hc).getMutelist().contains(player.getName())) {
+					if (plugin.perms.anyGroupsInList(player,
+							plugin.herochat.HeroChatHook.getChannelManager()
+									.getActiveChannel(player.getName())
+									.getVoicelist())
+							|| plugin.herochat.HeroChatHook.getChannelManager()
+									.getActiveChannel(player.getName())
+									.getVoicelist().isEmpty()) {
+						StringBuffer result = new StringBuffer();
+						result.append("<" + player.getName() + ">" + " ");
+						result.append(event.getMessage());
+						plugin.IRC.sendMessage(result.toString());
+						System.out.print(player.getDisplayName());
+					}
 				}
 			}
 		} catch (Exception e) {
