@@ -19,7 +19,7 @@ public class Ban extends Command {
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
 			if (!plugin.perms.hasCommandPerms(((Player) sender), this)) {
-				sender.sendMessage("[IRC] You don't have permission to preform that command.");
+				sender.sendMessage("[IRC] You don't have permission to perform that command.");
 				return false;
 			}
 		}
