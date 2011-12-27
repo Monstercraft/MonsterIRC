@@ -25,4 +25,6 @@ public class Variables {
 	
 	public static List<String> muted = new ArrayList<String>();
 
+	public static String announce = "Announce";
+
 }

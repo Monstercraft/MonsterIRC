@@ -6,9 +6,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.monstercraft.irc.IRC;
 
 public class Settings {
-	
+
 	private FileConfiguration config;
-	
+
 	public Settings(IRC plugin) {
 		config = plugin.getConfig();
 		loadConfigs();
@@ -24,7 +24,8 @@ public class Settings {
 			config.set("irc.SERVER", "default");
 			config.set("irc.PORT", 6667);
 			config.set("irc.CHANNEL", "#default");
-			config.set("irc.INGAME_HEROCHAT_CHANNEL", "IRC");
+			config.set("irc.INGAME_HEROCHAT_CHANNEL_IRC", "IRC");
+			config.set("irc.INGAME_HEROCHAT_CHANNEL_ALERT", "A");
 			config.set("irc.MUTED_IRC_USERS", Variables.muted);
 			config.save(new File(Constants.SETTINGS_PATH
 					+ Constants.SETTINGS_FILE));
@@ -51,6 +52,8 @@ public class Settings {
 				Variables.port = config.getInt("irc.PORT");
 				Variables.channel = config.getString("irc.CHANNEL");
 				Variables.hc = config.getString("irc.INGAME_HEROCHAT_CHANNEL");
+				Variables.announce = config
+						.getString("irc.INGAME_HEROCHAT_CHANNEL_ALERT");
 				Variables.muted = config.getStringList("irc.MUTED_IRC_USERS");
 			} catch (Exception e) {
 				saveConfig();
@@ -58,7 +61,7 @@ public class Settings {
 			}
 		}
 	}
-	
+
 	public void saveMuteConfig() {
 		try {
 			config.set("irc.MUTED_IRC_USERS", Variables.muted);
