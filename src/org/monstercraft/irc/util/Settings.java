@@ -51,7 +51,7 @@ public class Settings {
 				Variables.server = config.getString("irc.SERVER");
 				Variables.port = config.getInt("irc.PORT");
 				Variables.channel = config.getString("irc.CHANNEL");
-				Variables.hc = config.getString("irc.INGAME_HEROCHAT_CHANNEL");
+				Variables.hc = config.getString("irc.INGAME_HEROCHAT_CHANNEL_IRC");
 				Variables.announce = config
 						.getString("irc.INGAME_HEROCHAT_CHANNEL_ALERT");
 				Variables.muted = config.getStringList("irc.MUTED_IRC_USERS");

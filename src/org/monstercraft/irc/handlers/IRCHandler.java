@@ -64,8 +64,8 @@ public class IRCHandler extends IRC {
 				if (avalible) {
 					if (Variables.ident) {
 						System.out.println("[IRC] Identifying....");
-						writer.write("PRIVMSG NICKSERV :IDENTIFY "
-								+ Variables.password + "\r\n");
+						writer.write("NICKSERV IDENTIFY " + Variables.password
+								+ "\r\n");
 						writer.flush();
 					}
 					writer.write("JOIN " + Variables.channel + "\r\n");
@@ -97,6 +97,12 @@ public class IRCHandler extends IRC {
 			} catch (IOException e) {
 			}
 		}
+		try {
+			reader.close();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if (watch != null) {
 			try {
 				watch.interrupt();
@@ -116,6 +122,7 @@ public class IRCHandler extends IRC {
 		} catch (final IOException ignored) {
 		}
 		System.out.println("[IRC] Successfully disconnected from IRC.");
+		connection = null;
 		return !isConnected();
 	}
 
@@ -125,162 +132,195 @@ public class IRCHandler extends IRC {
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
 		public void run() {
-			if (isConnected()) {
-				String line;
-				try {
-					while ((line = reader.readLine()) != null) {
-						if (line.toLowerCase().startsWith("ping ")) {
-							// We must respond to PINGs to avoid being
-							// disconnected.
-							writer.write("PONG " + line.substring(5) + "\r\n");
-							writer.flush();
-							continue;
-						} else if (line.contains("353")) {
-							users.clear();
-							listImportance(line, users);
-						} else if (isCTCP(line)) {
-							final String _name = line.substring(1,
-									line.indexOf("!"));
-							final String ctcpMsg = getCTCPMessage(line)
-									.toUpperCase();
-							if (ctcpMsg.equals("VERSION")) {
-								writer.write("NOTICE " + _name + " :"
-										+ (char) ctcpControl + "Monstercraft"
-										+ " : " + "1" + (char) ctcpControl
+			try {
+				if (isConnected() && reader != null && reader.ready()) {
+					String line;
+					try {
+						while ((line = reader.readLine()) != null) {
+							if (line.toLowerCase().startsWith("ping ")) {
+								// We must respond to PINGs to avoid being
+								// disconnected.
+								writer.write("PONG " + line.substring(5)
 										+ "\r\n");
 								writer.flush();
-							} else if (ctcpMsg.equals("TIME")) {
-								final SimpleDateFormat sdf = new SimpleDateFormat(
-										"dd MMM yyyy hh:mm:ss zzz");
-								writer.write("NOTICE " + _name + " :"
-										+ (char) ctcpControl
-										+ sdf.format(new Date())
-										+ (char) ctcpControl + "\r\n");
-								writer.flush();
-							}
-							continue;
-						}
-						try {
-							String name = null;
-							String msg = null;
-							if (line.contains("PRIVMSG " + Variables.channel)) {
-								name = line.substring(1, line.indexOf("!"));
-								msg = line.substring(line.indexOf(":", 1) + 1);
-							} else if (line.contains("NICK :")) {
+								continue;
+							} else if (line.contains("353")) {
+								users.clear();
+								listImportance(line, users);
+							} else if (isCTCP(line)) {
 								final String _name = line.substring(1,
 										line.indexOf("!"));
-								msg = _name
-										+ " is now known as "
-										+ line.substring(line.indexOf("NICK :") + 6);
-							} else if (line.contains("JOIN :"
-									+ Variables.channel)) {
-								final String _name = line.substring(1,
-										line.indexOf("!"));
-								users.add(_name);
-								msg = _name + " has joined "
-										+ Variables.channel + ".";
-							} else if (line.contains("PART "
-									+ Variables.channel)) {
-								final String _name = line.substring(1,
-										line.indexOf("!"));
-								msg = _name + " has left " + Variables.channel
-										+ ".";
-							} else if (line.contains("QUIT :")) {
-								final String _name = line.substring(1,
-										line.indexOf("!"));
-								msg = _name
-										+ " has quit "
-										+ Variables.channel
-										+ " ("
-										+ line.substring(line.indexOf(":", 1) + 1)
-										+ ").";
-							} else if (line.contains("MODE "
-									+ Variables.channel)) {
-								name = line.substring(line.indexOf("MODE "
-										+ Variables.channel + " ")
-										+ Variables.channel.length() + 9);
-								final String mode = line.substring(
-										line.indexOf("MODE "
-												+ Variables.channel + " ")
-												+ Variables.channel.length()
-												+ 6,
-										line.indexOf("MODE "
-												+ Variables.channel + " ")
-												+ Variables.channel.length()
-												+ 8);
-								if (mode.contains("+v")) {
-									if (users.contains(name)) {
-										users.remove(name);
-									}
-									users.add("+" + name);
-								} else if (mode.contains("+o")) {
-									if (users.contains(name)) {
-										users.remove(name);
-									}
-									users.add("@" + name);
-								} else if (mode.contains("-o")) {
-									if (users.contains(name)) {
-										users.remove(name);
-									}
-									users.remove("@" + name);
-								} else if (mode.contains("-v")) {
-									if (users.contains(name)) {
-										users.remove(name);
-									}
-									users.remove("+" + name);
+								final String ctcpMsg = getCTCPMessage(line)
+										.toUpperCase();
+								if (ctcpMsg.equals("VERSION")) {
+									writer.write("NOTICE " + _name + " :"
+											+ (char) ctcpControl
+											+ "Monstercraft" + " : " + "1"
+											+ (char) ctcpControl + "\r\n");
+									writer.flush();
+								} else if (ctcpMsg.equals("TIME")) {
+									final SimpleDateFormat sdf = new SimpleDateFormat(
+											"dd MMM yyyy hh:mm:ss zzz");
+									writer.write("NOTICE " + _name + " :"
+											+ (char) ctcpControl
+											+ sdf.format(new Date())
+											+ (char) ctcpControl + "\r\n");
+									writer.flush();
 								}
-								name = line.substring(1,
-										line.indexOf("!"));
-								final String _name = line.substring(line.indexOf("MODE "
-										+ Variables.channel + " ")
-										+ Variables.channel.length() + 9);
-								msg = _name + " has mode " + mode + ".";
-							} else if (line.contains("KICK "
-									+ Variables.channel)) {
-								final String _name = line.substring(1,
-										line.indexOf("!"));
-								msg = _name + " has been kicked from"
-										+ Variables.channel + ".";
+								continue;
 							}
+							try {
+								String name = null;
+								String msg = null;
+								if (line.contains("PRIVMSG "
+										+ Variables.channel)) {
+									name = line.substring(1, line.indexOf("!"));
+									msg = line
+											.substring(line.indexOf(":", 1) + 1);
+								} else if (line.contains("NICK :")) {
+									final String _name = line.substring(1,
+											line.indexOf("!"));
+									msg = _name
+											+ " is now known as "
+											+ line.substring(line
+													.indexOf("NICK :") + 6);
+									if (users.contains(_name)) {
+										users.remove(_name);
+										users.add(line.substring(line
+												.indexOf("NICK :") + 6));
+									}
+								} else if (line.contains("JOIN :"
+										+ Variables.channel)) {
+									final String _name = line.substring(1,
+											line.indexOf("!"));
+									if (!users.contains(_name)) {
+										users.add(_name);
+									}
+									msg = _name + " has joined "
+											+ Variables.channel + ".";
+								} else if (line.contains("PART "
+										+ Variables.channel)) {
+									final String _name = line.substring(1,
+											line.indexOf("!"));
+									msg = _name + " has left "
+											+ Variables.channel + ".";
+									if (users.contains(_name)) {
+										users.remove(_name);
+									}
+								} else if (line.contains("QUIT :")) {
+									final String _name = line.substring(1,
+											line.indexOf("!"));
+									msg = _name
+											+ " has quit "
+											+ Variables.channel
+											+ " ("
+											+ line.substring(line.indexOf(":",
+													1) + 1) + ").";
+									if (users.contains(_name)) {
+										users.remove(_name);
+									}
+								} else if (line.contains("MODE "
+										+ Variables.channel + " +v")
+										|| line.contains("MODE "
+												+ Variables.channel + " -v")
+										|| line.contains("MODE "
+												+ Variables.channel + " +o")
+										|| line.contains("MODE "
+												+ Variables.channel + " -o")) {
+									name = line.substring(line.indexOf("MODE "
+											+ Variables.channel + " ")
+											+ Variables.channel.length() + 9);
+									final String mode = line.substring(
+											line.indexOf("MODE "
+													+ Variables.channel + " ")
+													+ Variables.channel
+															.length() + 6,
+											line.indexOf("MODE "
+													+ Variables.channel + " ")
+													+ Variables.channel
+															.length() + 8);
+									if (mode.contains("+v")) {
+										if (users.contains(name)) {
+											users.remove(name);
+										}
+										users.add("+" + name);
+									} else if (mode.contains("+o")) {
+										if (users.contains(name)) {
+											users.remove(name);
+										}
+										users.add("@" + name);
+									} else if (mode.contains("-o")) {
+										if (users.contains(name)) {
+											users.remove(name);
+										}
+										users.remove("@" + name);
+									} else if (mode.contains("-v")) {
+										if (users.contains(name)) {
+											users.remove(name);
+										}
+										users.remove("+" + name);
+									}
+									name = line.substring(1, line.indexOf("!"));
+									final String _name = line.substring(line
+											.indexOf("MODE "
+													+ Variables.channel + " ")
+											+ Variables.channel.length() + 9);
+									msg = _name + " has mode " + mode + ".";
+								} else if (line.contains("KICK "
+										+ Variables.channel)) {
+									final String _name = line.substring(1,
+											line.indexOf("!"));
+									msg = _name + " has been kicked from"
+											+ Variables.channel + ".";
+									if (users.contains(_name)) {
+										users.add(_name);
+									}
+								}
 
-							if (msg != null && name != null) {
-								if (!Variables.muted.contains(name
-										.toLowerCase())
-										&& !msg.startsWith(".say")) {
-									plugin.herochat.HeroChatHook
-											.getChannelManager()
-											.getChannel(Variables.hc)
-											.sendMessage(
-													"<" + name + ">",
-													removeColors(msg),
-													plugin.herochat.HeroChatHook
-															.getChannelManager()
-															.getChannel(
-																	Variables.hc)
-															.getMsgFormat(),
-													false);
-								} else if (msg.startsWith(".say")) {
-									if (isOp(name) || isVoice(name)) {
+								if (msg != null && name != null) {
+									if (msg.contains(".say")) {
+										if (isOp(name) || isVoice(name)) {
+											plugin.herochat.HeroChatHook
+													.getChannelManager()
+													.getChannel(
+															Variables.announce)
+													.sendMessage(
+															"<" + name + ">",
+															removeColors(msg
+																	.substring(5)),
+															plugin.herochat.HeroChatHook
+																	.getChannelManager()
+																	.getChannel(
+																			Variables.announce)
+																	.getMsgFormat(),
+															false);
+										}
+									} else if (!Variables.muted.contains(name
+											.toLowerCase())) {
 										plugin.herochat.HeroChatHook
 												.getChannelManager()
-												.getChannel(Variables.announce)
+												.getChannel(Variables.hc)
 												.sendMessage(
 														"<" + name + ">",
 														removeColors(msg),
 														plugin.herochat.HeroChatHook
 																.getChannelManager()
 																.getChannel(
-																		Variables.announce)
+																		Variables.hc)
 																.getMsgFormat(),
 														false);
 									}
 								}
+							} catch (final Exception e) {
+								e.printStackTrace();
 							}
-						} catch (final Exception e) {
 						}
+					} catch (final Exception e) {
+						e.printStackTrace();
 					}
-				} catch (final Exception e) {
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -347,11 +387,21 @@ public class IRCHandler extends IRC {
 	}
 
 	private boolean isOp(final String sender) {
-		return users.get(users.indexOf(sender)).indexOf('@') >= 0;
+		for (Object o : users.toArray()) {
+			if (((String) o).contains(sender) && ((String) o).contains("@")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isVoice(final String sender) {
-		return users.get(users.indexOf(sender)).indexOf('+') >= 0;
+		for (Object o : users.toArray()) {
+			if (((String) o).contains(sender) && ((String) o).contains("+")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private String removeColors(final String msg) {
