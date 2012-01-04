@@ -2,10 +2,10 @@ package org.monstercraft.irc.util;
 
 public class Constants {
 	
-	public static String SETTINGS_PATH = "plugins/MonsterCraft/IRC/";
+	public static final String MUTED_FILE = "Muted.txt";
+
+	public static final String SETTINGS_PATH = "plugins/MonsterIRC/";
 	
-	public static String SETTINGS_FILE = "Config.yml";
-	
-	public static String MUTED_FILE = "Muted.yml";
+	public static final String SETTINGS_FILE = "Config.yml";
 
 }

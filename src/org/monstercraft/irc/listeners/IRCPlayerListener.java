@@ -17,17 +17,28 @@ public class IRCPlayerListener extends PlayerListener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		try {
 			Player player = event.getPlayer();
-			if (!plugin.mcmmo.mcMMOHook.getPlayerProfile(player)
-					.getAdminChatMode()) {
+			if (plugin.mcmmo.mcMMOHook != null) {
+				if (plugin.mcmmo.mcMMOHook.getPlayerProfile(player)
+						.getAdminChatMode()) {
+					return;
+				}
+			}
+			if (Variables.all) {
+				StringBuffer result = new StringBuffer();
+				result.append("<" + player.getName() + ">" + " ");
+				result.append(event.getMessage());
+				plugin.IRC.sendMessage(result.toString());
+			} else if (Variables.hc && plugin.herochat.HeroChatHook != null) {
 				if (plugin.herochat.HeroChatHook.getChannelManager()
 						.getActiveChannel(player.getName()).getName()
-						.equals(Variables.hc)
+						.equals(Variables.hcc)
 						&& plugin.herochat.HeroChatHook.getChannelManager()
-								.getChannel(Variables.hc).isEnabled()
+								.getChannel(Variables.hcc).isEnabled()
 						&& !plugin.herochat.HeroChatHook.getChannelManager()
 								.getMutelist().contains(player.getName())
 						&& !plugin.herochat.HeroChatHook.getChannelManager()
-								.getChannel(Variables.hc).getMutelist().contains(player.getName())) {
+								.getChannel(Variables.hcc).getMutelist()
+								.contains(player.getName())) {
 					if (plugin.perms.anyGroupsInList(player,
 							plugin.herochat.HeroChatHook.getChannelManager()
 									.getActiveChannel(player.getName())
@@ -39,7 +50,6 @@ public class IRCPlayerListener extends PlayerListener {
 						result.append("<" + player.getName() + ">" + " ");
 						result.append(event.getMessage());
 						plugin.IRC.sendMessage(result.toString());
-						System.out.print(player.getDisplayName());
 					}
 				}
 			}

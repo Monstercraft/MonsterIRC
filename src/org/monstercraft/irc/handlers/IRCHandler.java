@@ -37,25 +37,22 @@ public class IRCHandler extends IRC {
 						connection.getOutputStream()));
 				reader = new BufferedReader(new InputStreamReader(
 						connection.getInputStream()));
-				System.out.println("[IRC] Attempting to connect to chat.");
+				log("Attempting to connect to chat.");
 				writer.write("USER " + Variables.login + " 8 * :"
 						+ Variables.name + "\r\n");
 				writer.write("NICK " + Variables.name + "\r\n");
 				writer.flush();
-				System.out.println("[IRC] Processing connection....");
+				log("Processing connection....");
 				while ((line = reader.readLine()) != null) {
 					if (line.contains("004")) {
 						break;
 					} else if (line.contains("433")) {
-						System.out
-								.println("[IRC] Your nickname is already in use, please switch it");
-						System.out
-								.println("[IRC] using \"nick [NAME]\" and try to connect again.");
+						log("Your nickname is already in use, please switch it");
+						log("using \"nick [NAME]\" and try to connect again.");
 						disconnect();
 						avalible = false;
 						break;
 					} else if (line.toLowerCase().startsWith("ping ")) {
-						// We must respond to PINGs to avoid being disconnected.
 						writer.write("PONG " + line.substring(5) + "\r\n");
 						writer.flush();
 						continue;
@@ -63,7 +60,7 @@ public class IRCHandler extends IRC {
 				}
 				if (avalible) {
 					if (Variables.ident) {
-						System.out.println("[IRC] Identifying....");
+						log("Identifying with Nickserv....");
 						writer.write("NICKSERV IDENTIFY " + Variables.password
 								+ "\r\n");
 						writer.flush();
@@ -74,13 +71,11 @@ public class IRCHandler extends IRC {
 					watch.setDaemon(true);
 					watch.setPriority(Thread.MAX_PRIORITY);
 					watch.start();
-					System.out.println("[IRC] Connected to chat as "
-							+ Variables.name + ".");
+					log("Connected to chat as " + Variables.name + ".");
 				}
 			} catch (Exception e) {
-				System.out.println("[IRC] Failed to connect to IRC!");
-				System.out
-						.println("[IRC] Please tell Fletch_to_99 the following!");
+				log("Failed to connect to IRC!");
+				log("Please tell Fletch_to_99 the following!");
 				e.printStackTrace();
 				disconnect();
 			}
@@ -89,45 +84,39 @@ public class IRCHandler extends IRC {
 	}
 
 	public boolean disconnect() {
-		if (isConnected()) {
-			avalible = true;
-			try {
+		try {
+			if (isConnected()) {
+				avalible = true;
 				writer.write("QUIT " + Variables.channel + "\n");
 				writer.flush();
-			} catch (IOException e) {
 			}
-		}
-		try {
-			reader.close();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (watch != null) {
-			try {
+			if (watch != null) {
 				watch.interrupt();
 				watch = null;
-			} catch (final IllegalThreadStateException ignored) {
 			}
-		}
-		writer = null;
-		reader = null;
-		try {
 			if (connection != null) {
 				connection.shutdownInput();
 				connection.shutdownOutput();
 				connection.close();
 				connection = null;
 			}
-		} catch (final IOException ignored) {
+			reader.close();
+			writer.close();
+			writer = null;
+			reader = null;
+			log("Successfully disconnected from IRC.");
+			connection = null;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		System.out.println("[IRC] Successfully disconnected from IRC.");
-		connection = null;
 		return !isConnected();
 	}
 
 	public boolean isConnected() {
-		return connection != null && connection.isConnected();
+		if (connection != null) {
+			connection.isConnected();
+		}
+		return false;
 	}
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
@@ -138,8 +127,6 @@ public class IRCHandler extends IRC {
 					try {
 						while ((line = reader.readLine()) != null) {
 							if (line.toLowerCase().startsWith("ping ")) {
-								// We must respond to PINGs to avoid being
-								// disconnected.
 								writer.write("PONG " + line.substring(5)
 										+ "\r\n");
 								writer.flush();
@@ -280,35 +267,57 @@ public class IRCHandler extends IRC {
 								if (msg != null && name != null) {
 									if (msg.contains(".say")) {
 										if (isOp(name) || isVoice(name)) {
-											plugin.herochat.HeroChatHook
-													.getChannelManager()
-													.getChannel(
-															Variables.announce)
-													.sendMessage(
-															"<" + name + ">",
-															removeColors(msg
-																	.substring(5)),
-															plugin.herochat.HeroChatHook
-																	.getChannelManager()
-																	.getChannel(
-																			Variables.announce)
-																	.getMsgFormat(),
-															false);
+											if (Variables.all) {
+												plugin.getServer()
+														.broadcastMessage(
+																"[IRC]<"
+																		+ name
+																		+ ">: "
+																		+ removeColors(msg
+																				.substring(5)));
+											} else if (Variables.hc
+													&& plugin.herochat.HeroChatHook != null) {
+												plugin.herochat.HeroChatHook
+														.getChannelManager()
+														.getChannel(
+																Variables.announce)
+														.sendMessage(
+																"<" + name
+																		+ ">",
+																removeColors(msg
+																		.substring(5)),
+																plugin.herochat.HeroChatHook
+																		.getChannelManager()
+																		.getChannel(
+																				Variables.announce)
+																		.getMsgFormat(),
+																false);
+											}
 										}
 									} else if (!Variables.muted.contains(name
 											.toLowerCase())) {
-										plugin.herochat.HeroChatHook
-												.getChannelManager()
-												.getChannel(Variables.hc)
-												.sendMessage(
-														"<" + name + ">",
-														removeColors(msg),
-														plugin.herochat.HeroChatHook
-																.getChannelManager()
-																.getChannel(
-																		Variables.hc)
-																.getMsgFormat(),
-														false);
+										if (Variables.all) {
+											plugin.getServer()
+													.broadcastMessage(
+															"[IRC]<"
+																	+ name
+																	+ ">: "
+																	+ removeColors(msg));
+										} else if (Variables.hc
+												&& plugin.herochat.HeroChatHook != null) {
+											plugin.herochat.HeroChatHook
+													.getChannelManager()
+													.getChannel(Variables.hcc)
+													.sendMessage(
+															"<" + name + ">",
+															removeColors(msg),
+															plugin.herochat.HeroChatHook
+																	.getChannelManager()
+																	.getChannel(
+																			Variables.hcc)
+																	.getMsgFormat(),
+															false);
+										}
 									}
 								}
 							} catch (final Exception e) {

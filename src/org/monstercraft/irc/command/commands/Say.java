@@ -34,14 +34,17 @@ public class Say extends Command {
 		}
 
 		plugin.IRC.sendMessage(result.toString());
-		plugin.herochat.HeroChatHook
-				.getChannelManager()
-				.getChannel(Variables.hc)
-				.sendMessage(
-						"<" + sender.getName() + ">",
-						result2.toString(),
-						plugin.herochat.HeroChatHook.getChannelManager()
-								.getChannel(Variables.hc).getMsgFormat(), false);
+		if (Variables.hc && plugin.herochat.HeroChatHook != null) {
+			plugin.herochat.HeroChatHook
+					.getChannelManager()
+					.getChannel(Variables.hcc)
+					.sendMessage(
+							"<" + sender.getName() + ">",
+							result2.toString(),
+							plugin.herochat.HeroChatHook.getChannelManager()
+									.getChannel(Variables.hcc).getMsgFormat(),
+							false);
+		}
 		return true;
 	}
 

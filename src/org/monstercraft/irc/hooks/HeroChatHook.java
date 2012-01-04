@@ -23,12 +23,13 @@ public class HeroChatHook {
 				.getPlugin("HeroChat");
 
 		if (HeroChatPlugin == null) {
-			System.out.println("[IRC] HeroChat not detected.");
+			plugin.log("HeroChat not detected.");
+			HeroChatHook = null;
 			return;
 		}
 
 		HeroChatHook = ((HeroChat) HeroChatPlugin);
-		System.out.println("[IRC] HeroChat detected; hooking: "
+		plugin.log("HeroChat detected; hooking: "
 				+ ((HeroChat) HeroChatPlugin).getDescription().getFullName());
 	}
 

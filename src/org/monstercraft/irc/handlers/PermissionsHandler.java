@@ -1,17 +1,20 @@
-package org.monstercraft.irc.util;
+package org.monstercraft.irc.handlers;
 
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.Command;
 
 import com.nijiko.permissions.PermissionHandler;
 
-public class PermissionsManager {
+public class PermissionsHandler {
 
 	private PermissionHandler perms;
+	private IRC plugin;
 
-	public PermissionsManager(PermissionHandler perms) {
+	public PermissionsHandler(PermissionHandler perms, IRC plugin) {
+		this.plugin = plugin;
 		this.perms = perms;
 	}
 
@@ -40,7 +43,7 @@ public class PermissionsManager {
             String name = p.getName();
             return perms.getGroups(world, name);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                plugin.log(e.getMessage());
             }
         }
         return new String[0];

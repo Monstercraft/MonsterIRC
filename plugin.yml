@@ -1,11 +1,11 @@
 name: MonsterIRC
 main: org.monstercraft.irc.IRC
-version: 1.01
+version: 1.02
 author: Fletch_to_99
 description: Using your servers IRC channel we allow communication between IRC and Ingame.
 commands:
   irc:
-    description: All irc related commands. ban, mute, unmute, connect, disconnect, nick, say
+    description: All irc related commands. ban, mute, unmute, connect, disconnect, nick, say, reloadconfig
     usage: /irc [command] [msg]
     permission: irc.*
 permissions:

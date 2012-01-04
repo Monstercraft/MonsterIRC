@@ -23,12 +23,13 @@ public class mcMMOHook {
 				.getPlugin("mcMMO");
 
 		if (mcMMOPlugin == null) {
-			System.out.println("[IRC] mcMMO not detected.");
+			plugin.log("mcMMO not detected.");
+			mcMMOHook = null;
 			return;
 		}
 
 		mcMMOHook = ((mcMMO) mcMMOPlugin);
-		System.out.println("[IRC] mcMMO detected; hooking: "
+		plugin.log("mcMMO detected; hooking: "
 				+ ((mcMMO) mcMMOPlugin).getDescription().getFullName());
 	}
 
