@@ -5,25 +5,39 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.monstercraft.irc.IRC;
 
-public class Settings {
+/**
+ * This class contains all of the plugins settings.
+ * 
+ * @author fletch_to_99 <fletchto99@hotmail.com>
+ * 
+ */
+public class Settings extends IRC {
 
 	private FileConfiguration config;
-	private IRC plugin;
 	private Properties p;
 
+	/**
+	 * Creates an instance of the Settings class.
+	 * 
+	 * @param plugin
+	 *            The parent plugin.
+	 */
 	public Settings(IRC plugin) {
-		this.plugin = plugin;
 		config = plugin.getConfig();
 		p = new Properties();
 		loadConfigs();
 		loadMuteConfig();
 	}
 
+	/**
+	 * This method saves the plugins configuration file.
+	 */
 	public void saveConfig() {
 		try {
 			config.set("IRC.SETTINGS_VERSION", 1.0);
@@ -48,12 +62,15 @@ public class Settings {
 		}
 	}
 
+	/**
+	 * This method loads the plugins configuration file.
+	 */
 	public void loadConfigs() {
 		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
 				+ Constants.SETTINGS_FILE);
 		if (!CONFIGURATION_FILE.exists()) {
 			new File(Constants.SETTINGS_PATH).mkdirs();
-			plugin.log("Setting up default settings!");
+			log("Setting up default settings!");
 			saveConfig();
 		} else {
 			try {
@@ -80,9 +97,15 @@ public class Settings {
 		}
 	}
 
+	/**
+	 * This method loads the muted users text file.
+	 */
 	public void loadMuteConfig() {
 		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
 				+ Constants.MUTED_FILE);
+		if (Variables.muted == null) {
+			Variables.muted = new ArrayList<String>();
+		}
 		if (!CONFIGURATION_FILE.exists()) {
 			new File(Constants.SETTINGS_PATH).mkdirs();
 			saveMuteConfig();
@@ -101,9 +124,13 @@ public class Settings {
 		}
 	}
 
+	/**
+	 * This method saves the muted users text file.
+	 */
 	public void saveMuteConfig() {
 		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
 				+ Constants.MUTED_FILE);
+		p.clear();
 		for (int i = 0; i < Variables.muted.size(); i++) {
 			p.setProperty(String.valueOf(i), Variables.muted.get(i));
 		}

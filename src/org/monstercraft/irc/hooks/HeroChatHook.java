@@ -5,16 +5,28 @@ import org.monstercraft.irc.IRC;
 
 import com.herocraftonline.dthielke.herochat.HeroChat;
 
-public class HeroChatHook {
-	
-	public HeroChat HeroChatHook;
+/**
+ * This class listens for chat ingame to pass to the IRC.
+ * 
+ * @author fletch_to_99 <fletchto99@hotmail.com>
+ * 
+ */
+public class HeroChatHook extends IRC {
+
+	private HeroChat HeroChatHook;
 	private IRC plugin;
-	
-	public HeroChatHook(IRC plugin) {
+
+	/**
+	 * Creates an instance of the HeroChatHook class.
+	 * 
+	 * @param plugin
+	 *            The parent plugin.
+	 */
+	public HeroChatHook(final IRC plugin) {
 		this.plugin = plugin;
 		initHeroChatHook();
 	}
-	
+
 	private void initHeroChatHook() {
 		if (HeroChatHook != null) {
 			return;
@@ -23,14 +35,23 @@ public class HeroChatHook {
 				.getPlugin("HeroChat");
 
 		if (HeroChatPlugin == null) {
-			plugin.log("HeroChat not detected.");
+			log("HeroChat not detected.");
 			HeroChatHook = null;
 			return;
 		}
 
 		HeroChatHook = ((HeroChat) HeroChatPlugin);
-		plugin.log("HeroChat detected; hooking: "
+		log("HeroChat detected; hooking: "
 				+ ((HeroChat) HeroChatPlugin).getDescription().getFullName());
+	}
+
+	/**
+	 * Fetches the hook into HeroChat.
+	 * 
+	 * @return the hook into HeroChat.
+	 */
+	public HeroChat getHook() {
+		return HeroChatHook;
 	}
 
 }

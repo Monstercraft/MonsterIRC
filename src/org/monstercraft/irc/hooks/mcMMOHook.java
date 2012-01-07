@@ -5,16 +5,22 @@ import org.monstercraft.irc.IRC;
 
 import com.gmail.nossr50.mcMMO;
 
-public class mcMMOHook {
-	
-	public mcMMO mcMMOHook;
+/**
+ * This class listens for chat ingame to pass to the IRC.
+ * 
+ * @author fletch_to_99 <fletchto99@hotmail.com>
+ * 
+ */
+public class mcMMOHook extends IRC {
+
+	private mcMMO mcMMOHook;
 	private IRC plugin;
-	
-	public mcMMOHook(IRC plugin) {
+
+	public mcMMOHook(final IRC plugin) {
 		this.plugin = plugin;
 		initmcMMOHook();
 	}
-	
+
 	private void initmcMMOHook() {
 		if (mcMMOHook != null) {
 			return;
@@ -23,14 +29,23 @@ public class mcMMOHook {
 				.getPlugin("mcMMO");
 
 		if (mcMMOPlugin == null) {
-			plugin.log("mcMMO not detected.");
+			log("mcMMO not detected.");
 			mcMMOHook = null;
 			return;
 		}
 
 		mcMMOHook = ((mcMMO) mcMMOPlugin);
-		plugin.log("mcMMO detected; hooking: "
+		log("mcMMO detected; hooking: "
 				+ ((mcMMO) mcMMOPlugin).getDescription().getFullName());
+	}
+
+	/**
+	 * Fetches the hook into mcMMO.
+	 * 
+	 * @return the hook into mcMMO.
+	 */
+	public mcMMO getHook() {
+		return mcMMOHook;
 	}
 
 }

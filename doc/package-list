@@ -1,0 +1,9 @@
+org.monstercraft.irc
+org.monstercraft.irc.command
+org.monstercraft.irc.command.gamecommands
+org.monstercraft.irc.command.irccommands
+org.monstercraft.irc.handlers
+org.monstercraft.irc.hooks
+org.monstercraft.irc.listeners
+org.monstercraft.irc.managers
+org.monstercraft.irc.util

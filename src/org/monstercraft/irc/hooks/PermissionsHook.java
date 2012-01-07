@@ -2,16 +2,27 @@ package org.monstercraft.irc.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.handlers.PermissionsHandler;
 
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-public class PermissionsHook {
+/**
+ * This class listens for chat ingame to pass to the IRC.
+ * 
+ * @author fletch_to_99 <fletchto99@hotmail.com>
+ * 
+ */
+public class PermissionsHook extends IRC {
 
-	public Permissions PermissionsHook;
+	private Permissions PermissionsHook;
 	private IRC plugin;
 
-	public PermissionsHook(IRC plugin) {
+	/**
+	 * Creates an instance of the PermissionsHook class.
+	 * 
+	 * @param plugin
+	 *            The parent plugin.
+	 */
+	public PermissionsHook(final IRC plugin) {
 		this.plugin = plugin;
 		initPermissionsHook();
 	}
@@ -24,22 +35,24 @@ public class PermissionsHook {
 				.getPlugin("Permissions");
 
 		if (PermissionsPlugin == null) {
-			plugin.log("Permissions not detected.");
+			log("Permissions not detected.");
 			PermissionsHook = null;
 			return;
 		}
 
 		PermissionsHook = ((Permissions) PermissionsPlugin);
-		plugin.log("Permissions detected; hooking: "
+		log("Permissions detected; hooking: "
 				+ ((Permissions) PermissionsPlugin).getDescription()
 						.getFullName());
-		if (PermissionsHook != null) {
-			if (PermissionsHook.isEnabled()) {
-				plugin.permissionManager = PermissionsHook.getHandler();
-				plugin.perms = new PermissionsHandler(plugin.permissionManager,
-						plugin);
-			}
-		}
+	}
+
+	/**
+	 * Fetches the hook into Permissions.
+	 * 
+	 * @return The hook into Permissions.
+	 */
+	public Permissions getHook() {
+		return PermissionsHook;
 	}
 
 }

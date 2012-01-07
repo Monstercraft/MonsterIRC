@@ -1,7 +1,5 @@
 package org.monstercraft.irc;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,42 +8,36 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.monstercraft.irc.command.commands.Ban;
-import org.monstercraft.irc.command.commands.Connect;
-import org.monstercraft.irc.command.commands.Disconnect;
-import org.monstercraft.irc.command.commands.Mute;
-import org.monstercraft.irc.command.commands.Nick;
-import org.monstercraft.irc.command.commands.ReloadConfig;
-import org.monstercraft.irc.command.commands.Say;
-import org.monstercraft.irc.command.commands.Unmute;
-import org.monstercraft.irc.handlers.IRCHandler;
-import org.monstercraft.irc.handlers.PermissionsHandler;
-import org.monstercraft.irc.hooks.HeroChatHook;
-import org.monstercraft.irc.hooks.PermissionsHook;
-import org.monstercraft.irc.hooks.mcMMOHook;
 import org.monstercraft.irc.listeners.IRCPlayerListener;
 import org.monstercraft.irc.listeners.IRCServerListener;
+import org.monstercraft.irc.managers.CommandManager;
+import org.monstercraft.irc.managers.HandleManager;
+import org.monstercraft.irc.managers.HookManager;
 import org.monstercraft.irc.util.Settings;
 import org.monstercraft.irc.util.Variables;
 
-import com.nijiko.permissions.PermissionHandler;
-
+/**
+ * This class represents the main plugin. All actions related to the plugin are
+ * forwarded by this class
+ * 
+ * @author Fletch_to_99 <fletchto99@hotmail.com>
+ * 
+ */
 public class IRC extends JavaPlugin {
 
-	public Settings settings = null;
-	public List<org.monstercraft.irc.command.Command> commands = null;
-	public IRCPlayerListener playerListener = null;
-	public PermissionHandler permissionManager = null;
-	public IRCServerListener serverListener = null;
-	public PermissionsHandler perms = null;
-	public HeroChatHook herochat = null;
-	public mcMMOHook mcmmo = null;
-	public PermissionsHook permissions = null;
-	public IRCHandler IRC = null;
-	public Logger logger = Logger.getLogger("MineCraft");
+	private IRCPlayerListener playerListener = null;
+	private IRCServerListener serverListener = null;
+
+	private HandleManager handles = null;
+	private HookManager hooks = null;
+	private CommandManager command = null;
+
+	private Logger logger = Logger.getLogger("MineCraft");
+
+	private Settings settings = null;
 
 	public void onEnable() {
-		commands = new ArrayList<org.monstercraft.irc.command.Command>();
+		log("Starting plugin.");
 		settings = new Settings(this);
 		if (Variables.version != 1.0) {
 			if (Variables.version == 0.0) {
@@ -53,33 +45,41 @@ public class IRC extends JavaPlugin {
 				log("We have detected this is your first run!");
 				log("Please modify the default configuration!");
 				log("***************************************************");
-				this.getServer().getPluginManager().disablePlugin(this);
+				getServer().getPluginManager().disablePlugin(this);
 				return;
 			}
 			log("***************************************************");
 			log("Your settings are outdated!" + Variables.version
 					+ ", Should be:" + 1.0);
 			log("Please delete the config file!");
-			log("Allowing the plugin to generate a new Updated file!");
+			log("Allowing the plugin to generate a new Updated  file!");
 			log("***************************************************");
-			this.getServer().getPluginManager().disablePlugin(this);
+			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		registerHooks();
-		registerHandles();
-		registerEvents();
-		registerCommands();
+		hooks = new HookManager(this);
+		handles = new HandleManager(this);
+		command = new CommandManager(this);
+		playerListener = new IRCPlayerListener(this);
+		serverListener = new IRCServerListener(this);
+		getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT,
+				playerListener, Priority.Highest, this);
+		getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
+				serverListener, Priority.Monitor, this);
 		if (Variables.autoJoin) {
-			IRC.connect();
+			getHandleManager().getIRCHandler().connect(Variables.channel,
+					Variables.server, Variables.port, Variables.login,
+					Variables.name, Variables.password, Variables.ident);
 		}
 		log("Successfully started up.");
 
 	}
 
 	public void onDisable() {
-		if (IRC != null) {
-			if (IRC.isConnected()) {
-				IRC.disconnect();
+		if (getHandleManager().getIRCHandler() != null) {
+			if (getHandleManager().getIRCHandler().isConnected()) {
+				getHandleManager().getIRCHandler()
+						.disconnect(Variables.channel);
 			}
 		}
 		log("Successfully disabled plugin.");
@@ -87,54 +87,52 @@ public class IRC extends JavaPlugin {
 
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (args.length > 0) {
-			String[] split = new String[args.length + 1];
-			split[0] = label;
-			for (int a = 0; a < args.length; a++) {
-				split[a + 1] = args[a];
-			}
-			for (org.monstercraft.irc.command.Command c : commands) {
-				if (c.canExecute(sender, split)) {
-					c.execute(sender, split);
-					return true;
-				}
-			}
-			return false;
-		}
-		return false;
+		return getCommandManager().onGameCommand(sender, command, label, args);
 	}
 
-	private void registerCommands() {
-		commands.add(new Ban(this));
-		commands.add(new Mute(this));
-		commands.add(new Unmute(this));
-		commands.add(new Connect(this));
-		commands.add(new Disconnect(this));
-		commands.add(new Nick(this));
-		commands.add(new Say(this));
-		commands.add(new ReloadConfig(this));
+	/**
+	 * The plugins settings.
+	 * 
+	 * @return The settings.
+	 */
+	public Settings getSettings() {
+		return settings;
 	}
 
-	private void registerEvents() {
-		playerListener = new IRCPlayerListener(this);
-		getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT,
-				playerListener, Priority.Highest, this);
-		serverListener = new IRCServerListener(this);
-		getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
-				serverListener, Priority.Normal, this);
-	}
-
-	private void registerHooks() {
-		herochat = new HeroChatHook(this);
-		mcmmo = new mcMMOHook(this);
-		permissions = new PermissionsHook(this);
-	}
-
-	private void registerHandles() {
-		IRC = new IRCHandler(this);
-	}
-
-	public void log(String msg) {
+	/**
+	 * Logs a message to the console.
+	 * 
+	 * @param msg
+	 *            The message to print.
+	 */
+	protected void log(String msg) {
 		logger.log(Level.INFO, "[IRC] " + msg);
+	}
+
+	/**
+	 * The manager that holds the handlers.
+	 * 
+	 * @return The handlers.
+	 */
+	public HandleManager getHandleManager() {
+		return handles;
+	}
+
+	/**
+	 * The manager that creates the hooks with other plugins.
+	 * 
+	 * @return The hooks.
+	 */
+	public HookManager getHookManager() {
+		return hooks;
+	}
+
+	/**
+	 * The CommandManager that Assigns all the commands.
+	 * 
+	 * @return The plugins command manager.
+	 */
+	public CommandManager getCommandManager() {
+		return command;
 	}
 }

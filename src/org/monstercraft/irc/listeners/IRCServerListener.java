@@ -7,11 +7,23 @@ import org.monstercraft.irc.hooks.HeroChatHook;
 import org.monstercraft.irc.hooks.PermissionsHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
 
+/**
+ * This class listens for certain plugins so we are able to hook into them.
+ * 
+ * @author fletch_to_99 <fletchto99@hotmail.com>
+ * 
+ */
 public class IRCServerListener extends ServerListener {
 
 	private IRC plugin;
 
-	public IRCServerListener(IRC plugin) {
+	/**
+	 * Creates an instance of the IRCServerListener class.
+	 * 
+	 * @param plugin
+	 *            The parent plugin.
+	 */
+	public IRCServerListener(final IRC plugin) {
 		this.plugin = plugin;
 	}
 
@@ -19,11 +31,15 @@ public class IRCServerListener extends ServerListener {
 		String PluginName = event.getPlugin().getDescription().getName();
 		if (plugin != null) {
 			if (PluginName.equals("Permissions")) {
-				plugin.permissions = new PermissionsHook(plugin);
+				plugin.getHookManager().setPermissionsHook(
+						new PermissionsHook(plugin));
+				plugin.getHandleManager().setPermissionsHandler(
+						plugin.getHookManager().getPermissionsHook());
 			} else if (PluginName.equals("mcMMO")) {
-				plugin.mcmmo = new mcMMOHook(plugin);
-			}else if (PluginName.equals("HeroChat")) {
-				plugin.herochat = new HeroChatHook(plugin);
+				plugin.getHookManager().setmcMMOHook(new mcMMOHook(plugin));
+			} else if (PluginName.equals("HeroChat")) {
+				plugin.getHookManager().setHeroChatHook(
+						new HeroChatHook(plugin));
 			}
 		}
 	}
