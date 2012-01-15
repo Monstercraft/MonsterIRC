@@ -28,59 +28,45 @@ public class IRC extends JavaPlugin {
 	private IRCPlayerListener playerListener = null;
 	private IRCServerListener serverListener = null;
 
-	private HandleManager handles = null;
-	private HookManager hooks = null;
-	private CommandManager command = null;
+	private static HandleManager handles = null;
+	private static HookManager hooks = null;
+	private static CommandManager command = null;
 
-	private Logger logger = Logger.getLogger("MineCraft");
+	private static Logger logger = Logger.getLogger("MineCraft");
 
 	private Settings settings = null;
 
 	public void onEnable() {
 		log("Starting plugin.");
 		settings = new Settings(this);
-		if (Variables.version != 1.0) {
-			if (Variables.version == 0.0) {
-				log("***************************************************");
-				log("We have detected this is your first run!");
-				log("Please modify the default configuration!");
-				log("***************************************************");
-				getServer().getPluginManager().disablePlugin(this);
-				return;
-			}
-			log("***************************************************");
-			log("Your settings are outdated!" + Variables.version
-					+ ", Should be:" + 1.0);
-			log("Please delete the config file!");
-			log("Allowing the plugin to generate a new Updated  file!");
-			log("***************************************************");
-			getServer().getPluginManager().disablePlugin(this);
-			return;
+		if (!settings.firstRun()) {
+			hooks = new HookManager(this);
+			handles = new HandleManager(this);
+			command = new CommandManager(this);
+			playerListener = new IRCPlayerListener(this);
+			serverListener = new IRCServerListener(this);
+			getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT,
+					playerListener, Priority.Highest, this);
+			getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
+					serverListener, Priority.Monitor, this);
+			getHandleManager().getIRCHandler().connect(Variables.server,
+					Variables.port, Variables.login, Variables.name,
+					Variables.password, Variables.ident);
+			log("Successfully started up.");
+		} else {
+			getServer().getPluginManager().disablePlugin(
+					getServer().getPluginManager().getPlugin("MonsterIRC"));
 		}
-		hooks = new HookManager(this);
-		handles = new HandleManager(this);
-		command = new CommandManager(this);
-		playerListener = new IRCPlayerListener(this);
-		serverListener = new IRCServerListener(this);
-		getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT,
-				playerListener, Priority.Highest, this);
-		getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
-				serverListener, Priority.Monitor, this);
-		if (Variables.autoJoin) {
-			getHandleManager().getIRCHandler().connect(Variables.channel,
-					Variables.server, Variables.port, Variables.login,
-					Variables.name, Variables.password, Variables.ident);
-		}
-		log("Successfully started up.");
 
 	}
 
 	public void onDisable() {
-		if (getHandleManager().getIRCHandler() != null) {
+		if (!settings.firstRun()) {
 			if (getHandleManager().getIRCHandler().isConnected()) {
-				getHandleManager().getIRCHandler()
-						.disconnect(Variables.channel);
+				getHandleManager().getIRCHandler().disconnect();
 			}
+		} else {
+			log("Please go edit the config!");
 		}
 		log("Successfully disabled plugin.");
 	}
@@ -105,7 +91,7 @@ public class IRC extends JavaPlugin {
 	 * @param msg
 	 *            The message to print.
 	 */
-	protected void log(String msg) {
+	protected static void log(String msg) {
 		logger.log(Level.INFO, "[IRC] " + msg);
 	}
 
@@ -114,7 +100,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The handlers.
 	 */
-	public HandleManager getHandleManager() {
+	public static HandleManager getHandleManager() {
 		return handles;
 	}
 
@@ -123,7 +109,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The hooks.
 	 */
-	public HookManager getHookManager() {
+	public static HookManager getHookManager() {
 		return hooks;
 	}
 
@@ -132,7 +118,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The plugins command manager.
 	 */
-	public CommandManager getCommandManager() {
+	public static CommandManager getCommandManager() {
 		return command;
 	}
 }

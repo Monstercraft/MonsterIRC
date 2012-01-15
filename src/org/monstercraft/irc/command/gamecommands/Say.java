@@ -2,8 +2,11 @@ package org.monstercraft.irc.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.wrappers.IRCChannel;
 
 public class Say extends GameCommand {
 
@@ -12,14 +15,14 @@ public class Say extends GameCommand {
 	}
 
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return plugin.getHandleManager().getIRCHandler().isConnected()
+		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("say");
 	}
 
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
-			if (!plugin.getHandleManager().getPermissionsHandler()
+			if (!IRC.getHandleManager().getPermissionsHandler()
 					.hasCommandPerms(((Player) sender), this)) {
 				sender.sendMessage("[IRC] You don't have permission to preform that command.");
 				return false;
@@ -35,22 +38,19 @@ public class Say extends GameCommand {
 			result2.append(" ");
 		}
 
-		plugin.getHandleManager().getIRCHandler()
-				.sendMessage(result.toString(), Variables.channel);
-		if (Variables.hc && plugin.getHookManager().getHeroChatHook() != null) {
-			plugin.getHookManager()
-					.getHeroChatHook()
-					.getChannelManager()
-					.getChannel(Variables.hcc)
-					.sendMessage(
-							"<" + sender.getName() + ">",
-							result2.toString(),
-							plugin.getHookManager().getHeroChatHook()
-									.getChannelManager()
-									.getChannel(Variables.hcc).getMsgFormat(),
-							false);
+		for (IRCChannel c : Variables.channels) {
+			if (c.getChannel().equalsIgnoreCase(split[3])) {
+				IRC.getHandleManager().getIRCHandler()
+						.sendMessage(result.toString(), c.getChannel());
+				if (c.getChatType() == ChatType.HEROCHAT
+						&& IRC.getHookManager().getHeroChatHook() != null) {
+					c.getHeroChatChannel().sendMessage(
+							"<" + sender.getName() + ">", result2.toString(),
+							c.getHeroChatChannel().getMsgFormat(), false);
+				}
+			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override

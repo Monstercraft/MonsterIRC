@@ -2,6 +2,7 @@ package org.monstercraft.irc.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
 import org.monstercraft.irc.util.Variables;
 
@@ -19,7 +20,7 @@ public class Unmute extends GameCommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
-			if (!plugin.getHandleManager().getPermissionsHandler()
+			if (!IRC.getHandleManager().getPermissionsHandler()
 					.hasCommandPerms(((Player) sender), this)) {
 				sender.sendMessage("[IRC] You don't have permission to preform that command.");
 				return false;

@@ -1,7 +1,7 @@
 package org.monstercraft.irc.command.irccommands;
 
+import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
-import org.monstercraft.irc.util.Variables;
 
 public class Announce extends IRCCommand {
 
@@ -10,46 +10,30 @@ public class Announce extends IRCCommand {
 	}
 
 	public boolean canExecute(String sender, String message) {
-		return plugin.getHandleManager().getIRCHandler().isConnected()
+		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& message.startsWith(".announce");
 	}
 
 	public boolean execute(String sender, String message) {
-		if (plugin
+		if (IRC
 				.getHandleManager()
 				.getIRCHandler()
 				.isVoice(
 						sender,
-						plugin.getHandleManager().getIRCHandler()
+						IRC.getHandleManager().getIRCHandler()
 								.getVoiceList())
-				|| plugin
+				|| IRC
 						.getHandleManager()
 						.getIRCHandler()
 						.isOp(sender,
-								plugin.getHandleManager().getIRCHandler()
+								IRC.getHandleManager().getIRCHandler()
 										.getOpList())) {
-			if (Variables.all) {
-				plugin.getServer().broadcastMessage(
-						"[IRC]<"
-								+ sender
-								+ ">: "
-								+ plugin.getHandleManager().getIRCHandler()
-										.removeColors(message.substring(10)));
-			} else if (Variables.hc
-					&& plugin.getHookManager().getHeroChatHook() != null) {
-				plugin.getHookManager()
-						.getHeroChatHook()
-						.getChannelManager()
-						.getChannel(Variables.announce)
-						.sendMessage(
-								"<" + sender + ">",
-								plugin.getHandleManager().getIRCHandler()
-										.removeColors(message.substring(10)),
-								plugin.getHookManager().getHeroChatHook()
-										.getChannelManager()
-										.getChannel(Variables.announce)
-										.getMsgFormat(), false);
-			}
+			plugin.getServer().broadcastMessage(
+					"§4[IRC]<"
+							+ sender
+							+ ">: "
+							+ IRC.getHandleManager().getIRCHandler()
+									.removeColors(message.substring(10)));
 		}
 		return true;
 	}

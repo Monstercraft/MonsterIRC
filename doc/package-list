@@ -7,3 +7,4 @@ org.monstercraft.irc.hooks
 org.monstercraft.irc.listeners
 org.monstercraft.irc.managers
 org.monstercraft.irc.util
+org.monstercraft.irc.wrappers

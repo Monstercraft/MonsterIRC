@@ -25,9 +25,9 @@ public class HandleManager {
 	 */
 	public HandleManager(final IRC plugin) {
 		IRC = new IRCHandler(plugin);
-		if (plugin.getHookManager().getPermissionsHook() != null) {
-			if (plugin.getHookManager().getPermissionsHook().isEnabled()) {
-				perms = new PermissionsHandler(plugin.getHookManager()
+		if (org.monstercraft.irc.IRC.getHookManager().getPermissionsHook() != null) {
+			if (org.monstercraft.irc.IRC.getHookManager().getPermissionsHook().isEnabled()) {
+				perms = new PermissionsHandler(org.monstercraft.irc.IRC.getHookManager()
 						.getPermissionsHook().getHandler());
 			}
 		}

@@ -1,5 +1,6 @@
 package org.monstercraft.irc.command.irccommands;
 
+import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
 import org.monstercraft.irc.util.Variables;
 
@@ -10,24 +11,24 @@ public class Unmute extends IRCCommand {
 	}
 
 	public boolean canExecute(String sender, String message) {
-		return plugin.getHandleManager().getIRCHandler().isConnected()
+		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& message.startsWith(".unmute");
 	}
 
 	public boolean execute(String sender, String message) {
 		String user = message.substring(8);
-		if (plugin
+		if (IRC
 				.getHandleManager()
 				.getIRCHandler()
 				.isVoice(
 						sender,
-						plugin.getHandleManager().getIRCHandler()
+						IRC.getHandleManager().getIRCHandler()
 								.getVoiceList())
-				|| plugin
+				|| IRC
 						.getHandleManager()
 						.getIRCHandler()
 						.isOp(sender,
-								plugin.getHandleManager().getIRCHandler()
+								IRC.getHandleManager().getIRCHandler()
 										.getOpList())) {
 			if (Variables.muted.contains(user.toString().toLowerCase())) {
 				Variables.muted.remove(user.toString().toLowerCase());

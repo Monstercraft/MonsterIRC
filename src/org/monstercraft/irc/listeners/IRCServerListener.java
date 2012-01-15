@@ -31,14 +31,14 @@ public class IRCServerListener extends ServerListener {
 		String PluginName = event.getPlugin().getDescription().getName();
 		if (plugin != null) {
 			if (PluginName.equals("Permissions")) {
-				plugin.getHookManager().setPermissionsHook(
+				IRC.getHookManager().setPermissionsHook(
 						new PermissionsHook(plugin));
-				plugin.getHandleManager().setPermissionsHandler(
-						plugin.getHookManager().getPermissionsHook());
+				IRC.getHandleManager().setPermissionsHandler(
+						IRC.getHookManager().getPermissionsHook());
 			} else if (PluginName.equals("mcMMO")) {
-				plugin.getHookManager().setmcMMOHook(new mcMMOHook(plugin));
+				IRC.getHookManager().setmcMMOHook(new mcMMOHook(plugin));
 			} else if (PluginName.equals("HeroChat")) {
-				plugin.getHookManager().setHeroChatHook(
+				IRC.getHookManager().setHeroChatHook(
 						new HeroChatHook(plugin));
 			}
 		}

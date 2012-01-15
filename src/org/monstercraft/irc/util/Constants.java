@@ -1,5 +1,7 @@
 package org.monstercraft.irc.util;
 
+import java.io.File;
+
 /**
  * This class holds all of the constants used within the plugin.
  * 
@@ -16,11 +18,17 @@ public class Constants {
 	/**
 	 * The location in which to save the files.
 	 */
-	public static final String SETTINGS_PATH = "plugins/MonsterIRC/";
+	public static final String SETTINGS_PATH = "plugins" + File.separator
+			+ "MonsterIRC" + File.separator;
 
 	/**
 	 * The configuration file.
 	 */
 	public static final String SETTINGS_FILE = "Config.yml";
+
+	/**
+	 * The Channel Directory.
+	 */
+	public static final String CHANNELS_PATH = "Channels" + File.separator;
 
 }
