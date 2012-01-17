@@ -48,26 +48,13 @@ public class IRCPlayerListener extends PlayerListener {
 												c.getChannel());
 							}
 						}
-					} else if (c.getChatType() == ChatType.ALL) {
-						if (IRC.getHookManager().getmcMMOHook() != null) {
-							if (IRC.getHookManager().getmcMMOHook()
-									.getPlayerProfile(player)
-									.getAdminChatMode()) {
-								return;
-							}
-						}
-						StringBuffer result = new StringBuffer();
-						result.append("<" + player.getName() + ">" + " ");
-						result.append(event.getMessage());
-						IRC.getHandleManager().getIRCHandler()
-								.sendMessage(result.toString(), c.getChannel());
 					} else if (c.getChatType() == ChatType.HEROCHAT
 							&& IRC.getHookManager().getHeroChatHook() != null) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
 							if (IRC.getHookManager().getmcMMOHook()
 									.getPlayerProfile(player)
 									.getAdminChatMode()) {
-								return;
+								continue;
 							}
 						}
 						if (IRC.getHookManager().getHeroChatHook()
@@ -104,6 +91,19 @@ public class IRCPlayerListener extends PlayerListener {
 												c.getChannel());
 							}
 						}
+					} else if (c.getChatType() == ChatType.ALL) {
+						if (IRC.getHookManager().getmcMMOHook() != null) {
+							if (IRC.getHookManager().getmcMMOHook()
+									.getPlayerProfile(player)
+									.getAdminChatMode()) {
+								continue;
+							}
+						}
+						StringBuffer result = new StringBuffer();
+						result.append("<" + player.getName() + ">" + " ");
+						result.append(event.getMessage());
+						IRC.getHandleManager().getIRCHandler()
+								.sendMessage(result.toString(), c.getChannel());
 					}
 				}
 			}

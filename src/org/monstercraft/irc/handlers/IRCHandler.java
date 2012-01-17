@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.util.ChatType;
@@ -200,13 +199,15 @@ public class IRCHandler extends IRC {
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
 		public void run() {
-			for (IRCChannel c : Variables.channels) {
-				try {
-					if (isConnected() && reader != null && reader.ready()) {
-						String line;
-						try {
-							while ((line = reader.readLine()) != null) {
-
+			try {
+				if (isConnected() && reader != null && reader.ready()) {
+					String line;
+					try {
+						while ((line = reader.readLine()) != null) {
+							if (!isConnected() || line == null || reader == null || connection == null) {
+								break;
+							}
+							for (IRCChannel c : Variables.channels) {
 								if (line.toLowerCase().startsWith("ping ")) {
 									writer.write("PONG " + line.substring(5)
 											+ "\r\n");
@@ -236,35 +237,25 @@ public class IRCHandler extends IRC {
 								try {
 									String name = null;
 									String msg = null;
-									String channel = null;
+									String channel = c.getChannel();
 									if (line.contains("PRIVMSG "
 											+ c.getChannel())) {
 										name = line.substring(1,
 												line.indexOf("!"));
-										msg = line.substring(line.indexOf(":",
-												1) + 1);
-										channel = c.getChannel();
-									} else if (line.contains("NICK :")) {
-										final String _name = line.substring(1,
-												line.indexOf("!"));
-										msg = _name
-												+ " is now known as "
-												+ line.substring(line
-														.indexOf("NICK :") + 6);
+										msg = line
+												.substring(line.indexOf(" :") + 3);
 									} else if (line.contains("JOIN :"
 											+ c.getChannel())) {
 										final String _name = line.substring(1,
 												line.indexOf("!"));
 										msg = _name + " has joined "
 												+ c.getChannel() + ".";
-										channel = c.getChannel();
 									} else if (line.contains("PART "
 											+ c.getChannel())) {
 										final String _name = line.substring(1,
 												line.indexOf("!"));
 										msg = _name + " has left "
 												+ c.getChannel() + ".";
-										channel = c.getChannel();
 									} else if (line.contains("QUIT :")) {
 										final String _name = line.substring(1,
 												line.indexOf("!"));
@@ -274,7 +265,6 @@ public class IRCHandler extends IRC {
 												+ " ("
 												+ line.substring(line.indexOf(
 														":", 1) + 1) + ").";
-										channel = c.getChannel();
 									} else if (line.contains("MODE "
 											+ c.getChannel() + " +v")
 											|| line.contains("MODE "
@@ -313,14 +303,12 @@ public class IRCHandler extends IRC {
 														+ c.getChannel()
 																.length() + 9);
 										msg = _name + " has mode " + mode + ".";
-										channel = c.getChannel();
 									} else if (line.contains("KICK "
 											+ c.getChannel())) {
 										final String _name = line.substring(1,
 												line.indexOf("!"));
 										msg = _name + " has been kicked from"
 												+ c.getChannel() + ".";
-										channel = c.getChannel();
 									}
 									if (msg != null && name != null
 											&& channel != null) {
@@ -336,13 +324,13 @@ public class IRCHandler extends IRC {
 									e.printStackTrace();
 								}
 							}
-						} catch (final Exception e) {
-							e.printStackTrace();
 						}
+					} catch (final Exception e) {
+						e.printStackTrace();
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	};
@@ -478,28 +466,36 @@ public class IRCHandler extends IRC {
 
 	private void handleMessage(final String Channel, final String name,
 			final String message) {
-		for (IRCChannel c : Variables.channels) {
-			if (c.getChannel().equalsIgnoreCase(Channel)) {
-				if (c.getChatType() == ChatType.ADMINCHAT) {
-					if (IRC.getHookManager().getmcMMOHook() != null) {
-						String format = "§b" + "{" + "§f" + "[IRC] " + name
-								+ "§b" + "} " + message;
-						for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-							if (p.isOp()
-									|| mcPermissions.getInstance().adminChat(p))
-								p.sendMessage(format);
+		try {
+			for (IRCChannel c : Variables.channels) {
+				if (c.getChannel().equalsIgnoreCase(Channel)) {
+					if (c.getChatType() == ChatType.ADMINCHAT) {
+						if (IRC.getHookManager().getmcMMOHook() != null) {
+							String format = "§b" + "{" + "§f" + "[IRC] " + name
+									+ "§b" + "} " + message;
+							for (Player p : plugin.getServer()
+									.getOnlinePlayers()) {
+								if (p.isOp()
+										|| mcPermissions.getInstance()
+												.adminChat(p))
+									p.sendMessage(format);
+							}
 						}
+					} else if (c.getChatType() == ChatType.HEROCHAT
+							&& IRC.getHookManager().getHeroChatHook() != null) {
+						c.getHeroChatChannel().sendMessage("<" + name + ">",
+								removeColors(message),
+								c.getHeroChatChannel().getMsgFormat(), false);
+					} else if (c.getChatType() == ChatType.ALL) {
+						plugin.getServer()
+								.broadcastMessage(
+										"[IRC]<" + name + ">: "
+												+ removeColors(message));
 					}
-				} else if (c.getChatType() == ChatType.ALL) {
-					plugin.getServer().broadcastMessage(
-							"[IRC]<" + name + ">: " + removeColors(message));
-				} else if (c.getChatType() == ChatType.HEROCHAT
-						&& IRC.getHookManager().getHeroChatHook() != null) {
-					c.getHeroChatChannel().sendMessage("<" + name + ">",
-							removeColors(message),
-							c.getHeroChatChannel().getMsgFormat(), false);
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
