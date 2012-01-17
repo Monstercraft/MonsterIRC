@@ -30,7 +30,6 @@ public class IRCHandler extends IRC {
 	private Socket connection = null;
 	private BufferedReader reader = null;
 	private Thread watch = null;
-	private boolean avalible = true;
 	private IRC plugin;
 	private List<String> ops = new ArrayList<String>();
 	private List<String> voice = new ArrayList<String>();
@@ -87,7 +86,6 @@ public class IRCHandler extends IRC {
 						log("Your nickname is already in use, please switch it");
 						log("using \"nick [NAME]\" and try to connect again.");
 						disconnect();
-						avalible = false;
 						break;
 					} else if (line.toLowerCase().startsWith("ping ")) {
 						writer.write("PONG " + line.substring(5) + "\r\n");
@@ -95,18 +93,16 @@ public class IRCHandler extends IRC {
 						continue;
 					}
 				}
-				if (avalible) {
-					if (identify) {
-						log("Identifying with Nickserv....");
+				if (identify) {
+					log("Identifying with Nickserv....");
 
-						writer.write("NICKSERV IDENTIFY " + password + "\r\n");
-						writer.flush();
-					}
-					for (IRCChannel c : Variables.channels) {
-						if (c.isAutoJoin()) {
-							join(c.getChannel());
+					writer.write("NICKSERV IDENTIFY " + password + "\r\n");
+					writer.flush();
+				}
+				for (IRCChannel c : Variables.channels) {
+					if (c.isAutoJoin()) {
+						join(c.getChannel());
 
-						}
 					}
 				}
 				watch = new Thread(KEEP_ALIVE);
@@ -135,22 +131,21 @@ public class IRCHandler extends IRC {
 				leave(c.getChannel());
 			}
 			connected = false;
-			if (watch != null) {
-				watch.interrupt();
-				watch = null;
-			}
-			if (connection != null) {
+			reader.close();
+			writer.close();
+			if (!connection.isClosed()) {
 				connection.shutdownInput();
 				connection.shutdownOutput();
 				connection.close();
-				connection = null;
 			}
-			reader.close();
-			writer.close();
+			if (watch != null) {
+				watch.interrupt();
+			}
+			watch = null;
 			writer = null;
 			reader = null;
-			log("Successfully disconnected from IRC.");
 			connection = null;
+			log("Successfully disconnected from IRC.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -191,7 +186,6 @@ public class IRCHandler extends IRC {
 	 */
 	public void leave(final String channel) throws IOException {
 		if (isConnected()) {
-			avalible = true;
 			writer.write("QUIT " + channel + "\r\n");
 			writer.flush();
 		}
@@ -204,46 +198,22 @@ public class IRCHandler extends IRC {
 					String line;
 					try {
 						while ((line = reader.readLine()) != null) {
-							if (!isConnected() || line == null || reader == null || connection == null) {
+							log(line);
+							if (!isConnected()) {
 								break;
 							}
+							String name = null;
+							String msg = null;
+							String channel = null;
 							for (IRCChannel c : Variables.channels) {
-								if (line.toLowerCase().startsWith("ping ")) {
-									writer.write("PONG " + line.substring(5)
-											+ "\r\n");
-									writer.flush();
-									continue;
-								} else if (line.contains("353")) {
-									List<String> users = new ArrayList<String>();
-									StringTokenizer st = new StringTokenizer(
-											line);
-									while (st.hasMoreTokens()) {
-										users.add(st.nextToken());
-									}
-									for (Object o : users.toArray()) {
-										String s = (String) o;
-										if (s.contains("+")) {
-											voice.add(s.substring(1));
-											log(s.substring(1)
-													+ " has been added to the voice list.");
-										}
-										if (s.contains("@")) {
-											ops.add(s.substring(1));
-											log(s.substring(1)
-													+ " has been added to the op list.");
-										}
-									}
-								}
 								try {
-									String name = null;
-									String msg = null;
-									String channel = c.getChannel();
+									channel = c.getChannel();
 									if (line.contains("PRIVMSG "
 											+ c.getChannel())) {
 										name = line.substring(1,
 												line.indexOf("!"));
 										msg = line
-												.substring(line.indexOf(" :") + 3);
+												.substring(line.indexOf(" :") + 2);
 									} else if (line.contains("JOIN :"
 											+ c.getChannel())) {
 										final String _name = line.substring(1,
@@ -314,14 +284,47 @@ public class IRCHandler extends IRC {
 											&& channel != null) {
 										if (msg.startsWith(".")) {
 											IRC.getCommandManager()
-													.onIRCCommand(name, msg);
+													.onIRCCommand(name, msg,
+															channel);
+											break;
 										} else if (!Variables.muted
-												.contains(name.toLowerCase())) {
+												.contains(name)) {
 											handleMessage(channel, name, msg);
+											break;
 										}
 									}
 								} catch (final Exception e) {
 									e.printStackTrace();
+								}
+							}
+							if (line.toLowerCase().startsWith("ping ")) {
+								if (msg == null) {
+									writer.write("PONG " + line.substring(5)
+											+ "\r\n");
+									writer.flush();
+								}
+								continue;
+							} else if (line.contains("353")) {
+								if (msg == null) {
+									List<String> users = new ArrayList<String>();
+									StringTokenizer st = new StringTokenizer(
+											line);
+									while (st.hasMoreTokens()) {
+										users.add(st.nextToken());
+									}
+									for (Object o : users.toArray()) {
+										String s = (String) o;
+										if (s.contains("+")) {
+											voice.add(s.substring(1));
+											log(s.substring(1)
+													+ " has been added to the voice list.");
+										}
+										if (s.contains("@")) {
+											ops.add(s.substring(1));
+											log(s.substring(1)
+													+ " has been added to the op list.");
+										}
+									}
 								}
 							}
 						}
@@ -479,6 +482,7 @@ public class IRCHandler extends IRC {
 										|| mcPermissions.getInstance()
 												.adminChat(p))
 									p.sendMessage(format);
+								break;
 							}
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
@@ -486,11 +490,13 @@ public class IRCHandler extends IRC {
 						c.getHeroChatChannel().sendMessage("<" + name + ">",
 								removeColors(message),
 								c.getHeroChatChannel().getMsgFormat(), false);
+						break;
 					} else if (c.getChatType() == ChatType.ALL) {
 						plugin.getServer()
 								.broadcastMessage(
 										"[IRC]<" + name + ">: "
 												+ removeColors(message));
+						break;
 					}
 				}
 			}

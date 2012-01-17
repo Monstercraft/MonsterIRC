@@ -91,10 +91,10 @@ public class CommandManager {
 	 *            The arguments in the command.
 	 * @return True if the command executed successfully; Otherwise false.
 	 */
-	public boolean onIRCCommand(final String sender, final String arg) {
+	public boolean onIRCCommand(final String sender, final String arg, final String channel) {
 		for (IRCCommand c : IRCCommands) {
-			if (c.canExecute(sender, arg)) {
-				c.execute(sender, arg);
+			if (c.canExecute(sender, arg, channel)) {
+				c.execute(sender, arg, channel);
 				return true;
 			}
 		}

@@ -9,12 +9,12 @@ public class Announce extends IRCCommand {
 		super(plugin);
 	}
 
-	public boolean canExecute(String sender, String message) {
+	public boolean canExecute(String sender, String message, String channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& message.startsWith(".announce");
 	}
 
-	public boolean execute(String sender, String message) {
+	public boolean execute(String sender, String message, String channel) {
 		if (IRC
 				.getHandleManager()
 				.getIRCHandler()

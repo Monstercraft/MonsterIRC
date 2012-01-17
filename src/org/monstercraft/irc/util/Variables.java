@@ -1,7 +1,7 @@
 package org.monstercraft.irc.util;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.monstercraft.irc.wrappers.IRCChannel;
@@ -47,7 +47,7 @@ public class Variables {
 	/**
 	 * A list containing all of the muted users.
 	 */
-	public static List<String> muted = null;
+	public static ArrayList<String> muted = null;
 
 	/**
 	 * A Set of all the IRC channels.

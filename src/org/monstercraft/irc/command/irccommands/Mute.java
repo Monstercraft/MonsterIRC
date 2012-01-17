@@ -10,12 +10,12 @@ public class Mute extends IRCCommand {
 		super(plugin);
 	}
 
-	public boolean canExecute(String sender, String message) {
+	public boolean canExecute(String sender, String message, String channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& message.startsWith(".mute");
 	}
 
-	public boolean execute(String sender, String message) {
+	public boolean execute(String sender, String message, String channel) {
 		String user = message.substring(6);
 		if (IRC
 				.getHandleManager()

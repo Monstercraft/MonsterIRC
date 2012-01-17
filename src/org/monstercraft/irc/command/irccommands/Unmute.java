@@ -10,22 +10,18 @@ public class Unmute extends IRCCommand {
 		super(plugin);
 	}
 
-	public boolean canExecute(String sender, String message) {
+	public boolean canExecute(String sender, String message, String channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& message.startsWith(".unmute");
 	}
 
-	public boolean execute(String sender, String message) {
+	public boolean execute(String sender, String message, String channel) {
 		String user = message.substring(8);
-		if (IRC
-				.getHandleManager()
+		if (IRC.getHandleManager()
 				.getIRCHandler()
-				.isVoice(
-						sender,
-						IRC.getHandleManager().getIRCHandler()
-								.getVoiceList())
-				|| IRC
-						.getHandleManager()
+				.isVoice(sender,
+						IRC.getHandleManager().getIRCHandler().getVoiceList())
+				|| IRC.getHandleManager()
 						.getIRCHandler()
 						.isOp(sender,
 								IRC.getHandleManager().getIRCHandler()

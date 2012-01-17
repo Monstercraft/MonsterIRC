@@ -106,8 +106,8 @@ public class Settings extends IRC {
 				e.printStackTrace();
 			}
 			for (Object o : p.keySet()) {
-				Variables.muted
-						.add(p.getProperty(String.valueOf(((String) o))));
+				String s = ((String) o);
+				Variables.muted.add(p.getProperty(String.valueOf(s)));
 			}
 		}
 	}
@@ -120,7 +120,7 @@ public class Settings extends IRC {
 				+ Constants.MUTED_FILE);
 		Properties p = new Properties();
 		p.clear();
-		for (int i = 0; i < Variables.muted.size(); i++) {
+		for (int i = 0; i < Variables.muted.size(); i++) {			
 			p.setProperty(String.valueOf(i), Variables.muted.get(i));
 		}
 		try {
