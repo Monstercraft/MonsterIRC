@@ -50,60 +50,67 @@ public class IRCPlayerListener extends PlayerListener {
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
 							&& IRC.getHookManager().getHeroChatHook() != null) {
-						if (IRC.getHookManager().getmcMMOHook() != null) {
-							if (IRC.getHookManager().getmcMMOHook()
-									.getPlayerProfile(player)
-									.getAdminChatMode()) {
-								continue;
+						if (IRC.getHookManager().getHeroChatHook().isEnabled()) {
+							if (IRC.getHookManager().getmcMMOHook() != null) {
+								if (IRC.getHookManager().getmcMMOHook()
+										.getPlayerProfile(player)
+										.getAdminChatMode()) {
+									continue;
+								}
 							}
-						}
-						if (IRC.getHookManager().getHeroChatHook()
-								.getChannelManager()
-								.getActiveChannel(player.getName()).getName()
-								.equals(c.getHeroChatChannel().getName())
-								&& c.getHeroChatChannel().isEnabled()
-								&& !IRC.getHookManager().getHeroChatHook()
-										.getChannelManager().getMutelist()
-										.contains(player.getName())
-								&& !c.getHeroChatChannel().getMutelist()
-										.contains(player.getName())) {
-							if (IRC.getHandleManager()
-									.getPermissionsHandler()
-									.anyGroupsInList(
-											player,
-											IRC.getHookManager()
-													.getHeroChatHook()
-													.getChannelManager()
-													.getActiveChannel(
-															player.getName())
-													.getVoicelist())
-									|| IRC.getHookManager().getHeroChatHook()
-											.getChannelManager()
-											.getActiveChannel(player.getName())
-											.getVoicelist().isEmpty()) {
-								StringBuffer result = new StringBuffer();
-								result.append("<" + player.getName() + ">"
-										+ " ");
-								result.append(event.getMessage());
-								IRC.getHandleManager()
-										.getIRCHandler()
-										.sendMessage(result.toString(),
-												c.getChannel());
+							if (IRC.getHookManager().getHeroChatHook()
+									.getChannelManager()
+									.getActiveChannel(player.getName())
+									.getName()
+									.equals(c.getHeroChatChannel().getName())
+									&& c.getHeroChatChannel().isEnabled()
+									&& !IRC.getHookManager().getHeroChatHook()
+											.getChannelManager().getMutelist()
+											.contains(player.getName())
+									&& !c.getHeroChatChannel().getMutelist()
+											.contains(player.getName())) {
+								if (IRC.getHandleManager()
+										.getPermissionsHandler()
+										.anyGroupsInList(
+												player,
+												IRC.getHookManager()
+														.getHeroChatHook()
+														.getChannelManager()
+														.getActiveChannel(
+																player.getName())
+														.getVoicelist())
+										|| IRC.getHookManager()
+												.getHeroChatHook()
+												.getChannelManager()
+												.getActiveChannel(
+														player.getName())
+												.getVoicelist().isEmpty()) {
+									StringBuffer result = new StringBuffer();
+									result.append("<" + player.getName() + ">"
+											+ " ");
+									result.append(event.getMessage());
+									IRC.getHandleManager()
+											.getIRCHandler()
+											.sendMessage(result.toString(),
+													c.getChannel());
+								}
 							}
-						}
-					} else if (c.getChatType() == ChatType.ALL) {
-						if (IRC.getHookManager().getmcMMOHook() != null) {
-							if (IRC.getHookManager().getmcMMOHook()
-									.getPlayerProfile(player)
-									.getAdminChatMode()) {
-								continue;
+						} else if (c.getChatType() == ChatType.ALL) {
+							if (IRC.getHookManager().getmcMMOHook() != null) {
+								if (IRC.getHookManager().getmcMMOHook()
+										.getPlayerProfile(player)
+										.getAdminChatMode()) {
+									continue;
+								}
 							}
+							StringBuffer result = new StringBuffer();
+							result.append("<" + player.getName() + ">" + " ");
+							result.append(event.getMessage());
+							IRC.getHandleManager()
+									.getIRCHandler()
+									.sendMessage(result.toString(),
+											c.getChannel());
 						}
-						StringBuffer result = new StringBuffer();
-						result.append("<" + player.getName() + ">" + " ");
-						result.append(event.getMessage());
-						IRC.getHandleManager().getIRCHandler()
-								.sendMessage(result.toString(), c.getChannel());
 					}
 				}
 			}

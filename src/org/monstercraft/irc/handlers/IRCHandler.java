@@ -198,7 +198,6 @@ public class IRCHandler extends IRC {
 					String line;
 					try {
 						while ((line = reader.readLine()) != null) {
-							log(line);
 							if (!isConnected()) {
 								break;
 							}
@@ -288,7 +287,7 @@ public class IRCHandler extends IRC {
 															channel);
 											break;
 										} else if (!Variables.muted
-												.contains(name)) {
+												.contains(name.toLowerCase())) {
 											handleMessage(channel, name, msg);
 											break;
 										}
@@ -482,7 +481,6 @@ public class IRCHandler extends IRC {
 										|| mcPermissions.getInstance()
 												.adminChat(p))
 									p.sendMessage(format);
-								break;
 							}
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
@@ -490,13 +488,11 @@ public class IRCHandler extends IRC {
 						c.getHeroChatChannel().sendMessage("<" + name + ">",
 								removeColors(message),
 								c.getHeroChatChannel().getMsgFormat(), false);
-						break;
 					} else if (c.getChatType() == ChatType.ALL) {
 						plugin.getServer()
 								.broadcastMessage(
 										"[IRC]<" + name + ">: "
 												+ removeColors(message));
-						break;
 					}
 				}
 			}
