@@ -1,9 +1,15 @@
 package org.monstercraft.irc.listeners;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.hooks.HeroChatHook;
+import org.monstercraft.irc.hooks.PermissionsHook;
+import org.monstercraft.irc.hooks.mcMMOHook;
 import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
@@ -14,7 +20,7 @@ import org.monstercraft.irc.wrappers.IRCChannel;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRCPlayerListener extends PlayerListener {
+public class IRCListener extends IRC implements Listener {
 	private IRC plugin;
 
 	/**
@@ -23,11 +29,28 @@ public class IRCPlayerListener extends PlayerListener {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public IRCPlayerListener(final IRC plugin) {
+	public IRCListener(final IRC plugin) {
 		this.plugin = plugin;
 	}
 
-	@Override
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPluginEnable(PluginEnableEvent event) {
+		String PluginName = event.getPlugin().getDescription().getName();
+		if (plugin != null) {
+			if (PluginName.equals("Permissions")) {
+				IRC.getHookManager().setPermissionsHook(
+						new PermissionsHook(plugin));
+				IRC.getHandleManager().setPermissionsHandler(
+						IRC.getHookManager().getPermissionsHook());
+			} else if (PluginName.equals("mcMMO")) {
+				IRC.getHookManager().setmcMMOHook(new mcMMOHook(plugin));
+			} else if (PluginName.equals("HeroChat")) {
+				IRC.getHookManager().setHeroChatHook(new HeroChatHook(plugin));
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChat(PlayerChatEvent event) {
 		try {
 			if (plugin.isEnabled()) {
@@ -115,7 +138,7 @@ public class IRCPlayerListener extends PlayerListener {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 	}
 }

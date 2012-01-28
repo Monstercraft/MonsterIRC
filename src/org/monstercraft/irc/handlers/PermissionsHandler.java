@@ -68,7 +68,8 @@ public class PermissionsHandler extends IRC {
 	/**
 	 * Sets the players groups.
 	 * 
-	 * @param player The player to set groups for.
+	 * @param player
+	 *            The player to set groups for.
 	 * @return The groups the player is in.
 	 */
 	public String[] getGroups(final Player player) {

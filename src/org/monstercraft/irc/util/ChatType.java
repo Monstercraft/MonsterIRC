@@ -7,7 +7,5 @@ package org.monstercraft.irc.util;
  * 
  */
 public enum ChatType {
-	ALL(),
-	HEROCHAT(),
-	ADMINCHAT();
+	ALL(), HEROCHAT(), ADMINCHAT();
 }

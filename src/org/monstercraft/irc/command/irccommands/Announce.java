@@ -15,15 +15,11 @@ public class Announce extends IRCCommand {
 	}
 
 	public boolean execute(String sender, String message, String channel) {
-		if (IRC
-				.getHandleManager()
+		if (IRC.getHandleManager()
 				.getIRCHandler()
-				.isVoice(
-						sender,
-						IRC.getHandleManager().getIRCHandler()
-								.getVoiceList())
-				|| IRC
-						.getHandleManager()
+				.isVoice(sender,
+						IRC.getHandleManager().getIRCHandler().getVoiceList())
+				|| IRC.getHandleManager()
 						.getIRCHandler()
 						.isOp(sender,
 								IRC.getHandleManager().getIRCHandler()

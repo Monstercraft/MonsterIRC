@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -79,7 +81,7 @@ public class IRCHandler extends IRC {
 				writer.flush();
 				log("Processing connection....");
 				while ((line = reader.readLine()) != null) {
-
+					debug(line);
 					if (line.contains("004")) {
 						break;
 					} else if (line.contains("433")) {
@@ -113,7 +115,7 @@ public class IRCHandler extends IRC {
 			} catch (Exception e) {
 				log("Failed to connect to IRC!");
 				log("Please tell Fletch_to_99 the following!");
-				e.printStackTrace();
+				debug(e.toString());
 				disconnect();
 			}
 		}
@@ -147,7 +149,7 @@ public class IRCHandler extends IRC {
 			connection = null;
 			log("Successfully disconnected from IRC.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 		return !isConnected();
 	}
@@ -173,7 +175,7 @@ public class IRCHandler extends IRC {
 			writer.flush();
 			log("Successfully joined " + channel);
 		} catch (IOException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 	}
 
@@ -198,6 +200,7 @@ public class IRCHandler extends IRC {
 					String line;
 					try {
 						while ((line = reader.readLine()) != null) {
+							debug(line);
 							if (!isConnected()) {
 								break;
 							}
@@ -293,7 +296,7 @@ public class IRCHandler extends IRC {
 										}
 									}
 								} catch (final Exception e) {
-									e.printStackTrace();
+									debug(e.toString());
 								}
 							}
 							if (line.toLowerCase().startsWith("ping ")) {
@@ -325,15 +328,60 @@ public class IRCHandler extends IRC {
 										}
 									}
 								}
+								continue;
+							} else if (isCTCP(line)) {
+								final String _name = line.substring(1,
+										line.indexOf("!"));
+								final String ctcpMsg = getCTCPMessage(line)
+										.toUpperCase();
+								if (ctcpMsg.equals("VERSION")) {
+									writer.write("NOTICE " + _name + " :"
+											+ (char) ctcpControl
+											+ "Monstercraft" + " : " + "1"
+											+ (char) ctcpControl + "\r\n");
+									writer.flush();
+								} else if (ctcpMsg.equals("TIME")) {
+									final SimpleDateFormat sdf = new SimpleDateFormat(
+											"dd MMM yyyy hh:mm:ss zzz");
+									writer.write("NOTICE " + _name + " :"
+											+ (char) ctcpControl
+											+ sdf.format(new Date())
+											+ (char) ctcpControl + "\r\n");
+									writer.flush();
+								}
 							}
 						}
 					} catch (final Exception e) {
-						e.printStackTrace();
+						debug(e.toString());
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			}
+		}
+
+		private final byte ctcpControl = 1;
+
+		private boolean isCTCP(final String input) {
+			if (input.length() != 0) {
+				String message = input.substring(input.indexOf(":", 1) + 1);
+				if (message.length() != 0) {
+					char[] messageArray = message.toCharArray();
+					return ((byte) messageArray[0]) == 1
+							&& ((byte) messageArray[messageArray.length - 1]) == 1;
+				}
+			}
+			return false;
+		}
+
+		private String getCTCPMessage(final String input) {
+			if (input.length() != 0) {
+				String message = input.substring(input.indexOf(":", 1) + 1);
+				return message.substring(
+						message.indexOf((char) ctcpControl) + 1,
+						message.indexOf((char) ctcpControl, 1));
+			}
+			return null;
 		}
 	};
 
@@ -346,12 +394,12 @@ public class IRCHandler extends IRC {
 	 *            The channel to send the message to.
 	 */
 	public void sendMessage(final String Message, final String channel) {
-		if (isConnected()) {
+		if (isConnected() && writer != null) {
 			try {
 				writer.write("PRIVMSG " + channel + " :" + Message + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			}
 		}
 	}
@@ -368,7 +416,7 @@ public class IRCHandler extends IRC {
 				writer.write("NICK " + Nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			}
 		}
 	}
@@ -389,7 +437,7 @@ public class IRCHandler extends IRC {
 				writer.write("MODE " + channel + " +b" + Nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			}
 		}
 	}
@@ -463,6 +511,23 @@ public class IRCHandler extends IRC {
 		text = text.replace("&D", "");
 		text = text.replace("&E", "");
 		text = text.replace("&F", "");
+
+		text = text.replace("§0", "");
+		text = text.replace("§1", "");
+		text = text.replace("§2", "");
+		text = text.replace("§3", "");
+		text = text.replace("§4", "");
+		text = text.replace("§5", "");
+		text = text.replace("§6", "");
+		text = text.replace("§7", "");
+		text = text.replace("§8", "");
+		text = text.replace("§9", "");
+		text = text.replace("§A", "");
+		text = text.replace("§B", "");
+		text = text.replace("§C", "");
+		text = text.replace("§D", "");
+		text = text.replace("§E", "");
+		text = text.replace("§F", "");
 		return text;
 	}
 
@@ -481,6 +546,7 @@ public class IRCHandler extends IRC {
 										|| mcPermissions.getInstance()
 												.adminChat(p))
 									p.sendMessage(format);
+								break;
 							}
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
@@ -488,16 +554,18 @@ public class IRCHandler extends IRC {
 						c.getHeroChatChannel().sendMessage("<" + name + ">",
 								removeColors(message),
 								c.getHeroChatChannel().getMsgFormat(), false);
+						break;
 					} else if (c.getChatType() == ChatType.ALL) {
 						plugin.getServer()
 								.broadcastMessage(
 										"[IRC]<" + name + ">: "
 												+ removeColors(message));
+						break;
 					}
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 	}
 }

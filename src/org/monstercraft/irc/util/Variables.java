@@ -15,6 +15,11 @@ import org.monstercraft.irc.wrappers.IRCChannel;
 public class Variables {
 
 	/**
+	 * The option to debug.
+	 */
+	public static boolean debug = false;
+
+	/**
 	 * The option to send the IDENTIFY command to nickserv.
 	 */
 	public static boolean ident = false;

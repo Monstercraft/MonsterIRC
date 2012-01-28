@@ -17,15 +17,11 @@ public class Mute extends IRCCommand {
 
 	public boolean execute(String sender, String message, String channel) {
 		String user = message.substring(6);
-		if (IRC
-				.getHandleManager()
+		if (IRC.getHandleManager()
 				.getIRCHandler()
-				.isVoice(
-						sender,
-						IRC.getHandleManager().getIRCHandler()
-								.getVoiceList())
-				|| IRC
-						.getHandleManager()
+				.isVoice(sender,
+						IRC.getHandleManager().getIRCHandler().getVoiceList())
+				|| IRC.getHandleManager()
 						.getIRCHandler()
 						.isOp(sender,
 								IRC.getHandleManager().getIRCHandler()

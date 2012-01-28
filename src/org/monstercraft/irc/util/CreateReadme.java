@@ -5,21 +5,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.monstercraft.irc.IRC;
+
 /**
  * This class creates the ReadMe.txt.
  * 
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class CreateReadme {
-	
+public class CreateReadme extends IRC {
+
 	/**
 	 * Creates an instance of the CreateReadme class.
 	 */
 	public CreateReadme() {
 		write();
 	}
-	
+
 	/**
 	 * Creates the ReadMe.txt file.
 	 */
@@ -43,7 +45,7 @@ public class CreateReadme {
 			out.println("Auto join specifies weither you want MonsterIRC to automatically join the specified IRC channel when the plugin is started. If you wish for this to be false then you can manually connect later with /irc join (channel).");
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 	}
 }

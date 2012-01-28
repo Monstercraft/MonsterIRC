@@ -16,6 +16,7 @@ import org.monstercraft.irc.command.gamecommands.ReloadConfig;
 import org.monstercraft.irc.command.gamecommands.Say;
 import org.monstercraft.irc.command.gamecommands.Unmute;
 import org.monstercraft.irc.command.irccommands.Announce;
+import org.monstercraft.irc.command.irccommands.Other;
 
 /**
  * This class manages all of the plugins commands.
@@ -49,6 +50,7 @@ public class CommandManager {
 		IRCCommands.add(new org.monstercraft.irc.command.irccommands.Mute(
 				plugin));
 		IRCCommands.add(new Announce(plugin));
+		IRCCommands.add(new Other(plugin));
 	}
 
 	/**
@@ -91,7 +93,8 @@ public class CommandManager {
 	 *            The arguments in the command.
 	 * @return True if the command executed successfully; Otherwise false.
 	 */
-	public boolean onIRCCommand(final String sender, final String arg, final String channel) {
+	public boolean onIRCCommand(final String sender, final String arg,
+			final String channel) {
 		for (IRCCommand c : IRCCommands) {
 			if (c.canExecute(sender, arg, channel)) {
 				c.execute(sender, arg, channel);

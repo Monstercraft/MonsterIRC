@@ -5,11 +5,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.monstercraft.irc.listeners.IRCPlayerListener;
-import org.monstercraft.irc.listeners.IRCServerListener;
+import org.monstercraft.irc.listeners.IRCListener;
 import org.monstercraft.irc.managers.CommandManager;
 import org.monstercraft.irc.managers.HandleManager;
 import org.monstercraft.irc.managers.HookManager;
@@ -25,37 +22,35 @@ import org.monstercraft.irc.util.Variables;
  */
 public class IRC extends JavaPlugin {
 
-	private IRCPlayerListener playerListener = null;
-	private IRCServerListener serverListener = null;
-
 	private static HandleManager handles = null;
 	private static HookManager hooks = null;
 	private static CommandManager command = null;
+	private static IRCListener listener = null;
 
 	private static Logger logger = Logger.getLogger("MineCraft");
 
 	private Settings settings = null;
 
 	public void onEnable() {
-		log("Starting plugin.");
-		settings = new Settings(this);
-		if (!settings.firstRun()) {
-			hooks = new HookManager(this);
-			handles = new HandleManager(this);
-			command = new CommandManager(this);
-			playerListener = new IRCPlayerListener(this);
-			serverListener = new IRCServerListener(this);
-			getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT,
-					playerListener, Priority.Highest, this);
-			getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
-					serverListener, Priority.Monitor, this);
-			getHandleManager().getIRCHandler().connect(Variables.server,
-					Variables.port, Variables.login, Variables.name,
-					Variables.password, Variables.ident);
-			log("Successfully started up.");
-		} else {
-			getServer().getPluginManager().disablePlugin(
-					getServer().getPluginManager().getPlugin("MonsterIRC"));
+		try {
+			log("Starting plugin.");
+			settings = new Settings(this);
+			if (!settings.firstRun()) {
+				hooks = new HookManager(this);
+				handles = new HandleManager(this);
+				command = new CommandManager(this);
+				listener = new IRCListener(this);
+				getServer().getPluginManager().registerEvents(listener, this);
+				getHandleManager().getIRCHandler().connect(Variables.server,
+						Variables.port, Variables.login, Variables.name,
+						Variables.password, Variables.ident);
+				log("Successfully started up.");
+			} else {
+				getServer().getPluginManager().disablePlugin(
+						getServer().getPluginManager().getPlugin("MonsterIRC"));
+			}
+		} catch (Exception e) {
+			debug(e.toString());
 		}
 
 	}
@@ -93,6 +88,18 @@ public class IRC extends JavaPlugin {
 	 */
 	protected static void log(String msg) {
 		logger.log(Level.INFO, "[IRC] " + msg);
+	}
+
+	/**
+	 * Logs debugging messages to the console.
+	 * 
+	 * @param error
+	 *            The message to print.
+	 */
+	protected static void debug(String error) {
+		if (Variables.debug) {
+			logger.log(Level.INFO, "[IRC - Debug] " + error);
+		}
 	}
 
 	/**

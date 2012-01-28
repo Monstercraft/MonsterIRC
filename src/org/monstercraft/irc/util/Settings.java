@@ -48,10 +48,11 @@ public class Settings extends IRC {
 			config.set("IRC.NICK_NAME", Variables.name);
 			config.set("IRC.SERVER", Variables.server);
 			config.set("IRC.PORT", Variables.port);
+			config.set("IRC.DEBUG", Variables.debug);
 			config.save(new File(Constants.SETTINGS_PATH
 					+ Constants.SETTINGS_FILE));
 		} catch (Exception e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 	}
 
@@ -74,9 +75,10 @@ public class Settings extends IRC {
 				Variables.name = config.getString("IRC.NICK_NAME");
 				Variables.server = config.getString("IRC.SERVER");
 				Variables.port = config.getInt("IRC.PORT");
+				Variables.debug = config.getBoolean("IRC.DEBUG");
 			} catch (Exception e) {
 				saveConfig();
-				e.printStackTrace();
+				debug(e.toString());
 			}
 		}
 		if (Variables.name.equalsIgnoreCase("Default")) {
@@ -101,9 +103,9 @@ public class Settings extends IRC {
 			try {
 				p.load(new FileInputStream(CONFIGURATION_FILE));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			} catch (IOException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			}
 			for (Object o : p.keySet()) {
 				String s = ((String) o);
@@ -120,16 +122,16 @@ public class Settings extends IRC {
 				+ Constants.MUTED_FILE);
 		Properties p = new Properties();
 		p.clear();
-		for (int i = 0; i < Variables.muted.size(); i++) {			
+		for (int i = 0; i < Variables.muted.size(); i++) {
 			p.setProperty(String.valueOf(i), Variables.muted.get(i));
 		}
 		try {
 			p.store(new FileOutputStream(CONFIGURATION_FILE),
 					"MonsterIRC's Muted Users - Please don't edit unless you know how to properly!");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 	}
 
@@ -154,9 +156,9 @@ public class Settings extends IRC {
 			try {
 				p.load(new FileInputStream(f));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			} catch (IOException e) {
-				e.printStackTrace();
+				debug(e.toString());
 			}
 			if (p.getProperty("Enabled") != null) {
 				if (Boolean.parseBoolean(p.getProperty("Enabled"))) {
@@ -209,9 +211,9 @@ public class Settings extends IRC {
 			p.store(new FileOutputStream(HeroChatSample),
 					"This is a HeroChat sample, use this to create other .channel files that will integrate with herochat.\n This type of channel file will allow chat from players within that HeroChat channel ingame to communicate with the specified IRC channel.\n The plugin will connect to the IRC channel with the same name as this file!");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 		p.clear();
 		p.setProperty("Enabled", String.valueOf(false));
@@ -220,9 +222,9 @@ public class Settings extends IRC {
 			p.store(new FileOutputStream(Sample),
 					"This is a sample, use this to create other .channel files.\n This type of channel file will allow chat from all players ingame to communicate with the specified IRC channel.\n The plugin will connect to the IRC channel with the same name as this file!");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 		p.clear();
 		p.setProperty("AdminChatEnabled", String.valueOf(false));
@@ -231,9 +233,9 @@ public class Settings extends IRC {
 			p.store(new FileOutputStream(AdminChatSample),
 					"This is a AdminChat sample, use this to create other .channel files that will integrate with AdminChat.\n This type of channel file will allow chat from players within AdminChat ingame to communicate with the specified IRC channel.\n The plugin will connect to the IRC channel with the same name as this file!");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			debug(e.toString());
 		}
 		new CreateReadme();
 		log("*************************************************");
