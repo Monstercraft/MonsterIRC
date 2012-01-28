@@ -49,6 +49,7 @@ public class Settings extends IRC {
 			config.set("IRC.SERVER", Variables.server);
 			config.set("IRC.PORT", Variables.port);
 			config.set("IRC.DEBUG", Variables.debug);
+			config.set("IRC.INGAME_COMMANDS", Variables.ingamecommands);
 			config.save(new File(Constants.SETTINGS_PATH
 					+ Constants.SETTINGS_FILE));
 		} catch (Exception e) {
@@ -76,6 +77,8 @@ public class Settings extends IRC {
 				Variables.server = config.getString("IRC.SERVER");
 				Variables.port = config.getInt("IRC.PORT");
 				Variables.debug = config.getBoolean("IRC.DEBUG");
+				Variables.ingamecommands = config
+						.getBoolean("IRC.INGAME_COMMANDS");
 			} catch (Exception e) {
 				saveConfig();
 				debug(e.toString());

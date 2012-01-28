@@ -17,6 +17,7 @@ import org.monstercraft.irc.command.gamecommands.Say;
 import org.monstercraft.irc.command.gamecommands.Unmute;
 import org.monstercraft.irc.command.irccommands.Announce;
 import org.monstercraft.irc.command.irccommands.Other;
+import org.monstercraft.irc.util.Variables;
 
 /**
  * This class manages all of the plugins commands.
@@ -50,7 +51,9 @@ public class CommandManager {
 		IRCCommands.add(new org.monstercraft.irc.command.irccommands.Mute(
 				plugin));
 		IRCCommands.add(new Announce(plugin));
-		IRCCommands.add(new Other(plugin));
+		if (Variables.ingamecommands) {
+			IRCCommands.add(new Other(plugin));
+		}
 	}
 
 	/**

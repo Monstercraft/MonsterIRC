@@ -18,6 +18,11 @@ public class Variables {
 	 * The option to debug.
 	 */
 	public static boolean debug = false;
+	
+	/**
+	 * The option to execute ingame commands as and IRC OP.
+	 */
+	public static boolean ingamecommands = true;
 
 	/**
 	 * The option to send the IDENTIFY command to nickserv.
