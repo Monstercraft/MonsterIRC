@@ -115,7 +115,7 @@ public class IRCHandler extends IRC {
 			} catch (Exception e) {
 				log("Failed to connect to IRC!");
 				log("Please tell Fletch_to_99 the following!");
-				debug(e.toString());
+				debug(e);
 				disconnect();
 			}
 		}
@@ -149,7 +149,7 @@ public class IRCHandler extends IRC {
 			connection = null;
 			log("Successfully disconnected from IRC.");
 		} catch (Exception e) {
-			debug(e.toString());
+			debug(e);
 		}
 		return !isConnected();
 	}
@@ -175,7 +175,7 @@ public class IRCHandler extends IRC {
 			writer.flush();
 			log("Successfully joined " + channel);
 		} catch (IOException e) {
-			debug(e.toString());
+			debug(e);
 		}
 	}
 
@@ -296,7 +296,7 @@ public class IRCHandler extends IRC {
 										}
 									}
 								} catch (final Exception e) {
-									debug(e.toString());
+									debug(e);
 								}
 							}
 							if (line.toLowerCase().startsWith("ping ")) {
@@ -352,11 +352,11 @@ public class IRCHandler extends IRC {
 							}
 						}
 					} catch (final Exception e) {
-						debug(e.toString());
+						debug(e);
 					}
 				}
 			} catch (IOException e) {
-				debug(e.toString());
+				debug(e);
 			}
 		}
 
@@ -399,7 +399,7 @@ public class IRCHandler extends IRC {
 				writer.write("PRIVMSG " + channel + " :" + Message + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				debug(e.toString());
+				debug(e);
 			}
 		}
 	}
@@ -416,7 +416,7 @@ public class IRCHandler extends IRC {
 				writer.write("NICK " + Nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				debug(e.toString());
+				debug(e);
 			}
 		}
 	}
@@ -437,7 +437,7 @@ public class IRCHandler extends IRC {
 				writer.write("MODE " + channel + " +b" + Nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				debug(e.toString());
+				debug(e);
 			}
 		}
 	}
@@ -546,26 +546,56 @@ public class IRCHandler extends IRC {
 										|| mcPermissions.getInstance()
 												.adminChat(p))
 									p.sendMessage(format);
-								break;
 							}
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
-							&& IRC.getHookManager().getHeroChatHook() != null) {
-						c.getHeroChatChannel().sendMessage("<" + name + ">",
-								removeColors(message),
-								c.getHeroChatChannel().getMsgFormat(), false);
-						break;
+							&& !Variables.hc4) {
+						c.getHeroChatChannel()
+								.announce(
+										Variables.format.substring(0,
+												Variables.format
+														.indexOf("{name}"))
+												+ name
+												+ Variables.format.substring(
+														Variables.format
+																.indexOf("{name}") + 6,
+														Variables.format
+																.indexOf("{message}"))
+												+ removeColors(message)
+												+ Variables.format
+														.substring(Variables.format
+																.indexOf("{message}") + 9));
+					} else if (c.getChatType() == ChatType.HEROCHAT
+							&& IRC.getHookManager().getHeroChatHook() != null
+							&& Variables.hc4) {
+						c.getHeroChatFourChannel().sendMessage(
+								"<" + name + ">", removeColors(message),
+								c.getHeroChatFourChannel().getMsgFormat(),
+								false);
 					} else if (c.getChatType() == ChatType.ALL) {
 						plugin.getServer()
 								.broadcastMessage(
-										"[IRC]<" + name + ">: "
-												+ removeColors(message));
-						break;
+										"[IRC]"
+												+ Variables.format
+														.substring(
+																0,
+																Variables.format
+																		.indexOf("{name}"))
+												+ name
+												+ Variables.format.substring(
+														Variables.format
+																.indexOf("{name}") + 6,
+														Variables.format
+																.indexOf("{message}"))
+												+ removeColors(message)
+												+ Variables.format
+														.substring(Variables.format
+																.indexOf("{message}") + 9));
 					}
 				}
 			}
 		} catch (Exception e) {
-			debug(e.toString());
+			debug(e);
 		}
 	}
 }

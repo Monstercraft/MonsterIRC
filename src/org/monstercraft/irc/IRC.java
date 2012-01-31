@@ -57,11 +57,13 @@ public class IRC extends JavaPlugin {
 
 	public void onDisable() {
 		if (!settings.firstRun()) {
-			if (getHandleManager().getIRCHandler().isConnected()) {
-				getHandleManager().getIRCHandler().disconnect();
+			if (getHandleManager().getIRCHandler() != null) {
+				if (getHandleManager().getIRCHandler().isConnected()) {
+					getHandleManager().getIRCHandler().disconnect();
+				}
 			}
 		} else {
-			log("Please go edit the config!");
+			log("Please go check the config or look for any errors that may have occured!");
 		}
 		log("Successfully disabled plugin.");
 	}
@@ -96,9 +98,22 @@ public class IRC extends JavaPlugin {
 	 * @param error
 	 *            The message to print.
 	 */
+	protected static void debug(Exception error) {
+		if (Variables.debug) {
+			logger.log(Level.WARNING, "[IRC - Critical error detected!]");
+			error.printStackTrace();
+		}
+	}
+
+	/**
+	 * Logs debugging messages to the console.
+	 * 
+	 * @param error
+	 *            The message to print.
+	 */
 	protected static void debug(String error) {
 		if (Variables.debug) {
-			logger.log(Level.INFO, "[IRC - Debug] " + error);
+			logger.log(Level.WARNING, "[IRC - Debug] " + error);
 		}
 	}
 

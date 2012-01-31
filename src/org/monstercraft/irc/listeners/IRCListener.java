@@ -14,6 +14,8 @@ import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
+import com.dthielke.herochat.Herochat;
+
 /**
  * This class listens for chat ingame to pass to the IRC.
  * 
@@ -72,7 +74,32 @@ public class IRCListener extends IRC implements Listener {
 							}
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
-							&& IRC.getHookManager().getHeroChatHook() != null) {
+							&& !Variables.hc4) {
+						if (IRC.getHookManager().getmcMMOHook() != null) {
+							if (IRC.getHookManager().getmcMMOHook()
+									.getPlayerProfile(player)
+									.getAdminChatMode()) {
+								continue;
+							}
+							if (Herochat.getChatterManager().getChatter(player)
+									.getActiveChannel() == c
+									.getHeroChatChannel()
+									&& !Herochat.getChatterManager()
+											.getChatter(player.getName())
+											.isMuted()) {
+								StringBuffer result = new StringBuffer();
+								result.append("<" + player.getName() + ">"
+										+ " ");
+								result.append(event.getMessage());
+								IRC.getHandleManager()
+										.getIRCHandler()
+										.sendMessage(result.toString(),
+												c.getChannel());
+							}
+						}
+					} else if (c.getChatType() == ChatType.HEROCHAT
+							&& IRC.getHookManager().getHeroChatHook() != null
+							&& Variables.hc4) {
 						if (IRC.getHookManager().getHeroChatHook().isEnabled()) {
 							if (IRC.getHookManager().getmcMMOHook() != null) {
 								if (IRC.getHookManager().getmcMMOHook()
@@ -83,14 +110,14 @@ public class IRCListener extends IRC implements Listener {
 							}
 							if (IRC.getHookManager().getHeroChatHook()
 									.getChannelManager()
-									.getActiveChannel(player.getName())
-									.getName()
-									.equals(c.getHeroChatChannel().getName())
-									&& c.getHeroChatChannel().isEnabled()
+									.getActiveChannel(player.getName()) == c
+									.getHeroChatFourChannel()
+									&& c.getHeroChatFourChannel().isEnabled()
 									&& !IRC.getHookManager().getHeroChatHook()
 											.getChannelManager().getMutelist()
 											.contains(player.getName())
-									&& !c.getHeroChatChannel().getMutelist()
+									&& !c.getHeroChatFourChannel()
+											.getMutelist()
 											.contains(player.getName())) {
 								if (IRC.getHandleManager()
 										.getPermissionsHandler()
@@ -118,27 +145,25 @@ public class IRCListener extends IRC implements Listener {
 													c.getChannel());
 								}
 							}
-						} else if (c.getChatType() == ChatType.ALL) {
-							if (IRC.getHookManager().getmcMMOHook() != null) {
-								if (IRC.getHookManager().getmcMMOHook()
-										.getPlayerProfile(player)
-										.getAdminChatMode()) {
-									continue;
-								}
-							}
-							StringBuffer result = new StringBuffer();
-							result.append("<" + player.getName() + ">" + " ");
-							result.append(event.getMessage());
-							IRC.getHandleManager()
-									.getIRCHandler()
-									.sendMessage(result.toString(),
-											c.getChannel());
 						}
+					} else if (c.getChatType() == ChatType.ALL) {
+						if (IRC.getHookManager().getmcMMOHook() != null) {
+							if (IRC.getHookManager().getmcMMOHook()
+									.getPlayerProfile(player)
+									.getAdminChatMode()) {
+								continue;
+							}
+						}
+						StringBuffer result = new StringBuffer();
+						result.append("<" + player.getName() + ">" + " ");
+						result.append(event.getMessage());
+						IRC.getHandleManager().getIRCHandler()
+								.sendMessage(result.toString(), c.getChannel());
 					}
 				}
 			}
 		} catch (Exception e) {
-			debug(e.toString());
+			debug(e);
 		}
 	}
 }

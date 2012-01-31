@@ -18,11 +18,16 @@ public class Variables {
 	 * The option to debug.
 	 */
 	public static boolean debug = false;
-	
+
+	/**
+	 * Hero chat 4 compatiblilty.
+	 */
+	public static boolean hc4 = false;
+
 	/**
 	 * The option to execute ingame commands as and IRC OP.
 	 */
-	public static boolean ingamecommands = true;
+	public static boolean ingamecommands = false;
 
 	/**
 	 * The option to send the IDENTIFY command to nickserv.
@@ -53,6 +58,11 @@ public class Variables {
 	 * The password to identify with.
 	 */
 	public static String password = "default";
+
+	/**
+	 * The format for the messages to be recieved in.
+	 */
+	public static String format = "<{name}>: {message}";
 
 	/**
 	 * A list containing all of the muted users.

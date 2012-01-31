@@ -31,4 +31,6 @@ public class Constants {
 	 */
 	public static final String CHANNELS_PATH = "Channels" + File.separator;
 
+	public static final String FORMAT_FILE = "Format.txt";
+
 }

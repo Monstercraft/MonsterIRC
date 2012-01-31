@@ -2,6 +2,7 @@ package org.monstercraft.irc.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.util.Variables;
 
 import com.herocraftonline.dthielke.herochat.HeroChat;
 
@@ -43,6 +44,10 @@ public class HeroChatHook extends IRC {
 		HeroChatHook = ((HeroChat) HeroChatPlugin);
 		log("HeroChat detected; hooking: "
 				+ ((HeroChat) HeroChatPlugin).getDescription().getFullName());
+		String ver = ((HeroChat) HeroChatPlugin).getDescription().getVersion();
+		if (!ver.startsWith("5")) {
+			Variables.hc4 = true;
+		}
 	}
 
 	/**

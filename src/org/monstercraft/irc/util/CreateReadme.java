@@ -45,7 +45,7 @@ public class CreateReadme extends IRC {
 			out.println("Auto join specifies weither you want MonsterIRC to automatically join the specified IRC channel when the plugin is started. If you wish for this to be false then you can manually connect later with /irc join (channel).");
 			out.close();
 		} catch (IOException e) {
-			debug(e.toString());
+			debug(e);
 		}
 	}
 }

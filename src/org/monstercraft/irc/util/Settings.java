@@ -35,6 +35,7 @@ public class Settings extends IRC {
 		loadConfigs();
 		populateChannels();
 		loadMuteConfig();
+		loadFormatConfig();
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class Settings extends IRC {
 			config.save(new File(Constants.SETTINGS_PATH
 					+ Constants.SETTINGS_FILE));
 		} catch (Exception e) {
-			debug(e.toString());
+			debug(e);
 		}
 	}
 
@@ -81,7 +82,7 @@ public class Settings extends IRC {
 						.getBoolean("IRC.INGAME_COMMANDS");
 			} catch (Exception e) {
 				saveConfig();
-				debug(e.toString());
+				debug(e);
 			}
 		}
 		if (Variables.name.equalsIgnoreCase("Default")) {
@@ -106,9 +107,9 @@ public class Settings extends IRC {
 			try {
 				p.load(new FileInputStream(CONFIGURATION_FILE));
 			} catch (FileNotFoundException e) {
-				debug(e.toString());
+				debug(e);
 			} catch (IOException e) {
-				debug(e.toString());
+				debug(e);
 			}
 			for (Object o : p.keySet()) {
 				String s = ((String) o);
@@ -132,9 +133,56 @@ public class Settings extends IRC {
 			p.store(new FileOutputStream(CONFIGURATION_FILE),
 					"MonsterIRC's Muted Users - Please don't edit unless you know how to properly!");
 		} catch (FileNotFoundException e) {
-			debug(e.toString());
+			debug(e);
 		} catch (IOException e) {
-			debug(e.toString());
+			debug(e);
+		}
+	}
+
+	/**
+	 * This method saves the format Config.
+	 */
+	public void saveFormatConfig() {
+		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
+				+ Constants.FORMAT_FILE);
+		Properties p = new Properties();
+		p.clear();
+		p.setProperty("Format", Variables.format);
+		try {
+			p.store(new FileOutputStream(CONFIGURATION_FILE),
+					"This is the way the messages will be sent to the server, excluding adminchat.\n Must contain {name} and {message} or the default format will be loaded.");
+		} catch (FileNotFoundException e) {
+			debug(e);
+		} catch (IOException e) {
+			debug(e);
+		}
+	}
+
+	/**
+	 * This method loads the formatting for relaying messages to the server from
+	 * irc.
+	 */
+	public void loadFormatConfig() {
+		Properties p = new Properties();
+		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
+				+ Constants.FORMAT_FILE);
+		if (!CONFIGURATION_FILE.exists()) {
+			new File(Constants.SETTINGS_PATH).mkdirs();
+			saveFormatConfig();
+		} else {
+			try {
+				p.load(new FileInputStream(CONFIGURATION_FILE));
+			} catch (FileNotFoundException e) {
+				debug(e);
+			} catch (IOException e) {
+				debug(e);
+			}
+			String s = p.getProperty("Format");
+			if (s.contains("{name}") && s.contains("{message}")) {
+				Variables.format = s;
+			} else {
+				debug("Invalid format detected!");
+			}
 		}
 	}
 
@@ -159,36 +207,40 @@ public class Settings extends IRC {
 			try {
 				p.load(new FileInputStream(f));
 			} catch (FileNotFoundException e) {
-				debug(e.toString());
+				debug(e);
 			} catch (IOException e) {
-				debug(e.toString());
+				debug(e);
 			}
 			if (p.getProperty("Enabled") != null) {
 				if (Boolean.parseBoolean(p.getProperty("Enabled"))) {
-					Variables.channels
-							.add(new IRCChannel(Boolean.parseBoolean(p
-									.getProperty("AutoJoin")), "#"
+					Variables.channels.add(new IRCChannel(Boolean
+							.parseBoolean(p.getProperty("AutoJoin", "false")),
+							Boolean.parseBoolean(p.getProperty("Default",
+									"false")), "#"
 									+ f.getName().substring(0,
 											f.getName().lastIndexOf(".")),
-									ChatType.ALL));
+							ChatType.ALL));
 				}
 			} else if (p.getProperty("AdminChatEnabled") != null) {
 				if (Boolean.parseBoolean(p.getProperty("AdminChatEnabled"))) {
 					Variables.channels.add(new IRCChannel(Boolean
-							.parseBoolean(p.getProperty("AutoJoin")), "#"
-							+ f.getName().substring(0,
-									f.getName().lastIndexOf(".")),
+							.parseBoolean(p.getProperty("AutoJoin", "false")),
+							Boolean.parseBoolean(p.getProperty("Default",
+									"false")), "#"
+									+ f.getName().substring(0,
+											f.getName().lastIndexOf(".")),
 							ChatType.ADMINCHAT));
 				}
 			} else if (p.getProperty("HeroChatEnabled") != null) {
 				if (Boolean.parseBoolean(p.getProperty("HeroChatEnabled"))) {
-					Variables.channels
-							.add(new IRCChannel(Boolean.parseBoolean(p
-									.getProperty("AutoJoin")), "#"
+					Variables.channels.add(new IRCChannel(Boolean
+							.parseBoolean(p.getProperty("AutoJoin", "false")),
+							Boolean.parseBoolean(p.getProperty("Default",
+									"false")), "#"
 									+ f.getName().substring(0,
 											f.getName().lastIndexOf(".")), p
 									.getProperty("HeroChatChannel"),
-									ChatType.HEROCHAT));
+							ChatType.HEROCHAT));
 				}
 			}
 		}
@@ -208,38 +260,42 @@ public class Settings extends IRC {
 		final File Sample = new File(Constants.SETTINGS_PATH
 				+ Constants.CHANNELS_PATH + "Sample.channel");
 		p.setProperty("HeroChatEnabled", String.valueOf(false));
+		p.setProperty("Default", String.valueOf(true));
 		p.setProperty("AutoJoin", String.valueOf(false));
 		p.setProperty("HeroChatChannel", "PLACE INGAME CHANNEL NAME HERE!");
 		try {
 			p.store(new FileOutputStream(HeroChatSample),
 					"This is a HeroChat sample, use this to create other .channel files that will integrate with herochat.\n This type of channel file will allow chat from players within that HeroChat channel ingame to communicate with the specified IRC channel.\n The plugin will connect to the IRC channel with the same name as this file!");
 		} catch (FileNotFoundException e) {
-			debug(e.toString());
+			debug(e);
 		} catch (IOException e) {
-			debug(e.toString());
+			debug(e);
 		}
 		p.clear();
 		p.setProperty("Enabled", String.valueOf(false));
+		p.setProperty("Default", String.valueOf(true));
 		p.setProperty("AutoJoin", String.valueOf(false));
 		try {
 			p.store(new FileOutputStream(Sample),
 					"This is a sample, use this to create other .channel files.\n This type of channel file will allow chat from all players ingame to communicate with the specified IRC channel.\n The plugin will connect to the IRC channel with the same name as this file!");
 		} catch (FileNotFoundException e) {
-			debug(e.toString());
+			debug(e);
 		} catch (IOException e) {
-			debug(e.toString());
+			debug(e);
 		}
 		p.clear();
 		p.setProperty("AdminChatEnabled", String.valueOf(false));
+		p.setProperty("Default", String.valueOf(true));
 		p.setProperty("AutoJoin", String.valueOf(false));
 		try {
 			p.store(new FileOutputStream(AdminChatSample),
 					"This is a AdminChat sample, use this to create other .channel files that will integrate with AdminChat.\n This type of channel file will allow chat from players within AdminChat ingame to communicate with the specified IRC channel.\n The plugin will connect to the IRC channel with the same name as this file!");
 		} catch (FileNotFoundException e) {
-			debug(e.toString());
+			debug(e);
 		} catch (IOException e) {
-			debug(e.toString());
+			debug(e);
 		}
+		p.clear();
 		new CreateReadme();
 		log("*************************************************");
 		log("*************************************************");

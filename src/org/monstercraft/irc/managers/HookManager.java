@@ -17,9 +17,9 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  */
 public class HookManager {
 
-	private HeroChatHook herochat = null;
 	private mcMMOHook mcmmo = null;
 	private PermissionsHook permissions = null;
+	private HeroChatHook herochat = null;
 
 	/**
 	 * Creates an instance of the HookManager class.
@@ -28,9 +28,9 @@ public class HookManager {
 	 *            The parent plugin.
 	 */
 	public HookManager(final IRC plugin) {
-		herochat = new HeroChatHook(plugin);
 		mcmmo = new mcMMOHook(plugin);
 		permissions = new PermissionsHook(plugin);
+		herochat = new HeroChatHook(plugin);
 	}
 
 	/**
@@ -52,15 +52,6 @@ public class HookManager {
 	}
 
 	/**
-	 * Fetches the Permissions hook.
-	 * 
-	 * @return The hook into Permissions.
-	 */
-	public Permissions getPermissionsHook() {
-		return permissions.getHook();
-	}
-
-	/**
 	 * Creates a new hook into the plugin.
 	 * 
 	 * @param hook
@@ -69,6 +60,15 @@ public class HookManager {
 	 */
 	public HeroChatHook setHeroChatHook(final HeroChatHook hook) {
 		return herochat = hook;
+	}
+
+	/**
+	 * Fetches the Permissions hook.
+	 * 
+	 * @return The hook into Permissions.
+	 */
+	public Permissions getPermissionsHook() {
+		return permissions.getHook();
 	}
 
 	/**
