@@ -36,7 +36,7 @@ public class HeroChatHook extends IRC {
 				.getPlugin("HeroChat");
 
 		if (HeroChatPlugin == null) {
-			log("HeroChat not detected.");
+			log("HeroChat 4 not detected.");
 			HeroChatHook = null;
 			return;
 		}

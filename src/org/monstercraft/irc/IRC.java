@@ -30,30 +30,45 @@ public class IRC extends JavaPlugin {
 	private static Logger logger = Logger.getLogger("MineCraft");
 
 	private Settings settings = null;
+	private Thread watch = null;
+	private IRC plugin;
 
 	public void onEnable() {
-		try {
-			log("Starting plugin.");
-			settings = new Settings(this);
-			if (!settings.firstRun()) {
-				hooks = new HookManager(this);
-				handles = new HandleManager(this);
-				command = new CommandManager(this);
-				listener = new IRCListener(this);
-				getServer().getPluginManager().registerEvents(listener, this);
-				getHandleManager().getIRCHandler().connect(Variables.server,
-						Variables.port, Variables.login, Variables.name,
-						Variables.password, Variables.ident);
-				log("Successfully started up.");
-			} else {
-				getServer().getPluginManager().disablePlugin(
-						getServer().getPluginManager().getPlugin("MonsterIRC"));
-			}
-		} catch (Exception e) {
-			debug(e.toString());
-		}
-
+		plugin = this;
+		watch = new Thread(STARTUP);
+		watch.setDaemon(true);
+		watch.setPriority(Thread.MAX_PRIORITY);
+		watch.start();
 	}
+
+	private final Runnable STARTUP = new Runnable() {
+		public void run() {
+			try {
+				log("Starting plugin.");
+				settings = new Settings(plugin);
+				if (!settings.firstRun()) {
+					hooks = new HookManager(plugin);
+					handles = new HandleManager(plugin);
+					command = new CommandManager(plugin);
+					listener = new IRCListener(plugin);
+					getServer().getPluginManager().registerEvents(listener,
+							plugin);
+					if (getHandleManager().getIRCHandler()
+							.connect(Variables.server, Variables.port,
+									Variables.login, Variables.name,
+									Variables.password, Variables.ident)) {
+						log("Successfully started up.");
+					} else {
+						stop();
+					}
+				} else {
+					stop();
+				}
+			} catch (Exception e) {
+				debug(e);
+			}
+		}
+	};
 
 	public void onDisable() {
 		if (!settings.firstRun()) {
@@ -103,6 +118,16 @@ public class IRC extends JavaPlugin {
 			logger.log(Level.WARNING, "[IRC - Critical error detected!]");
 			error.printStackTrace();
 		}
+	}
+
+	/**
+	 * Stops the server
+	 */
+	protected void stop() {
+		this.getServer()
+				.getPluginManager()
+				.disablePlugin(
+						getServer().getPluginManager().getPlugin("MonsterIRC"));
 	}
 
 	/**

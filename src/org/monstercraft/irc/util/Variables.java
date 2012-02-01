@@ -74,4 +74,9 @@ public class Variables {
 	 */
 	public static Set<IRCChannel> channels = new HashSet<IRCChannel>();
 
+	/**
+	 * The time to wait before disconnecting.
+	 */
+	public static int timeout = 3000;
+
 }

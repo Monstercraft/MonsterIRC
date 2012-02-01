@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.util.ChatType;
+import org.monstercraft.irc.util.Pinger;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
@@ -69,54 +70,73 @@ public class IRCHandler extends IRC {
 			final boolean identify) {
 		if (!isConnected()) {
 			String line = null;
-			try {
-				connection = new Socket(server, port);
-				writer = new BufferedWriter(new OutputStreamWriter(
-						connection.getOutputStream()));
-				reader = new BufferedReader(new InputStreamReader(
-						connection.getInputStream()));
-				log("Attempting to connect to chat.");
-				writer.write("USER " + user + " 8 * :" + nick + "\r\n");
-				writer.write("NICK " + Variables.name + "\r\n");
-				writer.flush();
-				log("Processing connection....");
-				while ((line = reader.readLine()) != null) {
-					debug(line);
-					if (line.contains("004")) {
-						break;
-					} else if (line.contains("433")) {
-						log("Your nickname is already in use, please switch it");
-						log("using \"nick [NAME]\" and try to connect again.");
-						disconnect();
-						break;
-					} else if (line.toLowerCase().startsWith("ping ")) {
-						writer.write("PONG " + line.substring(5) + "\r\n");
+			long ping = Pinger.ping(Variables.server, Variables.port,
+					Variables.timeout);
+			if (ping > 0) {
+				log("The IRC server took " + ping + " MS to respond.");
+				try {
+					connection = new Socket(server, port);
+					writer = new BufferedWriter(new OutputStreamWriter(
+							connection.getOutputStream()));
+					reader = new BufferedReader(new InputStreamReader(
+							connection.getInputStream()));
+					log("Attempting to connect to chat.");
+					if (identify) {
+						writer.write("PASS " + password + "\r\n");
 						writer.flush();
-						continue;
 					}
-				}
-				if (identify) {
-					log("Identifying with Nickserv....");
-
-					writer.write("NICKSERV IDENTIFY " + password + "\r\n");
+					writer.write("NICK " + nick + "\r\n");
 					writer.flush();
-				}
-				for (IRCChannel c : Variables.channels) {
-					if (c.isAutoJoin()) {
-						join(c.getChannel());
-
+					writer.write("USER " + user + " 8 * :" + nick + "\r\n");
+					writer.flush();
+					log("Processing connection....");
+					while ((line = reader.readLine()) != null) {
+						debug(line);
+						if (line.contains("004")) {
+							break;
+						} else if (line.contains("433")) {
+							if (!identify) {
+								log("Your nickname is already in use, please switch it");
+								log("using \"nick [NAME]\" and try to connect again.");
+								disconnect();
+								return false;
+							}
+						} else if (line.toLowerCase().startsWith("ping ")) {
+							writer.write("PONG " + line.substring(5) + "\r\n");
+							writer.flush();
+							continue;
+						}
 					}
+					if (identify) {
+						log("Identifying with Nickserv....");
+						writer.write("NICKSERV IDENTIFY " + password + "\r\n");
+						writer.flush();
+						log("Sending ghost command....");
+						writer.write("NICKSERV GHOST " + nick + " " + password
+								+ "\r\n");
+						writer.flush();
+					}
+					for (IRCChannel c : Variables.channels) {
+						if (c.isAutoJoin()) {
+							join(c.getChannel());
+
+						}
+					}
+					watch = new Thread(KEEP_ALIVE);
+					watch.setDaemon(true);
+					watch.setPriority(Thread.MAX_PRIORITY);
+					watch.start();
+					connected = true;
+				} catch (Exception e) {
+					log("Failed to connect to IRC!");
+					debug(e);
+					disconnect();
 				}
-				watch = new Thread(KEEP_ALIVE);
-				watch.setDaemon(true);
-				watch.setPriority(Thread.MAX_PRIORITY);
-				watch.start();
-				connected = true;
-			} catch (Exception e) {
-				log("Failed to connect to IRC!");
-				log("Please tell Fletch_to_99 the following!");
-				debug(e);
-				disconnect();
+			} else {
+				log("The IRC server seems to be down or running slowly!");
+				log("The plugin will now stop.");
+				connected = false;
+				return false;
 			}
 		}
 		return isConnected();
@@ -128,28 +148,34 @@ public class IRCHandler extends IRC {
 	 * @return True if we disconnect successfully; otherwise false.
 	 */
 	public boolean disconnect() {
-		try {
-			for (IRCChannel c : Variables.channels) {
-				leave(c.getChannel());
+		if (!isConnected()) {
+			try {
+				for (IRCChannel c : Variables.channels) {
+					leave(c.getChannel());
+				}
+				connected = false;
+				if (reader != null) {
+					reader.close();
+				}
+				if (writer != null) {
+					writer.close();
+				}
+				if (!connection.isClosed()) {
+					connection.shutdownInput();
+					connection.shutdownOutput();
+					connection.close();
+				}
+				if (watch != null) {
+					watch.interrupt();
+				}
+				watch = null;
+				writer = null;
+				reader = null;
+				connection = null;
+				log("Successfully disconnected from IRC.");
+			} catch (Exception e) {
+				debug(e);
 			}
-			connected = false;
-			reader.close();
-			writer.close();
-			if (!connection.isClosed()) {
-				connection.shutdownInput();
-				connection.shutdownOutput();
-				connection.close();
-			}
-			if (watch != null) {
-				watch.interrupt();
-			}
-			watch = null;
-			writer = null;
-			reader = null;
-			connection = null;
-			log("Successfully disconnected from IRC.");
-		} catch (Exception e) {
-			debug(e);
 		}
 		return !isConnected();
 	}
@@ -200,10 +226,10 @@ public class IRCHandler extends IRC {
 					String line;
 					try {
 						while ((line = reader.readLine()) != null) {
-							debug(line);
 							if (!isConnected()) {
 								break;
 							}
+							debug(line);
 							String name = null;
 							String msg = null;
 							String channel = null;
