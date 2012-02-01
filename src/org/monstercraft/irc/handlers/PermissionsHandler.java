@@ -39,9 +39,13 @@ public class PermissionsHandler extends IRC {
 	 */
 	public boolean hasCommandPerms(final Player player,
 			final GameCommand command) {
-		if (perms != null) {
-			return perms.has(player, "irc.admin")
-					|| perms.has(player, command.getPermissions());
+		if (IRC.getHookManager().getPermissionsHook() != null) {
+			if (perms != null) {
+				return perms.has(player, "irc.admin")
+						|| perms.has(player, command.getPermissions());
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}

@@ -55,23 +55,23 @@ public class IRCHandler extends IRC {
 	 *            The server to connec to.
 	 * @param port
 	 *            The port to use.
-	 * @param user
-	 *            The username.
 	 * @param nick
 	 *            The nick name.
 	 * @param password
 	 *            The password when identifing.
 	 * @param identify
 	 *            Weither the user wants to identify with nickserv.
+	 * @param timeoutMs
+	 *            The time to wait for a reply.
 	 * @return True if connected successfully; otherwise false.
 	 */
 	public boolean connect(final String server, final int port,
-			final String user, final String nick, final String password,
-			final boolean identify) {
+			final String nick, final String password, final boolean identify,
+			final int timeoutMs) {
 		if (!isConnected()) {
 			String line = null;
-			long ping = Pinger.ping(Variables.server, Variables.port,
-					Variables.timeout);
+			long ping = Pinger
+					.ping(Variables.server, Variables.port, timeoutMs);
 			if (ping > 0) {
 				log("The IRC server took " + ping + " MS to respond.");
 				try {
@@ -87,7 +87,8 @@ public class IRCHandler extends IRC {
 					}
 					writer.write("NICK " + nick + "\r\n");
 					writer.flush();
-					writer.write("USER " + user + " 8 * :" + nick + "\r\n");
+					writer.write("USER " + nick + " 8 * :"
+							+ plugin.getDescription().getVersion() + "\r\n");
 					writer.flush();
 					log("Processing connection....");
 					while ((line = reader.readLine()) != null) {
@@ -100,6 +101,11 @@ public class IRCHandler extends IRC {
 								log("using \"nick [NAME]\" and try to connect again.");
 								disconnect();
 								return false;
+							} else {
+								log("Sending ghost command....");
+								writer.write("NICKSERV GHOST " + nick + " "
+										+ password + "\r\n");
+								writer.flush();
 							}
 						} else if (line.toLowerCase().startsWith("ping ")) {
 							writer.write("PONG " + line.substring(5) + "\r\n");
@@ -110,10 +116,6 @@ public class IRCHandler extends IRC {
 					if (identify) {
 						log("Identifying with Nickserv....");
 						writer.write("NICKSERV IDENTIFY " + password + "\r\n");
-						writer.flush();
-						log("Sending ghost command....");
-						writer.write("NICKSERV GHOST " + nick + " " + password
-								+ "\r\n");
 						writer.flush();
 					}
 					for (IRCChannel c : Variables.channels) {
@@ -315,9 +317,22 @@ public class IRCHandler extends IRC {
 													.onIRCCommand(name, msg,
 															channel);
 											break;
-										} else if (!Variables.muted
-												.contains(name.toLowerCase())) {
+										} else if (!Variables.passOnName
+												&& !Variables.muted
+														.contains(name
+																.toLowerCase())) {
 											handleMessage(channel, name, msg);
+											break;
+										} else if (Variables.passOnName
+												&& msg.startsWith(Variables.name)
+												&& !Variables.muted
+														.contains(name
+																.toLowerCase())) {
+											handleMessage(
+													channel,
+													name,
+													msg.substring(Variables.name
+															.length()));
 											break;
 										}
 									}

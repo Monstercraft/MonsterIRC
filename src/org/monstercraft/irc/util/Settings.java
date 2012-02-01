@@ -44,13 +44,14 @@ public class Settings extends IRC {
 	public void saveConfig() {
 		try {
 			config.set("IRC.NICKSERV_IDENTIFY", Variables.ident);
-			config.set("IRC.NICKSERV_LOGIN", Variables.login);
 			config.set("IRC.NICKSERV_PASSWORD", Variables.password);
 			config.set("IRC.NICK_NAME", Variables.name);
 			config.set("IRC.SERVER", Variables.server);
 			config.set("IRC.PORT", Variables.port);
+			config.set("IRC.TIMEOUT", Variables.timeout);
 			config.set("IRC.DEBUG", Variables.debug);
 			config.set("IRC.INGAME_COMMANDS", Variables.ingamecommands);
+			config.set("IRC.CHAT.PASS_ON_NAME", Variables.passOnName);
 			config.save(new File(Constants.SETTINGS_PATH
 					+ Constants.SETTINGS_FILE));
 		} catch (Exception e) {
@@ -71,15 +72,23 @@ public class Settings extends IRC {
 		} else {
 			try {
 				config.load(CONFIGURATION_FILE);
-				Variables.ident = config.getBoolean("IRC.NICKSERV_IDENTIFY");
-				Variables.password = config.getString("IRC.NICKSERV_PASSWORD");
-				Variables.login = config.getString("IRC.NICKSERV_LOGIN");
-				Variables.name = config.getString("IRC.NICK_NAME");
-				Variables.server = config.getString("IRC.SERVER");
-				Variables.port = config.getInt("IRC.PORT");
-				Variables.debug = config.getBoolean("IRC.DEBUG");
-				Variables.ingamecommands = config
-						.getBoolean("IRC.INGAME_COMMANDS");
+				Variables.ident = config.getBoolean("IRC.NICKSERV_IDENTIFY",
+						Variables.ident);
+				Variables.password = config.getString("IRC.NICKSERV_PASSWORD",
+						Variables.password);
+				Variables.name = config.getString("IRC.NICK_NAME",
+						Variables.name);
+				Variables.server = config.getString("IRC.SERVER",
+						Variables.server);
+				Variables.port = config.getInt("IRC.PORT", Variables.port);
+				Variables.debug = config.getBoolean("IRC.DEBUG",
+						Variables.debug);
+				Variables.ingamecommands = config.getBoolean(
+						"IRC.INGAME_COMMANDS", Variables.ingamecommands);
+				Variables.timeout = config.getInt("IRC.TIMEOUT",
+						Variables.timeout);
+				Variables.passOnName = config.getBoolean(
+						"IRC.CHAT.PASS_ON_NAME", Variables.passOnName);
 			} catch (Exception e) {
 				saveConfig();
 				debug(e);

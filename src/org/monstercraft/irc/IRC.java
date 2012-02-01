@@ -53,10 +53,10 @@ public class IRC extends JavaPlugin {
 					listener = new IRCListener(plugin);
 					getServer().getPluginManager().registerEvents(listener,
 							plugin);
-					if (getHandleManager().getIRCHandler()
-							.connect(Variables.server, Variables.port,
-									Variables.login, Variables.name,
-									Variables.password, Variables.ident)) {
+					if (getHandleManager().getIRCHandler().connect(
+							Variables.server, Variables.port, Variables.name,
+							Variables.password, Variables.ident,
+							Variables.timeout)) {
 						log("Successfully started up.");
 					} else {
 						stop();
@@ -78,7 +78,7 @@ public class IRC extends JavaPlugin {
 				}
 			}
 		} else {
-			log("Please go check the config or look for any errors that may have occured!");
+			log("Please go edit your config!");
 		}
 		log("Successfully disabled plugin.");
 	}

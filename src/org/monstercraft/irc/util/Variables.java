@@ -13,6 +13,11 @@ import org.monstercraft.irc.wrappers.IRCChannel;
  * 
  */
 public class Variables {
+	
+	/**
+	 * Pass chat only when the bots name is said.
+	 */
+	public static boolean passOnName = false;
 
 	/**
 	 * The option to debug.
@@ -45,11 +50,6 @@ public class Variables {
 	public static String server = "irc.esper.net";
 
 	/**
-	 * The Users login name.
-	 */
-	public static String login = "Default";
-
-	/**
 	 * The users nickname.
 	 */
 	public static String name = "default";
@@ -77,6 +77,5 @@ public class Variables {
 	/**
 	 * The time to wait before disconnecting.
 	 */
-	public static int timeout = 3000;
-
+	public static int timeout = 2000;
 }
