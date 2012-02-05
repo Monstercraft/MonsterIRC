@@ -1,6 +1,7 @@
 package org.monstercraft.irc.command;
 
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.wrappers.IRCChannel;
 
 /**
  * This class is the Abstract IRC command.
@@ -34,7 +35,7 @@ public abstract class IRCCommand extends IRC {
 	 * @return True if the user is able to execute the command; otherwise false.
 	 */
 	public abstract boolean canExecute(final String sender,
-			final String message, final String channel);
+			final String message, final IRCChannel channel);
 
 	/**
 	 * The action to perfrom when executing the command.
@@ -48,5 +49,5 @@ public abstract class IRCCommand extends IRC {
 	 * @return True if the command executed successfully; otherwise false.
 	 */
 	public abstract boolean execute(final String sender, final String message,
-			final String channel);
+			final IRCChannel channel);
 }

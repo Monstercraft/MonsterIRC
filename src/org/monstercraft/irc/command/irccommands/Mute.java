@@ -3,6 +3,7 @@ package org.monstercraft.irc.command.irccommands;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
 import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.wrappers.IRCChannel;
 
 public class Mute extends IRCCommand {
 
@@ -10,12 +11,12 @@ public class Mute extends IRCCommand {
 		super(plugin);
 	}
 
-	public boolean canExecute(String sender, String message, String channel) {
+	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& message.startsWith(".mute");
 	}
 
-	public boolean execute(String sender, String message, String channel) {
+	public boolean execute(String sender, String message, IRCChannel channel) {
 		String user = message.substring(6);
 		if (IRC.getHandleManager()
 				.getIRCHandler()

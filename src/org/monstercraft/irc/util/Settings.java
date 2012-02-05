@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
@@ -20,8 +20,6 @@ import org.monstercraft.irc.wrappers.IRCChannel;
  * 
  */
 public class Settings extends IRC {
-
-	private FileConfiguration config;
 	private boolean firstRun = false;
 
 	/**
@@ -31,7 +29,6 @@ public class Settings extends IRC {
 	 *            The parent plugin.
 	 */
 	public Settings(IRC plugin) {
-		config = plugin.getConfig();
 		loadConfigs();
 		populateChannels();
 		loadMuteConfig();
@@ -39,60 +36,93 @@ public class Settings extends IRC {
 	}
 
 	/**
-	 * This method saves the plugins configuration file.
-	 */
-	public void saveConfig() {
-		try {
-			config.set("IRC.NICKSERV_IDENTIFY", Variables.ident);
-			config.set("IRC.NICKSERV_PASSWORD", Variables.password);
-			config.set("IRC.NICK_NAME", Variables.name);
-			config.set("IRC.SERVER", Variables.server);
-			config.set("IRC.PORT", Variables.port);
-			config.set("IRC.TIMEOUT", Variables.timeout);
-			config.set("IRC.DEBUG", Variables.debug);
-			config.set("IRC.INGAME_COMMANDS", Variables.ingamecommands);
-			config.set("IRC.CHAT.PASS_ON_NAME", Variables.passOnName);
-			config.save(new File(Constants.SETTINGS_PATH
-					+ Constants.SETTINGS_FILE));
-		} catch (Exception e) {
-			debug(e);
-		}
-	}
-
-	/**
 	 * This method loads the plugins configuration file.
 	 */
 	public void loadConfigs() {
+		Properties p = new Properties();
 		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
 				+ Constants.SETTINGS_FILE);
 		if (!CONFIGURATION_FILE.exists()) {
 			new File(Constants.SETTINGS_PATH).mkdirs();
 			log("Setting up default settings!");
-			saveConfig();
-		} else {
+		}
+		try {
 			try {
-				config.load(CONFIGURATION_FILE);
-				Variables.ident = config.getBoolean("IRC.NICKSERV_IDENTIFY",
-						Variables.ident);
-				Variables.password = config.getString("IRC.NICKSERV_PASSWORD",
-						Variables.password);
-				Variables.name = config.getString("IRC.NICK_NAME",
-						Variables.name);
-				Variables.server = config.getString("IRC.SERVER",
-						Variables.server);
-				Variables.port = config.getInt("IRC.PORT", Variables.port);
-				Variables.debug = config.getBoolean("IRC.DEBUG",
-						Variables.debug);
-				Variables.ingamecommands = config.getBoolean(
-						"IRC.INGAME_COMMANDS", Variables.ingamecommands);
-				Variables.timeout = config.getInt("IRC.TIMEOUT",
-						Variables.timeout);
-				Variables.passOnName = config.getBoolean(
-						"IRC.CHAT.PASS_ON_NAME", Variables.passOnName);
-			} catch (Exception e) {
-				saveConfig();
+				p.load(new FileInputStream(CONFIGURATION_FILE));
+			} catch (FileNotFoundException e) {
+				debug(e);
+			} catch (IOException e) {
 				debug(e);
 			}
+			if (p.getProperty("NICKSERV_IDENTIFY") != null) {
+				Variables.ident = Boolean.parseBoolean(p
+						.getProperty("NICKSERV_IDENTIFY"));
+			} else {
+				p.setProperty("NICKSERV_IDENTIFY",
+						String.valueOf(Variables.ident));
+			}
+			if (p.getProperty("NICKSERV_PASSWORD") != null) {
+				Variables.password = p.getProperty("NICKSERV_PASSWORD");
+			} else {
+				p.setProperty("NICKSERV_PASSWORD", Variables.password);
+			}
+			if (p.getProperty("NICK_NAME") != null) {
+				Variables.name = p.getProperty("NICK_NAME");
+			} else {
+				p.setProperty("NICK_NAME", Variables.name);
+			}
+			if (p.getProperty("SERVER") != null) {
+				Variables.server = p.getProperty("SERVER");
+			} else {
+				p.setProperty("SERVER", Variables.server);
+			}
+			if (p.getProperty("PORT") != null) {
+				Variables.port = Integer.parseInt(p.getProperty("PORT"));
+			} else {
+				p.setProperty("PORT", String.valueOf(Variables.port));
+			}
+			if (p.getProperty("PING_TIMEOUT") != null) {
+				Variables.timeout = Integer.parseInt(p
+						.getProperty("PING_TIMEOUT"));
+			} else {
+				p.setProperty("PING_TIMEOUT", String.valueOf(Variables.timeout));
+			}
+			if (p.getProperty("DEBUG") != null) {
+				Variables.debug = Boolean.parseBoolean(p.getProperty("DEBUG"));
+			} else {
+				p.setProperty("DEBUG", String.valueOf(Variables.debug));
+			}
+			if (p.getProperty("IRC_INGAME_COMMANDS") != null) {
+				Variables.ingamecommands = Boolean.parseBoolean(p
+						.getProperty("IRC_INGAME_COMMANDS"));
+			} else {
+				p.setProperty("IRC_INGAME_COMMANDS",
+						String.valueOf(Variables.ingamecommands));
+			}
+			if (p.getProperty("PASS_CHAT_ON_NAME") != null) {
+				Variables.passOnName = Boolean.parseBoolean(p
+						.getProperty("PASS_CHAT_ON_NAME"));
+			} else {
+				p.setProperty("PASS_CHAT_ON_NAME",
+						String.valueOf(Variables.passOnName));
+			}
+			if (p.getProperty("ALLOW_COLORED_MESSAGES") != null) {
+				Variables.colors = Boolean.parseBoolean(p
+						.getProperty("ALLOW_COLORED_MESSAGES"));
+			} else {
+				p.setProperty("ALLOW_COLORED_MESSAGES",
+						String.valueOf(Variables.colors));
+			}
+		} catch (Exception e) {
+			debug(e);
+		}
+		try {
+			p.store(new FileOutputStream(CONFIGURATION_FILE),
+					"For more information please refer to http://dev.bukkit.org/server-mods/monsterirc/pages/config/");
+		} catch (FileNotFoundException e) {
+			debug(e);
+		} catch (IOException e) {
+			debug(e);
 		}
 		if (Variables.name.equalsIgnoreCase("Default")) {
 			firstRun = true;
@@ -201,7 +231,7 @@ public class Settings extends IRC {
 	public void populateChannels() {
 		final File CHANNEL_DIR = new File(Constants.SETTINGS_PATH
 				+ Constants.CHANNELS_PATH);
-		HashSet<File> files = new HashSet<File>();
+		Set<File> files = new HashSet<File>();
 		if (CHANNEL_DIR.listFiles() != null) {
 			for (File f : CHANNEL_DIR.listFiles()) {
 				if (f.getName().endsWith(".channel")) {

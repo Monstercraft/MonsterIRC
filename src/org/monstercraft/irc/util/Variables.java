@@ -15,6 +15,11 @@ import org.monstercraft.irc.wrappers.IRCChannel;
 public class Variables {
 	
 	/**
+	 * The option to enable colors.
+	 */
+	public static boolean colors = true;
+	
+	/**
 	 * Pass chat only when the bots name is said.
 	 */
 	public static boolean passOnName = false;

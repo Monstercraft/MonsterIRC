@@ -5,12 +5,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.hooks.HeroChatHook;
+import org.monstercraft.irc.hooks.PermissionsExHook;
 import org.monstercraft.irc.hooks.PermissionsHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
 import org.monstercraft.irc.util.ChatType;
+import org.monstercraft.irc.util.IRCColor;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
@@ -35,7 +39,7 @@ public class IRCListener extends IRC implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPluginEnable(PluginEnableEvent event) {
 		String PluginName = event.getPlugin().getDescription().getName();
 		if (plugin != null) {
@@ -44,6 +48,9 @@ public class IRCListener extends IRC implements Listener {
 						new PermissionsHook(plugin));
 				IRC.getHandleManager().setPermissionsHandler(
 						IRC.getHookManager().getPermissionsHook());
+			} else if (PluginName.equals("PermissionsEx")) {
+				IRC.getHookManager().setPermissionsExHook(
+						new PermissionsExHook(plugin));
 			} else if (PluginName.equals("mcMMO")) {
 				IRC.getHookManager().setmcMMOHook(new mcMMOHook(plugin));
 			} else if (PluginName.equals("HeroChat")) {
@@ -69,7 +76,8 @@ public class IRCListener extends IRC implements Listener {
 								result.append(event.getMessage());
 								IRC.getHandleManager()
 										.getIRCHandler()
-										.sendMessage(result.toString(),
+										.sendMessage(
+												formatMessage(result.toString()),
 												c.getChannel());
 							}
 						}
@@ -81,21 +89,19 @@ public class IRCListener extends IRC implements Listener {
 									.getAdminChatMode()) {
 								continue;
 							}
-							if (Herochat.getChatterManager().getChatter(player)
-									.getActiveChannel() == c
-									.getHeroChatChannel()
-									&& !Herochat.getChatterManager()
-											.getChatter(player.getName())
-											.isMuted()) {
-								StringBuffer result = new StringBuffer();
-								result.append("<" + player.getName() + ">"
-										+ " ");
-								result.append(event.getMessage());
-								IRC.getHandleManager()
-										.getIRCHandler()
-										.sendMessage(result.toString(),
-												c.getChannel());
-							}
+						}
+						if (Herochat.getChatterManager().getChatter(player)
+								.getActiveChannel() == c.getHeroChatChannel()
+								&& !Herochat.getChatterManager()
+										.getChatter(player.getName()).isMuted()) {
+							StringBuffer result = new StringBuffer();
+							result.append("<" + player.getName() + ">" + " ");
+							result.append(event.getMessage());
+							IRC.getHandleManager()
+									.getIRCHandler()
+									.sendMessage(
+											formatMessage(result.toString()),
+											c.getChannel());
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
 							&& IRC.getHookManager().getHeroChatHook() != null
@@ -141,7 +147,9 @@ public class IRCListener extends IRC implements Listener {
 									result.append(event.getMessage());
 									IRC.getHandleManager()
 											.getIRCHandler()
-											.sendMessage(result.toString(),
+											.sendMessage(
+													formatMessage(result
+															.toString()),
 													c.getChannel());
 								}
 							}
@@ -157,13 +165,57 @@ public class IRCListener extends IRC implements Listener {
 						StringBuffer result = new StringBuffer();
 						result.append("<" + player.getName() + ">" + " ");
 						result.append(event.getMessage());
-						IRC.getHandleManager().getIRCHandler()
-								.sendMessage(result.toString(), c.getChannel());
+						IRC.getHandleManager()
+								.getIRCHandler()
+								.sendMessage(formatMessage(result.toString()),
+										c.getChannel());
 					}
 				}
 			}
 		} catch (Exception e) {
 			debug(e);
 		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		for (IRCChannel c : Variables.channels) {
+			IRC.getHandleManager()
+					.getIRCHandler()
+					.sendMessage(
+							IRCColor.RED.getIRCColor()
+									+ event.getPlayer().getName()
+									+ " has joined the server.", c.getChannel());
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		for (IRCChannel c : Variables.channels) {
+			IRC.getHandleManager()
+					.getIRCHandler()
+					.sendMessage(
+							IRCColor.RED.getIRCColor()
+									+ event.getPlayer().getName()
+									+ " has left the server.", c.getChannel());
+		}
+	}
+
+	private String formatMessage(final String message) {
+		String msg = message;
+		if (Variables.colors) {
+			for (IRCColor c : IRCColor.values()) {
+				if (msg.contains(c.getMinecraftColor())) {
+					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
+				}
+			}
+		} else {
+			for (IRCColor c : IRCColor.values()) {
+				if (msg.contains(c.getMinecraftColor())) {
+					msg = msg.replace(c.getMinecraftColor(), "");
+				}
+			}
+		}
+		return msg;
 	}
 }

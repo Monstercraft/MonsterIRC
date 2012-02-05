@@ -32,27 +32,30 @@ public class IRC extends JavaPlugin {
 	private Settings settings = null;
 	private Thread watch = null;
 	private IRC plugin;
+	private Object lock = new Object();
 
 	public void onEnable() {
 		plugin = this;
-		watch = new Thread(STARTUP);
-		watch.setDaemon(true);
-		watch.setPriority(Thread.MAX_PRIORITY);
-		watch.start();
+		log("Starting plugin.");
+		settings = new Settings(plugin);
+		hooks = new HookManager(plugin);
+		handles = new HandleManager(plugin);
+		command = new CommandManager(plugin);
+		listener = new IRCListener(plugin);
+		getServer().getPluginManager().registerEvents(listener,
+				plugin);
+		synchronized (lock) {
+			watch = new Thread(STARTUP);
+			watch.setDaemon(true);
+			watch.setPriority(Thread.MAX_PRIORITY);
+			watch.start();
+		}
 	}
 
 	private final Runnable STARTUP = new Runnable() {
 		public void run() {
 			try {
-				log("Starting plugin.");
-				settings = new Settings(plugin);
 				if (!settings.firstRun()) {
-					hooks = new HookManager(plugin);
-					handles = new HandleManager(plugin);
-					command = new CommandManager(plugin);
-					listener = new IRCListener(plugin);
-					getServer().getPluginManager().registerEvents(listener,
-							plugin);
 					if (getHandleManager().getIRCHandler().connect(
 							Variables.server, Variables.port, Variables.name,
 							Variables.password, Variables.ident,
@@ -81,6 +84,12 @@ public class IRC extends JavaPlugin {
 			log("Please go edit your config!");
 		}
 		log("Successfully disabled plugin.");
+		synchronized (lock) {
+			if (watch != null) {
+				watch.interrupt();
+			}
+			watch = null;
+		}
 	}
 
 	public boolean onCommand(CommandSender sender, Command command,

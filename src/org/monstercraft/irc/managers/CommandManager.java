@@ -16,8 +16,10 @@ import org.monstercraft.irc.command.gamecommands.ReloadConfig;
 import org.monstercraft.irc.command.gamecommands.Say;
 import org.monstercraft.irc.command.gamecommands.Unmute;
 import org.monstercraft.irc.command.irccommands.Announce;
+import org.monstercraft.irc.command.irccommands.List;
 import org.monstercraft.irc.command.irccommands.Other;
 import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.wrappers.IRCChannel;
 
 /**
  * This class manages all of the plugins commands.
@@ -25,7 +27,7 @@ import org.monstercraft.irc.util.Variables;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class CommandManager {
+public class CommandManager extends IRC {
 
 	private HashSet<GameCommand> gameCommands = new HashSet<GameCommand>();
 
@@ -46,6 +48,7 @@ public class CommandManager {
 		gameCommands.add(new Nick(plugin));
 		gameCommands.add(new Say(plugin));
 		gameCommands.add(new ReloadConfig(plugin));
+		IRCCommands.add(new List(plugin));
 		IRCCommands.add(new org.monstercraft.irc.command.irccommands.Unmute(
 				plugin));
 		IRCCommands.add(new org.monstercraft.irc.command.irccommands.Mute(
@@ -97,13 +100,14 @@ public class CommandManager {
 	 * @return True if the command executed successfully; Otherwise false.
 	 */
 	public boolean onIRCCommand(final String sender, final String arg,
-			final String channel) {
+			final IRCChannel channel) {
 		for (IRCCommand c : IRCCommands) {
 			if (c.canExecute(sender, arg, channel)) {
 				c.execute(sender, arg, channel);
 				return true;
 			}
 		}
+		log("Invalid IRC command");
 		return false;
 	}
 

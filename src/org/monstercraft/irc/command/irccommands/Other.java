@@ -5,6 +5,7 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
+import org.monstercraft.irc.wrappers.IRCChannel;
 
 public class Other extends IRCCommand {
 
@@ -12,11 +13,14 @@ public class Other extends IRCCommand {
 		super(plugin);
 	}
 
-	public boolean canExecute(String sender, String message, String channel) {
-		return IRC.getHandleManager().getIRCHandler().isConnected();
+	public boolean canExecute(String sender, String message, IRCChannel channel) {
+		return IRC.getHandleManager().getIRCHandler().isConnected()
+				&& !message.startsWith(".announce")
+				&& !message.startsWith(".list") && !message.startsWith(".mute")
+				&& !message.startsWith(".unmute");
 	}
 
-	public boolean execute(String sender, String message, String channel) {
+	public boolean execute(String sender, String message, IRCChannel channel) {
 		if (IRC.getHandleManager()
 				.getIRCHandler()
 				.isOp(sender,

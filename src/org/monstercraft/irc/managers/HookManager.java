@@ -2,8 +2,11 @@ package org.monstercraft.irc.managers;
 
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.hooks.HeroChatHook;
+import org.monstercraft.irc.hooks.PermissionsExHook;
 import org.monstercraft.irc.hooks.PermissionsHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
+
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.gmail.nossr50.mcMMO;
 import com.herocraftonline.dthielke.herochat.HeroChat;
@@ -19,6 +22,7 @@ public class HookManager {
 
 	private mcMMOHook mcmmo = null;
 	private PermissionsHook permissions = null;
+	private PermissionsExHook permissionsEx = null;
 	private HeroChatHook herochat = null;
 
 	/**
@@ -30,6 +34,7 @@ public class HookManager {
 	public HookManager(final IRC plugin) {
 		mcmmo = new mcMMOHook(plugin);
 		permissions = new PermissionsHook(plugin);
+		permissionsEx = new PermissionsExHook(plugin);
 		herochat = new HeroChatHook(plugin);
 	}
 
@@ -72,6 +77,15 @@ public class HookManager {
 	}
 
 	/**
+	 * Fetches the PermissionsEx hook.
+	 * 
+	 * @return The hook into PermissionsEx.
+	 */
+	public PermissionsEx getPermissionsExHook() {
+		return permissionsEx.getHook();
+	}
+
+	/**
 	 * Creates a new hook into the plugin.
 	 * 
 	 * @param hook
@@ -91,6 +105,17 @@ public class HookManager {
 	 */
 	public PermissionsHook setPermissionsHook(final PermissionsHook hook) {
 		return permissions = hook;
+	}
+
+	/**
+	 * Creates a new hook into the plugin.
+	 * 
+	 * @param hook
+	 *            A hook into PermissionsEx.
+	 * @return The new PermissionsExHook.
+	 */
+	public PermissionsExHook setPermissionsExHook(final PermissionsExHook hook) {
+		return permissionsEx = hook;
 	}
 
 }
