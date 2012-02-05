@@ -43,7 +43,7 @@ public class IRCListener extends IRC implements Listener {
 	public void onPluginEnable(PluginEnableEvent event) {
 		String PluginName = event.getPlugin().getDescription().getName();
 		if (plugin != null) {
-			if (PluginName.equals("Permissions")) {
+			if (PluginName.equals("Vault")) {
 				IRC.getHookManager().setPermissionsHook(
 						new PermissionsHook(plugin));
 				IRC.getHandleManager().setPermissionsHandler(

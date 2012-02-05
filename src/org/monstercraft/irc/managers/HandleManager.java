@@ -3,8 +3,7 @@ package org.monstercraft.irc.managers;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.handlers.IRCHandler;
 import org.monstercraft.irc.handlers.PermissionsHandler;
-
-import com.nijikokun.bukkit.Permissions.Permissions;
+import org.monstercraft.irc.hooks.PermissionsHook;
 
 /**
  * This class contains all of the plugins handles.
@@ -14,7 +13,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  */
 public class HandleManager {
 
-	private IRCHandler IRC = null;;
+	private IRCHandler irc = null;;
 	private PermissionsHandler perms = null;
 
 	/**
@@ -24,14 +23,9 @@ public class HandleManager {
 	 *            The parent plugin.
 	 */
 	public HandleManager(final IRC plugin) {
-		IRC = new IRCHandler(plugin);
-		if (org.monstercraft.irc.IRC.getHookManager().getPermissionsHook() != null) {
-			if (org.monstercraft.irc.IRC.getHookManager().getPermissionsHook()
-					.isEnabled()) {
-				perms = new PermissionsHandler(org.monstercraft.irc.IRC
-						.getHookManager().getPermissionsHook().getHandler());
-			}
-		}
+		irc = new IRCHandler(plugin);
+		perms = new PermissionsHandler(IRC.getHookManager()
+				.getPermissionsHook().getHook());
 	}
 
 	/**
@@ -40,7 +34,7 @@ public class HandleManager {
 	 * @return The IRCHandler.
 	 */
 	public IRCHandler getIRCHandler() {
-		return IRC;
+		return irc;
 	}
 
 	/**
@@ -59,10 +53,10 @@ public class HandleManager {
 	 *            The hook into Permissions.
 	 * @return The new permissions Handler.
 	 */
-	public PermissionsHandler setPermissionsHandler(final Permissions hook) {
+	public PermissionsHandler setPermissionsHandler(final PermissionsHook hook) {
 		if (hook != null) {
-			if (hook.isEnabled()) {
-				return perms = new PermissionsHandler(hook.getHandler());
+			if (perms.isEnabled()) {
+				return perms = new PermissionsHandler(hook.getHook());
 			}
 		}
 		return perms;

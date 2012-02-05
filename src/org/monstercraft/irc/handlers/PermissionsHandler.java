@@ -2,11 +2,11 @@ package org.monstercraft.irc.handlers;
 
 import java.util.List;
 
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
-
-import com.nijiko.permissions.PermissionHandler;
 
 /**
  * This handles all of the plugins permissions.
@@ -16,7 +16,7 @@ import com.nijiko.permissions.PermissionHandler;
  */
 public class PermissionsHandler extends IRC {
 
-	private PermissionHandler perms;
+	private Permission perms = null;
 
 	/**
 	 * Creates an instance of the PermissionsHandler class.
@@ -24,7 +24,7 @@ public class PermissionsHandler extends IRC {
 	 * @param perms
 	 *            The Permissions hooks handler.
 	 */
-	public PermissionsHandler(final PermissionHandler perms) {
+	public PermissionsHandler(final Permission perms) {
 		this.perms = perms;
 	}
 
@@ -81,7 +81,7 @@ public class PermissionsHandler extends IRC {
 			try {
 				String world = player.getWorld().getName();
 				String name = player.getName();
-				return perms.getGroups(world, name);
+				return perms.getPlayerGroups(world, name);
 			} catch (Exception e) {
 				log(e.getMessage());
 			}

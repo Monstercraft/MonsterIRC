@@ -1,9 +1,10 @@
 package org.monstercraft.irc.hooks;
 
-import org.bukkit.plugin.Plugin;
-import org.monstercraft.irc.IRC;
+import net.milkbowl.vault.permission.Permission;
 
-import com.nijikokun.bukkit.Permissions.Permissions;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.monstercraft.irc.IRC;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -13,7 +14,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  */
 public class PermissionsHook extends IRC {
 
-	private Permissions PermissionsHook;
+	private Permission PermissionsHook;
 	private IRC plugin;
 
 	/**
@@ -24,26 +25,30 @@ public class PermissionsHook extends IRC {
 	 */
 	public PermissionsHook(final IRC plugin) {
 		this.plugin = plugin;
-		initPermissionsHook();
+		setupPermissions();
+		Plugin permsPlugin = plugin.getServer().getPluginManager()
+				.getPlugin(PermissionsHook.getName());
+		if (PermissionsHook != null) {
+			if (permsPlugin != null) {
+				log("Vault permissions detected; hooking: "
+						+ permsPlugin.getDescription().getFullName());
+			} else {
+				log("Permissions found!");
+			}
+		} else {
+			log("Could not hook into permissions using vault!");
+		}
 	}
 
-	private void initPermissionsHook() {
-		if (PermissionsHook != null) {
-			return;
+	private Boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> permissionProvider = plugin
+				.getServer()
+				.getServicesManager()
+				.getRegistration(net.milkbowl.vault.permission.Permission.class);
+		if (permissionProvider != null) {
+			PermissionsHook = permissionProvider.getProvider();
 		}
-		Plugin PermissionsPlugin = plugin.getServer().getPluginManager()
-				.getPlugin("Permissions");
-
-		if (PermissionsPlugin == null) {
-			log("Permissions not detected.");
-			PermissionsHook = null;
-			return;
-		}
-
-		PermissionsHook = ((Permissions) PermissionsPlugin);
-		log("Permissions detected; hooking: "
-				+ ((Permissions) PermissionsPlugin).getDescription()
-						.getFullName());
+		return (PermissionsHook != null);
 	}
 
 	/**
@@ -51,7 +56,7 @@ public class PermissionsHook extends IRC {
 	 * 
 	 * @return The hook into Permissions.
 	 */
-	public Permissions getHook() {
+	public Permission getHook() {
 		return PermissionsHook;
 	}
 

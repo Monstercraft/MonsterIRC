@@ -10,7 +10,6 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.gmail.nossr50.mcMMO;
 import com.herocraftonline.dthielke.herochat.HeroChat;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * This class manages all of the hooks used within the plugin.
@@ -72,8 +71,8 @@ public class HookManager {
 	 * 
 	 * @return The hook into Permissions.
 	 */
-	public Permissions getPermissionsHook() {
-		return permissions.getHook();
+	public PermissionsHook getPermissionsHook() {
+		return permissions;
 	}
 
 	/**
