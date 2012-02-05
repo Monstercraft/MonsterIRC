@@ -13,12 +13,17 @@ import org.monstercraft.irc.wrappers.IRCChannel;
  * 
  */
 public class Variables {
-	
+
+	/**
+	 * The option to show when someone joins and quits the game/irc server.
+	 */
+	public static boolean joinAndQuit = true;
+
 	/**
 	 * The option to enable colors.
 	 */
 	public static boolean colors = true;
-	
+
 	/**
 	 * Pass chat only when the bots name is said.
 	 */

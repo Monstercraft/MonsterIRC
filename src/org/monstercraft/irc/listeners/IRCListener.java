@@ -179,25 +179,31 @@ public class IRCListener extends IRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		for (IRCChannel c : Variables.channels) {
-			IRC.getHandleManager()
-					.getIRCHandler()
-					.sendMessage(
-							IRCColor.RED.getIRCColor()
-									+ event.getPlayer().getName()
-									+ " has joined the server.", c.getChannel());
+		if (Variables.joinAndQuit) {
+			for (IRCChannel c : Variables.channels) {
+				IRC.getHandleManager()
+						.getIRCHandler()
+						.sendMessage(
+								IRCColor.RED.getIRCColor()
+										+ event.getPlayer().getName()
+										+ " has joined the server.",
+								c.getChannel());
+			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		for (IRCChannel c : Variables.channels) {
-			IRC.getHandleManager()
-					.getIRCHandler()
-					.sendMessage(
-							IRCColor.RED.getIRCColor()
-									+ event.getPlayer().getName()
-									+ " has left the server.", c.getChannel());
+		if (Variables.joinAndQuit) {
+			for (IRCChannel c : Variables.channels) {
+				IRC.getHandleManager()
+						.getIRCHandler()
+						.sendMessage(
+								IRCColor.RED.getIRCColor()
+										+ event.getPlayer().getName()
+										+ " has left the server.",
+								c.getChannel());
+			}
 		}
 	}
 

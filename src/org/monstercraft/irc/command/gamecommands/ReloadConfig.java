@@ -23,18 +23,18 @@ public class ReloadConfig extends GameCommand {
 			if (IRC.getHandleManager().getPermissionsHandler() != null) {
 				if (!IRC.getHandleManager().getPermissionsHandler()
 						.hasCommandPerms(((Player) sender), this)) {
-					sender.sendMessage("[IRC] You don't have permission to preform that command.");
+					sender.sendMessage("[IRC] You must run this command via the console.");
 					return false;
 				}
 			} else {
-				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
+				sender.sendMessage("[IRC] You must run this command via the console.");
 				return false;
 			}
 			sender.sendMessage("[IRC] You must run this command via the console.");
 			return false;
 		}
 		IRC.getHandleManager().getIRCHandler().disconnect();
-		plugin.getSettings().loadConfigs();
+		plugin.getSettings().reloadConfigs();
 		return IRC
 				.getHandleManager()
 				.getIRCHandler()

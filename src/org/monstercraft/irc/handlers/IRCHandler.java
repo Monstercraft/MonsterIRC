@@ -251,24 +251,30 @@ public class IRCHandler extends IRC {
 													+ c.getChannel()
 															.toLowerCase()
 															.toLowerCase())) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										msg = name + "joined " + c.getChannel()
-												+ ".";
+										if (Variables.joinAndQuit) {
+											name = line.substring(1,
+													line.indexOf("!"));
+											msg = name + "joined "
+													+ c.getChannel() + ".";
+										}
 									} else if (line.toLowerCase().contains(
 											"PART ".toLowerCase()
 													+ c.getChannel()
 															.toLowerCase())) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										msg = name + " left " + c.getChannel()
-												+ ".";
+										if (Variables.joinAndQuit) {
+											name = line.substring(1,
+													line.indexOf("!"));
+											msg = name + " left "
+													+ c.getChannel() + ".";
+										}
 									} else if (line.toLowerCase().contains(
 											"QUIT :".toLowerCase())) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										msg = name + " has quit"
-												+ c.getChannel() + ".";
+										if (Variables.joinAndQuit) {
+											name = line.substring(1,
+													line.indexOf("!"));
+											msg = name + " has quit"
+													+ c.getChannel() + ".";
+										}
 									} else if (line.toLowerCase().contains(
 											"MODE ".toLowerCase()
 													+ c.getChannel()

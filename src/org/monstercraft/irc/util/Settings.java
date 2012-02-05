@@ -36,6 +36,16 @@ public class Settings extends IRC {
 	}
 
 	/**
+	 * Reload all of the configuration files.
+	 */
+	public void reloadConfigs() {
+		loadConfigs();
+		populateChannels();
+		loadMuteConfig();
+		loadFormatConfig();
+	}
+
+	/**
 	 * This method loads the plugins configuration file.
 	 */
 	public void loadConfigs() {
@@ -113,6 +123,13 @@ public class Settings extends IRC {
 				p.setProperty("ALLOW_COLORED_MESSAGES",
 						String.valueOf(Variables.colors));
 			}
+			if (p.getProperty("JOIN_AND_LEAVE_MESSAGES") != null) {
+				Variables.joinAndQuit = Boolean.parseBoolean(p
+						.getProperty("JOIN_AND_LEAVE_MESSAGES"));
+			} else {
+				p.setProperty("JOIN_AND_LEAVE_MESSAGES",
+						String.valueOf(Variables.joinAndQuit));
+			}
 		} catch (Exception e) {
 			debug(e);
 		}
@@ -139,6 +156,7 @@ public class Settings extends IRC {
 		if (Variables.muted == null) {
 			Variables.muted = new ArrayList<String>();
 		}
+		Variables.muted.clear();
 		if (!CONFIGURATION_FILE.exists()) {
 			new File(Constants.SETTINGS_PATH).mkdirs();
 			saveMuteConfig();
@@ -202,6 +220,7 @@ public class Settings extends IRC {
 	 * irc.
 	 */
 	public void loadFormatConfig() {
+		Variables.format = "<{name}>: {message}";
 		Properties p = new Properties();
 		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
 				+ Constants.FORMAT_FILE);
@@ -229,6 +248,7 @@ public class Settings extends IRC {
 	 * This method loads all of the channels.
 	 */
 	public void populateChannels() {
+		Variables.channels.clear();
 		final File CHANNEL_DIR = new File(Constants.SETTINGS_PATH
 				+ Constants.CHANNELS_PATH);
 		Set<File> files = new HashSet<File>();
@@ -362,6 +382,11 @@ public class Settings extends IRC {
 		firstRun = true;
 	}
 
+	/**
+	 * Check if this is the first time the plugin ran.
+	 * 
+	 * @return True if this is the first run of the plugin; otherwise false.
+	 */
 	public boolean firstRun() {
 		return firstRun;
 	}
