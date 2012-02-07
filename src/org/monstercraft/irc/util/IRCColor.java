@@ -45,6 +45,56 @@ public enum IRCColor {
 		return IRCColor;
 	}
 
+	/**
+	 * Creates a formatted message with proper colors.
+	 * 
+	 * @param message
+	 *            The inital message to format.
+	 * @return The formatted message.
+	 */
+	public static String formatIRCMessage(final String message) {
+		String msg = message;
+		if (Variables.colors) {
+			for (IRCColor c : values()) {
+				if (msg.contains(c.getIRCColor())) {
+					msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
+				}
+			}
+		} else {
+			for (IRCColor c : values()) {
+				if (msg.contains(c.getIRCColor())) {
+					msg = msg.replace(c.getIRCColor(), "");
+				}
+			}
+		}
+		return msg;
+	}
+
+	/**
+	 * Creates a formatted message with proper colors.
+	 * 
+	 * @param message
+	 *            The inital message to format.
+	 * @return The formatted message.
+	 */
+	public static String formatMCMessage(final String message) {
+		String msg = message;
+		if (Variables.colors) {
+			for (IRCColor c : values()) {
+				if (msg.contains(c.getMinecraftColor())) {
+					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
+				}
+			}
+		} else {
+			for (IRCColor c : values()) {
+				if (msg.contains(c.getMinecraftColor())) {
+					msg = msg.replace(c.getMinecraftColor(), "");
+				}
+			}
+		}
+		return msg;
+	}
+
 	private final String IRCColor;
 
 	private final String MinecraftColor;

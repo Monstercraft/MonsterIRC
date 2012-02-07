@@ -77,7 +77,8 @@ public class IRCListener extends IRC implements Listener {
 								IRC.getHandleManager()
 										.getIRCHandler()
 										.sendMessage(
-												formatMessage(result.toString()),
+												IRCColor.formatMCMessage(result
+														.toString()),
 												c.getChannel());
 							}
 						}
@@ -100,7 +101,8 @@ public class IRCListener extends IRC implements Listener {
 							IRC.getHandleManager()
 									.getIRCHandler()
 									.sendMessage(
-											formatMessage(result.toString()),
+											IRCColor.formatMCMessage(result
+													.toString()),
 											c.getChannel());
 						}
 					} else if (c.getChatType() == ChatType.HEROCHAT
@@ -148,7 +150,7 @@ public class IRCListener extends IRC implements Listener {
 									IRC.getHandleManager()
 											.getIRCHandler()
 											.sendMessage(
-													formatMessage(result
+													IRCColor.formatMCMessage(result
 															.toString()),
 													c.getChannel());
 								}
@@ -167,8 +169,9 @@ public class IRCListener extends IRC implements Listener {
 						result.append(event.getMessage());
 						IRC.getHandleManager()
 								.getIRCHandler()
-								.sendMessage(formatMessage(result.toString()),
-										c.getChannel());
+								.sendMessage(
+										IRCColor.formatMCMessage(result
+												.toString()), c.getChannel());
 					}
 				}
 			}
@@ -205,23 +208,5 @@ public class IRCListener extends IRC implements Listener {
 								c.getChannel());
 			}
 		}
-	}
-
-	private String formatMessage(final String message) {
-		String msg = message;
-		if (Variables.colors) {
-			for (IRCColor c : IRCColor.values()) {
-				if (msg.contains(c.getMinecraftColor())) {
-					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
-				}
-			}
-		} else {
-			for (IRCColor c : IRCColor.values()) {
-				if (msg.contains(c.getMinecraftColor())) {
-					msg = msg.replace(c.getMinecraftColor(), "");
-				}
-			}
-		}
-		return msg;
 	}
 }

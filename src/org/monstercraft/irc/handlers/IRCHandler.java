@@ -245,7 +245,14 @@ public class IRCHandler extends IRC {
 												line.indexOf("!"));
 										msg = line
 												.substring(line.indexOf(" :") + 2);
-										log("");
+										if (line.contains("ACTION")) {
+											msg = "* "
+													+ line.substring(
+															line.indexOf(" :") + 2)
+															.replaceFirst(
+																	"ACTION",
+																	name);
+										}
 									} else if (line.toLowerCase().contains(
 											"JOIN :".toLowerCase()
 													+ c.getChannel()
@@ -254,7 +261,7 @@ public class IRCHandler extends IRC {
 										if (Variables.joinAndQuit) {
 											name = line.substring(1,
 													line.indexOf("!"));
-											msg = name + "joined "
+											msg = name + " joined "
 													+ c.getChannel() + ".";
 										}
 									} else if (line.toLowerCase().contains(
@@ -352,7 +359,7 @@ public class IRCHandler extends IRC {
 											continue;
 										}
 
-										if (msg.startsWith(".")) {
+										if (msg.startsWith(Variables.commandPrefix)) {
 											IRC.getCommandManager()
 													.onIRCCommand(name, msg, c);
 											break;
@@ -432,6 +439,25 @@ public class IRCHandler extends IRC {
 		if (isConnected() && writer != null) {
 			try {
 				writer.write("PRIVMSG " + channel + " :" + Message + "\r\n");
+				writer.flush();
+			} catch (IOException e) {
+				debug(e);
+			}
+		}
+	}
+	
+	/**
+	 * Sends a message to the specified channel.
+	 * 
+	 * @param Message
+	 *            The message to send.
+	 * @param channel
+	 *            The channel to send the message to.
+	 */
+	public void sendNotice(final String Message, final String reciever) {
+		if (isConnected() && writer != null) {
+			try {
+				writer.write("NOTICE " + reciever + " :" + Message + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
 				debug(e);
@@ -521,31 +547,6 @@ public class IRCHandler extends IRC {
 		return voice;
 	}
 
-	/**
-	 * Creates a formatted message with proper colors.
-	 * 
-	 * @param message
-	 *            The inital message to format.
-	 * @return The formatted message.
-	 */
-	public String formatMessage(final String message) {
-		String msg = message;
-		if (Variables.colors) {
-			for (IRCColor c : IRCColor.values()) {
-				if (msg.contains(c.getIRCColor())) {
-					msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
-				}
-			}
-		} else {
-			for (IRCColor c : IRCColor.values()) {
-				if (msg.contains(c.getIRCColor())) {
-					msg = msg.replace(c.getIRCColor(), "");
-				}
-			}
-		}
-		return msg;
-	}
-
 	private String getSpecialName(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = name;
@@ -587,7 +588,7 @@ public class IRCHandler extends IRC {
 								+ Variables.format.substring(
 										Variables.format.indexOf("{name}") + 6,
 										Variables.format.indexOf("{message}"))
-								+ formatMessage(message)
+								+ IRCColor.formatIRCMessage(message)
 								+ Variables.format.substring(Variables.format
 										.indexOf("{message}") + 9));
 			} else if (c.getChatType() == ChatType.HEROCHAT
@@ -595,7 +596,7 @@ public class IRCHandler extends IRC {
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel().sendMessage(
 						"<" + getSpecialName(name) + ">",
-						formatMessage(message),
+						IRCColor.formatIRCMessage(message),
 						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.ALL) {
 				plugin.getServer().broadcastMessage(
@@ -607,7 +608,7 @@ public class IRCHandler extends IRC {
 								+ Variables.format.substring(
 										Variables.format.indexOf("{name}") + 6,
 										Variables.format.indexOf("{message}"))
-								+ formatMessage(message)
+								+ IRCColor.formatIRCMessage(message)
 								+ Variables.format.substring(Variables.format
 										.indexOf("{message}") + 9));
 			}

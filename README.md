@@ -17,6 +17,7 @@ Keep your source up to date with:
 
  * [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/)
  * [Bukkit] (http://ci.bukkit.org/job/dev-CraftBukkit/)
+ * [Vault] (http://dev.bukkit.org/server-mods/vault/)
 
 
 ## Legal 

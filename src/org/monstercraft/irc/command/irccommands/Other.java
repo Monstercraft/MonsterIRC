@@ -1,11 +1,11 @@
 package org.monstercraft.irc.command.irccommands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
+import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.wrappers.IRCCommandSender;
 
 public class Other extends IRCCommand {
 
@@ -15,9 +15,10 @@ public class Other extends IRCCommand {
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
-				&& !message.startsWith(".announce")
-				&& !message.startsWith(".list") && !message.startsWith(".mute")
-				&& !message.startsWith(".unmute");
+				&& !message.startsWith(Variables.commandPrefix + "announce")
+				&& !message.startsWith(Variables.commandPrefix + "list")
+				&& !message.startsWith(Variables.commandPrefix + "mute")
+				&& !message.startsWith(Variables.commandPrefix + "unmute");
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {
@@ -26,9 +27,9 @@ public class Other extends IRCCommand {
 				.isOp(sender,
 						IRC.getHandleManager().getIRCHandler().getOpList())) {
 			try {
-				CommandSender console = Bukkit.getConsoleSender();
+				IRCCommandSender console = new IRCCommandSender(plugin, sender);
 				plugin.getServer().dispatchCommand(console,
-						message.substring(message.indexOf(".") + 1));
+						message.substring(message.indexOf(Variables.commandPrefix) + 1));
 			} catch (CommandException e) {
 				IRC.getHandleManager()
 						.getIRCHandler()

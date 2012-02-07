@@ -130,6 +130,11 @@ public class Settings extends IRC {
 				p.setProperty("JOIN_AND_LEAVE_MESSAGES",
 						String.valueOf(Variables.joinAndQuit));
 			}
+			if (p.getProperty("IRC_COMMAND_PREFIX") != null) {
+				Variables.commandPrefix = p.getProperty("IRC_COMMAND_PREFIX");
+			} else {
+				p.setProperty("IRC_COMMAND_PREFIX", Variables.commandPrefix);
+			}
 		} catch (Exception e) {
 			debug(e);
 		}

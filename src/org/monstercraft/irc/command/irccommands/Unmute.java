@@ -13,7 +13,7 @@ public class Unmute extends IRCCommand {
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
-				&& message.startsWith(".unmute");
+				&& message.startsWith(Variables.commandPrefix + "unmute");
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {

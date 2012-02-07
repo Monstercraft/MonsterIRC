@@ -3,6 +3,7 @@ package org.monstercraft.irc.command.irccommands;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
+import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
 public class List extends IRCCommand {
@@ -13,7 +14,7 @@ public class List extends IRCCommand {
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
-				&& message.startsWith(".list");
+				&& message.startsWith(Variables.commandPrefix + "list");
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {

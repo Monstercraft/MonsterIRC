@@ -73,6 +73,11 @@ public class Variables {
 	 * The format for the messages to be recieved in.
 	 */
 	public static String format = "<{name}>: {message}";
+	
+	/**
+	 * The prefix to be used when detecting an IRC command.
+	 */
+	public static String commandPrefix = ".";
 
 	/**
 	 * A list containing all of the muted users.

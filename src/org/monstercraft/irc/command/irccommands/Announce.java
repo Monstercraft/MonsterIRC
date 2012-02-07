@@ -2,6 +2,8 @@ package org.monstercraft.irc.command.irccommands;
 
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
+import org.monstercraft.irc.util.IRCColor;
+import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
 public class Announce extends IRCCommand {
@@ -12,7 +14,7 @@ public class Announce extends IRCCommand {
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
-				&& message.startsWith(".announce");
+				&& message.startsWith(Variables.commandPrefix + "announce");
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {
@@ -26,11 +28,8 @@ public class Announce extends IRCCommand {
 								IRC.getHandleManager().getIRCHandler()
 										.getOpList())) {
 			plugin.getServer().broadcastMessage(
-					"§4[IRC]<"
-							+ sender
-							+ ">: "
-							+ IRC.getHandleManager().getIRCHandler()
-									.formatMessage(message.substring(10)));
+					"§4[IRC]<" + sender + ">: "
+							+ IRCColor.formatMCMessage(message.substring(10)));
 		}
 		return true;
 	}
