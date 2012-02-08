@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.hooks.HeroChatHook;
-import org.monstercraft.irc.hooks.PermissionsExHook;
 import org.monstercraft.irc.hooks.PermissionsHook;
+import org.monstercraft.irc.hooks.VaultChatHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
 import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.IRCColor;
@@ -48,9 +48,7 @@ public class IRCListener extends IRC implements Listener {
 						new PermissionsHook(plugin));
 				IRC.getHandleManager().setPermissionsHandler(
 						IRC.getHookManager().getPermissionsHook());
-			} else if (PluginName.equals("PermissionsEx")) {
-				IRC.getHookManager().setPermissionsExHook(
-						new PermissionsExHook(plugin));
+				IRC.getHookManager().setChatHook(new VaultChatHook(plugin));
 			} else if (PluginName.equals("mcMMO")) {
 				IRC.getHookManager().setmcMMOHook(new mcMMOHook(plugin));
 			} else if (PluginName.equals("HeroChat")) {
@@ -71,8 +69,9 @@ public class IRCListener extends IRC implements Listener {
 									.getPlayerProfile(player)
 									.getAdminChatMode()) {
 								StringBuffer result = new StringBuffer();
-								result.append("<" + player.getName() + ">"
-										+ " ");
+								result.append("<"
+										+ getSpecialName(player.getName())
+										+ "§f>" + " ");
 								result.append(event.getMessage());
 								IRC.getHandleManager()
 										.getIRCHandler()
@@ -96,7 +95,9 @@ public class IRCListener extends IRC implements Listener {
 								&& !Herochat.getChatterManager()
 										.getChatter(player.getName()).isMuted()) {
 							StringBuffer result = new StringBuffer();
-							result.append("<" + player.getName() + ">" + " ");
+							result.append("<"
+									+ getSpecialName(player.getName()) + "§f>"
+									+ " ");
 							result.append(event.getMessage());
 							IRC.getHandleManager()
 									.getIRCHandler()
@@ -144,8 +145,9 @@ public class IRCListener extends IRC implements Listener {
 														player.getName())
 												.getVoicelist().isEmpty()) {
 									StringBuffer result = new StringBuffer();
-									result.append("<" + player.getName() + ">"
-											+ " ");
+									result.append("<"
+											+ getSpecialName(player.getName())
+											+ "§f>" + " ");
 									result.append(event.getMessage());
 									IRC.getHandleManager()
 											.getIRCHandler()
@@ -156,7 +158,7 @@ public class IRCListener extends IRC implements Listener {
 								}
 							}
 						}
-					} else if (c.getChatType() == ChatType.ALL) {
+					} else if (c.getChatType() == ChatType.GLOBAL) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
 							if (IRC.getHookManager().getmcMMOHook()
 									.getPlayerProfile(player)
@@ -165,7 +167,8 @@ public class IRCListener extends IRC implements Listener {
 							}
 						}
 						StringBuffer result = new StringBuffer();
-						result.append("<" + player.getName() + ">" + " ");
+						result.append("<" + getSpecialName(player.getName())
+								+ "§f>" + " ");
 						result.append(event.getMessage());
 						IRC.getHandleManager()
 								.getIRCHandler()
@@ -208,5 +211,26 @@ public class IRCListener extends IRC implements Listener {
 								c.getChannel());
 			}
 		}
+	}
+
+	private String getSpecialName(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC.getHookManager().getChatHook()
+					.getPlayerPrefix("", name);
+			String suffix = IRC.getHookManager().getChatHook()
+					.getPlayerSuffix("", name);
+			String color = name;
+			if (!color.contains("&")) {
+				color = "&f" + color;
+			}
+			sb.append(prefix);
+			sb.append(color);
+			sb.append(suffix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
 	}
 }

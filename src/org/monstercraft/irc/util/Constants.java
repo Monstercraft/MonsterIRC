@@ -11,26 +11,13 @@ import java.io.File;
 public class Constants {
 
 	/**
-	 * The name of the muted users file.
-	 */
-	public static final String MUTED_FILE = "Muted.ini";
-
-	/**
-	 * The location in which to save the files.
-	 */
-	public static final String SETTINGS_PATH = "plugins" + File.separator
-			+ "MonsterIRC" + File.separator;
-
-	/**
 	 * The configuration file.
 	 */
-	public static final String SETTINGS_FILE = "Settings.ini";
+	public static final String SETTINGS_FILE = "Settings.yml";
 
 	/**
 	 * The Channel Directory.
 	 */
 	public static final String CHANNELS_PATH = "Channels" + File.separator;
-
-	public static final String FORMAT_FILE = "Format.ini";
 
 }

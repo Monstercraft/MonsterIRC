@@ -30,7 +30,7 @@ public class Say extends GameCommand {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return false;
 				}
-			}else {
+			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
 				return false;
 			}
@@ -104,7 +104,7 @@ public class Say extends GameCommand {
 				&& Variables.hc4) {
 			c.getHeroChatFourChannel().sendMessage("<" + name + ">", message,
 					c.getHeroChatFourChannel().getMsgFormat(), false);
-		} else if (c.getChatType() == ChatType.ALL) {
+		} else if (c.getChatType() == ChatType.GLOBAL) {
 			plugin.getServer().broadcastMessage(
 					"[IRC]"
 							+ Variables.format.substring(0,

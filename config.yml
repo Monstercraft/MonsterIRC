@@ -1,0 +1,21 @@
+IRC:
+  SETTINGS:
+    IDENTIFY: false
+    NICKNAME: default
+    PASSWORD: default
+    SERVER: irc.esper.net
+    PORT: 6667
+  OPTIONS:
+    TIMEOUT: 2000
+    RETRYS: 5
+    DEBUG: false
+    PASS_ON_NAME: false
+    ALLOW_COLORS: true
+    SHOW_JOIN_AND_LEAVE_MESSAGES: true
+  ADMIN:
+    INGAME_COMMANDS: false
+    INGAME_COMMANDS_PREFIX: .
+  MINECRAFT:
+    FORMAT: <{name}>{colon} {message}
+  MUTED:
+  - sampleuser

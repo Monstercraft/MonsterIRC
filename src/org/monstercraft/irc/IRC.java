@@ -13,7 +13,7 @@ import org.monstercraft.irc.listeners.IRCListener;
 import org.monstercraft.irc.managers.CommandManager;
 import org.monstercraft.irc.managers.HandleManager;
 import org.monstercraft.irc.managers.HookManager;
-import org.monstercraft.irc.util.Settings;
+import org.monstercraft.irc.managers.SettingsManager;
 import org.monstercraft.irc.util.Variables;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,7 +36,7 @@ public class IRC extends JavaPlugin {
 
 	private static Logger logger = Logger.getLogger("MineCraft");
 
-	private Settings settings = null;
+	private SettingsManager settings = null;
 	private Thread watch = null;
 	private IRC plugin;
 	private Object lock = new Object();
@@ -44,7 +44,7 @@ public class IRC extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		log("Starting plugin.");
-		settings = new Settings(plugin);
+		settings = new SettingsManager(plugin);
 		hooks = new HookManager(plugin);
 		handles = new HandleManager(plugin);
 		command = new CommandManager(plugin);
@@ -98,6 +98,7 @@ public class IRC extends JavaPlugin {
 		} else {
 			log("Please go edit your config!");
 		}
+		settings.saveMuted();
 		log("Successfully disabled plugin.");
 		synchronized (lock) {
 			if (watch != null) {
@@ -150,7 +151,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The settings.
 	 */
-	public Settings getSettings() {
+	public SettingsManager getSettings() {
 		return settings;
 	}
 

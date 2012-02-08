@@ -1,5 +1,7 @@
 package org.monstercraft.irc.wrappers;
 
+import java.util.List;
+
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.util.ChatType;
 
@@ -9,10 +11,13 @@ import com.dthielke.herochat.Herochat;
 public class IRCChannel {
 
 	private String channel;
-	private String ingameChannel;
+	private String heroChatChannel;
 	private ChatType type;
 	private boolean autoJoin;
 	private boolean defaultChannel;
+	private List<String> opCommands;
+	private List<String> voiceCommands;
+	private List<String> userCommands;
 
 	/**
 	 * 
@@ -25,7 +30,9 @@ public class IRCChannel {
 	 *            The type of chat this will pass @see ChatType
 	 */
 	public IRCChannel(final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final ChatType type) {
+			final String channel, final ChatType type,
+			final List<String> opCommands, final List<String> voiceCommands,
+			final List<String> userCommands) {
 		this.channel = channel;
 		this.type = type;
 		this.autoJoin = autoJoin;
@@ -45,10 +52,11 @@ public class IRCChannel {
 	 *            The type of chat this will pass @see ChatType
 	 */
 	public IRCChannel(final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final String ingameChannel,
-			final ChatType type) {
+			final String channel, final String heroChatChannel,
+			final ChatType type, final List<String> opCommands,
+			final List<String> voiceCommands, final List<String> userCommands) {
 		this.channel = channel;
-		this.ingameChannel = ingameChannel;
+		this.heroChatChannel = heroChatChannel;
 		this.type = type;
 		this.autoJoin = autoJoin;
 		this.defaultChannel = defaultChannel;
@@ -87,7 +95,7 @@ public class IRCChannel {
 	 * @return The HeroChat channel to listen in.
 	 */
 	public Channel getHeroChatChannel() {
-		return Herochat.getChannelManager().getChannel(ingameChannel);
+		return Herochat.getChannelManager().getChannel(heroChatChannel);
 	}
 
 	/**
@@ -97,7 +105,7 @@ public class IRCChannel {
 	 */
 	public com.herocraftonline.dthielke.herochat.channels.Channel getHeroChatFourChannel() {
 		return IRC.getHookManager().getHeroChatHook().getChannelManager()
-				.getChannel(ingameChannel);
+				.getChannel(heroChatChannel);
 	}
 
 	/**
@@ -107,6 +115,18 @@ public class IRCChannel {
 	 */
 	public ChatType getChatType() {
 		return type;
+	}
+
+	public List<String> getOpCommands() {
+		return opCommands;
+	}
+
+	public List<String> getVoiceCommands() {
+		return voiceCommands;
+	}
+
+	public List<String> getUserCommands() {
+		return userCommands;
 	}
 
 }

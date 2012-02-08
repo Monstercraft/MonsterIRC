@@ -89,4 +89,13 @@ public class PermissionsHandler extends IRC {
 		return new String[0];
 	}
 
+	/**
+	 * Fetches the permissions.
+	 * 
+	 * @return The permission.
+	 */
+	public Permission getPermission() {
+		return perms;
+	}
+
 }

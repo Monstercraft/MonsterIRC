@@ -18,8 +18,6 @@ import org.monstercraft.irc.util.Pinger;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 import com.gmail.nossr50.mcPermissions;
 
 /**
@@ -71,10 +69,17 @@ public class IRCHandler extends IRC {
 			final int timeoutMs) {
 		if (!isConnected()) {
 			String line = null;
-			long ping = Pinger
-					.ping(Variables.server, Variables.port, timeoutMs);
+			long ping = 0;
+			int tries = 0;
+			for (int i = 0; i < Variables.tries; i++) {
+				ping = Pinger.ping(Variables.server, Variables.port, timeoutMs);
+				if (ping > 0) {
+					tries = i;
+					break;
+				}
+			}
 			if (ping > 0) {
-				log("The IRC server took " + ping + " MS to respond.");
+				log("The IRC server took " + ping + " MS to respond with " + tries + " retrys.");
 				try {
 					connection = new Socket(server, port);
 					writer = new BufferedWriter(new OutputStreamWriter(
@@ -445,7 +450,7 @@ public class IRCHandler extends IRC {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sends a message to the specified channel.
 	 * 
@@ -550,10 +555,12 @@ public class IRCHandler extends IRC {
 	private String getSpecialName(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = name;
-		if (IRC.getHookManager().getPermissionsExHook() != null) {
-			String prefix = PermissionsEx.getUser(name).getPrefix();
-			String suffix = PermissionsEx.getUser(name).getSuffix();
-			String color = PermissionsEx.getUser(name).getName();
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC.getHookManager().getChatHook()
+					.getPlayerPrefix("", name);
+			String suffix = IRC.getHookManager().getChatHook()
+					.getPlayerSuffix("", name);
+			String color = name;
 			if (!color.contains("&")) {
 				color = "&f" + color;
 			}
@@ -581,16 +588,9 @@ public class IRCHandler extends IRC {
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
 				c.getHeroChatChannel().announce(
-						Variables.format.substring(0,
-								Variables.format.indexOf("{name}"))
-								+ getSpecialName(name)
-								+ c.getHeroChatChannel().getColor()
-								+ Variables.format.substring(
-										Variables.format.indexOf("{name}") + 6,
-										Variables.format.indexOf("{message}"))
-								+ IRCColor.formatIRCMessage(message)
-								+ Variables.format.substring(Variables.format
-										.indexOf("{message}") + 9));
+						Variables.format.replace("{name}", name)
+								.replace("{message}", message)
+								.replace("{colon}", ":"));
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
@@ -598,19 +598,12 @@ public class IRCHandler extends IRC {
 						"<" + getSpecialName(name) + ">",
 						IRCColor.formatIRCMessage(message),
 						c.getHeroChatFourChannel().getMsgFormat(), false);
-			} else if (c.getChatType() == ChatType.ALL) {
+			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
 						"[IRC]"
-								+ Variables.format.substring(0,
-										Variables.format.indexOf("{name}"))
-								+ getSpecialName(name)
-								+ "§f"
-								+ Variables.format.substring(
-										Variables.format.indexOf("{name}") + 6,
-										Variables.format.indexOf("{message}"))
-								+ IRCColor.formatIRCMessage(message)
-								+ Variables.format.substring(Variables.format
-										.indexOf("{message}") + 9));
+								+ Variables.format.replace("{name}", name)
+										.replace("{message}", message)
+										.replace("{colon}", ":"));
 			}
 		} catch (Exception e) {
 			debug(e);

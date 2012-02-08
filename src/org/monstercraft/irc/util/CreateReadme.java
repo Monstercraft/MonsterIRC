@@ -27,8 +27,8 @@ public class CreateReadme extends IRC {
 	 */
 	public void write() {
 		try {
-			FileWriter outFile = new FileWriter(new File(
-					Constants.SETTINGS_PATH + "README.txt"));
+			FileWriter outFile = new FileWriter(new File(getDataFolder()
+					+ File.separator + "README.txt"));
 			PrintWriter out = new PrintWriter(outFile);
 			out.println("How to set up MonsterIRC");
 			out.println("Step 1 - Allow the plugin to run once which will create the default settings and channels.");

@@ -2,6 +2,7 @@ package org.monstercraft.irc.util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.monstercraft.irc.wrappers.IRCChannel;
@@ -14,6 +15,11 @@ import org.monstercraft.irc.wrappers.IRCChannel;
  */
 public class Variables {
 
+	/**
+	 * The amount of times to attempt to connect to the server.
+	 */
+	public static int tries = 5;
+	
 	/**
 	 * The option to show when someone joins and quits the game/irc server.
 	 */
@@ -72,7 +78,7 @@ public class Variables {
 	/**
 	 * The format for the messages to be recieved in.
 	 */
-	public static String format = "<{name}>: {message}";
+	public static String format = "<{name}>{colon} {message}";
 	
 	/**
 	 * The prefix to be used when detecting an IRC command.
@@ -82,7 +88,7 @@ public class Variables {
 	/**
 	 * A list containing all of the muted users.
 	 */
-	public static ArrayList<String> muted = null;
+	public static List<String> muted = new ArrayList<String>();
 
 	/**
 	 * A Set of all the IRC channels.

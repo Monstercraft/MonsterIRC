@@ -15,7 +15,7 @@ public class ReloadConfig extends GameCommand {
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return IRC.getHandleManager().getIRCHandler().isConnected()
 				&& split[0].equalsIgnoreCase("irc")
-				&& split[1].equalsIgnoreCase("reloadconfig");
+				&& split[1].equalsIgnoreCase("reload");
 	}
 
 	public boolean execute(CommandSender sender, String[] split) {
@@ -34,12 +34,12 @@ public class ReloadConfig extends GameCommand {
 			return false;
 		}
 		IRC.getHandleManager().getIRCHandler().disconnect();
-		plugin.getSettings().reloadConfigs();
-		return IRC
-				.getHandleManager()
+		plugin.getSettings().reload();
+		IRC.getHandleManager()
 				.getIRCHandler()
 				.connect(Variables.server, Variables.port, Variables.name,
 						Variables.password, Variables.ident, Variables.timeout);
+		return true;
 	}
 
 	@Override

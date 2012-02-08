@@ -1,12 +1,12 @@
 package org.monstercraft.irc.managers;
 
+import net.milkbowl.vault.chat.Chat;
+
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.hooks.HeroChatHook;
-import org.monstercraft.irc.hooks.PermissionsExHook;
 import org.monstercraft.irc.hooks.PermissionsHook;
+import org.monstercraft.irc.hooks.VaultChatHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
-
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.gmail.nossr50.mcMMO;
 import com.herocraftonline.dthielke.herochat.HeroChat;
@@ -21,7 +21,7 @@ public class HookManager {
 
 	private mcMMOHook mcmmo = null;
 	private PermissionsHook permissions = null;
-	private PermissionsExHook permissionsEx = null;
+	private VaultChatHook chat = null;
 	private HeroChatHook herochat = null;
 
 	/**
@@ -33,7 +33,7 @@ public class HookManager {
 	public HookManager(final IRC plugin) {
 		mcmmo = new mcMMOHook(plugin);
 		permissions = new PermissionsHook(plugin);
-		permissionsEx = new PermissionsExHook(plugin);
+		chat = new VaultChatHook(plugin);
 		herochat = new HeroChatHook(plugin);
 	}
 
@@ -80,8 +80,8 @@ public class HookManager {
 	 * 
 	 * @return The hook into PermissionsEx.
 	 */
-	public PermissionsEx getPermissionsExHook() {
-		return permissionsEx.getHook();
+	public Chat getChatHook() {
+		return chat.getHook();
 	}
 
 	/**
@@ -113,8 +113,8 @@ public class HookManager {
 	 *            A hook into PermissionsEx.
 	 * @return The new PermissionsExHook.
 	 */
-	public PermissionsExHook setPermissionsExHook(final PermissionsExHook hook) {
-		return permissionsEx = hook;
+	public VaultChatHook setChatHook(final VaultChatHook hook) {
+		return chat = hook;
 	}
 
 }

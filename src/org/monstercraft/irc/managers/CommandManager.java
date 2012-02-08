@@ -49,10 +49,6 @@ public class CommandManager extends IRC {
 		gameCommands.add(new Say(plugin));
 		gameCommands.add(new ReloadConfig(plugin));
 		IRCCommands.add(new List(plugin));
-		IRCCommands.add(new org.monstercraft.irc.command.irccommands.Unmute(
-				plugin));
-		IRCCommands.add(new org.monstercraft.irc.command.irccommands.Mute(
-				plugin));
 		IRCCommands.add(new Announce(plugin));
 		if (Variables.ingamecommands) {
 			IRCCommands.add(new Other(plugin));
