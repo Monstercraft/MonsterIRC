@@ -18,15 +18,8 @@ public class Announce extends IRCCommand {
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (IRC.getHandleManager()
-				.getIRCHandler()
-				.isVoice(sender,
-						IRC.getHandleManager().getIRCHandler().getVoiceList())
-				|| IRC.getHandleManager()
-						.getIRCHandler()
-						.isOp(sender,
-								IRC.getHandleManager().getIRCHandler()
-										.getOpList())) {
+		if (IRC.getHandleManager().getIRCHandler().isVoice(channel, sender)
+				|| IRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
 			plugin.getServer().broadcastMessage(
 					"§4[IRC]<" + sender + ">: "
 							+ IRCColor.formatMCMessage(message.substring(10)));

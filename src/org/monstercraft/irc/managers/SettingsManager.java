@@ -165,7 +165,7 @@ public class SettingsManager extends IRC {
 		final File CHANNEL_DIR = new File(plugin.getDataFolder()
 				+ File.separator + Constants.CHANNELS_PATH);
 		Set<File> files = new HashSet<File>();
-		if (CHANNEL_DIR.listFiles() != null) {
+		if (CHANNEL_DIR.listFiles().length != 0) {
 			for (File f : CHANNEL_DIR.listFiles()) {
 				if (f.getName().endsWith(".channel")) {
 					files.add(f);
@@ -256,6 +256,12 @@ public class SettingsManager extends IRC {
 	public void createDefaultChannel() {
 		File SAMPLE_CHANNEL = new File(plugin.getDataFolder() + File.separator
 				+ Constants.CHANNELS_PATH + File.separator + "Sample.channel");
+		ArrayList<String> op = new ArrayList<String>();
+		ArrayList<String> voice = new ArrayList<String>();
+		ArrayList<String> user = new ArrayList<String>();
+		op.add("*");
+		voice.add("give");
+		user.add("help");
 		FileConfiguration config = new YamlConfiguration();
 		config.set("CHANNEL.SETTINGS.AUTOJOIN", false);
 		config.set("CHANNEL.SETTINGS.DEFAULT", false);
@@ -263,9 +269,9 @@ public class SettingsManager extends IRC {
 		config.set("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
-		config.set("CHANNEL.COMMANDS.OP", new ArrayList<String>());
-		config.set("CHANNEL.COMMANDS.VOICE", new ArrayList<String>());
-		config.set("CHANNEL.COMMANDS.USERS", new ArrayList<String>());
+		config.set("CHANNEL.COMMANDS.OP", op);
+		config.set("CHANNEL.COMMANDS.VOICE", voice);
+		config.set("CHANNEL.COMMANDS.USERS", user);
 		save(config, SAMPLE_CHANNEL);
 		new CreateReadme();
 		log("*************************************************");

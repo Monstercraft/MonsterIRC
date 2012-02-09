@@ -48,8 +48,8 @@ public class CommandManager extends IRC {
 		gameCommands.add(new Nick(plugin));
 		gameCommands.add(new Say(plugin));
 		gameCommands.add(new ReloadConfig(plugin));
-		IRCCommands.add(new List(plugin));
 		IRCCommands.add(new Announce(plugin));
+		IRCCommands.add(new List(plugin));
 		if (Variables.ingamecommands) {
 			IRCCommands.add(new Other(plugin));
 		}

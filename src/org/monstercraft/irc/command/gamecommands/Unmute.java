@@ -33,7 +33,7 @@ public class Unmute extends GameCommand {
 		}
 		if (Variables.muted.contains(split[2].toString().toLowerCase())) {
 			Variables.muted.remove(split[2].toString().toLowerCase());
-			plugin.getSettings().saveMuted();
+			plugin.getSettingsManager().saveMuted();
 			sender.sendMessage("Player " + split[2].toString()
 					+ " has been unmuted from talking via IRC.");
 		} else {

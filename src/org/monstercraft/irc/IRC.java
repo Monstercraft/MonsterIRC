@@ -151,7 +151,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The settings.
 	 */
-	public SettingsManager getSettings() {
+	public SettingsManager getSettingsManager() {
 		return settings;
 	}
 

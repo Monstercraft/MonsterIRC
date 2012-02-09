@@ -1,5 +1,6 @@
 package org.monstercraft.irc.wrappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.monstercraft.irc.IRC;
@@ -18,6 +19,8 @@ public class IRCChannel {
 	private List<String> opCommands;
 	private List<String> voiceCommands;
 	private List<String> userCommands;
+	private List<String> ops;
+	private List<String> voices;
 
 	/**
 	 * 
@@ -37,6 +40,11 @@ public class IRCChannel {
 		this.type = type;
 		this.autoJoin = autoJoin;
 		this.defaultChannel = defaultChannel;
+		this.opCommands = opCommands;
+		this.voiceCommands = voiceCommands;
+		this.userCommands = userCommands;
+		this.ops = new ArrayList<String>();
+		this.voices = new ArrayList<String>();
 	}
 
 	/**
@@ -60,6 +68,11 @@ public class IRCChannel {
 		this.type = type;
 		this.autoJoin = autoJoin;
 		this.defaultChannel = defaultChannel;
+		this.opCommands = opCommands;
+		this.voiceCommands = voiceCommands;
+		this.userCommands = userCommands;
+		this.ops = new ArrayList<String>();
+		this.voices = new ArrayList<String>();
 	}
 
 	/**
@@ -127,6 +140,14 @@ public class IRCChannel {
 
 	public List<String> getUserCommands() {
 		return userCommands;
+	}
+	
+	public List<String> getOpList() {
+		return ops;
+	}
+	
+	public List<String> getVoiceList() {
+		return voices;
 	}
 
 }

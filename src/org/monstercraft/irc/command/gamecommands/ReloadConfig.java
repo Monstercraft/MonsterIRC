@@ -34,7 +34,7 @@ public class ReloadConfig extends GameCommand {
 			return false;
 		}
 		IRC.getHandleManager().getIRCHandler().disconnect();
-		plugin.getSettings().reload();
+		plugin.getSettingsManager().reload();
 		IRC.getHandleManager()
 				.getIRCHandler()
 				.connect(Variables.server, Variables.port, Variables.name,

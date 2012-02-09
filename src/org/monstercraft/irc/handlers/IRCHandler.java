@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import org.bukkit.entity.Player;
@@ -33,8 +32,6 @@ public class IRCHandler extends IRC {
 	private BufferedReader reader = null;
 	private Thread watch = null;
 	private IRC plugin;
-	private List<String> ops = new ArrayList<String>();
-	private List<String> voice = new ArrayList<String>();
 	private boolean connected = false;
 
 	/**
@@ -79,7 +76,8 @@ public class IRCHandler extends IRC {
 				}
 			}
 			if (ping > 0) {
-				log("The IRC server took " + ping + " MS to respond with " + tries + " retrys.");
+				log("The IRC server took " + ping + " MS to respond with "
+						+ tries + " retrys.");
 				try {
 					connection = new Socket(server, port);
 					writer = new BufferedWriter(new OutputStreamWriter(
@@ -156,7 +154,7 @@ public class IRCHandler extends IRC {
 	 * @return True if we disconnect successfully; otherwise false.
 	 */
 	public boolean disconnect() {
-		if (!isConnected()) {
+		if (isConnected()) {
 			try {
 				for (IRCChannel c : Variables.channels) {
 					leave(c.getChannel());
@@ -290,56 +288,39 @@ public class IRCHandler extends IRC {
 									} else if (line.toLowerCase().contains(
 											"MODE ".toLowerCase()
 													+ c.getChannel()
-															.toLowerCase()
-													+ " +v")
-											|| line.toLowerCase()
-													.contains(
-															"MODE ".toLowerCase()
-																	+ c.getChannel()
-																			.toLowerCase()
-																	+ " -v")
-											|| line.toLowerCase()
-													.contains(
-															"MODE ".toLowerCase()
-																	+ c.getChannel()
-																			.toLowerCase()
-																	+ " +o")
-											|| line.toLowerCase()
-													.contains(
-															"MODE ".toLowerCase()
-																	+ c.getChannel()
-																			.toLowerCase()
-																	+ " -o")) {
-										name = line.substring(line
-												.indexOf("MODE "
-														+ c.getChannel() + " ")
-												+ c.getChannel().length() + 9);
-										final String mode = line.substring(
-												line.indexOf("MODE "
-														+ c.getChannel() + " ")
-														+ c.getChannel()
-																.length() + 6,
-												line.indexOf("MODE "
-														+ c.getChannel() + " ")
-														+ c.getChannel()
-																.length() + 8);
-										if (mode.contains("+v")) {
-											getVoiceList().add(name);
-										} else if (mode.contains("+o")) {
-											getOpList().add(name);
-										} else if (mode.contains("-o")) {
-											getOpList().remove(name);
-										} else if (mode.contains("-v")) {
-											getVoiceList().remove(name);
-										}
+															.toLowerCase())) {
 										name = line.substring(1,
 												line.indexOf("!"));
-										final String _name = line
-												.substring(line.indexOf("MODE "
-														+ c.getChannel() + " ")
+										String mode = line.substring(
+												line.toLowerCase().indexOf(
+														c.getChannel()
+																.toLowerCase())
+														+ 1
 														+ c.getChannel()
-																.length() + 9);
-										msg = _name + " has mode " + mode + ".";
+																.length(),
+												line.toLowerCase().indexOf(
+														c.getChannel()
+																.toLowerCase())
+														+ 3
+														+ c.getChannel()
+																.length());
+										String _name = line.substring(line
+												.toLowerCase().indexOf(
+														c.getChannel()
+																.toLowerCase())
+												+ c.getChannel().length() + 4);
+										msg = name + " gave mode " + mode
+												+ " to " + _name + ".";
+										log("MODE LINE :D " + line);
+										if (mode.contains("+v")) {
+											c.getVoiceList().add(_name);
+										} else if (mode.contains("-v")) {
+											c.getVoiceList().remove(_name);
+										} else if (mode.contains("+o")) {
+											c.getOpList().add(_name);
+										} else if (mode.contains("-o")) {
+											c.getOpList().remove(_name);
+										}
 									} else if (line.toLowerCase().contains(
 											"KICK ".toLowerCase()
 													+ c.getChannel()
@@ -364,7 +345,10 @@ public class IRCHandler extends IRC {
 											continue;
 										}
 
-										if (msg.startsWith(Variables.commandPrefix)) {
+										if (msg.startsWith(Variables.commandPrefix)
+												&& !Variables.muted
+														.contains(name
+																.toLowerCase())) {
 											IRC.getCommandManager()
 													.onIRCCommand(name, msg, c);
 											break;
@@ -399,23 +383,37 @@ public class IRCHandler extends IRC {
 								}
 							} else if (line.toLowerCase().contains("353")) {
 								if (msg == null) {
-									List<String> users = new ArrayList<String>();
+									IRCChannel chan = null;
+									String split = line.substring(line
+											.indexOf(" :") + 2);
+									String channel = line.substring(
+											line.indexOf("#"),
+											line.indexOf(" :"));
 									StringTokenizer st = new StringTokenizer(
-											line);
+											split);
+									ArrayList<String> list = new ArrayList<String>();
 									while (st.hasMoreTokens()) {
-										users.add(st.nextToken());
+										list.add(st.nextToken());
 									}
-									for (Object o : users.toArray()) {
-										String s = (String) o;
-										if (s.contains("+")) {
-											voice.add(s.substring(1));
-											log(s.substring(1)
-													+ " has been added to the voice list.");
+									for (IRCChannel c : Variables.channels) {
+										if (c.getChannel()
+												.toLowerCase()
+												.contains(channel.toLowerCase())) {
+											chan = c;
+											break;
 										}
-										if (s.contains("@")) {
-											ops.add(s.substring(1));
-											log(s.substring(1)
-													+ " has been added to the op list.");
+									}
+									if (chan != null) {
+										for (String s : list) {
+											if (s.contains("@")) {
+												chan.getOpList()
+														.add(s.substring(s
+																.indexOf("@") + 1));
+											} else if (s.contains("+")) {
+												chan.getVoiceList()
+														.add(s.substring(s
+																.indexOf("+") + 1));
+											}
 										}
 									}
 								}
@@ -509,38 +507,12 @@ public class IRCHandler extends IRC {
 	}
 
 	/**
-	 * Checks if a user is OP in the IRC.
-	 * 
-	 * @param sender
-	 *            The name to check.
-	 * @param opList
-	 *            The list to check in.
-	 * @return True if the sender is OP; otherwise false.
-	 */
-	public boolean isOp(final String sender, final List<String> opList) {
-		return opList.contains(sender);
-	}
-
-	/**
-	 * Checks if a user is Voice in the IRC.
-	 * 
-	 * @param sender
-	 *            The name to check.
-	 * @param voiceList
-	 *            The list to check in.
-	 * @return True if the sender is Voice; otherwise false.
-	 */
-	public boolean isVoice(final String sender, final List<String> voiceList) {
-		return voiceList.contains(sender);
-	}
-
-	/**
 	 * Fetches the list of Operaters in the current IRC channel.
 	 * 
 	 * @return The list of Operators.
 	 */
-	public List<String> getOpList() {
-		return ops;
+	public boolean isOp(final IRCChannel channel, final String sender) {
+		return channel.getOpList().contains(sender);
 	}
 
 	/**
@@ -548,8 +520,8 @@ public class IRCHandler extends IRC {
 	 * 
 	 * @return The list of Voices.
 	 */
-	public List<String> getVoiceList() {
-		return voice;
+	public boolean isVoice(final IRCChannel channel, final String sender) {
+		return channel.getVoiceList().contains(sender);
 	}
 
 	private String getSpecialName(String name) {
@@ -588,7 +560,12 @@ public class IRCHandler extends IRC {
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
 				c.getHeroChatChannel().announce(
-						Variables.format.replace("{name}", name)
+						Variables.format
+								.replace(
+										"{name}",
+										getSpecialName(name)
+												+ c.getHeroChatChannel()
+														.getColor())
 								.replace("{message}", message)
 								.replace("{colon}", ":"));
 			} else if (c.getChatType() == ChatType.HEROCHAT
@@ -601,7 +578,9 @@ public class IRCHandler extends IRC {
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
 						"[IRC]"
-								+ Variables.format.replace("{name}", name)
+								+ Variables.format
+										.replace("{name}",
+												getSpecialName(name) + "§f")
 										.replace("{message}", message)
 										.replace("{colon}", ":"));
 			}
