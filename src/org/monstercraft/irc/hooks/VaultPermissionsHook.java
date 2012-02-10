@@ -38,7 +38,7 @@ public class VaultPermissionsHook extends IRC {
 				}
 			}
 		} else {
-			log("Could not hook into permissions using vault!");
+			log("Could not hook into permissions using vault! (Permissions now found?)");
 		}
 	}
 

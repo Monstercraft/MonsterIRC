@@ -34,11 +34,11 @@ public class VaultChatHook extends IRC {
 					log("Vault chat detected; hooking: "
 							+ permsPlugin.getDescription().getFullName());
 				} else {
-					log("Permissions found!");
+					log("Chat found!");
 				}
 			}
 		} else {
-			log("Could not hook into permissions using vault!");
+			log("Could not hook into chat using vault! (no prefix's or suffix's this means)");
 		}
 	}
 
