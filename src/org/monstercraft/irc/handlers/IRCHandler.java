@@ -555,7 +555,7 @@ public class IRCHandler extends IRC {
 					for (Player p : plugin.getServer().getOnlinePlayers()) {
 						if (p.isOp()
 								|| mcPermissions.getInstance().adminChat(p))
-							p.sendMessage(format);
+							p.sendMessage(IRCColor.formatIRCMessage(format));
 					}
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
@@ -566,23 +566,30 @@ public class IRCHandler extends IRC {
 										getSpecialName(name)
 												+ c.getHeroChatChannel()
 														.getColor())
-								.replace("{message}", message)
+								.replace("{message}",
+										IRCColor.formatIRCMessage(message))
 								.replace("{colon}", ":"));
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel().sendMessage(
 						"<" + getSpecialName(name) + ">",
-						IRCColor.formatIRCMessage(message),
+						IRCColor.formatIRCMessage(IRCColor
+								.formatIRCMessage(message)),
 						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
-				plugin.getServer().broadcastMessage(
-						"[IRC]"
-								+ Variables.format
-										.replace("{name}",
-												getSpecialName(name) + "§f")
-										.replace("{message}", message)
-										.replace("{colon}", ":"));
+				plugin.getServer()
+						.broadcastMessage(
+								"[IRC]"
+										+ Variables.format
+												.replace(
+														"{name}",
+														getSpecialName(name)
+																+ "§f")
+												.replace(
+														"{message}",
+														IRCColor.formatIRCMessage(message))
+												.replace("{colon}", ":"));
 			}
 		} catch (Exception e) {
 			debug(e);

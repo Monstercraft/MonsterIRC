@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.hooks.HeroChatHook;
-import org.monstercraft.irc.hooks.PermissionsHook;
 import org.monstercraft.irc.hooks.VaultChatHook;
+import org.monstercraft.irc.hooks.VaultPermissionsHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
 import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.IRCColor;
@@ -45,7 +45,7 @@ public class IRCListener extends IRC implements Listener {
 		if (plugin != null) {
 			if (PluginName.equals("Vault")) {
 				IRC.getHookManager().setPermissionsHook(
-						new PermissionsHook(plugin));
+						new VaultPermissionsHook(plugin));
 				IRC.getHandleManager().setPermissionsHandler(
 						IRC.getHookManager().getPermissionsHook());
 				IRC.getHookManager().setChatHook(new VaultChatHook(plugin));
@@ -71,7 +71,8 @@ public class IRCListener extends IRC implements Listener {
 								StringBuffer result = new StringBuffer();
 								result.append("<"
 										+ getSpecialName(player.getName())
-										+ "§f>" + " ");
+										+ IRCColor.NORMAL.getIRCColor() + ">"
+										+ " ");
 								result.append(event.getMessage());
 								IRC.getHandleManager()
 										.getIRCHandler()
@@ -96,7 +97,7 @@ public class IRCListener extends IRC implements Listener {
 										.getChatter(player.getName()).isMuted()) {
 							StringBuffer result = new StringBuffer();
 							result.append("<"
-									+ getSpecialName(player.getName()) + "§f>"
+									+ getSpecialName(player.getName()) + ">"
 									+ " ");
 							result.append(event.getMessage());
 							IRC.getHandleManager()
@@ -147,7 +148,7 @@ public class IRCListener extends IRC implements Listener {
 									StringBuffer result = new StringBuffer();
 									result.append("<"
 											+ getSpecialName(player.getName())
-											+ "§f>" + " ");
+											+ ">" + " ");
 									result.append(event.getMessage());
 									IRC.getHandleManager()
 											.getIRCHandler()
@@ -168,7 +169,7 @@ public class IRCListener extends IRC implements Listener {
 						}
 						StringBuffer result = new StringBuffer();
 						result.append("<" + getSpecialName(player.getName())
-								+ "§f>" + " ");
+								+ ">" + " ");
 						result.append(event.getMessage());
 						IRC.getHandleManager()
 								.getIRCHandler()
@@ -190,9 +191,10 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.RED.getIRCColor()
-										+ event.getPlayer().getName()
-										+ " has joined the server.",
+								IRCColor.formatMCMessage(IRCColor.RED
+										.getMinecraftColor()
+										+ getSpecialName(event.getPlayer()
+												.getName()) + " joined."),
 								c.getChannel());
 			}
 		}
@@ -205,9 +207,10 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.RED.getIRCColor()
-										+ event.getPlayer().getName()
-										+ " has left the server.",
+								IRCColor.formatMCMessage(IRCColor.RED
+										.getMinecraftColor()
+										+ getSpecialName(event.getPlayer()
+												.getName()) + " quit."),
 								c.getChannel());
 			}
 		}
@@ -223,13 +226,14 @@ public class IRCListener extends IRC implements Listener {
 					.getPlayerSuffix("", name);
 			String color = name;
 			if (!color.contains("&")) {
-				color = "&f" + color;
+				color = IRCColor.NORMAL.getIRCColor() + color;
 			}
 			sb.append(prefix);
 			sb.append(color);
 			sb.append(suffix);
 			String temp = sb.toString();
 			s = temp.replace("&", "§");
+			s = s + IRCColor.NORMAL.getIRCColor();
 		}
 		return s;
 	}

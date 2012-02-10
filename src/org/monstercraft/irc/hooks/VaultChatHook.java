@@ -25,15 +25,17 @@ public class VaultChatHook extends IRC {
 	 */
 	public VaultChatHook(final IRC plugin) {
 		this.plugin = plugin;
-		setupChat();
-		Plugin permsPlugin = plugin.getServer().getPluginManager()
-				.getPlugin(ChatHook.getName());
-		if (ChatHook != null) {
-			if (permsPlugin != null) {
-				log("Vault chat detected; hooking: "
-						+ permsPlugin.getDescription().getFullName());
-			} else {
-				log("Permissions found!");
+		boolean b = setupChat();
+		if (b) {
+			Plugin permsPlugin = plugin.getServer().getPluginManager()
+					.getPlugin(ChatHook.getName());
+			if (ChatHook != null) {
+				if (permsPlugin != null) {
+					log("Vault chat detected; hooking: "
+							+ permsPlugin.getDescription().getFullName());
+				} else {
+					log("Permissions found!");
+				}
 			}
 		} else {
 			log("Could not hook into permissions using vault!");
@@ -42,8 +44,8 @@ public class VaultChatHook extends IRC {
 
 	private Boolean setupChat() {
 		RegisteredServiceProvider<Chat> chatProvider = plugin.getServer()
-				.getServicesManager().getRegistration(
-						net.milkbowl.vault.chat.Chat.class);
+				.getServicesManager()
+				.getRegistration(net.milkbowl.vault.chat.Chat.class);
 		if (chatProvider != null) {
 			ChatHook = chatProvider.getProvider();
 		}

@@ -3,7 +3,7 @@ package org.monstercraft.irc.managers;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.handlers.IRCHandler;
 import org.monstercraft.irc.handlers.PermissionsHandler;
-import org.monstercraft.irc.hooks.PermissionsHook;
+import org.monstercraft.irc.hooks.VaultPermissionsHook;
 
 /**
  * This class contains all of the plugins handles.
@@ -53,7 +53,7 @@ public class HandleManager {
 	 *            The hook into Permissions.
 	 * @return The new permissions Handler.
 	 */
-	public PermissionsHandler setPermissionsHandler(final PermissionsHook hook) {
+	public PermissionsHandler setPermissionsHandler(final VaultPermissionsHook hook) {
 		if (hook != null) {
 			if (perms.isEnabled()) {
 				return perms = new PermissionsHandler(hook.getHook());

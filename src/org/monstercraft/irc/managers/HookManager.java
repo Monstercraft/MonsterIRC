@@ -4,8 +4,8 @@ import net.milkbowl.vault.chat.Chat;
 
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.hooks.HeroChatHook;
-import org.monstercraft.irc.hooks.PermissionsHook;
 import org.monstercraft.irc.hooks.VaultChatHook;
+import org.monstercraft.irc.hooks.VaultPermissionsHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
 
 import com.gmail.nossr50.mcMMO;
@@ -20,7 +20,7 @@ import com.herocraftonline.dthielke.herochat.HeroChat;
 public class HookManager {
 
 	private mcMMOHook mcmmo = null;
-	private PermissionsHook permissions = null;
+	private VaultPermissionsHook permissions = null;
 	private VaultChatHook chat = null;
 	private HeroChatHook herochat = null;
 
@@ -32,7 +32,7 @@ public class HookManager {
 	 */
 	public HookManager(final IRC plugin) {
 		mcmmo = new mcMMOHook(plugin);
-		permissions = new PermissionsHook(plugin);
+		permissions = new VaultPermissionsHook(plugin);
 		chat = new VaultChatHook(plugin);
 		herochat = new HeroChatHook(plugin);
 	}
@@ -71,7 +71,7 @@ public class HookManager {
 	 * 
 	 * @return The hook into Permissions.
 	 */
-	public PermissionsHook getPermissionsHook() {
+	public VaultPermissionsHook getPermissionsHook() {
 		return permissions;
 	}
 
@@ -102,7 +102,7 @@ public class HookManager {
 	 *            A hook into Permissions.
 	 * @return The new PermissionsHook.
 	 */
-	public PermissionsHook setPermissionsHook(final PermissionsHook hook) {
+	public VaultPermissionsHook setPermissionsHook(final VaultPermissionsHook hook) {
 		return permissions = hook;
 	}
 

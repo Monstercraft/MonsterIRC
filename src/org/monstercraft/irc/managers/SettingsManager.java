@@ -165,11 +165,19 @@ public class SettingsManager extends IRC {
 		final File CHANNEL_DIR = new File(plugin.getDataFolder()
 				+ File.separator + Constants.CHANNELS_PATH);
 		Set<File> files = new HashSet<File>();
-		if (CHANNEL_DIR.listFiles().length != 0) {
-			for (File f : CHANNEL_DIR.listFiles()) {
-				if (f.getName().endsWith(".channel")) {
-					files.add(f);
+		if (CHANNEL_DIR.listFiles() != null) {
+			if (CHANNEL_DIR.listFiles().length != 0) {
+				for (File f : CHANNEL_DIR.listFiles()) {
+					if (f.getName().toLowerCase()
+							.contains("Sample".toLowerCase())) {
+						continue;
+					}
+					if (f.getName().endsWith(".channel")) {
+						files.add(f);
+					}
 				}
+			} else {
+				createDefaultChannel();
 			}
 		} else {
 			createDefaultChannel();

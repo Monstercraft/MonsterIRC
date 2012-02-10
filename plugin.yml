@@ -1,6 +1,6 @@
 name: MonsterIRC
 main: org.monstercraft.irc.IRC
-version: 1.30
+version: 1.32
 author: Fletch_to_99
 description: Using your servers IRC channel we allow communication between IRC and Ingame.
 softdepend: [Vault]

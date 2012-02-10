@@ -12,7 +12,7 @@ import org.monstercraft.irc.IRC;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class PermissionsHook extends IRC {
+public class VaultPermissionsHook extends IRC {
 
 	private Permission PermissionsHook;
 	private IRC plugin;
@@ -23,17 +23,19 @@ public class PermissionsHook extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public PermissionsHook(final IRC plugin) {
+	public VaultPermissionsHook(final IRC plugin) {
 		this.plugin = plugin;
-		setupPermissions();
-		Plugin permsPlugin = plugin.getServer().getPluginManager()
-				.getPlugin(PermissionsHook.getName());
-		if (PermissionsHook != null) {
-			if (permsPlugin != null) {
-				log("Vault permissions detected; hooking: "
-						+ permsPlugin.getDescription().getFullName());
-			} else {
-				log("Permissions found!");
+		boolean b = setupPermissions();
+		if (b) {
+			Plugin permsPlugin = plugin.getServer().getPluginManager()
+					.getPlugin(PermissionsHook.getName());
+			if (PermissionsHook != null) {
+				if (permsPlugin != null) {
+					log("Vault permissions detected; hooking: "
+							+ permsPlugin.getDescription().getFullName());
+				} else {
+					log("Permissions found!");
+				}
 			}
 		} else {
 			log("Could not hook into permissions using vault!");
