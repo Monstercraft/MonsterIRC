@@ -32,7 +32,6 @@ public class IRCHandler extends IRC {
 	private BufferedReader reader = null;
 	private Thread watch = null;
 	private IRC plugin;
-	private boolean connected = false;
 
 	/**
 	 * Creates an instance of the IRCHandler class.
@@ -131,7 +130,6 @@ public class IRCHandler extends IRC {
 					watch.setDaemon(true);
 					watch.setPriority(Thread.MAX_PRIORITY);
 					watch.start();
-					connected = true;
 				} catch (Exception e) {
 					log("Failed to connect to IRC!");
 					debug(e);
@@ -140,7 +138,6 @@ public class IRCHandler extends IRC {
 			} else {
 				log("The IRC server seems to be down or running slowly!");
 				log("To try conencting again run the command /irc connect");
-				connected = false;
 				return false;
 			}
 		}
@@ -158,7 +155,6 @@ public class IRCHandler extends IRC {
 				for (IRCChannel c : Variables.channels) {
 					leave(c.getChannel());
 				}
-				connected = false;
 				if (reader != null) {
 					reader.close();
 				}
@@ -191,7 +187,10 @@ public class IRCHandler extends IRC {
 	 * @return True if conencted to an IRC server; othewise false.
 	 */
 	public boolean isConnected() {
-		return connected;
+		if (connection != null) {
+			return connection.isConnected();
+		}
+		return false;
 	}
 
 	/**
