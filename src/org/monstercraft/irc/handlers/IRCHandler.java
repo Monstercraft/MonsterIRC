@@ -31,7 +31,9 @@ public class IRCHandler extends IRC {
 	private Socket connection = null;
 	private BufferedReader reader = null;
 	private Thread watch = null;
+	private Thread print = null;
 	private IRC plugin;
+	private ArrayList<String> messageQue = new ArrayList<String>();
 
 	/**
 	 * Creates an instance of the IRCHandler class.
@@ -123,13 +125,17 @@ public class IRCHandler extends IRC {
 					}
 					for (IRCChannel c : Variables.channels) {
 						if (c.isAutoJoin()) {
-							join(c.getChannel());
+							join(c);
 						}
 					}
 					watch = new Thread(KEEP_ALIVE);
 					watch.setDaemon(true);
 					watch.setPriority(Thread.MAX_PRIORITY);
 					watch.start();
+					print = new Thread(DISPATCH);
+					print.setDaemon(true);
+					print.setPriority(Thread.NORM_PRIORITY);
+					print.start();
 				} catch (Exception e) {
 					log("Failed to connect to IRC!");
 					debug(e);
@@ -152,24 +158,23 @@ public class IRCHandler extends IRC {
 	public boolean disconnect() {
 		if (isConnected()) {
 			try {
-				for (IRCChannel c : Variables.channels) {
-					leave(c.getChannel());
-				}
-				if (reader != null) {
-					reader.close();
-				}
-				if (writer != null) {
-					writer.close();
+				if (connection.isBound() && connection.isConnected()
+						&& !connection.isClosed()) {
+					for (IRCChannel c : Variables.channels) {
+						leave(c);
+					}
 				}
 				if (!connection.isClosed()) {
-					connection.shutdownInput();
-					connection.shutdownOutput();
 					connection.close();
 				}
 				if (watch != null) {
 					watch.interrupt();
 				}
+				if (print != null) {
+					print.interrupt();
+				}
 				watch = null;
+				print = null;
 				writer = null;
 				reader = null;
 				connection = null;
@@ -199,14 +204,8 @@ public class IRCHandler extends IRC {
 	 * @param channel
 	 *            The channel to join.
 	 */
-	public void join(final String channel) {
-		try {
-			writer.write("JOIN " + channel + "\r\n");
-			writer.flush();
-			log("Successfully joined " + channel);
-		} catch (IOException e) {
-			debug(e);
-		}
+	public void join(final IRCChannel channel) {
+		messageQue.add("JOIN " + channel.getChannel());
 	}
 
 	/**
@@ -216,10 +215,14 @@ public class IRCHandler extends IRC {
 	 *            The channel to leave.
 	 * @throws IOException
 	 */
-	public void leave(final String channel) throws IOException {
-		if (isConnected()) {
-			writer.write("QUIT " + channel + "\r\n");
-			writer.flush();
+	public void leave(final IRCChannel channel) {
+		try {
+			if (isConnected()) {
+				writer.write("QUIT " + channel.getChannel() + "\r\n");
+				writer.flush();
+			}
+		} catch (IOException e) {
+			debug(e);
 		}
 	}
 
@@ -280,6 +283,11 @@ public class IRCHandler extends IRC {
 										if (Variables.joinAndQuit) {
 											name = line.substring(1,
 													line.indexOf("!"));
+											if (name.equalsIgnoreCase(Variables.name)) {
+												disconnect();
+												msg = null;
+												break;
+											}
 											msg = name + " has quit"
 													+ c.getChannel() + ".";
 										}
@@ -325,6 +333,9 @@ public class IRCHandler extends IRC {
 															.toLowerCase())) {
 										name = line.substring(1,
 												line.indexOf("!"));
+										if (name.equalsIgnoreCase(Variables.name)) {
+											join(c);
+										}
 										msg = name + " has been kicked from"
 												+ c.getChannel() + ".";
 									}
@@ -371,6 +382,17 @@ public class IRCHandler extends IRC {
 									}
 								} catch (final Exception e) {
 									debug(e);
+								}
+							}
+							if (line.toLowerCase().contains(
+									"QUIT :".toLowerCase())) {
+								if (name.equalsIgnoreCase(Variables.name)
+										&& msg == null) {
+									Thread run = new Thread(RECONNECT);
+									run.setDaemon(true);
+									run.setPriority(Thread.MAX_PRIORITY);
+									run.start();
+									break;
 								}
 							}
 							if (line.toLowerCase().startsWith("ping ")) {
@@ -428,6 +450,51 @@ public class IRCHandler extends IRC {
 		}
 	};
 
+	private final Runnable DISPATCH = new Runnable() {
+		public void run() {
+			try {
+				while (true) {
+					if (messageQue.size() > 0) {
+						if (isConnected()) {
+							for (final String str : messageQue) {
+								writer.write(str + "\r\n");
+								writer.flush();
+								messageQue.remove(str);
+								break;
+							}
+						}
+					}
+					try {
+						Thread.sleep(1000 / Variables.limit);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+			} catch (Exception e) {
+				debug(e);
+			}
+		}
+
+	};
+
+	private final Runnable RECONNECT = new Runnable() {
+		public void run() {
+			try {
+				if (IRC.getHandleManager().getIRCHandler().isConnected()) {
+					IRC.getHandleManager().getIRCHandler().disconnect();
+				}
+				plugin.getSettingsManager().reload();
+				IRC.getHandleManager()
+						.getIRCHandler()
+						.connect(Variables.server, Variables.port,
+								Variables.name, Variables.password,
+								Variables.ident, Variables.timeout);
+			} catch (final Exception e) {
+				debug(e);
+			}
+		}
+	};
+
 	/**
 	 * Sends a message to the specified channel.
 	 * 
@@ -437,14 +504,7 @@ public class IRCHandler extends IRC {
 	 *            The channel to send the message to.
 	 */
 	public void sendMessage(final String Message, final String channel) {
-		if (isConnected() && writer != null) {
-			try {
-				writer.write("PRIVMSG " + channel + " :" + Message + "\r\n");
-				writer.flush();
-			} catch (IOException e) {
-				debug(e);
-			}
-		}
+		messageQue.add("PRIVMSG " + channel + " :" + Message);
 	}
 
 	/**
@@ -456,14 +516,7 @@ public class IRCHandler extends IRC {
 	 *            The channel to send the message to.
 	 */
 	public void sendNotice(final String Message, final String reciever) {
-		if (isConnected() && writer != null) {
-			try {
-				writer.write("NOTICE " + reciever + " :" + Message + "\r\n");
-				writer.flush();
-			} catch (IOException e) {
-				debug(e);
-			}
-		}
+		messageQue.add("NOTICE " + reciever + " :" + Message);
 	}
 
 	/**
@@ -555,9 +608,6 @@ public class IRCHandler extends IRC {
 			String color = name;
 			sb.append(color);
 			String temp = sb.toString();
-			if (!temp.contains("&")) {
-				temp = "&f" + temp;
-			}
 			s = temp.replace("&", "§");
 		}
 		return s;
@@ -594,16 +644,11 @@ public class IRCHandler extends IRC {
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel().sendMessage(
-						Variables.mcformat
-								.replace("{name}", getName(name))
+						Variables.mcformat.replace("{name}", getName(name))
 								.replace("{message}", "")
 								.replace("{colon}", "")
 								.replace("{prefix}", getPrefix(name))
-								.replace(
-										"{suffix}",
-										getSuffix(name)
-												+ c.getHeroChatChannel()
-														.getColor()),
+								.replace("{suffix}", getSuffix(name) + "§f"),
 						IRCColor.formatIRCMessage(IRCColor
 								.formatIRCMessage(message)),
 						c.getHeroChatFourChannel().getMsgFormat(), false);

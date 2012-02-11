@@ -10,6 +10,8 @@ import org.monstercraft.irc.command.IRCCommand;
 import org.monstercraft.irc.command.gamecommands.Ban;
 import org.monstercraft.irc.command.gamecommands.Connect;
 import org.monstercraft.irc.command.gamecommands.Disconnect;
+import org.monstercraft.irc.command.gamecommands.Join;
+import org.monstercraft.irc.command.gamecommands.Leave;
 import org.monstercraft.irc.command.gamecommands.Mute;
 import org.monstercraft.irc.command.gamecommands.Nick;
 import org.monstercraft.irc.command.gamecommands.ReloadConfig;
@@ -45,6 +47,8 @@ public class CommandManager extends IRC {
 		gameCommands.add(new Unmute(plugin));
 		gameCommands.add(new Connect(plugin));
 		gameCommands.add(new Disconnect(plugin));
+		gameCommands.add(new Join(plugin));
+		gameCommands.add(new Leave(plugin));
 		gameCommands.add(new Nick(plugin));
 		gameCommands.add(new Say(plugin));
 		gameCommands.add(new ReloadConfig(plugin));
@@ -78,7 +82,11 @@ public class CommandManager extends IRC {
 			}
 			for (GameCommand c : gameCommands) {
 				if (c.canExecute(sender, split)) {
-					c.execute(sender, split);
+					try {
+						c.execute(sender, split);
+					} catch (Exception e) {
+						debug(e);
+					}
 					return true;
 				}
 			}
@@ -99,7 +107,11 @@ public class CommandManager extends IRC {
 			final IRCChannel channel) {
 		for (IRCCommand c : IRCCommands) {
 			if (c.canExecute(sender, arg, channel)) {
-				c.execute(sender, arg, channel);
+				try {
+					c.execute(sender, arg, channel);
+				} catch (Exception e) {
+					debug(e);
+				}
 				return true;
 			}
 		}

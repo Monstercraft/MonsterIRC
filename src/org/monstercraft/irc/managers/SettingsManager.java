@@ -129,6 +129,8 @@ public class SettingsManager extends IRC {
 			Variables.server = config.getString("IRC.SETTINGS.SERVER",
 					Variables.server);
 			Variables.port = config.getInt("IRC.SETTINGS.PORT", Variables.port);
+			Variables.limit = config.getInt(
+					"IRC.OPTIONS.MESSAGE_LIMIT_PER_SEC", Variables.limit);
 			Variables.timeout = config.getInt("IRC.OPTIONS.TIMEOUT",
 					Variables.timeout);
 			Variables.tries = config.getInt("IRC.OPTIONS.RETRYS",
@@ -157,12 +159,14 @@ public class SettingsManager extends IRC {
 			debug(e);
 		}
 
-		if (Variables.mcformat.contains("{name}") && Variables.mcformat.contains("{message}")) {
+		if (Variables.mcformat.contains("{name}")
+				&& Variables.mcformat.contains("{message}")) {
 		} else {
 			debug("Invalid Minecraft format detected!");
 			Variables.mcformat = defaultFormat;
 		}
-		if (Variables.ircformat.contains("{name}") && Variables.ircformat.contains("{message}")) {
+		if (Variables.ircformat.contains("{name}")
+				&& Variables.ircformat.contains("{message}")) {
 		} else {
 			debug("Invalid IRC format detected!");
 			Variables.ircformat = defaultFormat;
