@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
 import org.monstercraft.irc.util.ChatType;
+import org.monstercraft.irc.util.IRCColor;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
@@ -89,16 +90,19 @@ public class Say extends GameCommand {
 				}
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
-			c.getHeroChatChannel().announce(
-					Variables.format.substring(0,
-							Variables.format.indexOf("{name}"))
-							+ name
-							+ Variables.format.substring(
-									Variables.format.indexOf("{name}") + 6,
-									Variables.format.indexOf("{message}"))
-							+ message
-							+ Variables.format.substring(Variables.format
-									.indexOf("{message}") + 9));
+			c.getHeroChatChannel()
+					.announce(
+							Variables.mcformat
+									.replace("{name}", getName(name))
+									.replace("{message}",
+											IRCColor.formatIRCMessage(message))
+									.replace("{colon}", ":")
+									.replace("{prefix}", getPrefix(name))
+									.replace(
+											"{suffix}",
+											getSuffix(name)
+													+ c.getHeroChatChannel()
+															.getColor()));
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& IRC.getHookManager().getHeroChatHook() != null
 				&& Variables.hc4) {
@@ -106,17 +110,55 @@ public class Say extends GameCommand {
 					c.getHeroChatFourChannel().getMsgFormat(), false);
 		} else if (c.getChatType() == ChatType.GLOBAL) {
 			plugin.getServer().broadcastMessage(
-					"[IRC]"
-							+ Variables.format.substring(0,
-									Variables.format.indexOf("{name}"))
-							+ name
-							+ Variables.format.substring(
-									Variables.format.indexOf("{name}") + 6,
-									Variables.format.indexOf("{message}"))
-							+ message
-							+ Variables.format.substring(Variables.format
-									.indexOf("{message}") + 9));
+					Variables.mcformat
+							.replace("{name}", getName(name))
+							.replace("{message}",
+									IRCColor.formatIRCMessage(message))
+							.replace("{colon}", ":")
+							.replace("{prefix}", getPrefix(name))
+							.replace("{suffix}", getSuffix(name) + "§f"));
 		}
+	}
+
+	private String getPrefix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC.getHookManager().getChatHook()
+					.getPlayerPrefix("", name);
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getSuffix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String suffix = IRC.getHookManager().getChatHook()
+					.getPlayerSuffix("", name);
+			sb.append(suffix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getName(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String color = name;
+			sb.append(color);
+			String temp = sb.toString();
+			if (!temp.contains("&")) {
+				temp = "&f" + temp;
+			}
+			s = temp.replace("&", "§");
+		}
+		return s;
 	}
 
 	@Override

@@ -78,7 +78,12 @@ public class Variables {
 	/**
 	 * The format for the messages to be recieved in.
 	 */
-	public static String format = "<{name}>{colon} {message}";
+	public static String mcformat = "<{prefix}{name}{suffix}>{colon} {message}";
+	
+	/**
+	 * The format for the messages to be recieved in.
+	 */
+	public static String ircformat = "<{prefix}{name}{suffix}>{colon} {message}";
 	
 	/**
 	 * The prefix to be used when detecting an IRC command.

@@ -82,7 +82,9 @@ public class SettingsManager extends IRC {
 	 * This method loads the plugins configuration file.
 	 */
 	public void load() {
-		Variables.format = "<{name}>{colon} {message}";
+		String defaultFormat = "<{prefix}{name}{suffix}>{colon} {message}";
+		Variables.mcformat = defaultFormat;
+		Variables.ircformat = defaultFormat;
 		final FileConfiguration config = plugin.getConfig();
 		final File CONFIGURATION_FILE = new File(plugin.getDataFolder()
 				+ File.separator + Constants.SETTINGS_FILE);
@@ -145,12 +147,25 @@ public class SettingsManager extends IRC {
 			Variables.commandPrefix = config
 					.getString("IRC.ADMIN.INGAME_COMMANDS_PREFIX",
 							Variables.commandPrefix);
-			Variables.format = config.getString("IRC.MINECRAFT.FORMAT",
-					Variables.format);
+			Variables.mcformat = config.getString("IRC.FORMAT.MINECRAFT",
+					Variables.mcformat);
+			Variables.ircformat = config.getString("IRC.FORMAT.IRC",
+					Variables.ircformat);
 			Variables.muted = config.getStringList("IRC.MUTED");
 			save(config, CONFIGURATION_FILE);
 		} catch (Exception e) {
 			debug(e);
+		}
+
+		if (Variables.mcformat.contains("{name}") && Variables.mcformat.contains("{message}")) {
+		} else {
+			debug("Invalid Minecraft format detected!");
+			Variables.mcformat = defaultFormat;
+		}
+		if (Variables.ircformat.contains("{name}") && Variables.ircformat.contains("{message}")) {
+		} else {
+			debug("Invalid IRC format detected!");
+			Variables.ircformat = defaultFormat;
 		}
 		if (Variables.name.contains("default")) {
 			firstRun = true;

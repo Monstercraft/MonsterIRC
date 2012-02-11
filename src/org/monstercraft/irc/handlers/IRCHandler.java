@@ -66,7 +66,7 @@ public class IRCHandler extends IRC {
 			final int timeoutMs) {
 		if (!isConnected()) {
 			String line = null;
-			long ping = 0;
+			long ping = -1;
 			int tries = 0;
 			for (int i = 0; i < Variables.tries; i++) {
 				ping = Pinger.ping(Variables.server, Variables.port, timeoutMs);
@@ -75,7 +75,7 @@ public class IRCHandler extends IRC {
 					break;
 				}
 			}
-			if (ping > 0) {
+			if (ping < Variables.timeout + 1 && ping != -1) {
 				log("The IRC server took " + ping + " MS to respond with "
 						+ tries + " retrys.");
 				try {
@@ -524,22 +524,42 @@ public class IRCHandler extends IRC {
 		return channel.getVoiceList().contains(sender);
 	}
 
-	private String getSpecialName(String name) {
+	private String getPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = name;
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC.getHookManager().getChatHook()
 					.getPlayerPrefix("", name);
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getSuffix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
 			String suffix = IRC.getHookManager().getChatHook()
 					.getPlayerSuffix("", name);
-			String color = name;
-			if (!color.contains("&")) {
-				color = "&f" + color;
-			}
-			sb.append(prefix);
-			sb.append(color);
 			sb.append(suffix);
 			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getName(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String color = name;
+			sb.append(color);
+			String temp = sb.toString();
+			if (!temp.contains("&")) {
+				temp = "&f" + temp;
+			}
 			s = temp.replace("&", "§");
 		}
 		return s;
@@ -551,7 +571,8 @@ public class IRCHandler extends IRC {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
 				if (IRC.getHookManager().getmcMMOHook() != null) {
 					String format = "§b" + "{" + "§f" + "[IRC] "
-							+ getSpecialName(name) + "§b" + "} " + message;
+							+ getPrefix(name) + getName(name)
+							+ getSuffix(name) + "§b" + "} " + message;
 					for (Player p : plugin.getServer().getOnlinePlayers()) {
 						if (p.isOp()
 								|| mcPermissions.getInstance().adminChat(p))
@@ -560,36 +581,34 @@ public class IRCHandler extends IRC {
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
 				c.getHeroChatChannel().announce(
-						Variables.format
-								.replace(
-										"{name}",
-										getSpecialName(name)
-												+ c.getHeroChatChannel()
-														.getColor())
+						Variables.mcformat
+								.replace("{name}", getName(name))
 								.replace("{message}",
 										IRCColor.formatIRCMessage(message))
-								.replace("{colon}", ":"));
+								.replace("{colon}", ":")
+								.replace("{prefix}", getPrefix(name))
+								.replace(
+										"{suffix}",
+										getSuffix(name)
+												+ c.getHeroChatChannel()
+														.getColor()));
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel().sendMessage(
-						"<" + getSpecialName(name) + ">",
+						"<" + getName(name) + ">",
 						IRCColor.formatIRCMessage(IRCColor
 								.formatIRCMessage(message)),
 						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
-				plugin.getServer()
-						.broadcastMessage(
-								"[IRC]"
-										+ Variables.format
-												.replace(
-														"{name}",
-														getSpecialName(name)
-																+ "§f")
-												.replace(
-														"{message}",
-														IRCColor.formatIRCMessage(message))
-												.replace("{colon}", ":"));
+				plugin.getServer().broadcastMessage(
+						Variables.mcformat
+								.replace("{name}", getName(name))
+								.replace("{message}",
+										IRCColor.formatIRCMessage(message))
+								.replace("{colon}", ":")
+								.replace("{prefix}", getPrefix(name))
+								.replace("{suffix}", getSuffix(name) + "§f"));
 			}
 		} catch (Exception e) {
 			debug(e);

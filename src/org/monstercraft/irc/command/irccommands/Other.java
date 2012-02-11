@@ -14,7 +14,13 @@ public class Other extends IRCCommand {
 	}
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler().isConnected();
+		return IRC.getHandleManager().getIRCHandler().isConnected()
+				&& (!IRC.getHandleManager().getIRCHandler()
+						.isOp(channel, sender) && message
+						.startsWith(Variables.commandPrefix + "list"))
+				&& (!IRC.getHandleManager().getIRCHandler()
+						.isOp(channel, sender) && message
+						.startsWith(Variables.commandPrefix + "announce"));
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {
@@ -61,6 +67,64 @@ public class Other extends IRCCommand {
 							}
 						}
 
+					}
+				}
+				if (!channel.getVoiceCommands().isEmpty()) {
+					for (String s : channel.getVoiceCommands()) {
+						String lol = message.substring(message
+								.indexOf(Variables.commandPrefix) + 1);
+						if (lol != null) {
+							if (lol.toLowerCase().startsWith(s.toLowerCase())) {
+								try {
+									IRCCommandSender console = new IRCCommandSender(
+											plugin, sender);
+									plugin.getServer()
+											.dispatchCommand(
+													console,
+													message.substring(message
+															.indexOf(Variables.commandPrefix) + 1));
+									return true;
+								} catch (CommandException e) {
+									IRC.getHandleManager()
+											.getIRCHandler()
+											.sendMessage(
+													sender
+															+ ": Error executing ingame command! "
+															+ e.toString(),
+													sender);
+								}
+							}
+
+						}
+					}
+				}
+				if (!channel.getUserCommands().isEmpty()) {
+					for (String s : channel.getUserCommands()) {
+						String lol = message.substring(message
+								.indexOf(Variables.commandPrefix) + 1);
+						if (lol != null) {
+							if (lol.toLowerCase().startsWith(s.toLowerCase())) {
+								try {
+									IRCCommandSender console = new IRCCommandSender(
+											plugin, sender);
+									plugin.getServer()
+											.dispatchCommand(
+													console,
+													message.substring(message
+															.indexOf(Variables.commandPrefix) + 1));
+									return true;
+								} catch (CommandException e) {
+									IRC.getHandleManager()
+											.getIRCHandler()
+											.sendMessage(
+													sender
+															+ ": Error executing ingame command! "
+															+ e.toString(),
+													sender);
+								}
+							}
+
+						}
 					}
 				}
 				IRC.getHandleManager()
@@ -119,6 +183,35 @@ public class Other extends IRCCommand {
 							}
 						}
 
+					}
+				}
+				if (!channel.getUserCommands().isEmpty()) {
+					for (String s : channel.getUserCommands()) {
+						String lol = message.substring(message
+								.indexOf(Variables.commandPrefix) + 1);
+						if (lol != null) {
+							if (lol.toLowerCase().startsWith(s.toLowerCase())) {
+								try {
+									IRCCommandSender console = new IRCCommandSender(
+											plugin, sender);
+									plugin.getServer()
+											.dispatchCommand(
+													console,
+													message.substring(message
+															.indexOf(Variables.commandPrefix) + 1));
+									return true;
+								} catch (CommandException e) {
+									IRC.getHandleManager()
+											.getIRCHandler()
+											.sendMessage(
+													sender
+															+ ": Error executing ingame command! "
+															+ e.toString(),
+													sender);
+								}
+							}
+
+						}
 					}
 				}
 				IRC.getHandleManager()

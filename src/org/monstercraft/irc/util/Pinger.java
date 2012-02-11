@@ -35,8 +35,10 @@ public class Pinger extends IRC {
 			s.connect(sockaddr, timeoutMs);
 			end = System.currentTimeMillis();
 		} catch (Exception e) {
+			debug(e);
 			start = -1;
 			end = -1;
+			total = -1;
 		} finally {
 			if (s != null) {
 				try {

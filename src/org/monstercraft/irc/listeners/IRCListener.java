@@ -63,17 +63,21 @@ public class IRCListener extends IRC implements Listener {
 			if (plugin.isEnabled()) {
 				Player player = event.getPlayer();
 				for (IRCChannel c : Variables.channels) {
+					StringBuffer result = new StringBuffer();
+					result.append(Variables.ircformat
+							.replace("{prefix}",
+									getPrefix(event.getPlayer().getName()))
+							.replace("{name}",
+									getName(event.getPlayer().getName()))
+							.replace("{suffix}",
+									getSuffix(event.getPlayer().getName()))
+							.replace("{colon}", ":")
+							.replace("{message}", event.getMessage()));
 					if (c.getChatType() == ChatType.ADMINCHAT) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
 							if (IRC.getHookManager().getmcMMOHook()
 									.getPlayerProfile(player)
 									.getAdminChatMode()) {
-								StringBuffer result = new StringBuffer();
-								result.append("<"
-										+ getSpecialName(player.getName())
-										+ IRCColor.NORMAL.getIRCColor() + ">"
-										+ " ");
-								result.append(event.getMessage());
 								IRC.getHandleManager()
 										.getIRCHandler()
 										.sendMessage(
@@ -95,11 +99,6 @@ public class IRCListener extends IRC implements Listener {
 								.getActiveChannel() == c.getHeroChatChannel()
 								&& !Herochat.getChatterManager()
 										.getChatter(player.getName()).isMuted()) {
-							StringBuffer result = new StringBuffer();
-							result.append("<"
-									+ getSpecialName(player.getName()) + ">"
-									+ " ");
-							result.append(event.getMessage());
 							IRC.getHandleManager()
 									.getIRCHandler()
 									.sendMessage(
@@ -145,11 +144,6 @@ public class IRCListener extends IRC implements Listener {
 												.getActiveChannel(
 														player.getName())
 												.getVoicelist().isEmpty()) {
-									StringBuffer result = new StringBuffer();
-									result.append("<"
-											+ getSpecialName(player.getName())
-											+ ">" + " ");
-									result.append(event.getMessage());
 									IRC.getHandleManager()
 											.getIRCHandler()
 											.sendMessage(
@@ -167,10 +161,6 @@ public class IRCListener extends IRC implements Listener {
 								continue;
 							}
 						}
-						StringBuffer result = new StringBuffer();
-						result.append("<" + getSpecialName(player.getName())
-								+ ">" + " ");
-						result.append(event.getMessage());
 						IRC.getHandleManager()
 								.getIRCHandler()
 								.sendMessage(
@@ -193,9 +183,9 @@ public class IRCListener extends IRC implements Listener {
 						.sendMessage(
 								IRCColor.formatMCMessage(IRCColor.RED
 										.getMinecraftColor()
-										+ getSpecialName(event.getPlayer()
-												.getName()) + " joined."),
-								c.getChannel());
+										+ getName(event.getPlayer().getName())
+										+ IRCColor.RED.getMinecraftColor()
+										+ " joined."), c.getChannel());
 			}
 		}
 	}
@@ -209,31 +199,50 @@ public class IRCListener extends IRC implements Listener {
 						.sendMessage(
 								IRCColor.formatMCMessage(IRCColor.RED
 										.getMinecraftColor()
-										+ getSpecialName(event.getPlayer()
-												.getName()) + " quit."),
-								c.getChannel());
+										+ getName(event.getPlayer().getName())
+										+ IRCColor.RED.getMinecraftColor()
+										+ " quit."), c.getChannel());
 			}
 		}
 	}
 
-	private String getSpecialName(String name) {
+	private String getPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = name;
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC.getHookManager().getChatHook()
 					.getPlayerPrefix("", name);
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getSuffix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
 			String suffix = IRC.getHookManager().getChatHook()
 					.getPlayerSuffix("", name);
-			String color = name;
-			if (!color.contains("&")) {
-				color = IRCColor.NORMAL.getIRCColor() + color;
-			}
-			sb.append(prefix);
-			sb.append(color);
 			sb.append(suffix);
 			String temp = sb.toString();
 			s = temp.replace("&", "§");
-			s = s + IRCColor.NORMAL.getIRCColor();
+		}
+		return s;
+	}
+
+	private String getName(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String color = name;
+			sb.append(color);
+			String temp = sb.toString();
+			if (!temp.contains("&")) {
+				temp = "&f" + temp;
+			}
+			s = temp.replace("&", "§");
 		}
 		return s;
 	}
