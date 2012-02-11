@@ -125,7 +125,6 @@ public class IRCHandler extends IRC {
 					for (IRCChannel c : Variables.channels) {
 						if (c.isAutoJoin()) {
 							join(c.getChannel());
-
 						}
 					}
 					watch = new Thread(KEEP_ALIVE);
@@ -140,7 +139,7 @@ public class IRCHandler extends IRC {
 				}
 			} else {
 				log("The IRC server seems to be down or running slowly!");
-				log("The plugin will now stop.");
+				log("To try conencting again run the command /irc connect");
 				connected = false;
 				return false;
 			}
@@ -571,8 +570,8 @@ public class IRCHandler extends IRC {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
 				if (IRC.getHookManager().getmcMMOHook() != null) {
 					String format = "§b" + "{" + "§f" + "[IRC] "
-							+ getPrefix(name) + getName(name)
-							+ getSuffix(name) + "§b" + "} " + message;
+							+ getPrefix(name) + getName(name) + getSuffix(name)
+							+ "§b" + "} " + message;
 					for (Player p : plugin.getServer().getOnlinePlayers()) {
 						if (p.isOp()
 								|| mcPermissions.getInstance().adminChat(p))
@@ -596,7 +595,16 @@ public class IRCHandler extends IRC {
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel().sendMessage(
-						"<" + getName(name) + ">",
+						Variables.mcformat
+								.replace("{name}", getName(name))
+								.replace("{message}", "")
+								.replace("{colon}", "")
+								.replace("{prefix}", getPrefix(name))
+								.replace(
+										"{suffix}",
+										getSuffix(name)
+												+ c.getHeroChatChannel()
+														.getColor()),
 						IRCColor.formatIRCMessage(IRCColor
 								.formatIRCMessage(message)),
 						c.getHeroChatFourChannel().getMsgFormat(), false);

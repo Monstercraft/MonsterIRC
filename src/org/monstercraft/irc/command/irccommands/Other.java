@@ -14,13 +14,7 @@ public class Other extends IRCCommand {
 	}
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler().isConnected()
-				&& (!IRC.getHandleManager().getIRCHandler()
-						.isOp(channel, sender) && message
-						.startsWith(Variables.commandPrefix + "list"))
-				&& (!IRC.getHandleManager().getIRCHandler()
-						.isOp(channel, sender) && message
-						.startsWith(Variables.commandPrefix + "announce"));
+		return IRC.getHandleManager().getIRCHandler().isConnected();
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {

@@ -71,14 +71,11 @@ public class IRC extends JavaPlugin {
 					log("You are using the latest version of MonsterIRC");
 				}
 				if (!settings.firstRun()) {
-					if (getHandleManager().getIRCHandler().connect(
+					getHandleManager().getIRCHandler().connect(
 							Variables.server, Variables.port, Variables.name,
 							Variables.password, Variables.ident,
-							Variables.timeout)) {
-						log("Successfully started up.");
-					} else {
-						stop();
-					}
+							Variables.timeout);
+					log("Successfully started up.");
 				} else {
 					stop();
 				}
