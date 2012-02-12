@@ -11,6 +11,7 @@ import com.dthielke.herochat.Herochat;
 
 public class IRCChannel {
 
+	private IRCServer server;
 	private String channel;
 	private String heroChatChannel;
 	private ChatType type;
@@ -32,10 +33,11 @@ public class IRCChannel {
 	 * @param type
 	 *            The type of chat this will pass @see ChatType
 	 */
-	public IRCChannel(final boolean autoJoin, final boolean defaultChannel,
+	public IRCChannel(final IRCServer server, final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final ChatType type,
 			final List<String> opCommands, final List<String> voiceCommands,
 			final List<String> userCommands) {
+		this.server = server;
 		this.channel = channel;
 		this.type = type;
 		this.autoJoin = autoJoin;
@@ -59,10 +61,11 @@ public class IRCChannel {
 	 * @param type
 	 *            The type of chat this will pass @see ChatType
 	 */
-	public IRCChannel(final boolean autoJoin, final boolean defaultChannel,
+	public IRCChannel(final IRCServer server, final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final String heroChatChannel,
 			final ChatType type, final List<String> opCommands,
 			final List<String> voiceCommands, final List<String> userCommands) {
+		this.server = server;
 		this.channel = channel;
 		this.heroChatChannel = heroChatChannel;
 		this.type = type;
@@ -73,6 +76,10 @@ public class IRCChannel {
 		this.userCommands = userCommands;
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
+	}
+	
+	public IRCServer getServer() {
+		return server;
 	}
 
 	/**
@@ -141,13 +148,21 @@ public class IRCChannel {
 	public List<String> getUserCommands() {
 		return userCommands;
 	}
-	
+
 	public List<String> getOpList() {
 		return ops;
 	}
-	
+
 	public List<String> getVoiceList() {
 		return voices;
+	}
+
+	public void join() {
+		IRC.getHandleManager().getIRCHandler().join(this);
+	}
+	
+	public void leave() {
+		IRC.getHandleManager().getIRCHandler().leave(this);
 	}
 
 }

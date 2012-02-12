@@ -17,7 +17,7 @@ IRC:
     INGAME_COMMANDS: false
     INGAME_COMMANDS_PREFIX: .
   FORMAT:
-    MINECRAFT: <{prefix}{name}{suffix}>{colon} {message}
-    IRC: <{prefix}{name}{suffix}>{colon} {message}
+    MINECRAFT: <{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}
+    IRC: <{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}
   MUTED:
   - sampleuser

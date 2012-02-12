@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
 import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.wrappers.IRCChannel;
 
 public class Connect extends GameCommand {
 
@@ -14,7 +15,8 @@ public class Connect extends GameCommand {
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return split[0].contains("irc") && split[1].equalsIgnoreCase("connect");
+		return split[0].contains("irc") && split[1].equalsIgnoreCase("connect")
+				&& !IRC.getIRCServer().isConnected();
 	}
 
 	@Override
@@ -31,12 +33,13 @@ public class Connect extends GameCommand {
 				return false;
 			}
 		}
-		IRC.getHandleManager().getIRCHandler().disconnect();
-		return IRC
-				.getHandleManager()
-				.getIRCHandler()
-				.connect(Variables.server, Variables.port, Variables.name,
-						Variables.password, Variables.ident, Variables.timeout);
+		IRC.getIRCServer().connect();
+		for (IRCChannel c : Variables.channels) {
+			if (c.isAutoJoin()) {
+				c.join();
+			}
+		}
+		return true;
 	}
 
 	@Override

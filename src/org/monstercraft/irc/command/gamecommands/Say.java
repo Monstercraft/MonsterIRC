@@ -18,7 +18,8 @@ public class Say extends GameCommand {
 	}
 
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return IRC.getHandleManager().getIRCHandler().isConnected()
+		return IRC.getHandleManager().getIRCHandler()
+				.isConnected(IRC.getIRCServer())
 				&& split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("say");
 	}
@@ -90,23 +91,29 @@ public class Say extends GameCommand {
 				}
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
-			c.getHeroChatChannel()
-					.announce(
-							Variables.mcformat
-									.replace("{name}", getName(name))
-									.replace("{message}",
-											IRCColor.formatIRCMessage(message))
-									.replace("{colon}", ":")
-									.replace("{prefix}", getPrefix(name))
-									.replace(
-											"{suffix}",
-											getSuffix(name)
-													+ c.getHeroChatChannel()
-															.getColor()));
+			c.getHeroChatChannel().announce(
+					Variables.mcformat
+							.replace("{name}", getName(name))
+							.replace("{message}",
+									IRCColor.formatIRCMessage(message))
+							.replace("{colon}", ":")
+							.replace("{prefix}", getPrefix(name))
+							.replace("{suffix}", getSuffix(name))
+							.replace("{groupPrefix}", getGroupPrefix(name))
+							.replace("{groupSuffix}", getGroupSuffix(name))
+							+ c.getHeroChatChannel().getColor());
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& IRC.getHookManager().getHeroChatHook() != null
 				&& Variables.hc4) {
-			c.getHeroChatFourChannel().sendMessage("<" + name + ">", message,
+			c.getHeroChatFourChannel().sendMessage(
+					Variables.mcformat.replace("{name}", getName(name))
+							.replace("{message}", "").replace("{colon}", "")
+							.replace("{prefix}", getPrefix(name))
+							.replace("{suffix}", getSuffix(name))
+							.replace("{groupPrefix}", getGroupPrefix(name))
+							.replace("{groupSuffix}", getGroupSuffix(name)),
+					IRCColor.formatIRCMessage(IRCColor
+							.formatIRCMessage(message)),
 					c.getHeroChatFourChannel().getMsgFormat(), false);
 		} else if (c.getChatType() == ChatType.GLOBAL) {
 			plugin.getServer().broadcastMessage(
@@ -116,7 +123,10 @@ public class Say extends GameCommand {
 									IRCColor.formatIRCMessage(message))
 							.replace("{colon}", ":")
 							.replace("{prefix}", getPrefix(name))
-							.replace("{suffix}", getSuffix(name) + "§f"));
+							.replace("{suffix}", getSuffix(name))
+							.replace("{groupPrefix}", getGroupPrefix(name))
+							.replace("{groupSuffix}", getGroupSuffix(name))
+							+ "§f");
 		}
 	}
 
@@ -153,9 +163,42 @@ public class Say extends GameCommand {
 			String color = name;
 			sb.append(color);
 			String temp = sb.toString();
-			if (!temp.contains("&")) {
-				temp = "&f" + temp;
-			}
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getGroupSuffix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC
+					.getHookManager()
+					.getChatHook()
+					.getGroupSuffix(
+							"",
+							IRC.getHookManager().getChatHook()
+									.getPrimaryGroup("", name));
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getGroupPrefix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC
+					.getHookManager()
+					.getChatHook()
+					.getGroupPrefix(
+							"",
+							IRC.getHookManager().getChatHook()
+									.getPrimaryGroup("", name));
+			sb.append(prefix);
+			String temp = sb.toString();
 			s = temp.replace("&", "§");
 		}
 		return s;

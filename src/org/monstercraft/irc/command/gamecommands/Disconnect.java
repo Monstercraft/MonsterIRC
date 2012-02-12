@@ -15,7 +15,7 @@ public class Disconnect extends GameCommand {
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return split[0].contains("irc")
 				&& split[1].equalsIgnoreCase("disconnect")
-				&& IRC.getHandleManager().getIRCHandler().isConnected();
+				&& IRC.getHandleManager().getIRCHandler().isConnected(IRC.getIRCServer());
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class Disconnect extends GameCommand {
 				return false;
 			}
 		}
-		return IRC.getHandleManager().getIRCHandler().disconnect();
+		return IRC.getHandleManager().getIRCHandler().disconnect(IRC.getIRCServer());
 	}
 
 	@Override

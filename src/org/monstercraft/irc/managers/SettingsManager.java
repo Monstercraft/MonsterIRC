@@ -82,33 +82,13 @@ public class SettingsManager extends IRC {
 	 * This method loads the plugins configuration file.
 	 */
 	public void load() {
-		String defaultFormat = "<{prefix}{name}{suffix}>{colon} {message}";
+		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
 		Variables.mcformat = defaultFormat;
 		Variables.ircformat = defaultFormat;
 		final FileConfiguration config = plugin.getConfig();
 		final File CONFIGURATION_FILE = new File(plugin.getDataFolder()
 				+ File.separator + Constants.SETTINGS_FILE);
 		boolean exists = CONFIGURATION_FILE.exists();
-		// List<String> sample = new ArrayList<String>();
-		// sample.add("user sample 1");
-		// sample.add("user sample 2");
-		// config.addDefault("IRC.SETTINGS.IDENTIFY", Variables.ident);
-		// config.addDefault("IRC.SETTINGS.NICKNAME", Variables.name);
-		// config.addDefault("IRC.SETTINGS.PASSWORD", Variables.password);
-		// config.addDefault("IRC.SETTINGS.SERVER", Variables.server);
-		// config.addDefault("IRC.SETTINGS.PORT", Variables.port);
-		// config.addDefault("IRC.OPTIONS.TIMEOUT", Variables.timeout);
-		// config.addDefault("IRC.OPTIONS.DEBUG", Variables.debug);
-		// config.addDefault("IRC.OPTIONS.PASS_ON_NAME", Variables.passOnName);
-		// config.addDefault("IRC.OPTIONS.ALLOW_COLORS", Variables.colors);
-		// config.addDefault("IRC.OPTIONS.SHOW_JOIN_AND_LEAVE_MESSAGES",
-		// Variables.joinAndQuit);
-		// config.addDefault("IRC.ADMIN.INGAME_COMMANDS",
-		// Variables.ingamecommands);
-		// config.addDefault("IRC.ADMIN.INGAME_COMMANDS_PREFIX",
-		// Variables.commandPrefix);
-		// config.addDefault("IRC.MINECRAFT.FORMAT", Variables.format);
-		// config.addDefault("IRC.MUTED", sample);
 		if (exists) {
 			try {
 				config.options().copyDefaults(true);
@@ -240,36 +220,41 @@ public class SettingsManager extends IRC {
 					continue;
 				}
 				if (global) {
-					Variables.channels.add(new IRCChannel(config
-							.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"), config
-							.getBoolean("CHANNEL.SETTINGS.DEFAULT"), "#"
-							+ f.getName().substring(0,
-									f.getName().lastIndexOf(".")),
+					Variables.channels.add(new IRCChannel(IRC.getIRCServer(),
+							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), "#"
+									+ f.getName().substring(0,
+											f.getName().lastIndexOf(".")),
 							ChatType.GLOBAL, config
 									.getStringList("CHANNEL.COMMANDS.OP"),
 							config.getStringList("CHANNEL.COMMANDS.VOICE"),
 							config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (admin) {
-					Variables.channels.add(new IRCChannel(config
-							.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"), config
-							.getBoolean("CHANNEL.SETTINGS.DEFAULT"), "#"
-							+ f.getName().substring(0,
-									f.getName().lastIndexOf(".")),
+					Variables.channels.add(new IRCChannel(IRC.getIRCServer(),
+							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), "#"
+									+ f.getName().substring(0,
+											f.getName().lastIndexOf(".")),
 							ChatType.ADMINCHAT, config
 									.getStringList("CHANNEL.COMMANDS.OP"),
 							config.getStringList("CHANNEL.COMMANDS.VOICE"),
 							config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (hero) {
-					Variables.channels.add(new IRCChannel(config
-							.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"), config
-							.getBoolean("CHANNEL.SETTINGS.DEFAULT"), "#"
-							+ f.getName().substring(0,
-									f.getName().lastIndexOf(".")), config
-							.getString("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL"),
-							ChatType.HEROCHAT, config
-									.getStringList("CHANNEL.COMMANDS.OP"),
-							config.getStringList("CHANNEL.COMMANDS.VOICE"),
-							config.getStringList("CHANNEL.COMMANDS.USERS")));
+					Variables.channels
+							.add(new IRCChannel(
+									IRC.getIRCServer(),
+									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
+									"#"
+											+ f.getName().substring(
+													0,
+													f.getName()
+															.lastIndexOf(".")),
+									config.getString("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL"),
+									ChatType.HEROCHAT,
+									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.VOICE"),
+									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				}
 			} catch (Exception e) {
 				debug(e);

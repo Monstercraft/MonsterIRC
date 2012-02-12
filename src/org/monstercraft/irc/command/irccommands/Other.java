@@ -14,7 +14,8 @@ public class Other extends IRCCommand {
 	}
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler().isConnected();
+		return IRC.getHandleManager().getIRCHandler()
+				.isConnected(IRC.getIRCServer());
 	}
 
 	public boolean execute(String sender, String message, IRCChannel channel) {

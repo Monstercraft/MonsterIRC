@@ -35,7 +35,7 @@ public class Ban extends GameCommand {
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChannel().equalsIgnoreCase(split[3])) {
 				IRC.getHandleManager().getIRCHandler()
-						.ban(split[2].toString(), c.getChannel());
+						.ban(IRC.getIRCServer(), split[2].toString(), c.getChannel());
 				return true;
 			}
 		}

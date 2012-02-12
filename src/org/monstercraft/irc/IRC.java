@@ -15,6 +15,8 @@ import org.monstercraft.irc.managers.HandleManager;
 import org.monstercraft.irc.managers.HookManager;
 import org.monstercraft.irc.managers.SettingsManager;
 import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.wrappers.IRCServer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,6 +36,8 @@ public class IRC extends JavaPlugin {
 	private static CommandManager command = null;
 	private static IRCListener listener = null;
 
+	private static IRCServer IRCserver = null;
+
 	private static Logger logger = Logger.getLogger("MineCraft");
 
 	private SettingsManager settings = null;
@@ -49,6 +53,9 @@ public class IRC extends JavaPlugin {
 		handles = new HandleManager(plugin);
 		command = new CommandManager(plugin);
 		listener = new IRCListener(plugin);
+		IRCserver = new IRCServer(Variables.server, Variables.port,
+				Variables.name, Variables.password, Variables.ident,
+				Variables.timeout, Variables.limit);
 		getServer().getPluginManager().registerEvents(listener, plugin);
 		synchronized (lock) {
 			watch = new Thread(STARTUP);
@@ -71,10 +78,7 @@ public class IRC extends JavaPlugin {
 					log("You are using the latest version of MonsterIRC");
 				}
 				if (!settings.firstRun()) {
-					getHandleManager().getIRCHandler().connect(
-							Variables.server, Variables.port, Variables.name,
-							Variables.password, Variables.ident,
-							Variables.timeout);
+					getHandleManager().getIRCHandler().connect(getIRCServer());
 					log("Successfully started up.");
 				} else {
 					stop();
@@ -88,8 +92,13 @@ public class IRC extends JavaPlugin {
 	public void onDisable() {
 		if (!settings.firstRun()) {
 			if (getHandleManager().getIRCHandler() != null) {
-				if (getHandleManager().getIRCHandler().isConnected()) {
-					getHandleManager().getIRCHandler().disconnect();
+				if (getHandleManager().getIRCHandler().isConnected(
+						getIRCServer())) {
+					for (IRCChannel c : Variables.channels) {
+						c.leave();
+					}
+					getHandleManager().getIRCHandler().disconnect(
+							getIRCServer());
 				}
 			}
 		} else {
@@ -222,5 +231,14 @@ public class IRC extends JavaPlugin {
 	 */
 	public static CommandManager getCommandManager() {
 		return command;
+	}
+
+	/**
+	 * The CommandManager that Assigns all the commands.
+	 * 
+	 * @return The plugins command manager.
+	 */
+	public static IRCServer getIRCServer() {
+		return IRCserver;
 	}
 }

@@ -13,7 +13,7 @@ public class Announce extends IRCCommand {
 	}
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler().isConnected()
+		return IRC.getHandleManager().getIRCHandler().isConnected(IRC.getIRCServer())
 				&& message.startsWith(Variables.commandPrefix + "announce");
 	}
 

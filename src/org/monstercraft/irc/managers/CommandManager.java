@@ -14,6 +14,7 @@ import org.monstercraft.irc.command.gamecommands.Join;
 import org.monstercraft.irc.command.gamecommands.Leave;
 import org.monstercraft.irc.command.gamecommands.Mute;
 import org.monstercraft.irc.command.gamecommands.Nick;
+import org.monstercraft.irc.command.gamecommands.PrivateMessage;
 import org.monstercraft.irc.command.gamecommands.ReloadConfig;
 import org.monstercraft.irc.command.gamecommands.Say;
 import org.monstercraft.irc.command.gamecommands.Unmute;
@@ -42,6 +43,7 @@ public class CommandManager extends IRC {
 	 *            The parent plugin.
 	 */
 	public CommandManager(final IRC plugin) {
+		gameCommands.add(new PrivateMessage(plugin));
 		gameCommands.add(new Ban(plugin));
 		gameCommands.add(new Mute(plugin));
 		gameCommands.add(new Unmute(plugin));

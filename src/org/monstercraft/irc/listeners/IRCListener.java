@@ -72,6 +72,10 @@ public class IRCListener extends IRC implements Listener {
 							.replace("{suffix}",
 									getSuffix(event.getPlayer().getName()))
 							.replace("{colon}", ":")
+							.replace("{groupPrefix}",
+									getGroupPrefix(event.getPlayer().getName()))
+							.replace("{groupSuffix}",
+									getGroupSuffix(event.getPlayer().getName()))
 							.replace("{message}", event.getMessage()));
 					if (c.getChatType() == ChatType.ADMINCHAT) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
@@ -181,7 +185,7 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.formatMCMessage(IRCColor.RED
+								IRCColor.formatMCMessage(IRCColor.WHITE
 										.getMinecraftColor()
 										+ getName(event.getPlayer().getName())
 										+ IRCColor.RED.getMinecraftColor()
@@ -197,7 +201,7 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.formatMCMessage(IRCColor.RED
+								IRCColor.formatMCMessage(IRCColor.WHITE
 										.getMinecraftColor()
 										+ getName(event.getPlayer().getName())
 										+ IRCColor.RED.getMinecraftColor()
@@ -239,9 +243,42 @@ public class IRCListener extends IRC implements Listener {
 			String color = name;
 			sb.append(color);
 			String temp = sb.toString();
-			if (!temp.contains("&")) {
-				temp = "&f" + temp;
-			}
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getGroupSuffix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC
+					.getHookManager()
+					.getChatHook()
+					.getGroupSuffix(
+							"",
+							IRC.getHookManager().getChatHook()
+									.getPrimaryGroup("", name));
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getGroupPrefix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC
+					.getHookManager()
+					.getChatHook()
+					.getGroupPrefix(
+							"",
+							IRC.getHookManager().getChatHook()
+									.getPrimaryGroup("", name));
+			sb.append(prefix);
+			String temp = sb.toString();
 			s = temp.replace("&", "§");
 		}
 		return s;

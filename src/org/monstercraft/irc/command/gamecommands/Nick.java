@@ -34,9 +34,9 @@ public class Nick extends GameCommand {
 		}
 		if (split.length == 3) {
 			Variables.name = split[2];
-			if (IRC.getHandleManager().getIRCHandler().isConnected()) {
+			if (IRC.getHandleManager().getIRCHandler().isConnected(IRC.getIRCServer())) {
 				IRC.getHandleManager().getIRCHandler()
-						.changeNick(Variables.name);
+						.changeNick(IRC.getIRCServer(), Variables.name);
 			}
 			sender.sendMessage("Nick successfully changed to: "
 					+ Variables.name);

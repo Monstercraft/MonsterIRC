@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
 import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.wrappers.IRCChannel;
 
 public class ReloadConfig extends GameCommand {
 
@@ -32,14 +33,18 @@ public class ReloadConfig extends GameCommand {
 			sender.sendMessage("[IRC] You must run this command via the console.");
 			return false;
 		}
-		if (IRC.getHandleManager().getIRCHandler().isConnected()) {
-			IRC.getHandleManager().getIRCHandler().disconnect();
+		if (IRC.getHandleManager().getIRCHandler()
+				.isConnected(IRC.getIRCServer())) {
+			IRC.getHandleManager().getIRCHandler()
+					.disconnect(IRC.getIRCServer());
 		}
 		plugin.getSettingsManager().reload();
-		IRC.getHandleManager()
-				.getIRCHandler()
-				.connect(Variables.server, Variables.port, Variables.name,
-						Variables.password, Variables.ident, Variables.timeout);
+		IRC.getHandleManager().getIRCHandler().connect(IRC.getIRCServer());
+		for (IRCChannel c : Variables.channels) {
+			if (c.isAutoJoin()) {
+				c.join();
+			}
+		}
 		return true;
 	}
 

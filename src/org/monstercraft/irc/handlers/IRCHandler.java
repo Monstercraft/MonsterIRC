@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.util.ChatType;
@@ -16,6 +17,7 @@ import org.monstercraft.irc.util.IRCColor;
 import org.monstercraft.irc.util.Pinger;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.wrappers.IRCServer;
 
 import com.gmail.nossr50.mcPermissions;
 
@@ -34,6 +36,8 @@ public class IRCHandler extends IRC {
 	private Thread print = null;
 	private IRC plugin;
 	private ArrayList<String> messageQue = new ArrayList<String>();
+	private OutputStreamWriter osw = null;
+	private InputStreamReader isr = null;
 
 	/**
 	 * Creates an instance of the IRCHandler class.
@@ -49,50 +53,40 @@ public class IRCHandler extends IRC {
 	 * Connects to an IRC server then a channel.
 	 * 
 	 * @param server
-	 *            The server to connec to.
-	 * @param port
-	 *            The port to use.
-	 * @param nick
-	 *            The nick name.
-	 * @param password
-	 *            The password when identifing.
-	 * @param identify
-	 *            Weither the user wants to identify with nickserv.
-	 * @param timeoutMs
-	 *            The time to wait for a reply.
+	 *            The server to connect to.
 	 * @return True if connected successfully; otherwise false.
 	 */
-	public boolean connect(final String server, final int port,
-			final String nick, final String password, final boolean identify,
-			final int timeoutMs) {
-		if (!isConnected()) {
+	public boolean connect(final IRCServer server) {
+		if (!isConnected(server)) {
 			String line = null;
 			long ping = -1;
 			int tries = 0;
-			for (int i = 0; i < Variables.tries; i++) {
-				ping = Pinger.ping(Variables.server, Variables.port, timeoutMs);
+			for (int i = 0; i < server.getRetrys(); i++) {
+				ping = Pinger.ping(server.getServer(), server.getPort(),
+						server.getTimeout());
 				if (ping > 0) {
 					tries = i;
 					break;
 				}
 			}
-			if (ping < Variables.timeout + 1 && ping != -1) {
+			if (ping < server.getTimeout() + 1 && ping != -1) {
 				log("The IRC server took " + ping + " MS to respond with "
 						+ tries + " retrys.");
 				try {
-					connection = new Socket(server, port);
-					writer = new BufferedWriter(new OutputStreamWriter(
-							connection.getOutputStream()));
-					reader = new BufferedReader(new InputStreamReader(
-							connection.getInputStream()));
+					connection = new Socket(server.getServer(),
+							server.getPort());
+					osw = new OutputStreamWriter(connection.getOutputStream());
+					isr = new InputStreamReader(connection.getInputStream());
+					writer = new BufferedWriter(osw);
+					reader = new BufferedReader(isr);
 					log("Attempting to connect to chat.");
-					if (identify) {
-						writer.write("PASS " + password + "\r\n");
+					if (server.isIdentifing()) {
+						writer.write("PASS " + server.getPassword() + "\r\n");
 						writer.flush();
 					}
-					writer.write("NICK " + nick + "\r\n");
+					writer.write("NICK " + server.getNick() + "\r\n");
 					writer.flush();
-					writer.write("USER " + nick + " 8 * :"
+					writer.write("USER " + server.getNick() + " 8 * :"
 							+ plugin.getDescription().getVersion() + "\r\n");
 					writer.flush();
 					log("Processing connection....");
@@ -101,15 +95,16 @@ public class IRCHandler extends IRC {
 						if (line.contains("004")) {
 							break;
 						} else if (line.contains("433")) {
-							if (!identify) {
+							if (!server.isIdentifing()) {
 								log("Your nickname is already in use, please switch it");
 								log("using \"nick [NAME]\" and try to connect again.");
-								disconnect();
+								disconnect(server);
 								return false;
 							} else {
 								log("Sending ghost command....");
-								writer.write("NICKSERV GHOST " + nick + " "
-										+ password + "\r\n");
+								writer.write("NICKSERV GHOST "
+										+ server.getNick() + " "
+										+ server.getPassword() + "\r\n");
 								writer.flush();
 							}
 						} else if (line.toLowerCase().startsWith("ping ")) {
@@ -118,14 +113,15 @@ public class IRCHandler extends IRC {
 							continue;
 						}
 					}
-					if (identify) {
+					if (server.isIdentifing()) {
 						log("Identifying with Nickserv....");
-						writer.write("NICKSERV IDENTIFY " + password + "\r\n");
+						writer.write("NICKSERV IDENTIFY "
+								+ server.getPassword() + "\r\n");
 						writer.flush();
 					}
 					for (IRCChannel c : Variables.channels) {
 						if (c.isAutoJoin()) {
-							join(c);
+							c.join();
 						}
 					}
 					watch = new Thread(KEEP_ALIVE);
@@ -137,9 +133,8 @@ public class IRCHandler extends IRC {
 					print.setPriority(Thread.NORM_PRIORITY);
 					print.start();
 				} catch (Exception e) {
-					log("Failed to connect to IRC!");
-					debug(e);
-					disconnect();
+					log("Failed to connect to IRC! Try again in about 1 minute!");
+					disconnect(server);
 				}
 			} else {
 				log("The IRC server seems to be down or running slowly!");
@@ -147,7 +142,7 @@ public class IRCHandler extends IRC {
 				return false;
 			}
 		}
-		return isConnected();
+		return isConnected(server);
 	}
 
 	/**
@@ -155,35 +150,42 @@ public class IRCHandler extends IRC {
 	 * 
 	 * @return True if we disconnect successfully; otherwise false.
 	 */
-	public boolean disconnect() {
-		if (isConnected()) {
+	public boolean disconnect(final IRCServer server) {
+		if (isConnected(server)) {
 			try {
-				if (connection.isBound() && connection.isConnected()
-						&& !connection.isClosed()) {
-					for (IRCChannel c : Variables.channels) {
-						leave(c);
-					}
-				}
-				if (!connection.isClosed()) {
-					connection.close();
-				}
 				if (watch != null) {
 					watch.interrupt();
+					watch = null;
 				}
 				if (print != null) {
 					print.interrupt();
+					print = null;
 				}
-				watch = null;
-				print = null;
-				writer = null;
-				reader = null;
-				connection = null;
+				if (!connection.isClosed()) {
+					log("Closing connection.");
+					connection.shutdownInput();
+					connection.shutdownOutput();
+					if (reader != null) {
+						isr.close();
+						reader.close();
+						reader = null;
+					}
+					if (writer != null) {
+						osw.flush();
+						writer.flush();
+						osw.close();
+						writer.close();
+						writer = null;
+					}
+					connection.close();
+					connection = null;
+				}
 				log("Successfully disconnected from IRC.");
 			} catch (Exception e) {
 				debug(e);
 			}
 		}
-		return !isConnected();
+		return !isConnected(server);
 	}
 
 	/**
@@ -191,7 +193,7 @@ public class IRCHandler extends IRC {
 	 * 
 	 * @return True if conencted to an IRC server; othewise false.
 	 */
-	public boolean isConnected() {
+	public boolean isConnected(final IRCServer server) {
 		if (connection != null) {
 			return connection.isConnected();
 		}
@@ -217,8 +219,8 @@ public class IRCHandler extends IRC {
 	 */
 	public void leave(final IRCChannel channel) {
 		try {
-			if (isConnected()) {
-				writer.write("QUIT " + channel.getChannel() + "\r\n");
+			if (isConnected(channel.getServer())) {
+				writer.write("PART " + channel.getChannel() + "\r\n");
 				writer.flush();
 			}
 		} catch (IOException e) {
@@ -229,11 +231,12 @@ public class IRCHandler extends IRC {
 	private final Runnable KEEP_ALIVE = new Runnable() {
 		public void run() {
 			try {
-				if (isConnected() && reader != null && reader.ready()) {
+				if (isConnected(IRC.getIRCServer()) && reader != null
+						&& reader.ready()) {
 					String line;
 					try {
 						while ((line = reader.readLine()) != null) {
-							if (!isConnected()) {
+							if (!isConnected(IRC.getIRCServer())) {
 								break;
 							}
 							debug(line);
@@ -284,7 +287,7 @@ public class IRCHandler extends IRC {
 											name = line.substring(1,
 													line.indexOf("!"));
 											if (name.equalsIgnoreCase(Variables.name)) {
-												disconnect();
+												disconnect(IRC.getIRCServer());
 												msg = null;
 												break;
 											}
@@ -384,6 +387,37 @@ public class IRCHandler extends IRC {
 									debug(e);
 								}
 							}
+
+							if (line.toLowerCase().contains(
+									"PRIVMSG ".toLowerCase()
+											+ IRC.getIRCServer().getNick()
+													.toLowerCase())) {
+								for (Player p : Bukkit.getServer()
+										.getOnlinePlayers()) {
+									name = line.substring(1, line.indexOf("!"));
+									msg = line
+											.substring(line.indexOf(" :") + 2);
+									if (msg.contains(":")
+											&& msg.indexOf(":") > 2) {
+										String to = msg.substring(0,
+												msg.indexOf(":"));
+										String _msg = msg.substring(msg
+												.indexOf(":") + 1);
+										if (to == null || _msg == null
+												|| msg == null || name == null) {
+											break;
+										}
+										if (p.getName().equalsIgnoreCase(to)) {
+											p.sendMessage(IRCColor.LIGHT_GRAY
+													.getMinecraftColor()
+													+ "([IRC] from "
+													+ name
+													+ "):" + _msg);
+										}
+									}
+								}
+							}
+
 							if (line.toLowerCase().contains(
 									"QUIT :".toLowerCase())) {
 								if (name.equalsIgnoreCase(Variables.name)
@@ -455,7 +489,7 @@ public class IRCHandler extends IRC {
 			try {
 				while (true) {
 					if (messageQue.size() > 0) {
-						if (isConnected()) {
+						if (isConnected(IRC.getIRCServer())) {
 							for (final String str : messageQue) {
 								writer.write(str + "\r\n");
 								writer.flush();
@@ -480,15 +514,14 @@ public class IRCHandler extends IRC {
 	private final Runnable RECONNECT = new Runnable() {
 		public void run() {
 			try {
-				if (IRC.getHandleManager().getIRCHandler().isConnected()) {
-					IRC.getHandleManager().getIRCHandler().disconnect();
+				if (IRC.getHandleManager().getIRCHandler()
+						.isConnected(IRC.getIRCServer())) {
+					IRC.getHandleManager().getIRCHandler()
+							.disconnect(IRC.getIRCServer());
 				}
 				plugin.getSettingsManager().reload();
-				IRC.getHandleManager()
-						.getIRCHandler()
-						.connect(Variables.server, Variables.port,
-								Variables.name, Variables.password,
-								Variables.ident, Variables.timeout);
+				IRC.getHandleManager().getIRCHandler()
+						.connect(IRC.getIRCServer());
 			} catch (final Exception e) {
 				debug(e);
 			}
@@ -525,8 +558,8 @@ public class IRCHandler extends IRC {
 	 * @param Nick
 	 *            The name to change to.
 	 */
-	public void changeNick(final String Nick) {
-		if (isConnected()) {
+	public void changeNick(final IRCServer server, final String Nick) {
+		if (isConnected(server)) {
 			try {
 				writer.write("NICK " + Nick + "\r\n");
 				writer.flush();
@@ -544,8 +577,9 @@ public class IRCHandler extends IRC {
 	 * @param channel
 	 *            The channel to ban in.
 	 */
-	public void ban(final String Nick, final String channel) {
-		if (isConnected()) {
+	public void ban(final IRCServer server, final String Nick,
+			final String channel) {
+		if (isConnected(server)) {
 			try {
 				writer.write("KICK " + channel + " " + Nick + "\r\n");
 				writer.flush();
@@ -573,6 +607,42 @@ public class IRCHandler extends IRC {
 	 */
 	public boolean isVoice(final IRCChannel channel, final String sender) {
 		return channel.getVoiceList().contains(sender);
+	}
+
+	private String getGroupSuffix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC
+					.getHookManager()
+					.getChatHook()
+					.getGroupSuffix(
+							"",
+							IRC.getHookManager().getChatHook()
+									.getPrimaryGroup("", name));
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	private String getGroupPrefix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC
+					.getHookManager()
+					.getChatHook()
+					.getGroupPrefix(
+							"",
+							IRC.getHookManager().getChatHook()
+									.getPrimaryGroup("", name));
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
 	}
 
 	private String getPrefix(String name) {
@@ -635,23 +705,29 @@ public class IRCHandler extends IRC {
 										IRCColor.formatIRCMessage(message))
 								.replace("{colon}", ":")
 								.replace("{prefix}", getPrefix(name))
-								.replace(
-										"{suffix}",
-										getSuffix(name)
-												+ c.getHeroChatChannel()
-														.getColor()));
+								.replace("{suffix}", getSuffix(name))
+								.replace("{groupPrefix}", getGroupPrefix(name))
+								.replace("{groupSuffix}", getGroupSuffix(name))
+								+ c.getHeroChatChannel().getColor());
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
-				c.getHeroChatFourChannel().sendMessage(
-						Variables.mcformat.replace("{name}", getName(name))
-								.replace("{message}", "")
-								.replace("{colon}", "")
-								.replace("{prefix}", getPrefix(name))
-								.replace("{suffix}", getSuffix(name) + "§f"),
-						IRCColor.formatIRCMessage(IRCColor
-								.formatIRCMessage(message)),
-						c.getHeroChatFourChannel().getMsgFormat(), false);
+				c.getHeroChatFourChannel()
+						.sendMessage(
+								Variables.mcformat
+										.replace("{name}", getName(name))
+										.replace("{message}", "")
+										.replace("{colon}", "")
+										.replace("{prefix}", getPrefix(name))
+										.replace("{suffix}", getSuffix(name))
+										.replace("{groupPrefix}",
+												getGroupPrefix(name))
+										.replace("{groupSuffix}",
+												getGroupSuffix(name)),
+								IRCColor.formatIRCMessage(IRCColor
+										.formatIRCMessage(message)),
+								c.getHeroChatFourChannel().getMsgFormat(),
+								false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
 						Variables.mcformat
@@ -660,7 +736,10 @@ public class IRCHandler extends IRC {
 										IRCColor.formatIRCMessage(message))
 								.replace("{colon}", ":")
 								.replace("{prefix}", getPrefix(name))
-								.replace("{suffix}", getSuffix(name) + "§f"));
+								.replace("{suffix}", getSuffix(name))
+								.replace("{groupPrefix}", getGroupPrefix(name))
+								.replace("{groupSuffix}", getGroupSuffix(name))
+								+ IRCColor.WHITE.getMinecraftColor());
 			}
 		} catch (Exception e) {
 			debug(e);
