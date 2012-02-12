@@ -20,4 +20,10 @@ public class Constants {
 	 */
 	public static final String CHANNELS_PATH = "Channels" + File.separator;
 
+	/**
+	 * The location in which to save the files.
+	 */
+	public static final String SETTINGS_PATH = "plugins" + File.separator
+			+ "MonsterIRC" + File.separator;
+
 }

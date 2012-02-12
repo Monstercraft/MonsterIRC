@@ -13,7 +13,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.Constants;
-import org.monstercraft.irc.util.CreateReadme;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
@@ -57,7 +56,7 @@ public class SettingsManager extends IRC {
 
 	public void saveMuted() {
 		final FileConfiguration config = plugin.getConfig();
-		final File CONFIGURATION_FILE = new File(plugin.getDataFolder()
+		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
 				+ File.separator + Constants.SETTINGS_FILE);
 		boolean exists = CONFIGURATION_FILE.exists();
 		if (exists) {
@@ -82,21 +81,25 @@ public class SettingsManager extends IRC {
 	 * This method loads the plugins configuration file.
 	 */
 	public void load() {
-		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
-		Variables.mcformat = defaultFormat;
-		Variables.ircformat = defaultFormat;
-		final FileConfiguration config = plugin.getConfig();
-		final File CONFIGURATION_FILE = new File(plugin.getDataFolder()
+		final FileConfiguration config = this.plugin.getConfig();
+		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
 				+ File.separator + Constants.SETTINGS_FILE);
 		boolean exists = CONFIGURATION_FILE.exists();
+		log("Loading settings.yml file");
 		if (exists) {
 			try {
+				log("Loading settings!");
+				config.options()
+						.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help");
 				config.options().copyDefaults(true);
 				config.load(CONFIGURATION_FILE);
 			} catch (Exception e) {
 				debug(e);
 			}
 		} else {
+			log("Loading default settings!");
+			config.options()
+					.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help");
 			config.options().copyDefaults(true);
 		}
 		try {
@@ -138,7 +141,7 @@ public class SettingsManager extends IRC {
 		} catch (Exception e) {
 			debug(e);
 		}
-
+		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
 		if (Variables.mcformat.contains("{name}")
 				&& Variables.mcformat.contains("{message}")) {
 		} else {
@@ -161,7 +164,7 @@ public class SettingsManager extends IRC {
 	 */
 	public void populateChannels() {
 		Variables.channels.clear();
-		final File CHANNEL_DIR = new File(plugin.getDataFolder()
+		final File CHANNEL_DIR = new File(Constants.SETTINGS_PATH
 				+ File.separator + Constants.CHANNELS_PATH);
 		Set<File> files = new HashSet<File>();
 		if (CHANNEL_DIR.listFiles() != null) {
@@ -266,7 +269,7 @@ public class SettingsManager extends IRC {
 	 * This methods creates the default sample channel files for the plugin.
 	 */
 	public void createDefaultChannel() {
-		File SAMPLE_CHANNEL = new File(plugin.getDataFolder() + File.separator
+		File SAMPLE_CHANNEL = new File(Constants.SETTINGS_PATH + File.separator
 				+ Constants.CHANNELS_PATH + File.separator + "Sample.channel");
 		ArrayList<String> op = new ArrayList<String>();
 		ArrayList<String> voice = new ArrayList<String>();
@@ -275,6 +278,8 @@ public class SettingsManager extends IRC {
 		voice.add("give");
 		user.add("help");
 		FileConfiguration config = new YamlConfiguration();
+		config.options()
+		.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
 		config.set("CHANNEL.SETTINGS.AUTOJOIN", false);
 		config.set("CHANNEL.SETTINGS.DEFAULT", false);
 		config.set("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
@@ -285,22 +290,6 @@ public class SettingsManager extends IRC {
 		config.set("CHANNEL.COMMANDS.VOICE", voice);
 		config.set("CHANNEL.COMMANDS.USERS", user);
 		save(config, SAMPLE_CHANNEL);
-		new CreateReadme();
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
-		log("We have set up the default channels for you!");
-		log("Check the Readme.txt file in plugins/MonsterIRC");
-		log("for a detailed guide to set up this plugin!");
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
-		log("*************************************************");
 		firstRun = true;
 	}
 
