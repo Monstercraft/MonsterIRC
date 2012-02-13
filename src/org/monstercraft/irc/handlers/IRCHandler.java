@@ -268,7 +268,7 @@ public class IRCHandler extends IRC {
 																name);
 									}
 								} else if (line.toLowerCase().contains(
-										"JOIN :".toLowerCase()
+										"JOIN ".toLowerCase()
 												+ c.getChannel().toLowerCase()
 														.toLowerCase())) {
 									if (c.showJoinLeave()) {
@@ -469,7 +469,7 @@ public class IRCHandler extends IRC {
 	private final Runnable DISPATCH = new Runnable() {
 		public void run() {
 			try {
-				while (true) {
+				while (isConnected(IRC.getIRCServer())) {
 					if (messageQue.size() > 0) {
 						if (isConnected(IRC.getIRCServer())) {
 							for (final String str : messageQue) {
@@ -485,6 +485,7 @@ public class IRCHandler extends IRC {
 							Thread.sleep(1000 / Variables.limit);
 						} catch (InterruptedException e) {
 							Thread.currentThread().interrupt();
+							break;
 						}
 					}
 				}

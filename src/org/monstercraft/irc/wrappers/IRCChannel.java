@@ -32,17 +32,28 @@ public class IRCChannel {
 	private boolean showJoinLeave;
 
 	/**
+	 * Creates an IRCChannel to join.
 	 * 
 	 * @param server
+	 *            The parent Server.
 	 * @param password
+	 *            The password to the channel, if any;
 	 * @param showJoinLeave
+	 *            The option to show leave/join messages.
 	 * @param autoJoin
+	 *            The option to automatically connect to the server.
 	 * @param defaultChannel
+	 *            Weither the channel is defaulted with the irc say command.
 	 * @param channel
+	 *            The channel to join.
 	 * @param type
+	 *            The channel type.
 	 * @param opCommands
+	 *            The list of commands IRC ops can use.
 	 * @param voiceCommands
+	 *            The list of commands IRC voices can use.
 	 * @param userCommands
+	 *            The list of commands IRC users can use.
 	 */
 	public IRCChannel(final IRCServer server, final String password,
 			final boolean showJoinLeave, final boolean autoJoin,
@@ -61,21 +72,34 @@ public class IRCChannel {
 		this.userCommands = userCommands;
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
+		this.heroChatChannel = null;
 	}
 
 	/**
+	 * Creates an IRCChannel to join.
 	 * 
 	 * @param server
+	 *            The parent Server.
 	 * @param password
+	 *            The password to the channel, if any;
 	 * @param showJoinLeave
+	 *            The option to show leave/join messages.
 	 * @param autoJoin
+	 *            The option to automatically connect to the server.
 	 * @param defaultChannel
+	 *            Weither the channel is defaulted with the irc say command.
 	 * @param channel
+	 *            The channel to join.
 	 * @param heroChatChannel
+	 *            The herochat channel to pass chat to.
 	 * @param type
+	 *            The channel type.
 	 * @param opCommands
+	 *            The list of commands IRC ops can use.
 	 * @param voiceCommands
+	 *            The list of commands IRC voices can use.
 	 * @param userCommands
+	 *            The list of commands IRC users can use.
 	 */
 	public IRCChannel(final IRCServer server, final String password,
 			final boolean showJoinLeave, final boolean autoJoin,
