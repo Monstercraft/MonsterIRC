@@ -221,18 +221,4 @@ public class IRCChannel {
 		return showJoinLeave;
 	}
 
-	/**
-	 * Joines the channel.
-	 */
-	public void join() {
-		IRC.getHandleManager().getIRCHandler().join(this);
-	}
-
-	/**
-	 * Leaves the channel.
-	 */
-	public void leave() {
-		IRC.getHandleManager().getIRCHandler().leave(this);
-	}
-
 }

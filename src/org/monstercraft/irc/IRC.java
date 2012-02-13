@@ -40,7 +40,7 @@ public class IRC extends JavaPlugin {
 
 	private static Logger logger = Logger.getLogger("MineCraft");
 
-	private SettingsManager settings = null;
+	private static SettingsManager settings = null;
 	private Thread watch = null;
 	private IRC plugin;
 	private Object lock = new Object();
@@ -101,7 +101,7 @@ public class IRC extends JavaPlugin {
 				if (getHandleManager().getIRCHandler().isConnected(
 						getIRCServer())) {
 					for (IRCChannel c : Variables.channels) {
-						c.leave();
+						IRC.getHandleManager().getIRCHandler().leave(c);
 					}
 					getHandleManager().getIRCHandler().disconnect(
 							getIRCServer());
@@ -166,7 +166,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The settings.
 	 */
-	public SettingsManager getSettingsManager() {
+	public static SettingsManager getSettingsManager() {
 		return settings;
 	}
 

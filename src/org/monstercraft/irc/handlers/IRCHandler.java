@@ -39,8 +39,6 @@ public class IRCHandler extends IRC {
 	private Thread print = null;
 	private IRC plugin;
 	private ArrayList<String> messageQue = new ArrayList<String>();
-	private OutputStreamWriter osw = null;
-	private InputStreamReader isr = null;
 
 	/**
 	 * Creates an instance of the IRCHandler class.
@@ -60,98 +58,100 @@ public class IRCHandler extends IRC {
 	 * @return True if connected successfully; otherwise false.
 	 */
 	public boolean connect(final IRCServer server) {
-		if (!isConnected(server)) {
-			String line = null;
-			int ping = -1;
-			int tries = 0;
-			for (int i = 0; i < server.getRetrys(); i++) {
-				ping = Pinger.ping(server.getServer(), server.getPort(),
-						server.getTimeout());
-				if (ping < server.getTimeout() + 1 && ping != -1) {
-					tries = i;
-					break;
-				}
+		if (connection != null) {
+			if (connection.isConnected()) {
+				disconnect(server);
 			}
+		}
+		String line = null;
+		int ping = -1;
+		int tries = 0;
+		for (int i = 0; i < server.getRetrys(); i++) {
+			ping = Pinger.ping(server.getServer(), server.getPort(),
+					server.getTimeout());
 			if (ping < server.getTimeout() + 1 && ping != -1) {
-				log("The IRC server took " + ping + " MS to respond with "
-						+ tries + " retrys.");
-				try {
-					connection = new Socket();
-					InetAddress addr = InetAddress
-							.getByName(server.getServer());
-					SocketAddress sockaddr = new InetSocketAddress(addr,
-							server.getPort());
-					connection.connect(sockaddr);
-					osw = new OutputStreamWriter(connection.getOutputStream());
-					isr = new InputStreamReader(connection.getInputStream());
-					writer = new BufferedWriter(osw);
-					reader = new BufferedReader(isr);
-					log("Attempting to connect to chat.");
-					if (server.isIdentifing()) {
-						writer.write("PASS " + server.getPassword() + "\r\n");
-						writer.flush();
-					}
-					writer.write("NICK " + server.getNick() + "\r\n");
-					writer.flush();
-					writer.write("USER " + server.getNick() + " 8 * :"
-							+ plugin.getDescription().getVersion() + "\r\n");
-					writer.flush();
-					log("Processing connection....");
-					while ((line = reader.readLine()) != null) {
-						debug(line);
-						if (line.contains("004") || line.contains("376")) {
-							for (String s : server.getConnectCommands()) {
-								writer.write(s + "\r\n");
-								writer.flush();
-							}
-							break;
-						} else if (line.contains("433")) {
-							if (!server.isIdentifing()) {
-								log("Your nickname is already in use, please switch it");
-								log("using \"nick [NAME]\" and try to connect again.");
-								disconnect(server);
-								return false;
-							} else {
-								log("Sending ghost command....");
-								writer.write("NICKSERV GHOST "
-										+ server.getNick() + " "
-										+ server.getPassword() + "\r\n");
-								writer.flush();
-							}
-						} else if (line.toLowerCase().startsWith("ping ")) {
-							writer.write("PONG " + line.substring(5) + "\r\n");
-							writer.flush();
-							continue;
-						}
-					}
-					if (server.isIdentifing()) {
-						log("Identifying with Nickserv....");
-						writer.write("NICKSERV IDENTIFY "
-								+ server.getPassword() + "\r\n");
-						writer.flush();
-					}
-					for (IRCChannel c : Variables.channels) {
-						if (c.isAutoJoin()) {
-							c.join();
-						}
-					}
-					watch = new Thread(KEEP_ALIVE);
-					watch.setDaemon(true);
-					watch.setPriority(Thread.MAX_PRIORITY);
-					watch.start();
-					print = new Thread(DISPATCH);
-					print.setDaemon(true);
-					print.setPriority(Thread.NORM_PRIORITY);
-					print.start();
-				} catch (Exception e) {
-					log("Failed to connect to IRC! Try again in about 1 minute!");
-					disconnect(server);
-				}
-			} else {
-				log("The IRC server seems to be down or running slowly!");
-				log("To try conencting again run the command /irc connect");
-				return false;
+				tries = i;
+				break;
 			}
+		}
+		if (ping < server.getTimeout() + 1 && ping != -1) {
+			log("The IRC server took " + ping + " MS to respond with " + tries
+					+ " retrys.");
+			try {
+				connection = null;
+				connection = new Socket();
+				InetAddress addr = InetAddress.getByName(server.getServer());
+				SocketAddress sockaddr = new InetSocketAddress(addr,
+						server.getPort());
+				connection.connect(sockaddr);
+				writer = new BufferedWriter(new OutputStreamWriter(
+						connection.getOutputStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						connection.getInputStream()));
+				log("Attempting to connect to chat.");
+				if (server.isIdentifing()) {
+					writer.write("PASS " + server.getPassword() + "\r\n");
+					writer.flush();
+				}
+				writer.write("NICK " + server.getNick() + "\r\n");
+				writer.flush();
+				writer.write("USER " + server.getNick() + " 8 * :"
+						+ plugin.getDescription().getVersion() + "\r\n");
+				writer.flush();
+				log("Processing connection....");
+				while ((line = reader.readLine()) != null) {
+					debug(line);
+					if (line.contains("004") || line.contains("376")) {
+						for (String s : server.getConnectCommands()) {
+							writer.write(s + "\r\n");
+							writer.flush();
+						}
+						break;
+					} else if (line.contains("433")) {
+						if (!server.isIdentifing()) {
+							log("Your nickname is already in use, please switch it");
+							log("using \"nick [NAME]\" and try to connect again.");
+							disconnect(server);
+							return false;
+						} else {
+							log("Sending ghost command....");
+							writer.write("NICKSERV GHOST " + server.getNick()
+									+ " " + server.getPassword() + "\r\n");
+							writer.flush();
+						}
+					} else if (line.toLowerCase().startsWith("ping ")) {
+						writer.write("PONG " + line.substring(5) + "\r\n");
+						writer.flush();
+						continue;
+					}
+				}
+				if (server.isIdentifing()) {
+					log("Identifying with Nickserv....");
+					writer.write("NICKSERV IDENTIFY " + server.getPassword()
+							+ "\r\n");
+					writer.flush();
+				}
+				for (IRCChannel c : Variables.channels) {
+					if (c.isAutoJoin()) {
+						IRC.getHandleManager().getIRCHandler().join(c);
+					}
+				}
+				watch = new Thread(KEEP_ALIVE);
+				watch.setDaemon(true);
+				watch.setPriority(Thread.MAX_PRIORITY);
+				watch.start();
+				print = new Thread(DISPATCH);
+				print.setDaemon(true);
+				print.setPriority(Thread.NORM_PRIORITY);
+				print.start();
+			} catch (Exception e) {
+				log("Failed to connect to IRC! Try again in about 1 minute!");
+				disconnect(server);
+			}
+		} else {
+			log("The IRC server seems to be down or running slowly!");
+			log("To try conencting again run the command /irc connect");
+			return false;
 		}
 		return isConnected(server);
 	}
@@ -177,9 +177,7 @@ public class IRCHandler extends IRC {
 					connection.shutdownInput();
 					connection.shutdownOutput();
 					if (writer != null) {
-						osw.flush();
 						writer.flush();
-						osw.close();
 						writer.close();
 						writer = null;
 					}
@@ -491,6 +489,7 @@ public class IRCHandler extends IRC {
 					}
 				}
 			} catch (Exception e) {
+				Thread.currentThread().interrupt();
 				debug(e);
 			}
 		}
@@ -500,12 +499,7 @@ public class IRCHandler extends IRC {
 	private final Runnable RECONNECT = new Runnable() {
 		public void run() {
 			try {
-				if (IRC.getHandleManager().getIRCHandler()
-						.isConnected(IRC.getIRCServer())) {
-					IRC.getHandleManager().getIRCHandler()
-							.disconnect(IRC.getIRCServer());
-				}
-				plugin.getSettingsManager().reload();
+				IRC.getSettingsManager().reload();
 				IRC.getHandleManager().getIRCHandler()
 						.connect(IRC.getIRCServer());
 			} catch (final Exception e) {

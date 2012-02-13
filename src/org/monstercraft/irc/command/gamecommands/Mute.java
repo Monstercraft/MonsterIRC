@@ -33,7 +33,7 @@ public class Mute extends GameCommand {
 		}
 		if (!Variables.muted.contains(split[2].toString().toLowerCase())) {
 			Variables.muted.add(split[2].toString().toLowerCase());
-			plugin.getSettingsManager().saveMuted();
+			IRC.getSettingsManager().saveMuted();
 			sender.sendMessage("Player " + split[2].toString()
 					+ " has been muted from talking via IRC.");
 		} else {

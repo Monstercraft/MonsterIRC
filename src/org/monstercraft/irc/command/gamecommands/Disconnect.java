@@ -14,8 +14,7 @@ public class Disconnect extends GameCommand {
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return split[0].contains("irc")
-				&& split[1].equalsIgnoreCase("disconnect")
-				&& IRC.getHandleManager().getIRCHandler().isConnected(IRC.getIRCServer());
+				&& split[1].equalsIgnoreCase("disconnect");
 	}
 
 	@Override
@@ -27,12 +26,13 @@ public class Disconnect extends GameCommand {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return false;
 				}
-			}else {
+			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
 				return false;
 			}
 		}
-		return IRC.getHandleManager().getIRCHandler().disconnect(IRC.getIRCServer());
+		return IRC.getHandleManager().getIRCHandler()
+				.disconnect(IRC.getIRCServer());
 	}
 
 	@Override

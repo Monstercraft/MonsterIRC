@@ -2,8 +2,6 @@ package org.monstercraft.irc.wrappers;
 
 import java.util.List;
 
-import org.monstercraft.irc.IRC;
-
 /**
  * This class creates an IRCServer to connect to.
  * 
@@ -153,33 +151,6 @@ public class IRCServer {
 	 */
 	public List<String> getConnectCommands() {
 		return connectCommands;
-	}
-
-	/**
-	 * Checks if the bot is connected to the IRC server.
-	 * 
-	 * @return True if the bot is connected; otherwise false.
-	 */
-	public boolean isConnected() {
-		return IRC.getHandleManager().getIRCHandler().isConnected(this);
-	}
-
-	/**
-	 * Connects the bot to the IRC server.
-	 * 
-	 * @return True if the bot connects properly; otherwise false.
-	 */
-	public boolean connect() {
-		return IRC.getHandleManager().getIRCHandler().connect(this);
-	}
-
-	/**
-	 * Disconnects the bot from the IRC server.
-	 * 
-	 * @return True if the bot is disconnected; otherwise false.
-	 */
-	public boolean disconnect() {
-		return IRC.getHandleManager().getIRCHandler().disconnect(this);
 	}
 
 }

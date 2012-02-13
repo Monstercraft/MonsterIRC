@@ -17,9 +17,7 @@ public class PrivateMessage extends GameCommand {
 	}
 
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return IRC.getHandleManager().getIRCHandler()
-				.isConnected(IRC.getIRCServer())
-				&& split[0].equalsIgnoreCase("irc")
+		return split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("pm");
 	}
 
