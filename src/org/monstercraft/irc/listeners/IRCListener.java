@@ -76,7 +76,10 @@ public class IRCListener extends IRC implements Listener {
 									getGroupPrefix(event.getPlayer().getName()))
 							.replace("{groupSuffix}",
 									getGroupSuffix(event.getPlayer().getName()))
-							.replace("{message}", event.getMessage())
+							.replace(
+									"{message}",
+									IRCColor.NORMAL.getIRCColor()
+											+ event.getMessage())
 							.replace("&", "§"));
 					if (c.getChatType() == ChatType.ADMINCHAT) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
@@ -211,6 +214,13 @@ public class IRCListener extends IRC implements Listener {
 		}
 	}
 
+	/**
+	 * Fetches the users prefix.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users prefix.
+	 */
 	private String getPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = "";
@@ -224,6 +234,13 @@ public class IRCListener extends IRC implements Listener {
 		return s;
 	}
 
+	/**
+	 * Fetches the users suffix.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users suffix.
+	 */
 	private String getSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = "";
@@ -237,6 +254,13 @@ public class IRCListener extends IRC implements Listener {
 		return s;
 	}
 
+	/**
+	 * Fetches the special name of the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users name.
+	 */
 	private String getName(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = name;
@@ -249,6 +273,13 @@ public class IRCListener extends IRC implements Listener {
 		return s;
 	}
 
+	/**
+	 * Fetches the group suffix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups suffix.
+	 */
 	private String getGroupSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = "";
@@ -267,6 +298,13 @@ public class IRCListener extends IRC implements Listener {
 		return s;
 	}
 
+	/**
+	 * Fetches the group prefix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups prefix.
+	 */
 	private String getGroupPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = "";

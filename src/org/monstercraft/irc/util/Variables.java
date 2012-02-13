@@ -106,7 +106,7 @@ public class Variables {
 	public static int limit = 2;
 
 	/**
-	 * The commands to send on
+	 * The commands to send on.
 	 */
 	public static List<String> connectCommands = new ArrayList<String>();;
 }

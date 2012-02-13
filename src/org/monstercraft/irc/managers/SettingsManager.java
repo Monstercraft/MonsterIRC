@@ -46,6 +46,14 @@ public class SettingsManager extends IRC {
 		populateChannels();
 	}
 
+	/**
+	 * Saves the config file.
+	 * 
+	 * @param config
+	 *            The config to save.
+	 * @param file
+	 *            The file to save it to.
+	 */
 	private void save(final FileConfiguration config, final File file) {
 		try {
 			config.save(file);
@@ -54,6 +62,9 @@ public class SettingsManager extends IRC {
 		}
 	}
 
+	/**
+	 * Saves the muted users.
+	 */
 	public void saveMuted() {
 		final FileConfiguration config = plugin.getConfig();
 		final File CONFIGURATION_FILE = new File(Constants.SETTINGS_PATH
@@ -133,7 +144,8 @@ public class SettingsManager extends IRC {
 					Variables.mcformat);
 			Variables.ircformat = config.getString("IRC.FORMAT.IRC",
 					Variables.ircformat);
-			Variables.connectCommands = config.getStringList("IRC.ON_CONNECT_COMMANDS");
+			Variables.connectCommands = config
+					.getStringList("IRC.ON_CONNECT_COMMANDS");
 			Variables.muted = config.getStringList("IRC.MUTED");
 			save(config, CONFIGURATION_FILE);
 		} catch (Exception e) {
@@ -169,7 +181,7 @@ public class SettingsManager extends IRC {
 			if (CHANNEL_DIR.listFiles().length != 0) {
 				for (File f : CHANNEL_DIR.listFiles()) {
 					if (f.getName().toLowerCase()
-							.contains("SSample".toLowerCase())) {
+							.contains("#Sample".toLowerCase())) {
 						continue;
 					}
 					if (f.getName().endsWith(".channel")) {

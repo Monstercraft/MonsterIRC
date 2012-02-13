@@ -5,7 +5,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -59,12 +62,12 @@ public class IRCHandler extends IRC {
 	public boolean connect(final IRCServer server) {
 		if (!isConnected(server)) {
 			String line = null;
-			long ping = -1;
+			int ping = -1;
 			int tries = 0;
 			for (int i = 0; i < server.getRetrys(); i++) {
 				ping = Pinger.ping(server.getServer(), server.getPort(),
 						server.getTimeout());
-				if (ping > 0) {
+				if (ping < server.getTimeout() + 1 && ping != -1) {
 					tries = i;
 					break;
 				}
@@ -73,8 +76,12 @@ public class IRCHandler extends IRC {
 				log("The IRC server took " + ping + " MS to respond with "
 						+ tries + " retrys.");
 				try {
-					connection = new Socket(server.getServer(),
+					connection = new Socket();
+					InetAddress addr = InetAddress
+							.getByName(server.getServer());
+					SocketAddress sockaddr = new InetSocketAddress(addr,
 							server.getPort());
+					connection.connect(sockaddr);
 					osw = new OutputStreamWriter(connection.getOutputStream());
 					isr = new InputStreamReader(connection.getInputStream());
 					writer = new BufferedWriter(osw);
@@ -588,6 +595,72 @@ public class IRCHandler extends IRC {
 		return channel.getVoiceList().contains(sender);
 	}
 
+	/**
+	 * Fetches the users prefix.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users prefix.
+	 */
+	private String getPrefix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = "";
+		if (IRC.getHookManager().getChatHook() != null) {
+			String prefix = IRC.getHookManager().getChatHook()
+					.getPlayerPrefix("", name);
+			sb.append(prefix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	/**
+	 * Fetches the users suffix.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users suffix.
+	 */
+	private String getSuffix(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = "";
+		if (IRC.getHookManager().getChatHook() != null) {
+			String suffix = IRC.getHookManager().getChatHook()
+					.getPlayerSuffix("", name);
+			sb.append(suffix);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	/**
+	 * Fetches the special name of the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users name.
+	 */
+	private String getName(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = name;
+		if (IRC.getHookManager().getChatHook() != null) {
+			String color = name;
+			sb.append(color);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	/**
+	 * Fetches the group suffix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups suffix.
+	 */
 	private String getGroupSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = "";
@@ -606,6 +679,13 @@ public class IRCHandler extends IRC {
 		return s;
 	}
 
+	/**
+	 * Fetches the group prefix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups prefix.
+	 */
 	private String getGroupPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
 		String s = "";
@@ -624,44 +704,16 @@ public class IRCHandler extends IRC {
 		return s;
 	}
 
-	private String getPrefix(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String prefix = IRC.getHookManager().getChatHook()
-					.getPlayerPrefix("", name);
-			sb.append(prefix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-
-	private String getSuffix(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String suffix = IRC.getHookManager().getChatHook()
-					.getPlayerSuffix("", name);
-			sb.append(suffix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-
-	private String getName(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = name;
-		if (IRC.getHookManager().getChatHook() != null) {
-			String color = name;
-			sb.append(color);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-
+	/**
+	 * Handles a message accoradingly.
+	 * 
+	 * @param c
+	 *            The IRCChannel to handle the message for.
+	 * @param name
+	 *            The sender's name.
+	 * @param message
+	 *            The message to handle.
+	 */
 	private void handleMessage(final IRCChannel c, final String name,
 			final String message) {
 		try {

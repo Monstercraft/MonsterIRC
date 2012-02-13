@@ -19,21 +19,24 @@ public class Pinger extends IRC {
 	 * Pings the host.
 	 * 
 	 * @param host
+	 *            The host to ping
 	 * @param port
+	 *            The port the host is on.
 	 * @param timeoutMs
-	 * @return
+	 *            The time in ms for the maximum ping response.
+	 * @return The time in ms the ping took.
 	 */
-	public static long ping(String host, int port, int timeoutMs) {
-		long start = -1;
-		long end = -1;
-		long total = -1;
+	public static int ping(String host, int port, int timeoutMs) {
+		int start = -1;
+		int end = -1;
+		int total = -1;
 		Socket s = new Socket();
 		try {
 			InetAddress addr = InetAddress.getByName(host);
 			SocketAddress sockaddr = new InetSocketAddress(addr, port);
-			start = System.currentTimeMillis();
+			start = (int) System.currentTimeMillis();
 			s.connect(sockaddr, timeoutMs);
-			end = System.currentTimeMillis();
+			end = (int) System.currentTimeMillis();
 		} catch (Exception e) {
 			debug(e);
 			start = -1;

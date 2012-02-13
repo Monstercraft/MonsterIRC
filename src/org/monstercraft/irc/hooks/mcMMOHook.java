@@ -16,11 +16,20 @@ public class mcMMOHook extends IRC {
 	private mcMMO mcMMOHook;
 	private IRC plugin;
 
+	/**
+	 * Creates a hook into mcmmo.
+	 * 
+	 * @param plugin
+	 *            The IRC plugin.
+	 */
 	public mcMMOHook(final IRC plugin) {
 		this.plugin = plugin;
 		initmcMMOHook();
 	}
 
+	/**
+	 * Hooks into mcmmo.
+	 */
 	private void initmcMMOHook() {
 		if (mcMMOHook != null) {
 			return;

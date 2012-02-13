@@ -9,6 +9,12 @@ import org.monstercraft.irc.util.ChatType;
 import com.dthielke.herochat.Channel;
 import com.dthielke.herochat.Herochat;
 
+/**
+ * This class creates an IRC channel to join.
+ * 
+ * @author fletch_to_99 <fletchto99@hotmail.com>
+ * 
+ */
 public class IRCChannel {
 
 	private IRCServer server;
@@ -27,13 +33,16 @@ public class IRCChannel {
 
 	/**
 	 * 
+	 * @param server
+	 * @param password
+	 * @param showJoinLeave
 	 * @param autoJoin
-	 *            True if the bot should automatically join that channel;
-	 *            otherwise false.
+	 * @param defaultChannel
 	 * @param channel
-	 *            The IRC channel to join.
 	 * @param type
-	 *            The type of chat this will pass @see ChatType
+	 * @param opCommands
+	 * @param voiceCommands
+	 * @param userCommands
 	 */
 	public IRCChannel(final IRCServer server, final String password,
 			final boolean showJoinLeave, final boolean autoJoin,
@@ -56,15 +65,17 @@ public class IRCChannel {
 
 	/**
 	 * 
+	 * @param server
+	 * @param password
+	 * @param showJoinLeave
 	 * @param autoJoin
-	 *            True if the bot should automatically join that channel;
-	 *            otherwise false.
+	 * @param defaultChannel
 	 * @param channel
-	 *            The IRC channel to join.
-	 * @param ingameChannel
-	 *            The ingame channel name.
+	 * @param heroChatChannel
 	 * @param type
-	 *            The type of chat this will pass @see ChatType
+	 * @param opCommands
+	 * @param voiceCommands
+	 * @param userCommands
 	 */
 	public IRCChannel(final IRCServer server, final String password,
 			final boolean showJoinLeave, final boolean autoJoin,
@@ -118,6 +129,11 @@ public class IRCChannel {
 		return channel;
 	}
 
+	/**
+	 * Fetches the channel's password.
+	 * 
+	 * @return the channel's password.
+	 */
 	public String getPassword() {
 		return password;
 	}
@@ -150,34 +166,71 @@ public class IRCChannel {
 		return type;
 	}
 
+	/**
+	 * Fetches the commands list for channel OPS.
+	 * 
+	 * @return The commands list for channel OPS.
+	 */
 	public List<String> getOpCommands() {
 		return opCommands;
 	}
 
+	/**
+	 * Fetches the commands list for channel voices.
+	 * 
+	 * @return The commands list for channel voices.
+	 */
 	public List<String> getVoiceCommands() {
 		return voiceCommands;
 	}
 
+	/**
+	 * Fetches the commands list for normal users.
+	 * 
+	 * @return The commands list for normal users.
+	 */
 	public List<String> getUserCommands() {
 		return userCommands;
 	}
 
+	/**
+	 * Fetches the OPS in this channel.
+	 * 
+	 * @return The OPS in this channel.
+	 */
 	public List<String> getOpList() {
 		return ops;
 	}
 
+	/**
+	 * Fetches the voices in this channel.
+	 * 
+	 * @return The voices in this channel.
+	 */
 	public List<String> getVoiceList() {
 		return voices;
 	}
 
+	/**
+	 * The option to show join and leave messages.
+	 * 
+	 * @return True if the option to show join and leave messages is enabled;
+	 *         otherwise false.
+	 */
 	public boolean showJoinLeave() {
 		return showJoinLeave;
 	}
 
+	/**
+	 * Joines the channel.
+	 */
 	public void join() {
 		IRC.getHandleManager().getIRCHandler().join(this);
 	}
 
+	/**
+	 * Leaves the channel.
+	 */
 	public void leave() {
 		IRC.getHandleManager().getIRCHandler().leave(this);
 	}

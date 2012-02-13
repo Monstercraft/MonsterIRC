@@ -45,6 +45,9 @@ public class IRC extends JavaPlugin {
 	private IRC plugin;
 	private Object lock = new Object();
 
+	/**
+	 * Enables the plugin.
+	 */
 	public void onEnable() {
 		plugin = this;
 		log("Starting plugin.");
@@ -89,6 +92,9 @@ public class IRC extends JavaPlugin {
 		}
 	};
 
+	/**
+	 * Disables the plugin.
+	 */
 	public void onDisable() {
 		if (!settings.firstRun()) {
 			if (getHandleManager().getIRCHandler() != null) {
@@ -114,6 +120,9 @@ public class IRC extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * Handles commands.
+	 */
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		return getCommandManager().onGameCommand(sender, command, label, args);
