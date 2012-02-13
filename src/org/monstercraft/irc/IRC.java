@@ -55,7 +55,7 @@ public class IRC extends JavaPlugin {
 		listener = new IRCListener(plugin);
 		IRCserver = new IRCServer(Variables.server, Variables.port,
 				Variables.name, Variables.password, Variables.ident,
-				Variables.timeout, Variables.limit);
+				Variables.timeout, Variables.limit, Variables.connectCommands);
 		getServer().getPluginManager().registerEvents(listener, plugin);
 		synchronized (lock) {
 			watch = new Thread(STARTUP);

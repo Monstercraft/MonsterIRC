@@ -19,11 +19,6 @@ public class Variables {
 	 * The amount of times to attempt to connect to the server.
 	 */
 	public static int tries = 5;
-	
-	/**
-	 * The option to show when someone joins and quits the game/irc server.
-	 */
-	public static boolean joinAndQuit = true;
 
 	/**
 	 * The option to enable colors.
@@ -79,12 +74,12 @@ public class Variables {
 	 * The format for the messages to be recieved in.
 	 */
 	public static String mcformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
-	
+
 	/**
 	 * The format for the messages to be recieved in.
 	 */
 	public static String ircformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
-	
+
 	/**
 	 * The prefix to be used when detecting an IRC command.
 	 */
@@ -104,9 +99,14 @@ public class Variables {
 	 * The time to wait before disconnecting.
 	 */
 	public static int timeout = 2000;
-	
+
 	/**
 	 * The time to wait before disconnecting.
 	 */
 	public static int limit = 2;
+
+	/**
+	 * The commands to send on
+	 */
+	public static List<String> connectCommands = new ArrayList<String>();;
 }

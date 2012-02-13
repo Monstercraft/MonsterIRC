@@ -1,8 +1,8 @@
 IRC:
   SETTINGS:
     IDENTIFY: false
-    NICKNAME: default
-    PASSWORD: default
+    NICKNAME: 'default'
+    PASSWORD: 'default'
     SERVER: irc.esper.net
     PORT: 6667
   OPTIONS:
@@ -12,12 +12,12 @@ IRC:
     DEBUG: false
     PASS_ON_NAME: false
     ALLOW_COLORS: true
-    SHOW_JOIN_AND_LEAVE_MESSAGES: true
   ADMIN:
     INGAME_COMMANDS: false
-    INGAME_COMMANDS_PREFIX: .
+    INGAME_COMMANDS_PREFIX: '.'
   FORMAT:
-    MINECRAFT: <{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}
-    IRC: <{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}
+    MINECRAFT: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
+    IRC: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
+  ON_CONNECT_COMMANDS: []
   MUTED:
   - sampleuser

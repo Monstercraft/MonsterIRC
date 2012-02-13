@@ -92,7 +92,11 @@ public class IRCHandler extends IRC {
 					log("Processing connection....");
 					while ((line = reader.readLine()) != null) {
 						debug(line);
-						if (line.contains("004")) {
+						if (line.contains("004") || line.contains("376")) {
+							for (String s : server.getConnectCommands()) {
+								writer.write(s + "\r\n");
+								writer.flush();
+							}
 							break;
 						} else if (line.contains("433")) {
 							if (!server.isIdentifing()) {
@@ -165,11 +169,6 @@ public class IRCHandler extends IRC {
 					log("Closing connection.");
 					connection.shutdownInput();
 					connection.shutdownOutput();
-					if (reader != null) {
-						isr.close();
-						reader.close();
-						reader = null;
-					}
 					if (writer != null) {
 						osw.flush();
 						writer.flush();
@@ -207,7 +206,12 @@ public class IRCHandler extends IRC {
 	 *            The channel to join.
 	 */
 	public void join(final IRCChannel channel) {
-		messageQue.add("JOIN " + channel.getChannel());
+		if (channel.getPassword() != null && channel.getPassword() != "") {
+			messageQue.add("JOIN " + channel.getChannel() + " "
+					+ channel.getPassword());
+		} else {
+			messageQue.add("JOIN " + channel.getChannel());
+		}
 	}
 
 	/**
@@ -231,255 +235,228 @@ public class IRCHandler extends IRC {
 	private final Runnable KEEP_ALIVE = new Runnable() {
 		public void run() {
 			try {
-				if (isConnected(IRC.getIRCServer()) && reader != null
-						&& reader.ready()) {
+				if (isConnected(IRC.getIRCServer()) && reader != null) {
 					String line;
-					try {
-						while ((line = reader.readLine()) != null) {
-							if (!isConnected(IRC.getIRCServer())) {
-								break;
-							}
-							debug(line);
-							String name = null;
-							String msg = null;
-							for (IRCChannel c : Variables.channels) {
-								try {
-									if (line.toLowerCase().contains(
-											"PRIVMSG ".toLowerCase()
-													+ c.getChannel()
-															.toLowerCase())) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										msg = line
-												.substring(line.indexOf(" :") + 2);
-										if (line.contains("ACTION")) {
-											msg = "* "
-													+ line.substring(
-															line.indexOf(" :") + 2)
-															.replaceFirst(
-																	"ACTION",
-																	name);
-										}
-									} else if (line.toLowerCase().contains(
-											"JOIN :".toLowerCase()
-													+ c.getChannel()
-															.toLowerCase()
-															.toLowerCase())) {
-										if (Variables.joinAndQuit) {
-											name = line.substring(1,
-													line.indexOf("!"));
-											msg = name + " joined "
-													+ c.getChannel() + ".";
-										}
-									} else if (line.toLowerCase().contains(
-											"PART ".toLowerCase()
-													+ c.getChannel()
-															.toLowerCase())) {
-										if (Variables.joinAndQuit) {
-											name = line.substring(1,
-													line.indexOf("!"));
-											msg = name + " left "
-													+ c.getChannel() + ".";
-										}
-									} else if (line.toLowerCase().contains(
-											"QUIT :".toLowerCase())) {
-										if (Variables.joinAndQuit) {
-											name = line.substring(1,
-													line.indexOf("!"));
-											if (name.equalsIgnoreCase(Variables.name)) {
-												disconnect(IRC.getIRCServer());
-												msg = null;
-												break;
-											}
-											msg = name + " has quit"
-													+ c.getChannel() + ".";
-										}
-									} else if (line.toLowerCase().contains(
-											"MODE ".toLowerCase()
-													+ c.getChannel()
-															.toLowerCase())) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										String mode = line.substring(
-												line.toLowerCase().indexOf(
-														c.getChannel()
-																.toLowerCase())
-														+ 1
-														+ c.getChannel()
-																.length(),
-												line.toLowerCase().indexOf(
-														c.getChannel()
-																.toLowerCase())
-														+ 3
-														+ c.getChannel()
-																.length());
-										String _name = line.substring(line
-												.toLowerCase().indexOf(
-														c.getChannel()
-																.toLowerCase())
-												+ c.getChannel().length() + 4);
-										msg = name + " gave mode " + mode
-												+ " to " + _name + ".";
-										log("MODE LINE :D " + line);
-										if (mode.contains("+v")) {
-											c.getVoiceList().add(_name);
-										} else if (mode.contains("-v")) {
-											c.getVoiceList().remove(_name);
-										} else if (mode.contains("+o")) {
-											c.getOpList().add(_name);
-										} else if (mode.contains("-o")) {
-											c.getOpList().remove(_name);
-										}
-									} else if (line.toLowerCase().contains(
-											"KICK ".toLowerCase()
-													+ c.getChannel()
-															.toLowerCase())) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										if (name.equalsIgnoreCase(Variables.name)) {
-											join(c);
-										}
-										msg = name + " has been kicked from"
-												+ c.getChannel() + ".";
-									}
-
-									if (msg != null && name != null
-											&& c.getChannel() != null) {
-										if (!line.toLowerCase().contains(
-												c.getChannel().toLowerCase())) {
-											continue;
-										} else if (msg.toLowerCase().contains(
-												c.getChannel().toLowerCase())
-												&& !line.toLowerCase()
-														.contains(
-																c.getChannel()
-																		.toLowerCase())) {
-											continue;
-										}
-
-										if (msg.startsWith(Variables.commandPrefix)
-												&& !Variables.muted
-														.contains(name
-																.toLowerCase())) {
-											IRC.getCommandManager()
-													.onIRCCommand(name, msg, c);
-											break;
-										} else if (!Variables.passOnName
-												&& !Variables.muted
-														.contains(name
-																.toLowerCase())) {
-											handleMessage(c, name, msg);
-											break;
-										} else if (Variables.passOnName
-												&& msg.startsWith(Variables.name)
-												&& !Variables.muted
-														.contains(name
-																.toLowerCase())) {
-											handleMessage(
-													c,
-													name,
-													msg.substring(Variables.name
-															.length()));
-											break;
-										}
-									}
-								} catch (final Exception e) {
-									debug(e);
-								}
-							}
-
-							if (line.toLowerCase().contains(
-									"PRIVMSG ".toLowerCase()
-											+ IRC.getIRCServer().getNick()
-													.toLowerCase())) {
-								for (Player p : Bukkit.getServer()
-										.getOnlinePlayers()) {
+					while ((line = reader.readLine()) != null) {
+						debug(line);
+						if (line.toLowerCase().startsWith("ping")) {
+							writer.write("PONG " + line.substring(5) + "\r\n");
+							writer.flush();
+							debug("PONG " + line.substring(5));
+							continue;
+						}
+						String name = null;
+						String msg = null;
+						for (IRCChannel c : Variables.channels) {
+							try {
+								if (line.toLowerCase().contains(
+										"PRIVMSG ".toLowerCase()
+												+ c.getChannel().toLowerCase())) {
 									name = line.substring(1, line.indexOf("!"));
 									msg = line
 											.substring(line.indexOf(" :") + 2);
-									if (msg.contains(":")
-											&& msg.indexOf(":") > 2) {
-										String to = msg.substring(0,
-												msg.indexOf(":"));
-										String _msg = msg.substring(msg
-												.indexOf(":") + 1);
-										if (to == null || _msg == null
-												|| msg == null || name == null) {
+									if (line.contains("ACTION")) {
+										msg = "* "
+												+ line.substring(
+														line.indexOf(" :") + 2)
+														.replaceFirst("ACTION",
+																name);
+									}
+								} else if (line.toLowerCase().contains(
+										"JOIN :".toLowerCase()
+												+ c.getChannel().toLowerCase()
+														.toLowerCase())) {
+									if (c.showJoinLeave()) {
+										name = line.substring(1,
+												line.indexOf("!"));
+										msg = name + " joined "
+												+ c.getChannel() + ".";
+									}
+								} else if (line.toLowerCase().contains(
+										"PART ".toLowerCase()
+												+ c.getChannel().toLowerCase())) {
+									if (c.showJoinLeave()) {
+										name = line.substring(1,
+												line.indexOf("!"));
+										msg = name + " left " + c.getChannel()
+												+ ".";
+									}
+								} else if (line.toLowerCase().contains(
+										"QUIT :".toLowerCase())) {
+									if (c.showJoinLeave()) {
+										name = line.substring(1,
+												line.indexOf("!"));
+										if (name.equalsIgnoreCase(Variables.name)) {
+											disconnect(IRC.getIRCServer());
+											msg = null;
 											break;
 										}
-										if (p.getName().equalsIgnoreCase(to)) {
-											p.sendMessage(IRCColor.LIGHT_GRAY
-													.getMinecraftColor()
-													+ "([IRC] from "
-													+ name
-													+ "):" + _msg);
-										}
+										msg = name + " has quit"
+												+ c.getChannel() + ".";
 									}
+								} else if (line.toLowerCase().contains(
+										"MODE ".toLowerCase()
+												+ c.getChannel().toLowerCase())) {
+									name = line.substring(1, line.indexOf("!"));
+									String mode = line.substring(
+											line.toLowerCase().indexOf(
+													c.getChannel()
+															.toLowerCase())
+													+ 1
+													+ c.getChannel().length(),
+											line.toLowerCase().indexOf(
+													c.getChannel()
+															.toLowerCase())
+													+ 3
+													+ c.getChannel().length());
+									String _name = line.substring(line
+											.toLowerCase().indexOf(
+													c.getChannel()
+															.toLowerCase())
+											+ c.getChannel().length() + 4);
+									msg = name + " gave mode " + mode + " to "
+											+ _name + ".";
+									log("MODE LINE :D " + line);
+									if (mode.contains("+v")) {
+										c.getVoiceList().add(_name);
+									} else if (mode.contains("-v")) {
+										c.getVoiceList().remove(_name);
+									} else if (mode.contains("+o")) {
+										c.getOpList().add(_name);
+									} else if (mode.contains("-o")) {
+										c.getOpList().remove(_name);
+									}
+								} else if (line.toLowerCase().contains(
+										"KICK ".toLowerCase()
+												+ c.getChannel().toLowerCase())) {
+									name = line.substring(1, line.indexOf("!"));
+									if (name.equalsIgnoreCase(Variables.name)) {
+										join(c);
+									}
+									msg = name + " has been kicked from"
+											+ c.getChannel() + ".";
 								}
-							}
 
-							if (line.toLowerCase().contains(
-									"QUIT :".toLowerCase())) {
-								if (name.equalsIgnoreCase(Variables.name)
-										&& msg == null) {
-									Thread run = new Thread(RECONNECT);
-									run.setDaemon(true);
-									run.setPriority(Thread.MAX_PRIORITY);
-									run.start();
-									break;
-								}
-							}
-							if (line.toLowerCase().startsWith("ping ")) {
-								if (msg == null) {
-									writer.write("PONG " + line.substring(5)
-											+ "\r\n");
-									writer.flush();
-								}
-							} else if (line.toLowerCase().contains("353")) {
-								if (msg == null) {
-									IRCChannel chan = null;
-									String split = line.substring(line
-											.indexOf(" :") + 2);
-									String channel = line.substring(
-											line.indexOf("#"),
-											line.indexOf(" :"));
-									StringTokenizer st = new StringTokenizer(
-											split);
-									ArrayList<String> list = new ArrayList<String>();
-									while (st.hasMoreTokens()) {
-										list.add(st.nextToken());
+								if (msg != null && name != null
+										&& c.getChannel() != null) {
+									if (!line.toLowerCase().contains(
+											c.getChannel().toLowerCase())) {
+										continue;
+									} else if (msg.toLowerCase().contains(
+											c.getChannel().toLowerCase())
+											&& !line.toLowerCase().contains(
+													c.getChannel()
+															.toLowerCase())) {
+										continue;
 									}
-									for (IRCChannel c : Variables.channels) {
-										if (c.getChannel()
-												.toLowerCase()
-												.contains(channel.toLowerCase())) {
-											chan = c;
-											break;
-										}
-									}
-									if (chan != null) {
-										for (String s : list) {
-											if (s.contains("@")) {
-												chan.getOpList()
-														.add(s.substring(s
-																.indexOf("@") + 1));
-											} else if (s.contains("+")) {
-												chan.getVoiceList()
-														.add(s.substring(s
-																.indexOf("+") + 1));
-											}
-										}
-									}
-								}
-							}
 
+									if (msg.startsWith(Variables.commandPrefix)
+											&& !Variables.muted.contains(name
+													.toLowerCase())) {
+										IRC.getCommandManager().onIRCCommand(
+												name, msg, c);
+										break;
+									} else if (!Variables.passOnName
+											&& !Variables.muted.contains(name
+													.toLowerCase())) {
+										handleMessage(c, name, msg);
+										break;
+									} else if (Variables.passOnName
+											&& msg.startsWith(Variables.name)
+											&& !Variables.muted.contains(name
+													.toLowerCase())) {
+										handleMessage(c, name,
+												msg.substring(Variables.name
+														.length()));
+										break;
+									}
+								}
+							} catch (final Exception e) {
+								debug(e);
+							}
 						}
-					} catch (final Exception e) {
-						debug(e);
+
+						if (line.toLowerCase().contains(
+								"PRIVMSG ".toLowerCase()
+										+ IRC.getIRCServer().getNick()
+												.toLowerCase())) {
+							for (Player p : Bukkit.getServer()
+									.getOnlinePlayers()) {
+								name = line.substring(1, line.indexOf("!"));
+								msg = line.substring(line.indexOf(" :") + 2);
+								if (msg.contains(":") && msg.indexOf(":") > 2) {
+									String to = msg.substring(0,
+											msg.indexOf(":"));
+									String _msg = msg.substring(msg
+											.indexOf(":") + 1);
+									if (to == null || _msg == null
+											|| msg == null || name == null) {
+										break;
+									}
+									if (p.getName().equalsIgnoreCase(to)) {
+										p.sendMessage(IRCColor.LIGHT_GRAY
+												.getMinecraftColor()
+												+ "([IRC] from "
+												+ name
+												+ "):"
+												+ _msg);
+									}
+								}
+							}
+						} else if (line.toLowerCase().contains("353")) {
+							if (msg == null) {
+								IRCChannel chan = null;
+								String split = line.substring(line
+										.indexOf(" :") + 2);
+								String channel = line.substring(
+										line.indexOf("#"), line.indexOf(" :"));
+								StringTokenizer st = new StringTokenizer(split);
+								ArrayList<String> list = new ArrayList<String>();
+								while (st.hasMoreTokens()) {
+									list.add(st.nextToken());
+								}
+								for (IRCChannel c : Variables.channels) {
+									if (c.getChannel().toLowerCase()
+											.contains(channel.toLowerCase())) {
+										chan = c;
+										break;
+									}
+								}
+								if (chan != null) {
+									for (String s : list) {
+										if (s.contains("@")) {
+											chan.getOpList()
+													.add(s.substring(s
+															.indexOf("@") + 1));
+										} else if (s.contains("+")) {
+											chan.getVoiceList()
+													.add(s.substring(s
+															.indexOf("+") + 1));
+										}
+									}
+								}
+							}
+						} else if (line.toLowerCase().contains(
+								"QUIT :".toLowerCase())) {
+							if (name.equalsIgnoreCase(Variables.name)
+									&& msg == null) {
+								Thread run = new Thread(RECONNECT);
+								run.setDaemon(true);
+								run.setPriority(Thread.MAX_PRIORITY);
+								run.start();
+								break;
+							}
+						}
 					}
 				}
-			} catch (IOException e) {
-				debug(e);
+			} catch (final Exception e) {
+				Thread.currentThread().interrupt();
+			} finally {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					Thread.currentThread().interrupt();
+				}
 			}
 		}
 	};
@@ -498,10 +475,12 @@ public class IRCHandler extends IRC {
 							}
 						}
 					}
-					try {
-						Thread.sleep(1000 / Variables.limit);
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
+					if (Variables.limit != 0) {
+						try {
+							Thread.sleep(1000 / Variables.limit);
+						} catch (InterruptedException e) {
+							Thread.currentThread().interrupt();
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -611,7 +590,7 @@ public class IRCHandler extends IRC {
 
 	private String getGroupSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC
 					.getHookManager()
@@ -629,7 +608,7 @@ public class IRCHandler extends IRC {
 
 	private String getGroupPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC
 					.getHookManager()
@@ -647,7 +626,7 @@ public class IRCHandler extends IRC {
 
 	private String getPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC.getHookManager().getChatHook()
 					.getPlayerPrefix("", name);
@@ -660,7 +639,7 @@ public class IRCHandler extends IRC {
 
 	private String getSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String suffix = IRC.getHookManager().getChatHook()
 					.getPlayerSuffix("", name);
@@ -703,42 +682,40 @@ public class IRCHandler extends IRC {
 								.replace("{name}", getName(name))
 								.replace("{message}",
 										IRCColor.formatIRCMessage(message))
-								.replace("{colon}", ":")
+
 								.replace("{prefix}", getPrefix(name))
 								.replace("{suffix}", getSuffix(name))
 								.replace("{groupPrefix}", getGroupPrefix(name))
 								.replace("{groupSuffix}", getGroupSuffix(name))
+								.replace("&", "§")
 								+ c.getHeroChatChannel().getColor());
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
-				c.getHeroChatFourChannel()
-						.sendMessage(
-								Variables.mcformat
-										.replace("{name}", getName(name))
-										.replace("{message}", "")
-										.replace("{colon}", "")
-										.replace("{prefix}", getPrefix(name))
-										.replace("{suffix}", getSuffix(name))
-										.replace("{groupPrefix}",
-												getGroupPrefix(name))
-										.replace("{groupSuffix}",
-												getGroupSuffix(name)),
-								IRCColor.formatIRCMessage(IRCColor
-										.formatIRCMessage(message)),
-								c.getHeroChatFourChannel().getMsgFormat(),
-								false);
+				c.getHeroChatFourChannel().sendMessage(
+						Variables.mcformat.replace("{name}", getName(name))
+								.replace("{message}", "").replace(":", "")
+								.replace("{prefix}", getPrefix(name))
+								.replace("{suffix}", getSuffix(name))
+								.replace("{groupPrefix}", getGroupPrefix(name))
+								.replace("{groupSuffix}", getGroupSuffix(name))
+								.replace("&", "§")
+								+ "§f",
+						IRCColor.formatIRCMessage(IRCColor
+								.formatIRCMessage(message)),
+						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
 						Variables.mcformat
 								.replace("{name}", getName(name))
 								.replace("{message}",
 										IRCColor.formatIRCMessage(message))
-								.replace("{colon}", ":")
+
 								.replace("{prefix}", getPrefix(name))
 								.replace("{suffix}", getSuffix(name))
 								.replace("{groupPrefix}", getGroupPrefix(name))
 								.replace("{groupSuffix}", getGroupSuffix(name))
+								.replace("&", "§")
 								+ IRCColor.WHITE.getMinecraftColor());
 			}
 		} catch (Exception e) {

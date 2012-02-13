@@ -22,6 +22,8 @@ public class IRCChannel {
 	private List<String> userCommands;
 	private List<String> ops;
 	private List<String> voices;
+	private String password;
+	private boolean showJoinLeave;
 
 	/**
 	 * 
@@ -33,11 +35,14 @@ public class IRCChannel {
 	 * @param type
 	 *            The type of chat this will pass @see ChatType
 	 */
-	public IRCChannel(final IRCServer server, final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final ChatType type,
-			final List<String> opCommands, final List<String> voiceCommands,
-			final List<String> userCommands) {
+	public IRCChannel(final IRCServer server, final String password,
+			final boolean showJoinLeave, final boolean autoJoin,
+			final boolean defaultChannel, final String channel,
+			final ChatType type, final List<String> opCommands,
+			final List<String> voiceCommands, final List<String> userCommands) {
 		this.server = server;
+		this.showJoinLeave = showJoinLeave;
+		this.password = password;
 		this.channel = channel;
 		this.type = type;
 		this.autoJoin = autoJoin;
@@ -61,11 +66,15 @@ public class IRCChannel {
 	 * @param type
 	 *            The type of chat this will pass @see ChatType
 	 */
-	public IRCChannel(final IRCServer server, final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final String heroChatChannel,
-			final ChatType type, final List<String> opCommands,
-			final List<String> voiceCommands, final List<String> userCommands) {
+	public IRCChannel(final IRCServer server, final String password,
+			final boolean showJoinLeave, final boolean autoJoin,
+			final boolean defaultChannel, final String channel,
+			final String heroChatChannel, final ChatType type,
+			final List<String> opCommands, final List<String> voiceCommands,
+			final List<String> userCommands) {
 		this.server = server;
+		this.showJoinLeave = showJoinLeave;
+		this.password = password;
 		this.channel = channel;
 		this.heroChatChannel = heroChatChannel;
 		this.type = type;
@@ -77,7 +86,7 @@ public class IRCChannel {
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
 	}
-	
+
 	public IRCServer getServer() {
 		return server;
 	}
@@ -107,6 +116,10 @@ public class IRCChannel {
 	 */
 	public String getChannel() {
 		return channel;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	/**
@@ -157,10 +170,14 @@ public class IRCChannel {
 		return voices;
 	}
 
+	public boolean showJoinLeave() {
+		return showJoinLeave;
+	}
+
 	public void join() {
 		IRC.getHandleManager().getIRCHandler().join(this);
 	}
-	
+
 	public void leave() {
 		IRC.getHandleManager().getIRCHandler().leave(this);
 	}

@@ -90,7 +90,7 @@ public class SettingsManager extends IRC {
 			try {
 				log("Loading settings!");
 				config.options()
-						.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help");
+						.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \n#Do not remove the ' ' around the strings!");
 				config.options().copyDefaults(true);
 				config.load(CONFIGURATION_FILE);
 			} catch (Exception e) {
@@ -99,7 +99,7 @@ public class SettingsManager extends IRC {
 		} else {
 			log("Loading default settings!");
 			config.options()
-					.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help");
+					.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \n#Do not remove the ' ' around the strings!");
 			config.options().copyDefaults(true);
 		}
 		try {
@@ -124,9 +124,6 @@ public class SettingsManager extends IRC {
 					"IRC.OPTIONS.PASS_ON_NAME", Variables.passOnName);
 			Variables.colors = config.getBoolean("IRC.OPTIONS.ALLOW_COLORS",
 					Variables.colors);
-			Variables.joinAndQuit = config.getBoolean(
-					"IRC.OPTIONS.SHOW_JOIN_AND_LEAVE_MESSAGES",
-					Variables.joinAndQuit);
 			Variables.ingamecommands = config.getBoolean(
 					"IRC.ADMIN.INGAME_COMMANDS", Variables.ingamecommands);
 			Variables.commandPrefix = config
@@ -136,6 +133,7 @@ public class SettingsManager extends IRC {
 					Variables.mcformat);
 			Variables.ircformat = config.getString("IRC.FORMAT.IRC",
 					Variables.ircformat);
+			Variables.connectCommands = config.getStringList("IRC.ON_CONNECT_COMMANDS");
 			Variables.muted = config.getStringList("IRC.MUTED");
 			save(config, CONFIGURATION_FILE);
 		} catch (Exception e) {
@@ -171,7 +169,7 @@ public class SettingsManager extends IRC {
 			if (CHANNEL_DIR.listFiles().length != 0) {
 				for (File f : CHANNEL_DIR.listFiles()) {
 					if (f.getName().toLowerCase()
-							.contains("Sample".toLowerCase())) {
+							.contains("SSample".toLowerCase())) {
 						continue;
 					}
 					if (f.getName().endsWith(".channel")) {
@@ -223,36 +221,43 @@ public class SettingsManager extends IRC {
 					continue;
 				}
 				if (global) {
-					Variables.channels.add(new IRCChannel(IRC.getIRCServer(),
-							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
-							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), "#"
-									+ f.getName().substring(0,
+					Variables.channels
+							.add(new IRCChannel(
+									IRC.getIRCServer(),
+									config.getString("CHANNEL.SETTINGS.PASSWORD"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
+									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
+									f.getName().substring(0,
 											f.getName().lastIndexOf(".")),
-							ChatType.GLOBAL, config
-									.getStringList("CHANNEL.COMMANDS.OP"),
-							config.getStringList("CHANNEL.COMMANDS.VOICE"),
-							config.getStringList("CHANNEL.COMMANDS.USERS")));
+									ChatType.GLOBAL,
+									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.VOICE"),
+									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (admin) {
-					Variables.channels.add(new IRCChannel(IRC.getIRCServer(),
-							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
-							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), "#"
-									+ f.getName().substring(0,
+					Variables.channels
+							.add(new IRCChannel(
+									IRC.getIRCServer(),
+									config.getString("CHANNEL.SETTINGS.PASSWORD"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
+									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
+									f.getName().substring(0,
 											f.getName().lastIndexOf(".")),
-							ChatType.ADMINCHAT, config
-									.getStringList("CHANNEL.COMMANDS.OP"),
-							config.getStringList("CHANNEL.COMMANDS.VOICE"),
-							config.getStringList("CHANNEL.COMMANDS.USERS")));
+									ChatType.ADMINCHAT,
+									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.VOICE"),
+									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (hero) {
 					Variables.channels
 							.add(new IRCChannel(
 									IRC.getIRCServer(),
+									config.getString("CHANNEL.SETTINGS.PASSWORD"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
 									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
 									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
-									"#"
-											+ f.getName().substring(
-													0,
-													f.getName()
-															.lastIndexOf(".")),
+									f.getName().substring(0,
+											f.getName().lastIndexOf(".")),
 									config.getString("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL"),
 									ChatType.HEROCHAT,
 									config.getStringList("CHANNEL.COMMANDS.OP"),
@@ -270,7 +275,7 @@ public class SettingsManager extends IRC {
 	 */
 	public void createDefaultChannel() {
 		File SAMPLE_CHANNEL = new File(Constants.SETTINGS_PATH + File.separator
-				+ Constants.CHANNELS_PATH + File.separator + "Sample.channel");
+				+ Constants.CHANNELS_PATH + File.separator + "#Sample.channel");
 		ArrayList<String> op = new ArrayList<String>();
 		ArrayList<String> voice = new ArrayList<String>();
 		ArrayList<String> user = new ArrayList<String>();
@@ -279,9 +284,11 @@ public class SettingsManager extends IRC {
 		user.add("help");
 		FileConfiguration config = new YamlConfiguration();
 		config.options()
-		.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
+				.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
 		config.set("CHANNEL.SETTINGS.AUTOJOIN", false);
 		config.set("CHANNEL.SETTINGS.DEFAULT", false);
+		config.set("CHANNEL.SETTINGS.PASSWORD", "");
+		config.set("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES", true);
 		config.set("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);

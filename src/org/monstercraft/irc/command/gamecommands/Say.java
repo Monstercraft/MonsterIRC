@@ -96,11 +96,11 @@ public class Say extends GameCommand {
 							.replace("{name}", getName(name))
 							.replace("{message}",
 									IRCColor.formatIRCMessage(message))
-							.replace("{colon}", ":")
 							.replace("{prefix}", getPrefix(name))
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
+							.replace("&", "§")
 							+ c.getHeroChatChannel().getColor());
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& IRC.getHookManager().getHeroChatHook() != null
@@ -111,7 +111,8 @@ public class Say extends GameCommand {
 							.replace("{prefix}", getPrefix(name))
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
-							.replace("{groupSuffix}", getGroupSuffix(name)),
+							.replace("{groupSuffix}", getGroupSuffix(name))
+							.replace("&", "§"),
 					IRCColor.formatIRCMessage(IRCColor
 							.formatIRCMessage(message)),
 					c.getHeroChatFourChannel().getMsgFormat(), false);
@@ -121,18 +122,18 @@ public class Say extends GameCommand {
 							.replace("{name}", getName(name))
 							.replace("{message}",
 									IRCColor.formatIRCMessage(message))
-							.replace("{colon}", ":")
 							.replace("{prefix}", getPrefix(name))
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
+							.replace("&", "§")
 							+ "§f");
 		}
 	}
 
 	private String getPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC.getHookManager().getChatHook()
 					.getPlayerPrefix("", name);
@@ -145,7 +146,7 @@ public class Say extends GameCommand {
 
 	private String getSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String suffix = IRC.getHookManager().getChatHook()
 					.getPlayerSuffix("", name);
@@ -170,7 +171,7 @@ public class Say extends GameCommand {
 
 	private String getGroupSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC
 					.getHookManager()
@@ -188,7 +189,7 @@ public class Say extends GameCommand {
 
 	private String getGroupPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC
 					.getHookManager()

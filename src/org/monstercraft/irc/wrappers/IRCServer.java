@@ -1,5 +1,7 @@
 package org.monstercraft.irc.wrappers;
 
+import java.util.List;
+
 import org.monstercraft.irc.IRC;
 
 public class IRCServer {
@@ -11,10 +13,11 @@ public class IRCServer {
 	private boolean identify;
 	private int timeoutMs;
 	private int retrys;
+	private List<String> connectCommands;
 
 	public IRCServer(final String server, final int port, final String nick,
 			final String password, final boolean identify, final int timeoutMs,
-			final int retrys) {
+			final int retrys, final List<String> connectCommands) {
 		this.server = server;
 		this.port = port;
 		this.nick = nick;
@@ -22,10 +25,12 @@ public class IRCServer {
 		this.identify = identify;
 		this.timeoutMs = timeoutMs;
 		this.retrys = retrys;
+		this.connectCommands = connectCommands;
 	}
 
 	public IRCServer(final String server, final int port, final String nick,
-			final int timeoutMs, final int retrys) {
+			final int timeoutMs, final int retrys,
+			final List<String> connectCommands) {
 		this.server = server;
 		this.port = port;
 		this.nick = nick;
@@ -33,6 +38,7 @@ public class IRCServer {
 		this.identify = false;
 		this.timeoutMs = timeoutMs;
 		this.retrys = retrys;
+		this.connectCommands = connectCommands;
 	}
 
 	public String getServer() {
@@ -62,15 +68,19 @@ public class IRCServer {
 	public int getRetrys() {
 		return retrys;
 	}
-	
+
+	public List<String> getConnectCommands() {
+		return connectCommands;
+	}
+
 	public boolean isConnected() {
 		return IRC.getHandleManager().getIRCHandler().isConnected(this);
 	}
-	
+
 	public boolean connect() {
 		return IRC.getHandleManager().getIRCHandler().connect(this);
 	}
-	
+
 	public boolean disconnect() {
 		return IRC.getHandleManager().getIRCHandler().disconnect(this);
 	}

@@ -40,6 +40,12 @@ public class HeroChatHook extends IRC {
 			HeroChatHook = null;
 			return;
 		}
+		
+		if(!HeroChatPlugin.isEnabled()) {
+			log("HeroChat 4 not enabled.");
+			HeroChatHook = null;
+			return;
+		}
 
 		HeroChatHook = ((HeroChat) HeroChatPlugin);
 		log("HeroChat detected; hooking: "

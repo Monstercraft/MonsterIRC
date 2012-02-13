@@ -71,12 +71,13 @@ public class IRCListener extends IRC implements Listener {
 									getName(event.getPlayer().getName()))
 							.replace("{suffix}",
 									getSuffix(event.getPlayer().getName()))
-							.replace("{colon}", ":")
+
 							.replace("{groupPrefix}",
 									getGroupPrefix(event.getPlayer().getName()))
 							.replace("{groupSuffix}",
 									getGroupSuffix(event.getPlayer().getName()))
-							.replace("{message}", event.getMessage()));
+							.replace("{message}", event.getMessage())
+							.replace("&", "§"));
 					if (c.getChatType() == ChatType.ADMINCHAT) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
 							if (IRC.getHookManager().getmcMMOHook()
@@ -180,8 +181,8 @@ public class IRCListener extends IRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (Variables.joinAndQuit) {
-			for (IRCChannel c : Variables.channels) {
+		for (IRCChannel c : Variables.channels) {
+			if (c.showJoinLeave()) {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
@@ -196,8 +197,8 @@ public class IRCListener extends IRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (Variables.joinAndQuit) {
-			for (IRCChannel c : Variables.channels) {
+		for (IRCChannel c : Variables.channels) {
+			if (c.showJoinLeave()) {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
@@ -212,7 +213,7 @@ public class IRCListener extends IRC implements Listener {
 
 	private String getPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC.getHookManager().getChatHook()
 					.getPlayerPrefix("", name);
@@ -225,7 +226,7 @@ public class IRCListener extends IRC implements Listener {
 
 	private String getSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String suffix = IRC.getHookManager().getChatHook()
 					.getPlayerSuffix("", name);
@@ -250,7 +251,7 @@ public class IRCListener extends IRC implements Listener {
 
 	private String getGroupSuffix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC
 					.getHookManager()
@@ -268,7 +269,7 @@ public class IRCListener extends IRC implements Listener {
 
 	private String getGroupPrefix(String name) {
 		StringBuilder sb = new StringBuilder();
-		String s = name;
+		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
 			String prefix = IRC
 					.getHookManager()
