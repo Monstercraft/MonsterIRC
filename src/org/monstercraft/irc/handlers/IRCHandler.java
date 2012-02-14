@@ -41,7 +41,7 @@ public class IRCHandler extends IRC {
 	private Thread print = null;
 	private IRC plugin;
 	private Hashtable<Integer, String> MessageQueue = new Hashtable<Integer, String>();
-	int j = 0;
+	int counter = -1;
 
 	/**
 	 * Creates an instance of the IRCHandler class.
@@ -217,10 +217,12 @@ public class IRCHandler extends IRC {
 		if (channel.getPassword() != null && channel.getPassword() != "") {
 			String pass = "JOIN " + channel.getChannel() + " "
 					+ channel.getPassword();
-			MessageQueue.put(pass.hashCode(), pass);
+			MessageQueue.put(counter, pass);
+			counter--;
 		} else {
 			String nopass = "JOIN " + channel.getChannel();
-			MessageQueue.put(nopass.hashCode(), nopass);
+			MessageQueue.put(counter, nopass);
+			counter--;
 		}
 	}
 
@@ -302,7 +304,10 @@ public class IRCHandler extends IRC {
 								} else if (line.toLowerCase().contains(
 										"MODE ".toLowerCase()
 												+ c.getChannel().toLowerCase())) {
-									name = line.substring(1, line.indexOf("!"));
+									if (line.substring(1, line.indexOf("!")) != null) {
+										name = line.substring(1,
+												line.indexOf("!"));
+									}
 									String mode = line.substring(
 											line.toLowerCase().indexOf(
 													c.getChannel()
@@ -489,7 +494,7 @@ public class IRCHandler extends IRC {
 								break;
 							}
 							if (MessageQueue.isEmpty()) {
-								j = 0;
+								counter = -1;
 								break;
 							}
 						}
@@ -520,8 +525,8 @@ public class IRCHandler extends IRC {
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {
 			String msg = prefix + parts[i];
-			MessageQueue.put(MessageQueue.size() + ((parts.length - 1) - i),
-					msg);
+			MessageQueue.put(counter, msg);
+			counter--;
 		}
 	}
 
@@ -540,7 +545,8 @@ public class IRCHandler extends IRC {
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {
 			String msg = prefix + parts[i];
-			MessageQueue.put(j + (parts.length - i), msg);
+			MessageQueue.put(counter, msg);
+			counter--;
 		}
 	}
 
@@ -711,6 +717,29 @@ public class IRCHandler extends IRC {
 	}
 
 	/**
+	 * Fetches the group prefix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups prefix.
+	 */
+	private String getWorld(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = "";
+		if (IRC.getHookManager().getChatHook() != null) {
+			String world = plugin.getServer().getPlayer(name).getWorld()
+					.getName();
+			sb.append(world);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+			if (s == null) {
+				s = "";
+			}
+		}
+		return s;
+	}
+
+	/**
 	 * Handles a message accoradingly.
 	 * 
 	 * @param c
@@ -745,6 +774,7 @@ public class IRCHandler extends IRC {
 								.replace("{suffix}", getSuffix(name))
 								.replace("{groupPrefix}", getGroupPrefix(name))
 								.replace("{groupSuffix}", getGroupSuffix(name))
+								.replace("{world}", getWorld(name))
 								.replace("&", "§")
 								+ c.getHeroChatChannel().getColor()));
 			} else if (c.getChatType() == ChatType.HEROCHAT
@@ -757,6 +787,7 @@ public class IRCHandler extends IRC {
 								.replace("{suffix}", getSuffix(name))
 								.replace("{groupPrefix}", getGroupPrefix(name))
 								.replace("{groupSuffix}", getGroupSuffix(name))
+								.replace("{world}", getWorld(name))
 								.replace("&", "§")
 								+ "§f",
 						IRCColor.formatIRCMessage(IRCColor
@@ -773,6 +804,7 @@ public class IRCHandler extends IRC {
 								.replace("{suffix}", getSuffix(name))
 								.replace("{groupPrefix}", getGroupPrefix(name))
 								.replace("{groupSuffix}", getGroupSuffix(name))
+								.replace("{world}", getWorld(name))
 								.replace("&", "§")
 								+ IRCColor.WHITE.getMinecraftColor()));
 			}

@@ -98,6 +98,7 @@ public class Say extends GameCommand {
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
+							.replace("{world}", getWorld(name))
 							.replace("&", "§")
 							+ c.getHeroChatChannel().getColor());
 		} else if (c.getChatType() == ChatType.HEROCHAT
@@ -110,6 +111,7 @@ public class Say extends GameCommand {
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
+							.replace("{world}", getWorld(name))
 							.replace("&", "§"),
 					IRCColor.formatIRCMessage(IRCColor
 							.formatIRCMessage(message)),
@@ -125,6 +127,7 @@ public class Say extends GameCommand {
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
 							.replace("&", "§")
+							.replace("{world}", getWorld(name))
 							+ "§f");
 		}
 	}
@@ -234,6 +237,29 @@ public class Say extends GameCommand {
 			sb.append(prefix);
 			String temp = sb.toString();
 			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	/**
+	 * Fetches the group prefix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups prefix.
+	 */
+	private String getWorld(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = "";
+		if (IRC.getHookManager().getChatHook() != null) {
+			String world = plugin.getServer().getPlayer(name).getWorld()
+					.getName();
+			sb.append(world);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+			if (s == null) {
+				s = "";
+			}
 		}
 		return s;
 	}

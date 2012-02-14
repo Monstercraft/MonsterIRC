@@ -80,6 +80,7 @@ public class IRCListener extends IRC implements Listener {
 									"{message}",
 									IRCColor.NORMAL.getIRCColor()
 											+ event.getMessage())
+							.replace("{world}", getWorld(event.getPlayer().getName()))
 							.replace("&", "§"));
 					if (c.getChatType() == ChatType.ADMINCHAT) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
@@ -319,6 +320,29 @@ public class IRCListener extends IRC implements Listener {
 			sb.append(prefix);
 			String temp = sb.toString();
 			s = temp.replace("&", "§");
+		}
+		return s;
+	}
+
+	/**
+	 * Fetches the group prefix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups prefix.
+	 */
+	private String getWorld(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = "";
+		if (IRC.getHookManager().getChatHook() != null) {
+			String world = plugin.getServer().getPlayer(name).getWorld()
+					.getName();
+			sb.append(world);
+			String temp = sb.toString();
+			s = temp.replace("&", "§");
+			if (s == null) {
+				s = "";
+			}
 		}
 		return s;
 	}

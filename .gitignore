@@ -3,7 +3,6 @@
 *.patch
 /.svn
 .DS_Store
-pom.xml
 /target/
 /*.iml
 /*.ipr
@@ -15,9 +14,5 @@ pom.xml
 /.settings
 /bin
 /temp/*
-/scripts/
-/devscripts/
 /temp.txt
-/build.xml
-/manifest.mf
 /nbproject
