@@ -14,7 +14,7 @@ public class List extends IRCCommand {
 
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler().isConnected(IRC.getIRCServer())
-				&& message.startsWith(Variables.commandPrefix + "list")
+				&& message.toLowerCase().startsWith(Variables.commandPrefix + "list")
 				&& IRC.getHandleManager().getIRCHandler().isOp(channel, sender);
 	}
 

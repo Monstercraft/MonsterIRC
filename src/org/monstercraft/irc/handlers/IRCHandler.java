@@ -10,6 +10,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 import org.bukkit.Bukkit;
@@ -38,7 +40,8 @@ public class IRCHandler extends IRC {
 	private Thread watch = null;
 	private Thread print = null;
 	private IRC plugin;
-	private ArrayList<String> messageQue = new ArrayList<String>();
+	private Hashtable<Integer, String> MessageQueue = new Hashtable<Integer, String>();
+	int j = 0;
 
 	/**
 	 * Creates an instance of the IRCHandler class.
@@ -212,10 +215,12 @@ public class IRCHandler extends IRC {
 	 */
 	public void join(final IRCChannel channel) {
 		if (channel.getPassword() != null && channel.getPassword() != "") {
-			messageQue.add("JOIN " + channel.getChannel() + " "
-					+ channel.getPassword());
+			String pass = "JOIN " + channel.getChannel() + " "
+					+ channel.getPassword();
+			MessageQueue.put(pass.hashCode(), pass);
 		} else {
-			messageQue.add("JOIN " + channel.getChannel());
+			String nopass = "JOIN " + channel.getChannel();
+			MessageQueue.put(nopass.hashCode(), nopass);
 		}
 	}
 
@@ -291,12 +296,7 @@ public class IRCHandler extends IRC {
 									if (c.showJoinLeave()) {
 										name = line.substring(1,
 												line.indexOf("!"));
-										if (name.equalsIgnoreCase(Variables.name)) {
-											disconnect(IRC.getIRCServer());
-											msg = null;
-											break;
-										}
-										msg = name + " has quit"
+										msg = name + " has quit "
 												+ c.getChannel() + ".";
 									}
 								} else if (line.toLowerCase().contains(
@@ -321,7 +321,6 @@ public class IRCHandler extends IRC {
 											+ c.getChannel().length() + 4);
 									msg = name + " gave mode " + mode + " to "
 											+ _name + ".";
-									log("MODE LINE :D " + line);
 									if (mode.contains("+v")) {
 										c.getVoiceList().add(_name);
 									} else if (mode.contains("-v")) {
@@ -335,10 +334,20 @@ public class IRCHandler extends IRC {
 										"KICK ".toLowerCase()
 												+ c.getChannel().toLowerCase())) {
 									name = line.substring(1, line.indexOf("!"));
+									String _name = line
+											.substring(
+													line.toLowerCase()
+															.indexOf(
+																	c.getChannel()
+																			.toLowerCase())
+															+ c.getChannel()
+																	.length()
+															+ 1, line
+															.indexOf(" :") - 1);
 									if (name.equalsIgnoreCase(Variables.name)) {
 										join(c);
 									}
-									msg = name + " has been kicked from"
+									msg = _name + " has been kicked from "
 											+ c.getChannel() + ".";
 								}
 
@@ -433,23 +442,19 @@ public class IRCHandler extends IRC {
 											chan.getOpList()
 													.add(s.substring(s
 															.indexOf("@") + 1));
+											log(s.substring(s.indexOf("@") + 1)
+													+ " is an OP in "
+													+ chan.getChannel());
 										} else if (s.contains("+")) {
 											chan.getVoiceList()
 													.add(s.substring(s
 															.indexOf("+") + 1));
+											log(s.substring(s.indexOf("+") + 1)
+													+ " is voice in "
+													+ chan.getChannel());
 										}
 									}
 								}
-							}
-						} else if (line.toLowerCase().contains(
-								"QUIT :".toLowerCase())) {
-							if (name.equalsIgnoreCase(Variables.name)
-									&& msg == null) {
-								Thread run = new Thread(RECONNECT);
-								run.setDaemon(true);
-								run.setPriority(Thread.MAX_PRIORITY);
-								run.start();
-								break;
 							}
 						}
 					}
@@ -468,43 +473,34 @@ public class IRCHandler extends IRC {
 
 	private final Runnable DISPATCH = new Runnable() {
 		public void run() {
-			try {
-				while (isConnected(IRC.getIRCServer())) {
-					if (messageQue.size() > 0) {
-						if (isConnected(IRC.getIRCServer())) {
-							for (final String str : messageQue) {
-								writer.write(str + "\r\n");
-								writer.flush();
-								messageQue.remove(str);
+			while (true) {
+				try {
+					if (isConnected(IRC.getIRCServer())) {
+						int i = 0;
+						for (Enumeration<Integer> e = MessageQueue.keys(); e
+								.hasMoreElements();) {
+							int key = e.nextElement();
+							String Message = MessageQueue.get(key);
+							writer.write(Message + "\r\n");
+							writer.flush();
+							MessageQueue.remove(key);
+							i++;
+							if (i >= Variables.limit) {
+								break;
+							}
+							if (MessageQueue.isEmpty()) {
+								j = 0;
 								break;
 							}
 						}
-					}
-					if (Variables.limit != 0) {
-						try {
+						if (Variables.limit != 0) {
 							Thread.sleep(1000 / Variables.limit);
-						} catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-							break;
 						}
 					}
+				} catch (Exception ex) {
+					Thread.currentThread().interrupt();
+					break;
 				}
-			} catch (Exception e) {
-				Thread.currentThread().interrupt();
-				debug(e);
-			}
-		}
-
-	};
-
-	private final Runnable RECONNECT = new Runnable() {
-		public void run() {
-			try {
-				IRC.getSettingsManager().reload();
-				IRC.getHandleManager().getIRCHandler()
-						.connect(IRC.getIRCServer());
-			} catch (final Exception e) {
-				debug(e);
 			}
 		}
 	};
@@ -518,7 +514,15 @@ public class IRCHandler extends IRC {
 	 *            The channel to send the message to.
 	 */
 	public void sendMessage(final String Message, final String channel) {
-		messageQue.add("PRIVMSG " + channel + " :" + Message);
+		final String prefix = "PRIVMSG " + channel + " :";
+		final int length = 512 - prefix.length();
+		final String parts[] = Message.toString().split(
+				"(?<=\\G.{" + length + "})");
+		for (int i = 0; i < parts.length; i++) {
+			String msg = prefix + parts[i];
+			MessageQueue.put(MessageQueue.size() + ((parts.length - 1) - i),
+					msg);
+		}
 	}
 
 	/**
@@ -530,7 +534,14 @@ public class IRCHandler extends IRC {
 	 *            The channel to send the message to.
 	 */
 	public void sendNotice(final String Message, final String reciever) {
-		messageQue.add("NOTICE " + reciever + " :" + Message);
+		final String prefix = "NOTICE " + reciever + " :";
+		final int length = 512 - prefix.length();
+		final String parts[] = Message.toString().split(
+				"(?<=\\G.{" + length + "})");
+		for (int i = 0; i < parts.length; i++) {
+			String msg = prefix + parts[i];
+			MessageQueue.put(j + (parts.length - i), msg);
+		}
 	}
 
 	/**
@@ -725,7 +736,7 @@ public class IRCHandler extends IRC {
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
 				c.getHeroChatChannel().announce(
-						Variables.mcformat
+						IRCColor.formatIRCMessage(Variables.mcformat
 								.replace("{name}", getName(name))
 								.replace("{message}",
 										IRCColor.formatIRCMessage(message))
@@ -735,7 +746,7 @@ public class IRCHandler extends IRC {
 								.replace("{groupPrefix}", getGroupPrefix(name))
 								.replace("{groupSuffix}", getGroupSuffix(name))
 								.replace("&", "§")
-								+ c.getHeroChatChannel().getColor());
+								+ c.getHeroChatChannel().getColor()));
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
@@ -753,7 +764,7 @@ public class IRCHandler extends IRC {
 						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
-						Variables.mcformat
+						IRCColor.formatIRCMessage(Variables.mcformat
 								.replace("{name}", getName(name))
 								.replace("{message}",
 										IRCColor.formatIRCMessage(message))
@@ -763,7 +774,7 @@ public class IRCHandler extends IRC {
 								.replace("{groupPrefix}", getGroupPrefix(name))
 								.replace("{groupSuffix}", getGroupSuffix(name))
 								.replace("&", "§")
-								+ IRCColor.WHITE.getMinecraftColor());
+								+ IRCColor.WHITE.getMinecraftColor()));
 			}
 		} catch (Exception e) {
 			debug(e);
