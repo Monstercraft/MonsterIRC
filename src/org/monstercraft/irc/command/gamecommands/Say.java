@@ -2,6 +2,7 @@ package org.monstercraft.irc.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.Server;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
 import org.monstercraft.irc.util.ChatType;
@@ -81,7 +82,7 @@ public class Say extends GameCommand {
 	private void handleMessage(IRCChannel c, String name, String message) {
 		if (c.getChatType() == ChatType.ADMINCHAT) {
 			if (IRC.getHookManager().getmcMMOHook() != null) {
-				String format = "§b" + "{" + "§f" + "[IRC] " + name + "§b"
+				String format = "ï¿½b" + "{" + "ï¿½f" + "[IRC] " + name + "ï¿½b"
 						+ "} " + message;
 				for (Player p : plugin.getServer().getOnlinePlayers()) {
 					if (p.isOp() || mcPermissions.getInstance().adminChat(p))
@@ -98,7 +99,7 @@ public class Say extends GameCommand {
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
-							.replace("&", "§")
+							.replace("&", "ï¿½")
 							+ c.getHeroChatChannel().getColor());
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& IRC.getHookManager().getHeroChatHook() != null
@@ -110,7 +111,7 @@ public class Say extends GameCommand {
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
-							.replace("&", "§"),
+							.replace("&", "ï¿½"),
 					IRCColor.formatIRCMessage(IRCColor
 							.formatIRCMessage(message)),
 					c.getHeroChatFourChannel().getMsgFormat(), false);
@@ -124,8 +125,9 @@ public class Say extends GameCommand {
 							.replace("{suffix}", getSuffix(name))
 							.replace("{groupPrefix}", getGroupPrefix(name))
 							.replace("{groupSuffix}", getGroupSuffix(name))
-							.replace("&", "§")
-							+ "§f");
+							.replace("{world}", getPlayerWorld(name))
+							.replace("&", "ï¿½")
+							+ "ï¿½f");
 		}
 	}
 
@@ -144,7 +146,7 @@ public class Say extends GameCommand {
 					.getPlayerPrefix("", name);
 			sb.append(prefix);
 			String temp = sb.toString();
-			s = temp.replace("&", "§");
+			s = temp.replace("&", "ï¿½");
 		}
 		return s;
 	}
@@ -164,7 +166,7 @@ public class Say extends GameCommand {
 					.getPlayerSuffix("", name);
 			sb.append(suffix);
 			String temp = sb.toString();
-			s = temp.replace("&", "§");
+			s = temp.replace("&", "ï¿½");
 		}
 		return s;
 	}
@@ -183,7 +185,7 @@ public class Say extends GameCommand {
 			String color = name;
 			sb.append(color);
 			String temp = sb.toString();
-			s = temp.replace("&", "§");
+			s = temp.replace("&", "ï¿½");
 		}
 		return s;
 	}
@@ -208,7 +210,7 @@ public class Say extends GameCommand {
 									.getPrimaryGroup("", name));
 			sb.append(prefix);
 			String temp = sb.toString();
-			s = temp.replace("&", "§");
+			s = temp.replace("&", "ï¿½");
 		}
 		return s;
 	}
@@ -233,7 +235,30 @@ public class Say extends GameCommand {
 									.getPrimaryGroup("", name));
 			sb.append(prefix);
 			String temp = sb.toString();
-			s = temp.replace("&", "§");
+			s = temp.replace("&", "ï¿½");
+		}
+		return s;
+	}
+	
+	/**
+	 * Fetches the world name for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The worlds name.
+	 */
+	private String getPlayerWorld(String name) {
+		StringBuilder sb = new StringBuilder();
+		String s = "";
+		if(IRC.getHookManager().getChatHook() != null) {
+			String world = plugin
+					.getServer()
+					.getPlayer(name)
+					.getWorld()
+					.getName();
+			sb.append(world);
+			String temp = sb.toString();
+			s = temp.replace("&", "ï¿½");
 		}
 		return s;
 	}
