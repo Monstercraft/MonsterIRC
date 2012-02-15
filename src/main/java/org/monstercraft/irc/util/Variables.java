@@ -108,5 +108,10 @@ public class Variables {
 	/**
 	 * The commands to send on.
 	 */
-	public static List<String> connectCommands = new ArrayList<String>();;
+	public static List<String> connectCommands = new ArrayList<String>();
+
+	/**
+	 * Option to hide MODE messages in irc.
+	 */
+	public static boolean hideMode = false;
 }

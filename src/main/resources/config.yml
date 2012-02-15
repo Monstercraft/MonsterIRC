@@ -11,6 +11,7 @@ IRC:
     RETRYS: 5
     DEBUG: false
     PASS_ON_NAME: false
+    HIDE_MODE: false
     ALLOW_COLORS: true
   ADMIN:
     INGAME_COMMANDS: false

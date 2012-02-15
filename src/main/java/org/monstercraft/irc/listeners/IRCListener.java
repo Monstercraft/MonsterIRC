@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.monstercraft.irc.IRC;
@@ -80,7 +81,8 @@ public class IRCListener extends IRC implements Listener {
 									"{message}",
 									IRCColor.NORMAL.getIRCColor()
 											+ event.getMessage())
-							.replace("{world}", getWorld(event.getPlayer().getName()))
+							.replace("{world}",
+									getWorld(event.getPlayer().getName()))
 							.replace("&", "§"));
 					if (c.getChatType() == ChatType.ADMINCHAT) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
@@ -211,6 +213,22 @@ public class IRCListener extends IRC implements Listener {
 										+ getName(event.getPlayer().getName())
 										+ IRCColor.RED.getMinecraftColor()
 										+ " quit."), c.getChannel());
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerKick(PlayerKickEvent event) {
+		for (IRCChannel c : Variables.channels) {
+			if (c.showJoinLeave()) {
+				IRC.getHandleManager()
+						.getIRCHandler()
+						.sendMessage(
+								IRCColor.formatMCMessage(IRCColor.WHITE
+										.getMinecraftColor()
+										+ getName(event.getPlayer().getName())
+										+ IRCColor.RED.getMinecraftColor()
+										+ " was kicked."), c.getChannel());
 			}
 		}
 	}

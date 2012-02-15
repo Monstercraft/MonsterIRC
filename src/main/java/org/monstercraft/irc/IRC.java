@@ -187,10 +187,8 @@ public class IRC extends JavaPlugin {
 	 *            The message to print.
 	 */
 	protected static void debug(Exception error) {
-		if (Variables.debug) {
-			logger.log(Level.WARNING, "[IRC - Critical error detected!]");
-			error.printStackTrace();
-		}
+		logger.log(Level.WARNING, "[IRC - Critical error detected!]");
+		error.printStackTrace();
 	}
 
 	/**

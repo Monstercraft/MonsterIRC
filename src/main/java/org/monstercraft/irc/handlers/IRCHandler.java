@@ -268,7 +268,7 @@ public class IRCHandler extends IRC {
 									msg = line
 											.substring(line.indexOf(" :") + 2);
 									if (line.contains("ACTION")) {
-										msg = "* "
+										msg = "[Action] * "
 												+ line.substring(
 														line.indexOf(" :") + 2)
 														.replaceFirst("ACTION",
@@ -324,8 +324,10 @@ public class IRCHandler extends IRC {
 													c.getChannel()
 															.toLowerCase())
 											+ c.getChannel().length() + 4);
-									msg = name + " gave mode " + mode + " to "
-											+ _name + ".";
+									if (!Variables.hideMode) {
+										msg = "[Mode] " + name + " gave mode "
+												+ mode + " to " + _name + ".";
+									}
 									if (mode.contains("+v")) {
 										c.getVoiceList().add(_name);
 									} else if (mode.contains("-v")) {
@@ -455,6 +457,20 @@ public class IRCHandler extends IRC {
 													.add(s.substring(s
 															.indexOf("+") + 1));
 											log(s.substring(s.indexOf("+") + 1)
+													+ " is voice in "
+													+ chan.getChannel());
+										} else if (s.contains("~")) {
+											chan.getOpList()
+													.add(s.substring(s
+															.indexOf("~") + 1));
+											log(s.substring(s.indexOf("~") + 1)
+													+ " is an OP in "
+													+ chan.getChannel());
+										} else if (s.contains("%")) {
+											chan.getVoiceList()
+													.add(s.substring(s
+															.indexOf("%") + 1));
+											log(s.substring(s.indexOf("%") + 1)
 													+ " is voice in "
 													+ chan.getChannel());
 										}

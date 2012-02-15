@@ -133,6 +133,8 @@ public class SettingsManager extends IRC {
 					Variables.debug);
 			Variables.passOnName = config.getBoolean(
 					"IRC.OPTIONS.PASS_ON_NAME", Variables.passOnName);
+			Variables.hideMode = config.getBoolean("IRC.OPTIONS.HIDE_MODE",
+					Variables.hideMode);
 			Variables.colors = config.getBoolean("IRC.OPTIONS.ALLOW_COLORS",
 					Variables.colors);
 			Variables.ingamecommands = config.getBoolean(
