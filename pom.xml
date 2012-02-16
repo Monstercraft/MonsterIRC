@@ -26,8 +26,8 @@
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
         <repository>
-            <id>milkbowl_repos</id>
-            <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository/</url>
+            <id>milkbowl-repo</id>
+            <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
         </repository>
     </repositories>
 	
@@ -37,13 +37,11 @@
             <groupId>net.milkbowl</groupId>
             <artifactId>vault</artifactId>
             <version>1.2.9-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>1.1-R4</version>
-            <scope>provided</scope>
         </dependency>
         </dependencies>
     <build>
