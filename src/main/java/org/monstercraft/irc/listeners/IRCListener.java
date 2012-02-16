@@ -1,5 +1,6 @@
 package org.monstercraft.irc.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -341,7 +342,6 @@ public class IRCListener extends IRC implements Listener {
 		}
 		return s;
 	}
-
 	/**
 	 * Fetches the group prefix for the user.
 	 * 
@@ -350,17 +350,9 @@ public class IRCListener extends IRC implements Listener {
 	 * @return The groups prefix.
 	 */
 	private String getWorld(String name) {
-		StringBuilder sb = new StringBuilder();
 		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String world = plugin.getServer().getPlayer(name).getWorld()
-					.getName();
-			sb.append(world);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-			if (s == null) {
-				s = "";
-			}
+		if (Bukkit.getServer().getPlayer(name) != null) {
+			s = plugin.getServer().getPlayer(name).getWorld().getName();
 		}
 		return s;
 	}

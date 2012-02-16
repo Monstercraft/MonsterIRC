@@ -15,9 +15,8 @@ import com.dthielke.herochat.Herochat;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRCChannel {
+public class IRCChannel extends IRC {
 
-	private IRCServer server;
 	private String channel;
 	private String heroChatChannel;
 	private ChatType type;
@@ -32,10 +31,8 @@ public class IRCChannel {
 	private boolean showJoinLeave;
 
 	/**
-	 * Creates an IRCChannel to join.
+	 * Creates an IRCChannel to join. .
 	 * 
-	 * @param server
-	 *            The parent Server.
 	 * @param password
 	 *            The password to the channel, if any;
 	 * @param showJoinLeave
@@ -55,12 +52,11 @@ public class IRCChannel {
 	 * @param userCommands
 	 *            The list of commands IRC users can use.
 	 */
-	public IRCChannel(final IRCServer server, final String password,
-			final boolean showJoinLeave, final boolean autoJoin,
-			final boolean defaultChannel, final String channel,
-			final ChatType type, final List<String> opCommands,
-			final List<String> voiceCommands, final List<String> userCommands) {
-		this.server = server;
+	public IRCChannel(final String password, final boolean showJoinLeave,
+			final boolean autoJoin, final boolean defaultChannel,
+			final String channel, final ChatType type,
+			final List<String> opCommands, final List<String> voiceCommands,
+			final List<String> userCommands) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -78,8 +74,6 @@ public class IRCChannel {
 	/**
 	 * Creates an IRCChannel to join.
 	 * 
-	 * @param server
-	 *            The parent Server.
 	 * @param password
 	 *            The password to the channel, if any;
 	 * @param showJoinLeave
@@ -101,13 +95,11 @@ public class IRCChannel {
 	 * @param userCommands
 	 *            The list of commands IRC users can use.
 	 */
-	public IRCChannel(final IRCServer server, final String password,
-			final boolean showJoinLeave, final boolean autoJoin,
-			final boolean defaultChannel, final String channel,
-			final String heroChatChannel, final ChatType type,
-			final List<String> opCommands, final List<String> voiceCommands,
-			final List<String> userCommands) {
-		this.server = server;
+	public IRCChannel(final String password, final boolean showJoinLeave,
+			final boolean autoJoin, final boolean defaultChannel,
+			final String channel, final String heroChatChannel,
+			final ChatType type, final List<String> opCommands,
+			final List<String> voiceCommands, final List<String> userCommands) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -120,10 +112,6 @@ public class IRCChannel {
 		this.userCommands = userCommands;
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
-	}
-
-	public IRCServer getServer() {
-		return server;
 	}
 
 	/**

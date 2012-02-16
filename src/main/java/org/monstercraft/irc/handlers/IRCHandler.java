@@ -17,6 +17,16 @@ import java.util.StringTokenizer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.event.events.IRCActionEvent;
+import org.monstercraft.irc.event.events.IRCConnectEvent;
+import org.monstercraft.irc.event.events.IRCDisconnectEvent;
+import org.monstercraft.irc.event.events.IRCJoinEvent;
+import org.monstercraft.irc.event.events.IRCKickEvent;
+import org.monstercraft.irc.event.events.IRCMessageEvent;
+import org.monstercraft.irc.event.events.IRCModeEvent;
+import org.monstercraft.irc.event.events.IRCPartEvent;
+import org.monstercraft.irc.event.events.IRCPrivateMessageEvent;
+import org.monstercraft.irc.event.events.IRCQuitEvent;
 import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.IRCColor;
 import org.monstercraft.irc.util.Pinger;
@@ -156,6 +166,8 @@ public class IRCHandler extends IRC {
 			log("To try conencting again run the command /irc connect");
 			return false;
 		}
+		IRCConnectEvent cevent = new IRCConnectEvent(server);
+		plugin.getServer().getPluginManager().callEvent(cevent);
 		return isConnected(server);
 	}
 
@@ -192,6 +204,8 @@ public class IRCHandler extends IRC {
 				debug(e);
 			}
 		}
+		IRCDisconnectEvent devent = new IRCDisconnectEvent(server);
+		plugin.getServer().getPluginManager().callEvent(devent);
 		return !isConnected(server);
 	}
 
@@ -224,6 +238,9 @@ public class IRCHandler extends IRC {
 			MessageQueue.put(counter, nopass);
 			counter--;
 		}
+		IRCJoinEvent jevent = new IRCJoinEvent(channel, IRC.getIRCServer()
+				.getNick());
+		plugin.getServer().getPluginManager().callEvent(jevent);
 	}
 
 	/**
@@ -235,13 +252,16 @@ public class IRCHandler extends IRC {
 	 */
 	public void leave(final IRCChannel channel) {
 		try {
-			if (isConnected(channel.getServer())) {
+			if (isConnected(IRC.getIRCServer())) {
 				writer.write("PART " + channel.getChannel() + "\r\n");
 				writer.flush();
 			}
 		} catch (IOException e) {
 			debug(e);
 		}
+		IRCPartEvent levent = new IRCPartEvent(channel, IRC.getIRCServer()
+				.getNick());
+		plugin.getServer().getPluginManager().callEvent(levent);
 	}
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
@@ -273,6 +293,15 @@ public class IRCHandler extends IRC {
 														line.indexOf(" :") + 2)
 														.replaceFirst("ACTION",
 																name);
+										IRCActionEvent actionEvent = new IRCActionEvent(
+												c, name, msg);
+										plugin.getServer().getPluginManager()
+												.callEvent(actionEvent);
+									} else {
+										IRCMessageEvent msgEvent = new IRCMessageEvent(
+												c, msg, name);
+										plugin.getServer().getPluginManager()
+												.callEvent(msgEvent);
 									}
 								} else if (line.toLowerCase().contains(
 										"JOIN ".toLowerCase()
@@ -284,6 +313,10 @@ public class IRCHandler extends IRC {
 										msg = name + " joined "
 												+ c.getChannel() + ".";
 									}
+									IRCJoinEvent jevent = new IRCJoinEvent(c,
+											name);
+									plugin.getServer().getPluginManager()
+											.callEvent(jevent);
 								} else if (line.toLowerCase().contains(
 										"PART ".toLowerCase()
 												+ c.getChannel().toLowerCase())) {
@@ -293,6 +326,10 @@ public class IRCHandler extends IRC {
 										msg = name + " left " + c.getChannel()
 												+ ".";
 									}
+									IRCPartEvent pevent = new IRCPartEvent(c,
+											name);
+									plugin.getServer().getPluginManager()
+											.callEvent(pevent);
 								} else if (line.toLowerCase().contains(
 										"QUIT :".toLowerCase())) {
 									if (c.showJoinLeave()) {
@@ -301,6 +338,10 @@ public class IRCHandler extends IRC {
 										msg = name + " has quit "
 												+ c.getChannel() + ".";
 									}
+									IRCQuitEvent qevent = new IRCQuitEvent(c,
+											name);
+									plugin.getServer().getPluginManager()
+											.callEvent(qevent);
 								} else if (line.toLowerCase().contains(
 										"MODE ".toLowerCase()
 												+ c.getChannel().toLowerCase())) {
@@ -337,6 +378,10 @@ public class IRCHandler extends IRC {
 									} else if (mode.contains("-o")) {
 										c.getOpList().remove(_name);
 									}
+									IRCModeEvent mevent = new IRCModeEvent(c,
+											name, mode, msg);
+									plugin.getServer().getPluginManager()
+											.callEvent(mevent);
 								} else if (line.toLowerCase().contains(
 										"KICK ".toLowerCase()
 												+ c.getChannel().toLowerCase())) {
@@ -356,6 +401,10 @@ public class IRCHandler extends IRC {
 									}
 									msg = _name + " has been kicked from "
 											+ c.getChannel() + ".";
+									IRCKickEvent kevent = new IRCKickEvent(c,
+											name);
+									plugin.getServer().getPluginManager()
+											.callEvent(kevent);
 								}
 
 								if (msg != null && name != null
@@ -415,6 +464,10 @@ public class IRCHandler extends IRC {
 										break;
 									}
 									if (p.getName().equalsIgnoreCase(to)) {
+										IRCPrivateMessageEvent pmevent = new IRCPrivateMessageEvent(
+												to, name, _msg);
+										plugin.getServer().getPluginManager()
+												.callEvent(pmevent);
 										p.sendMessage(IRCColor.LIGHT_GRAY
 												.getMinecraftColor()
 												+ "([IRC] from "
@@ -740,17 +793,9 @@ public class IRCHandler extends IRC {
 	 * @return The groups prefix.
 	 */
 	private String getWorld(String name) {
-		StringBuilder sb = new StringBuilder();
 		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String world = plugin.getServer().getPlayer(name).getWorld()
-					.getName();
-			sb.append(world);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-			if (s == null) {
-				s = "";
-			}
+		if (Bukkit.getServer().getPlayer(name) != null) {
+			s = plugin.getServer().getPlayer(name).getWorld().getName();
 		}
 		return s;
 	}

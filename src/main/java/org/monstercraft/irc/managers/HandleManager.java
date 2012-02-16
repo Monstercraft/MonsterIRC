@@ -11,7 +11,7 @@ import org.monstercraft.irc.hooks.VaultPermissionsHook;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class HandleManager {
+public class HandleManager extends IRC {
 
 	private IRCHandler irc = null;;
 	private PermissionsHandler perms = null;
@@ -24,8 +24,8 @@ public class HandleManager {
 	 */
 	public HandleManager(final IRC plugin) {
 		irc = new IRCHandler(plugin);
-		perms = new PermissionsHandler(IRC.getHookManager()
-				.getPermissionsHook().getHook());
+		perms = new PermissionsHandler(getHookManager().getPermissionsHook()
+				.getHook());
 	}
 
 	/**
@@ -53,7 +53,8 @@ public class HandleManager {
 	 *            The hook into Permissions.
 	 * @return The new permissions Handler.
 	 */
-	public PermissionsHandler setPermissionsHandler(final VaultPermissionsHook hook) {
+	public PermissionsHandler setPermissionsHandler(
+			final VaultPermissionsHook hook) {
 		if (hook != null) {
 			if (perms.isEnabled()) {
 				return perms = new PermissionsHandler(hook.getHook());

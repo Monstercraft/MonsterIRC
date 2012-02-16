@@ -237,7 +237,6 @@ public class SettingsManager extends IRC {
 				if (global) {
 					Variables.channels
 							.add(new IRCChannel(
-									IRC.getIRCServer(),
 									config.getString("CHANNEL.SETTINGS.PASSWORD"),
 									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
 									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
@@ -251,7 +250,6 @@ public class SettingsManager extends IRC {
 				} else if (admin) {
 					Variables.channels
 							.add(new IRCChannel(
-									IRC.getIRCServer(),
 									config.getString("CHANNEL.SETTINGS.PASSWORD"),
 									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
 									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
@@ -265,7 +263,6 @@ public class SettingsManager extends IRC {
 				} else if (hero) {
 					Variables.channels
 							.add(new IRCChannel(
-									IRC.getIRCServer(),
 									config.getString("CHANNEL.SETTINGS.PASSWORD"),
 									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
 									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),

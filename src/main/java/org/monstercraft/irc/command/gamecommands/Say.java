@@ -1,5 +1,6 @@
 package org.monstercraft.irc.command.gamecommands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
@@ -249,17 +250,9 @@ public class Say extends GameCommand {
 	 * @return The groups prefix.
 	 */
 	private String getWorld(String name) {
-		StringBuilder sb = new StringBuilder();
 		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String world = plugin.getServer().getPlayer(name).getWorld()
-					.getName();
-			sb.append(world);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-			if (s == null) {
-				s = "";
-			}
+		if (Bukkit.getServer().getPlayer(name) != null) {
+			s = plugin.getServer().getPlayer(name).getWorld().getName();
 		}
 		return s;
 	}

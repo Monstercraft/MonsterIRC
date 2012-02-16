@@ -136,7 +136,7 @@ public class IRC extends JavaPlugin {
 	 *            The version that is currently running.
 	 * @return The latest version
 	 */
-	public String updateCheck(String currentVersion) {
+	protected String updateCheck(String currentVersion) {
 		String pluginUrlString = "http://dev.bukkit.org/server-mods/monsterirc/files.rss";
 		try {
 			URL url = new URL(pluginUrlString);
@@ -166,7 +166,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The settings.
 	 */
-	public static SettingsManager getSettingsManager() {
+	protected static SettingsManager getSettingsManager() {
 		return settings;
 	}
 
@@ -186,8 +186,20 @@ public class IRC extends JavaPlugin {
 	 * @param error
 	 *            The message to print.
 	 */
+	protected static void debug(String error) {
+		if (Variables.debug) {
+			logger.log(Level.WARNING, "[IRC - Debug] " + error);
+		}
+	}
+
+	/**
+	 * Logs debugging messages to the console.
+	 * 
+	 * @param error
+	 *            The message to print.
+	 */
 	protected static void debug(Exception error) {
-		logger.log(Level.WARNING, "[IRC - Critical error detected!]");
+		logger.log(Level.SEVERE, "[IRC - Critical error detected!]");
 		error.printStackTrace();
 	}
 
@@ -199,18 +211,6 @@ public class IRC extends JavaPlugin {
 				.getPluginManager()
 				.disablePlugin(
 						getServer().getPluginManager().getPlugin("MonsterIRC"));
-	}
-
-	/**
-	 * Logs debugging messages to the console.
-	 * 
-	 * @param error
-	 *            The message to print.
-	 */
-	protected static void debug(String error) {
-		if (Variables.debug) {
-			logger.log(Level.WARNING, "[IRC - Debug] " + error);
-		}
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The hooks.
 	 */
-	public static HookManager getHookManager() {
+	protected static HookManager getHookManager() {
 		return hooks;
 	}
 
@@ -236,7 +236,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The plugins command manager.
 	 */
-	public static CommandManager getCommandManager() {
+	protected static CommandManager getCommandManager() {
 		return command;
 	}
 
