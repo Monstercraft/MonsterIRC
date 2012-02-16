@@ -34,8 +34,8 @@
 	
         <dependencies>
         <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>Vault</artifactId>
+            <groupId>net.milkbowl</groupId>
+            <artifactId>vault</artifactId>
             <version>1.2.9-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
