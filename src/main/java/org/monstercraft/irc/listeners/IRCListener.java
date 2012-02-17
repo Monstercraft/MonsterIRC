@@ -1,6 +1,5 @@
 package org.monstercraft.irc.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +16,7 @@ import org.monstercraft.irc.hooks.VaultPermissionsHook;
 import org.monstercraft.irc.hooks.mcMMOHook;
 import org.monstercraft.irc.util.ChatType;
 import org.monstercraft.irc.util.IRCColor;
+import org.monstercraft.irc.util.StringUtils;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
 
@@ -67,24 +67,35 @@ public class IRCListener extends IRC implements Listener {
 				for (IRCChannel c : Variables.channels) {
 					StringBuffer result = new StringBuffer();
 					result.append(Variables.ircformat
-							.replace("{prefix}",
-									getPrefix(event.getPlayer().getName()))
-							.replace("{name}",
-									getName(event.getPlayer().getName()))
-							.replace("{suffix}",
-									getSuffix(event.getPlayer().getName()))
+							.replace(
+									"{prefix}",
+									StringUtils.getPrefix(event.getPlayer()
+											.getName()))
+							.replace(
+									"{name}",
+									StringUtils.getName(event.getPlayer()
+											.getName()))
+							.replace(
+									"{suffix}",
+									StringUtils.getSuffix(event.getPlayer()
+											.getName()))
 
-							.replace("{groupPrefix}",
-									getGroupPrefix(event.getPlayer().getName()))
-							.replace("{groupSuffix}",
-									getGroupSuffix(event.getPlayer().getName()))
+							.replace(
+									"{groupPrefix}",
+									StringUtils.getGroupPrefix(event
+											.getPlayer().getName()))
+							.replace(
+									"{groupSuffix}",
+									StringUtils.getGroupSuffix(event
+											.getPlayer().getName()))
 							.replace(
 									"{message}",
 									IRCColor.NORMAL.getIRCColor()
 											+ event.getMessage())
-							.replace("{world}",
-									getWorld(event.getPlayer().getName()))
-							.replace("&", "§"));
+							.replace(
+									"{world}",
+									StringUtils.getWorld(event.getPlayer()
+											.getName())).replace("&", "§"));
 					if (c.getChatType() == ChatType.ADMINCHAT) {
 						if (IRC.getHookManager().getmcMMOHook() != null) {
 							if (IRC.getHookManager().getmcMMOHook()
@@ -195,7 +206,8 @@ public class IRCListener extends IRC implements Listener {
 						.sendMessage(
 								IRCColor.formatMCMessage(IRCColor.WHITE
 										.getMinecraftColor()
-										+ getName(event.getPlayer().getName())
+										+ StringUtils.getName(event.getPlayer()
+												.getName())
 										+ IRCColor.RED.getMinecraftColor()
 										+ " joined."), c.getChannel());
 			}
@@ -211,7 +223,8 @@ public class IRCListener extends IRC implements Listener {
 						.sendMessage(
 								IRCColor.formatMCMessage(IRCColor.WHITE
 										.getMinecraftColor()
-										+ getName(event.getPlayer().getName())
+										+ StringUtils.getName(event.getPlayer()
+												.getName())
 										+ IRCColor.RED.getMinecraftColor()
 										+ " quit."), c.getChannel());
 			}
@@ -227,133 +240,11 @@ public class IRCListener extends IRC implements Listener {
 						.sendMessage(
 								IRCColor.formatMCMessage(IRCColor.WHITE
 										.getMinecraftColor()
-										+ getName(event.getPlayer().getName())
+										+ StringUtils.getName(event.getPlayer()
+												.getName())
 										+ IRCColor.RED.getMinecraftColor()
 										+ " was kicked."), c.getChannel());
 			}
 		}
-	}
-
-	/**
-	 * Fetches the users prefix.
-	 * 
-	 * @param name
-	 *            The user's name to look up.
-	 * @return The users prefix.
-	 */
-	private String getPrefix(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String prefix = IRC.getHookManager().getChatHook()
-					.getPlayerPrefix("", name);
-			sb.append(prefix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-
-	/**
-	 * Fetches the users suffix.
-	 * 
-	 * @param name
-	 *            The user's name to look up.
-	 * @return The users suffix.
-	 */
-	private String getSuffix(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String suffix = IRC.getHookManager().getChatHook()
-					.getPlayerSuffix("", name);
-			sb.append(suffix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-
-	/**
-	 * Fetches the special name of the user.
-	 * 
-	 * @param name
-	 *            The user's name to look up.
-	 * @return The users name.
-	 */
-	private String getName(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = name;
-		if (IRC.getHookManager().getChatHook() != null) {
-			String color = name;
-			sb.append(color);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-
-	/**
-	 * Fetches the group suffix for the user.
-	 * 
-	 * @param name
-	 *            The user's name to look up.
-	 * @return The groups suffix.
-	 */
-	private String getGroupSuffix(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String prefix = IRC
-					.getHookManager()
-					.getChatHook()
-					.getGroupSuffix(
-							"",
-							IRC.getHookManager().getChatHook()
-									.getPrimaryGroup("", name));
-			sb.append(prefix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-
-	/**
-	 * Fetches the group prefix for the user.
-	 * 
-	 * @param name
-	 *            The user's name to look up.
-	 * @return The groups prefix.
-	 */
-	private String getGroupPrefix(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = "";
-		if (IRC.getHookManager().getChatHook() != null) {
-			String prefix = IRC
-					.getHookManager()
-					.getChatHook()
-					.getGroupPrefix(
-							"",
-							IRC.getHookManager().getChatHook()
-									.getPrimaryGroup("", name));
-			sb.append(prefix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
-	}
-	/**
-	 * Fetches the group prefix for the user.
-	 * 
-	 * @param name
-	 *            The user's name to look up.
-	 * @return The groups prefix.
-	 */
-	private String getWorld(String name) {
-		String s = "";
-		if (Bukkit.getServer().getPlayer(name) != null) {
-			s = plugin.getServer().getPlayer(name).getWorld().getName();
-		}
-		return s;
 	}
 }

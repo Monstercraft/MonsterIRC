@@ -13,6 +13,7 @@ import org.monstercraft.irc.listeners.IRCListener;
 import org.monstercraft.irc.managers.CommandManager;
 import org.monstercraft.irc.managers.HandleManager;
 import org.monstercraft.irc.managers.HookManager;
+import org.monstercraft.irc.managers.IRCPluginManager;
 import org.monstercraft.irc.managers.SettingsManager;
 import org.monstercraft.irc.util.Variables;
 import org.monstercraft.irc.wrappers.IRCChannel;
@@ -44,6 +45,7 @@ public class IRC extends JavaPlugin {
 	private Thread watch = null;
 	private IRC plugin;
 	private Object lock = new Object();
+	private static IRCPluginManager pm;
 
 	/**
 	 * Enables the plugin.
@@ -51,6 +53,7 @@ public class IRC extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		log("Starting plugin.");
+		pm = new IRCPluginManager();
 		settings = new SettingsManager(plugin);
 		hooks = new HookManager(plugin);
 		handles = new HandleManager(plugin);
@@ -247,5 +250,14 @@ public class IRC extends JavaPlugin {
 	 */
 	public static IRCServer getIRCServer() {
 		return IRCserver;
+	}
+
+	/**
+	 * The CommandManager that Assigns all the commands.
+	 * 
+	 * @return The plugins command manager.
+	 */
+	protected static IRCPluginManager getPluginManager() {
+		return pm;
 	}
 }

@@ -26,4 +26,6 @@ public class Constants {
 	public static final String SETTINGS_PATH = "plugins" + File.separator
 			+ "MonsterIRC" + File.separator;
 
+	public static String PLUGINS_FOLDER = "Plugins";
+
 }
