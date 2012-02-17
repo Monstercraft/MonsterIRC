@@ -7,28 +7,46 @@
     <groupId>org.monstercraft.irc</groupId>
     <artifactId>MonsterIRC</artifactId>
     <version>1.46</version>
+    
+    
+    <properties>	
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>	
+    </properties>
+         
+	
+	<scm>
+            <connection>scm:git:git://github.com/Monstercraft/MonsterIRC.git</connection>
+            <developerConnection>scm:git:ssh://git@github.com/Monstercraft/MonsterIRC.git</developerConnection>
+            <url>https://github.com/Monstercraft/MonsterIRC</url>
+	</scm>
+  
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://voice.monstercraft.org:8080/job/MonsterIRC</url>
+	</ciManagement>
+	
     <repositories>
         <repository>
-            <id>bukkit_repos</id>
-            <url>http://repo.bukkit.org/content/repositories/releases</url>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
         <repository>
-            <id>milkbowl_repos</id>
-            <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository/</url>
+            <id>milkbowl-repo</id>
+            <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
         </repository>
     </repositories>
+	
+	
         <dependencies>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>1.2.9-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>Bukkit</artifactId>
+            <artifactId>craftbukkit</artifactId>
             <version>1.1-R4</version>
-            <scope>provided</scope>
         </dependency>
         </dependencies>
     <build>
@@ -55,5 +73,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+        
     </build>
 </project>
