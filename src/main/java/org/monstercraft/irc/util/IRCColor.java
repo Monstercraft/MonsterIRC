@@ -44,7 +44,7 @@ public enum IRCColor {
 	 * @return The minecraft color code.
 	 */
 	public String getMinecraftColor() {
-		return "ยง" + MinecraftColor;
+		return "ง" + MinecraftColor;
 	}
 
 	/**
