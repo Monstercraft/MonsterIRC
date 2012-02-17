@@ -1,7 +1,7 @@
 package org.monstercraft.irc.command;
 
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**
  * This class is the Abstract IRC command.

@@ -3,8 +3,8 @@ package org.monstercraft.irc.command.irccommands;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
-import org.monstercraft.irc.util.Variables;
-import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class List extends IRCCommand {
 
@@ -12,6 +12,7 @@ public class List extends IRCCommand {
 		super(plugin);
 	}
 
+	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler()
 				.isConnected(IRC.getIRCServer())
@@ -19,6 +20,7 @@ public class List extends IRCCommand {
 						Variables.commandPrefix + "list");
 	}
 
+	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
 		if (IRC.getHandleManager().getIRCHandler().isOp(channel, sender)
 				|| IRC.getHandleManager().getIRCHandler()

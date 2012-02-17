@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
-import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.plugin.util.Variables;
 
 public class Unmute extends GameCommand {
 

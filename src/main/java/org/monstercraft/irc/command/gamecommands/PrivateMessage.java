@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
-import org.monstercraft.irc.util.IRCColor;
+import org.monstercraft.irc.plugin.util.IRCColor;
 
 public class PrivateMessage extends GameCommand {
 
@@ -16,11 +16,13 @@ public class PrivateMessage extends GameCommand {
 		super(plugin);
 	}
 
+	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("pm");
 	}
 
+	@Override
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
 			if (IRC.getHandleManager().getPermissionsHandler() != null) {

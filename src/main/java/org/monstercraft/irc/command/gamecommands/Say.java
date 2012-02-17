@@ -4,11 +4,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
-import org.monstercraft.irc.util.ChatType;
-import org.monstercraft.irc.util.IRCColor;
-import org.monstercraft.irc.util.StringUtils;
-import org.monstercraft.irc.util.Variables;
-import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.util.ChatType;
+import org.monstercraft.irc.plugin.util.IRCColor;
+import org.monstercraft.irc.plugin.util.StringUtils;
+import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.gmail.nossr50.mcPermissions;
 
@@ -18,11 +18,13 @@ public class Say extends GameCommand {
 		super(plugin);
 	}
 
+	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("say");
 	}
 
+	@Override
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
 			if (IRC.getHandleManager().getPermissionsHandler() != null) {

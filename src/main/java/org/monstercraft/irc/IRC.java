@@ -9,15 +9,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.monstercraft.irc.listeners.IRCListener;
-import org.monstercraft.irc.managers.CommandManager;
-import org.monstercraft.irc.managers.HandleManager;
-import org.monstercraft.irc.managers.HookManager;
-import org.monstercraft.irc.managers.IRCPluginManager;
-import org.monstercraft.irc.managers.SettingsManager;
-import org.monstercraft.irc.util.Variables;
-import org.monstercraft.irc.wrappers.IRCChannel;
-import org.monstercraft.irc.wrappers.IRCServer;
+import org.monstercraft.irc.plugin.handlers.PluginHandler;
+import org.monstercraft.irc.plugin.listeners.IRCListener;
+import org.monstercraft.irc.plugin.managers.CommandManager;
+import org.monstercraft.irc.plugin.managers.HandleManager;
+import org.monstercraft.irc.plugin.managers.HookManager;
+import org.monstercraft.irc.plugin.managers.SettingsManager;
+import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.wrappers.IRCServer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,15 +45,16 @@ public class IRC extends JavaPlugin {
 	private Thread watch = null;
 	private IRC plugin;
 	private Object lock = new Object();
-	private static IRCPluginManager pm;
+	private static PluginHandler pm;
 
 	/**
 	 * Enables the plugin.
 	 */
+	@Override
 	public void onEnable() {
 		plugin = this;
 		log("Starting plugin.");
-		pm = new IRCPluginManager();
+		pm = new PluginHandler();
 		settings = new SettingsManager(plugin);
 		hooks = new HookManager(plugin);
 		handles = new HandleManager(plugin);
@@ -72,6 +73,7 @@ public class IRC extends JavaPlugin {
 	}
 
 	private final Runnable STARTUP = new Runnable() {
+		@Override
 		public void run() {
 			try {
 				String currentVersion = getDescription().getVersion();
@@ -98,6 +100,7 @@ public class IRC extends JavaPlugin {
 	/**
 	 * Disables the plugin.
 	 */
+	@Override
 	public void onDisable() {
 		if (!settings.firstRun()) {
 			if (getHandleManager().getIRCHandler() != null) {
@@ -126,6 +129,7 @@ public class IRC extends JavaPlugin {
 	/**
 	 * Handles commands.
 	 */
+	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		return getCommandManager().onGameCommand(sender, command, label, args);
@@ -257,7 +261,7 @@ public class IRC extends JavaPlugin {
 	 * 
 	 * @return The plugins command manager.
 	 */
-	protected static IRCPluginManager getPluginManager() {
+	protected static PluginHandler getPluginManager() {
 		return pm;
 	}
 }

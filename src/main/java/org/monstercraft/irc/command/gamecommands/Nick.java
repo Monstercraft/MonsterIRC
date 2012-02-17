@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
-import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.plugin.util.Variables;
 
 public class Nick extends GameCommand {
 
@@ -27,14 +27,15 @@ public class Nick extends GameCommand {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return false;
 				}
-			}else {
+			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
 				return false;
 			}
 		}
 		if (split.length == 3) {
 			Variables.name = split[2];
-			if (IRC.getHandleManager().getIRCHandler().isConnected(IRC.getIRCServer())) {
+			if (IRC.getHandleManager().getIRCHandler()
+					.isConnected(IRC.getIRCServer())) {
 				IRC.getHandleManager().getIRCHandler()
 						.changeNick(IRC.getIRCServer(), Variables.name);
 			}

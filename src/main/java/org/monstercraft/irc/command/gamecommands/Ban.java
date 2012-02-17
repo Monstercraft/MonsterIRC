@@ -4,8 +4,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
-import org.monstercraft.irc.util.Variables;
-import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Ban extends GameCommand {
 
@@ -34,8 +34,10 @@ public class Ban extends GameCommand {
 		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChannel().equalsIgnoreCase(split[3])) {
-				IRC.getHandleManager().getIRCHandler()
-						.ban(IRC.getIRCServer(), split[2].toString(), c.getChannel());
+				IRC.getHandleManager()
+						.getIRCHandler()
+						.ban(IRC.getIRCServer(), split[2].toString(),
+								c.getChannel());
 				return true;
 			}
 		}

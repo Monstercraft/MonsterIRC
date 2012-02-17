@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.GameCommand;
-import org.monstercraft.irc.util.Variables;
+import org.monstercraft.irc.plugin.util.Variables;
 
 public class Mute extends GameCommand {
 
@@ -26,7 +26,7 @@ public class Mute extends GameCommand {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return false;
 				}
-			}else {
+			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
 				return false;
 			}

@@ -2,9 +2,9 @@ package org.monstercraft.irc.command.irccommands;
 
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
-import org.monstercraft.irc.util.IRCColor;
-import org.monstercraft.irc.util.Variables;
-import org.monstercraft.irc.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.util.IRCColor;
+import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Announce extends IRCCommand {
 
@@ -12,11 +12,15 @@ public class Announce extends IRCCommand {
 		super(plugin);
 	}
 
+	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler().isConnected(IRC.getIRCServer())
-				&& message.toLowerCase().startsWith(Variables.commandPrefix + "announce");
+		return IRC.getHandleManager().getIRCHandler()
+				.isConnected(IRC.getIRCServer())
+				&& message.toLowerCase().startsWith(
+						Variables.commandPrefix + "announce");
 	}
 
+	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
 		if (IRC.getHandleManager().getIRCHandler().isVoice(channel, sender)
 				|| IRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {

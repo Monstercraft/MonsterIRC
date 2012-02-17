@@ -11,11 +11,13 @@ public class ReloadConfig extends GameCommand {
 		super(plugin);
 	}
 
+	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return split[0].equalsIgnoreCase("irc")
 				&& split[1].equalsIgnoreCase("reload");
 	}
 
+	@Override
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
 			if (IRC.getHandleManager().getPermissionsHandler() != null) {

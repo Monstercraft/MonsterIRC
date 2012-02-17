@@ -3,9 +3,9 @@ package org.monstercraft.irc.command.irccommands;
 import org.bukkit.command.CommandException;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.command.IRCCommand;
-import org.monstercraft.irc.util.Variables;
-import org.monstercraft.irc.wrappers.IRCChannel;
-import org.monstercraft.irc.wrappers.IRCCommandSender;
+import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.wrappers.IRCCommandSender;
 
 public class Other extends IRCCommand {
 
@@ -13,11 +13,13 @@ public class Other extends IRCCommand {
 		super(plugin);
 	}
 
+	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return IRC.getHandleManager().getIRCHandler()
 				.isConnected(IRC.getIRCServer());
 	}
 
+	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
 		if (IRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
 			if (channel.getOpCommands().contains("*")) {
