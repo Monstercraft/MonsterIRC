@@ -34,10 +34,6 @@
             <id>milkbowl-repo</id>
             <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
         </repository>
-		<repository>
-            <id>herochat-repo</id>
-            <url>http://ci.milkbowl.net/plugin/repository/project/Herochat/LastSuccessful/repository/</url>
-        </repository>
     </repositories>
 
 
@@ -56,6 +52,7 @@
             <groupId>com.dthielke.herochat.Herochat</groupId>
             <artifactId>Herochat</artifactId>
             <version>5.2.0</version>
+            <scope>provided</scope>
         </dependency>
         </dependencies>
     <build>
@@ -81,6 +78,26 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
+            
+            <plugin> 
+                <groupId>org.apache.maven.plugins</groupId> 
+                <artifactId>maven-dependency-plugin</artifactId> 
+                <executions> 
+                   <execution> 
+                     <id>unpack</id> 
+                     <phase>compile</phase> 
+                     <goals> 
+                        <goal>unpack-dependencies</goal> 
+                     </goals> 
+                     <configuration> 
+                        <includeGroupId>HeroChat4</includeGroupId> 
+                        <includeArtifactId>HeroChat4</includeArtifactId> 
+                        <outputDirectory>${project.build.directory}/tempdir</outputDirectory> 
+                     </configuration> 
+                   </execution> 
+                </executions> 
+            </plugin> 
+            
         </plugins>
         
         
