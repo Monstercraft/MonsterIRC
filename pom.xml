@@ -82,7 +82,7 @@
             <version>1.0.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/dependencies/mcMMO.jar</systemPath>
-        </dependency>>
+        </dependency>
      </dependencies>
         
     <build>
