@@ -52,6 +52,31 @@
             <artifactId>craftbukkit</artifactId>
             <version>1.1-R4</version>
         </dependency>
+	<dependency>
+            <groupId>com.palmergames.bukkit</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.79.0.0</version>
+        </dependency>
+	<dependency>
+            <groupId>com.palmergames.bukkit</groupId>
+            <artifactId>TownyChat</artifactId>
+            <version>0.0.16</version>
+        </dependency>
+	<dependency>
+            <groupId>com.dthielke.herochat</groupId>
+            <artifactId>Herochat</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+	<dependency>
+            <groupId>com.gmail.nossr50</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>1.2.08</version>
+        </dependency>
+        <dependency>
+            <groupId>com.herocraftonline.dthielke.herochat</groupId>
+            <artifactId>Herochat</artifactId>
+            <version>4.10.3</version>
+        </dependency>
      </dependencies>
         
     <build>
