@@ -53,7 +53,7 @@
             <artifactId>Herochat</artifactId>
             <version>5.2.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/dependencies/Herochat5.jar</systemPath>
+            <systemPath>${basedir}/dependencies/Herochat5.jar</systemPath>
         </dependency>
         </dependencies>
     <build>
