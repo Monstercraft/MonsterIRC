@@ -52,7 +52,8 @@
             <groupId>com.dthielke.herochat.Herochat</groupId>
             <artifactId>Herochat</artifactId>
             <version>5.2.0</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/dependencies/Herochat5.jar</systemPath>
         </dependency>
         </dependencies>
     <build>
@@ -78,21 +79,6 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
-            
-	<plugin> 
-         <groupId>org.apache.maven.plugins</groupId> 
-         <artifactId>maven-dependency-plugin</artifactId> 
-         <executions> 
-           <execution> 
-             <id>unpack</id> 
-             <phase>compile</phase> 
-             <goals> 
-               <goal>unpack-dependencies</goal> 
-             </goals> 
-           </execution> 
-         </executions> 
-       </plugin> 
-            
         </plugins>
         
         
