@@ -101,7 +101,7 @@ public class SettingsManager extends IRC {
 			try {
 				log("Loading settings!");
 				config.options()
-						.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \n#Do not remove the ' ' around the strings!");
+						.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \nDo not remove the ' ' around the strings!");
 				config.options().copyDefaults(true);
 				config.load(CONFIGURATION_FILE);
 			} catch (Exception e) {
@@ -110,7 +110,7 @@ public class SettingsManager extends IRC {
 		} else {
 			log("Loading default settings!");
 			config.options()
-					.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \n#Do not remove the ' ' around the strings!");
+					.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \nDo not remove the ' ' around the strings!");
 			config.options().copyDefaults(true);
 		}
 		try {
@@ -146,6 +146,10 @@ public class SettingsManager extends IRC {
 					Variables.mcformat);
 			Variables.ircformat = config.getString("IRC.FORMAT.IRC",
 					Variables.ircformat);
+			Variables.joinformat = config.getString("IRC.FORMAT.JOIN",
+					Variables.joinformat);
+			Variables.leaveformat = config.getString("IRC.FORMAT.LEAVE",
+					Variables.leaveformat);
 			Variables.connectCommands = config
 					.getStringList("IRC.ON_CONNECT_COMMANDS");
 			Variables.muted = config.getStringList("IRC.MUTED");
@@ -154,6 +158,8 @@ public class SettingsManager extends IRC {
 			debug(e);
 		}
 		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
+		String defaultjoin = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has joined.";
+		String defaultleave = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has left.";
 		if (Variables.mcformat.contains("{name}")
 				&& Variables.mcformat.contains("{message}")) {
 		} else {
@@ -165,6 +171,14 @@ public class SettingsManager extends IRC {
 		} else {
 			debug("Invalid IRC format detected!");
 			Variables.ircformat = defaultFormat;
+		}
+		if (!Variables.joinformat.contains("{name}")) {
+			debug("Invalid IRC format detected!");
+			Variables.ircformat = defaultjoin;
+		}
+		if (!Variables.leaveformat.contains("{name}")) {
+			debug("Invalid IRC format detected!");
+			Variables.ircformat = defaultleave;
 		}
 		if (Variables.name.contains("default")) {
 			firstRun = true;

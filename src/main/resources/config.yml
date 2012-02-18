@@ -19,6 +19,8 @@ IRC:
   FORMAT:
     MINECRAFT: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
     IRC: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
+    JOIN: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has joined.'
+    LEAVE: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has left.'
   ON_CONNECT_COMMANDS: []
   MUTED:
   - sampleuser

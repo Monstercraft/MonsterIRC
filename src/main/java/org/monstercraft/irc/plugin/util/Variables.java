@@ -71,14 +71,24 @@ public class Variables {
 	public static String password = "default";
 
 	/**
-	 * The format for the messages to be recieved in.
+	 * The format for the game messages to be recieved in.
 	 */
-	public static String mcformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
+	public static String mcformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}";
 
 	/**
-	 * The format for the messages to be recieved in.
+	 * The format for the irc messages to be recieved in.
 	 */
-	public static String ircformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
+	public static String ircformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}";
+
+	/**
+	 * The format for the join messages to be recieved in.
+	 */
+	public static String joinformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has joined.";
+
+	/**
+	 * The format for the leave messages to be recieved in.
+	 */
+	public static String leaveformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has left.\'";
 
 	/**
 	 * The prefix to be used when detecting an IRC command.

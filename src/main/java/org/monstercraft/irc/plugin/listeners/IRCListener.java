@@ -23,7 +23,6 @@ import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.dthielke.herochat.Herochat;
-import com.palmergames.bukkit.TownyChat.channels.Channel;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -89,12 +88,36 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.formatMCMessage(IRCColor.WHITE
-										.getMinecraftColor()
-										+ StringUtils.getName(event.getPlayer()
-												.getName())
-										+ IRCColor.RED.getMinecraftColor()
-										+ " joined."), c.getChannel());
+								IRCColor.formatMCMessage(Variables.joinformat
+										.replace(
+												"{name}",
+												StringUtils.getName(event
+														.getPlayer().getName()))
+										.replace(
+												"{prefix}",
+												StringUtils.getPrefix(event
+														.getPlayer().getName()))
+										.replace(
+												"{suffix}",
+												StringUtils.getSuffix(event
+														.getPlayer().getName()))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(event
+																.getPlayer()
+																.getName()))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(event
+																.getPlayer()
+																.getName()))
+										.replace(
+												"{world}",
+												StringUtils.getWorld(event
+														.getPlayer().getName()))),
+								c.getChannel());
 			}
 		}
 	}
@@ -106,12 +129,36 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.formatMCMessage(IRCColor.WHITE
-										.getMinecraftColor()
-										+ StringUtils.getName(event.getPlayer()
-												.getName())
-										+ IRCColor.RED.getMinecraftColor()
-										+ " quit."), c.getChannel());
+								IRCColor.formatMCMessage(Variables.leaveformat
+										.replace(
+												"{name}",
+												StringUtils.getName(event
+														.getPlayer().getName()))
+										.replace(
+												"{prefix}",
+												StringUtils.getPrefix(event
+														.getPlayer().getName()))
+										.replace(
+												"{suffix}",
+												StringUtils.getSuffix(event
+														.getPlayer().getName()))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(event
+																.getPlayer()
+																.getName()))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(event
+																.getPlayer()
+																.getName()))
+										.replace(
+												"{world}",
+												StringUtils.getWorld(event
+														.getPlayer().getName()))),
+								c.getChannel());
 			}
 		}
 	}
@@ -126,12 +173,36 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.formatMCMessage(IRCColor.WHITE
-										.getMinecraftColor()
-										+ StringUtils.getName(event.getPlayer()
-												.getName())
-										+ IRCColor.RED.getMinecraftColor()
-										+ " was kicked."), c.getChannel());
+								IRCColor.formatMCMessage(Variables.leaveformat
+										.replace(
+												"{name}",
+												StringUtils.getName(event
+														.getPlayer().getName()))
+										.replace(
+												"{prefix}",
+												StringUtils.getPrefix(event
+														.getPlayer().getName()))
+										.replace(
+												"{suffix}",
+												StringUtils.getSuffix(event
+														.getPlayer().getName()))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(event
+																.getPlayer()
+																.getName()))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(event
+																.getPlayer()
+																.getName()))
+										.replace(
+												"{world}",
+												StringUtils.getWorld(event
+														.getPlayer().getName()))),
+								c.getChannel());
 			}
 		}
 	}
@@ -270,18 +341,10 @@ public class IRCListener extends IRC implements Listener {
 					return;
 				}
 			}
-			for (Channel channel : IRC.getHookManager().getTownyChatHook()
-					.getChannelsHandler().getAllChannels().values()) {
-				log(channel.getName());
-				// if (channel == c.getTownyChannel()) {
-				// IRC.getHandleManager()
-				// .getIRCHandler()
-				// .sendMessage(
-				// IRCColor.formatMCMessage(result.toString()),
-				// c.getChannel());
-				// }
-			}
-			log("Towny done list");
+			IRC.getHandleManager()
+					.getIRCHandler()
+					.sendMessage(IRCColor.formatMCMessage(result.toString()),
+							c.getChannel());
 		}
 	}
 }

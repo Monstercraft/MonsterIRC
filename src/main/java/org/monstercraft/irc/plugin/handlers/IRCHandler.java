@@ -36,6 +36,8 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
 import com.gmail.nossr50.mcPermissions;
+import com.palmergames.bukkit.towny.TownyMessaging;
+import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 /**
  * This handles all of the IRC related stuff.
@@ -312,8 +314,22 @@ public class IRCHandler extends IRC {
 									if (c.showJoinLeave()) {
 										name = line.substring(1,
 												line.indexOf("!"));
-										msg = name + " joined "
-												+ c.getChannel() + ".";
+										msg = IRCColor
+												.formatIRCMessage(Variables.joinformat
+														.replace("{name}", "")
+														.replace("{prefix}", "")
+														.replace("{suffix}", "")
+														.replace(
+																"{groupPrefix}",
+																"")
+														.replace(
+																"{groupSuffix}",
+																"")
+														.replace("{world}", "")
+														.replace("&", "§")
+														.replace("<", "")
+														.replace(">", ""))
+												+ " (" + c.getChannel() + ")";
 									}
 									IRCJoinEvent jevent = new IRCJoinEvent(c,
 											name);
@@ -325,8 +341,22 @@ public class IRCHandler extends IRC {
 									if (c.showJoinLeave()) {
 										name = line.substring(1,
 												line.indexOf("!"));
-										msg = name + " left " + c.getChannel()
-												+ ".";
+										msg = IRCColor
+												.formatIRCMessage(Variables.leaveformat
+														.replace("{name}", "")
+														.replace("{prefix}", "")
+														.replace("{suffix}", "")
+														.replace(
+																"{groupPrefix}",
+																"")
+														.replace(
+																"{groupSuffix}",
+																"")
+														.replace("{world}", "")
+														.replace("&", "§")
+														.replace("<", "")
+														.replace(">", ""))
+												+ " (" + c.getChannel() + ")";
 									}
 									IRCPartEvent pevent = new IRCPartEvent(c,
 											name);
@@ -337,8 +367,22 @@ public class IRCHandler extends IRC {
 									if (c.showJoinLeave()) {
 										name = line.substring(1,
 												line.indexOf("!"));
-										msg = name + " has quit "
-												+ c.getChannel() + ".";
+										msg = IRCColor
+												.formatIRCMessage(Variables.leaveformat
+														.replace("{name}", "")
+														.replace("{prefix}", "")
+														.replace("{suffix}", "")
+														.replace(
+																"{groupPrefix}",
+																"")
+														.replace(
+																"{groupSuffix}",
+																"")
+														.replace("{world}", "")
+														.replace("&", "§")
+														.replace("<", "")
+														.replace(">", ""))
+												+ " (" + c.getChannel() + ")";
 									}
 									IRCQuitEvent qevent = new IRCQuitEvent(c,
 											name);
@@ -400,9 +444,6 @@ public class IRCHandler extends IRC {
 																	.length()
 															+ 1, line
 															.indexOf(" :") - 1);
-									if (name.equalsIgnoreCase(Variables.name)) {
-										join(c);
-									}
 									msg = _name + " has been kicked from "
 											+ c.getChannel() + ".";
 									IRCKickEvent kevent = new IRCKickEvent(c,
@@ -711,9 +752,10 @@ public class IRCHandler extends IRC {
 				c.getHeroChatChannel().announce(
 						IRCColor.formatIRCMessage(Variables.mcformat
 								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}",
-										IRCColor.formatIRCMessage(message))
-
+								.replace(
+										"{message}",
+										c.getHeroChatChannel().getColor()
+												+ message)
 								.replace("{prefix}",
 										StringUtils.getPrefix(name))
 								.replace("{suffix}",
@@ -723,37 +765,47 @@ public class IRCHandler extends IRC {
 								.replace("{groupSuffix}",
 										StringUtils.getGroupSuffix(name))
 								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")
-								+ c.getHeroChatChannel().getColor()));
+								.replace("&", "§")));
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
-				c.getHeroChatFourChannel().sendMessage(
-						Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}", "")
-								.replace(":", "")
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")
-								+ "§f",
-						IRCColor.formatIRCMessage(IRCColor
-								.formatIRCMessage(message)),
-						c.getHeroChatFourChannel().getMsgFormat(), false);
+				c.getHeroChatFourChannel()
+						.sendMessage(
+								Variables.mcformat
+										.replace("{name}",
+												StringUtils.getName(name))
+										.replace("{message}", "")
+										.replace(":", "")
+										.replace("{prefix}",
+												StringUtils.getPrefix(name))
+										.replace("{suffix}",
+												StringUtils.getSuffix(name))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(name))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(name))
+										.replace("{world}",
+												StringUtils.getWorld(name))
+										.replace("&", "§"),
+								IRCColor.formatIRCMessage(IRCColor
+										.formatIRCMessage(c
+												.getHeroChatFourChannel()
+												.getColor()
+												+ message)),
+								c.getHeroChatFourChannel().getMsgFormat(),
+								false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
 						IRCColor.formatIRCMessage(Variables.mcformat
 								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}",
-										IRCColor.formatIRCMessage(message))
-
+								.replace(
+										"{message}",
+										IRCColor.WHITE.getMinecraftColor()
+												+ message)
 								.replace("{prefix}",
 										StringUtils.getPrefix(name))
 								.replace("{suffix}",
@@ -763,26 +815,32 @@ public class IRCHandler extends IRC {
 								.replace("{groupSuffix}",
 										StringUtils.getGroupSuffix(name))
 								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")
-								+ IRCColor.WHITE.getMinecraftColor()));
+								.replace("&", "§")));
 			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
-				c.getTownyChannel().setMessageColour(
-						IRCColor.formatIRCMessage(Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}",
-										IRCColor.formatIRCMessage(message))
-
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")
-								+ IRCColor.WHITE.getMinecraftColor()));
+				for (Player p : TownyUniverse.getOnlinePlayers()) {
+					TownyMessaging.sendMessage(p, IRCColor.formatIRCMessage(c
+							.getTownyChannel().getChannelTag()
+							.replace("&", "§")
+							+ Variables.mcformat
+									.replace("{name}",
+											StringUtils.getName(name))
+									.replace(
+											"{message}",
+											c.getTownyChannel()
+													.getMessageColour()
+													+ message)
+									.replace("{prefix}",
+											StringUtils.getPrefix(name))
+									.replace("{suffix}",
+											StringUtils.getSuffix(name))
+									.replace("{groupPrefix}",
+											StringUtils.getGroupPrefix(name))
+									.replace("{groupSuffix}",
+											StringUtils.getGroupSuffix(name))
+									.replace("{world}",
+											StringUtils.getWorld(name))
+									.replace("&", "§")));
+				}
 			} else if (c.getChatType() == ChatType.NONE) {
 				return;
 			}

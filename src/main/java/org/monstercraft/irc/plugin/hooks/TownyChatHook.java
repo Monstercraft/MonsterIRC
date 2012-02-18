@@ -2,9 +2,6 @@ package org.monstercraft.irc.plugin.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.plugin.util.Variables;
-
-import com.herocraftonline.dthielke.herochat.HeroChat;
 import com.palmergames.bukkit.TownyChat.Chat;
 
 /**
@@ -34,10 +31,10 @@ public class TownyChatHook extends IRC {
 			return;
 		}
 		Plugin TownyChatPlugin = plugin.getServer().getPluginManager()
-				.getPlugin("HeroChat");
+				.getPlugin("TownyChat");
 
 		if (TownyChatPlugin == null) {
-			log("HeroChat 4 not detected.");
+			log("TownyChat not detected.");
 			TownyChatHook = null;
 			return;
 		}
@@ -49,18 +46,14 @@ public class TownyChatHook extends IRC {
 		}
 
 		TownyChatHook = ((Chat) TownyChatPlugin);
-		log("HeroChat detected; hooking: "
-				+ ((HeroChat) TownyChatPlugin).getDescription().getFullName());
-		String ver = ((HeroChat) TownyChatPlugin).getDescription().getVersion();
-		if (!ver.startsWith("5")) {
-			Variables.hc4 = true;
-		}
+		log("TownyChat detected; hooking: "
+				+ ((Chat) TownyChatPlugin).getDescription().getFullName());
 	}
 
 	/**
-	 * Fetches the hook into HeroChat.
+	 * Fetches the hook into TownyChat.
 	 * 
-	 * @return the hook into HeroChat.
+	 * @return The hook into TownyChat.
 	 */
 	public Chat getHook() {
 		return TownyChatHook;
