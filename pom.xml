@@ -37,7 +37,7 @@
     </repositories>
 
 
-        <dependencies>
+     <dependencies>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
@@ -48,44 +48,39 @@
             <artifactId>craftbukkit</artifactId>
             <version>1.1-R4</version>
         </dependency>
-
-
 	<dependency>
             <groupId>com.dthielke.herochat.Herochat</groupId>
             <artifactId>Herochat</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/dependencies/Herochat4.jar</systemPath>
+            <systemPath>${basedir}/dependencies/Herochat4.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>Towny</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/dependencies/Towny.jar</systemPath>
+            <systemPath>${basedir}/dependencies/Towny.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>TownyChat</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/dependencies/TownyChat.jar</systemPath>
+            <systemPath>${basedir}/dependencies/TownyChat.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.herocraftonline.dthielke.herochat</groupId>
             <artifactId>Herochat</artifactId>
             <version>5.2.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/dependencies/Herochat5.jar</systemPath>
+            <systemPath>${basedir}/dependencies/Herochat5.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/dependencies/mcMMO.jar</systemPath>
+            <systemPath>${basedir}/dependencies/mcMMO.jar</systemPath>
         </dependency>>
-        </dependencies>
+     </dependencies>
+        
     <build>
         <resources>
             <resource>
