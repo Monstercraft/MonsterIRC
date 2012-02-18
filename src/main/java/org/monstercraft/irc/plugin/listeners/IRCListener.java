@@ -248,8 +248,11 @@ public class IRCListener extends IRC implements Listener {
 					return;
 				}
 			}
-			if (Herochat.getChatterManager().getChatter(player)
-					.getActiveChannel() == c.getHeroChatChannel()
+			if ((Herochat.getChatterManager().getChatter(player)
+					.getActiveChannel() == c.getHeroChatChannel() ||
+							c.isHeroChatListenChannel(Herochat.getChatterManager().getChatter(player)
+									.getActiveChannel().getName())
+					)
 					&& !Herochat.getChatterManager()
 							.getChatter(player.getName()).isMuted()) {
 				IRC.getHandleManager()
@@ -268,9 +271,13 @@ public class IRCListener extends IRC implements Listener {
 						return;
 					}
 				}
-				if (IRC.getHookManager().getHeroChatHook().getChannelManager()
+				if ((IRC.getHookManager().getHeroChatHook().getChannelManager()
 						.getActiveChannel(player.getName()) == c
-						.getHeroChatFourChannel()
+						.getHeroChatFourChannel() ||
+						c.isHeroChatListenChannel(IRC.getHookManager()
+								.getHeroChatHook().getChannelManager()
+								.getActiveChannel(player.getName()).getName())
+						 )
 						&& c.getHeroChatFourChannel().isEnabled()
 						&& !IRC.getHookManager().getHeroChatHook()
 								.getChannelManager().getMutelist()
