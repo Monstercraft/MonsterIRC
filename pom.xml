@@ -34,6 +34,10 @@
             <id>milkbowl-repo</id>
             <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
         </repository>
+        <repository>
+            <id>central</id>
+            <url>file://~/.m2/repository</url>
+        </repository>
     </repositories>
 
 
