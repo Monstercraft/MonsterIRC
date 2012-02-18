@@ -36,7 +36,7 @@
         </repository>
         <repository>
             <id>central</id>
-            <url>file://~/.m2/repository</url>
+            <url>file:///var/lib/jenkins/workspace/MonsterIRC/.repository/</url>
         </repository>
     </repositories>
 
