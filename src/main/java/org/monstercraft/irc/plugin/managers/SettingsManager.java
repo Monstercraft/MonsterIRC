@@ -277,6 +277,7 @@ public class SettingsManager extends IRC {
 									f.getName().substring(0,
 											f.getName().lastIndexOf(".")),
 									config.getString("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL"),
+									config.getStringList("CHANNEL.CHATTYPE.HEROCHAT.LISTEN"),
 									ChatType.HEROCHAT,
 									config.getStringList("CHANNEL.COMMANDS.OP"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
@@ -339,6 +340,7 @@ public class SettingsManager extends IRC {
 		config.set("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
+		config.set("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", "G");
 		config.set("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
 		config.set("CHANNEL.COMMANDS.OP", op);

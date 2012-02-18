@@ -223,9 +223,13 @@ public class IRCListener extends IRC implements Listener {
 						return;
 					}
 				}
-				if (IRC.getHookManager().getHeroChatHook().getChannelManager()
+				if ((IRC.getHookManager().getHeroChatHook().getChannelManager()
 						.getActiveChannel(player.getName()) == c
-						.getHeroChatFourChannel()
+						.getHeroChatFourChannel() ||
+						c.isHeroChatFourListenChannel(IRC.getHookManager()
+								.getHeroChatHook().getChannelManager()
+								.getActiveChannel(player.getName()))
+						 )
 						&& c.getHeroChatFourChannel().isEnabled()
 						&& !IRC.getHookManager().getHeroChatHook()
 								.getChannelManager().getMutelist()

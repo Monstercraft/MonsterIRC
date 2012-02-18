@@ -27,6 +27,7 @@ public class IRCChannel extends IRC {
 	private List<String> userCommands;
 	private List<String> ops;
 	private List<String> voices;
+	private List<String> listenChatChannels;
 	private String password;
 	private boolean showJoinLeave;
 
@@ -95,6 +96,26 @@ public class IRCChannel extends IRC {
 	 * @param userCommands
 	 *            The list of commands IRC users can use.
 	 */
+	public IRCChannel(final String password, final boolean showJoinLeave,
+			final boolean autoJoin, final boolean defaultChannel,
+			final String channel, final String ChatChannel,
+			final List<String> listenChatChannels, final ChatType type, final List<String> opCommands,
+			final List<String> voiceCommands, final List<String> userCommands) {
+		this.showJoinLeave = showJoinLeave;
+		this.password = password;
+		this.channel = channel;
+		this.ChatChannel = ChatChannel;
+		this.listenChatChannels = listenChatChannels;
+		this.type = type;
+		this.autoJoin = autoJoin;
+		this.defaultChannel = defaultChannel;
+		this.opCommands = opCommands;
+		this.voiceCommands = voiceCommands;
+		this.userCommands = userCommands;
+		this.ops = new ArrayList<String>();
+		this.voices = new ArrayList<String>();
+	}
+	
 	public IRCChannel(final String password, final boolean showJoinLeave,
 			final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final String ChatChannel,
@@ -241,6 +262,15 @@ public class IRCChannel extends IRC {
 	 */
 	public boolean showJoinLeave() {
 		return showJoinLeave;
+	}
+
+	public boolean isHeroChatFourListenChannel(
+			com.herocraftonline.dthielke.herochat.channels.Channel activeChannel) {
+		if (listenChatChannels != null)
+			for (String chTestName : listenChatChannels)
+				if (chTestName.equalsIgnoreCase(activeChannel.getCName())) return true;
+		
+		return false;
 	}
 
 }
