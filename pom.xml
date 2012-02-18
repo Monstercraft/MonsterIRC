@@ -27,16 +27,16 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <url>file:///var/lib/jenkins/workspace/MonsterIRC/.repository/</url>
+        </repository>
+        <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
         <repository>
             <id>milkbowl-repo</id>
             <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <url>file:///var/lib/jenkins/workspace/MonsterIRC/.repository/</url>
         </repository>
     </repositories>
 
