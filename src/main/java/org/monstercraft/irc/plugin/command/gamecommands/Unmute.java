@@ -1,20 +1,20 @@
-package org.monstercraft.irc.command.gamecommands;
+package org.monstercraft.irc.plugin.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 
-public class Mute extends GameCommand {
+public class Unmute extends GameCommand {
 
-	public Mute(org.monstercraft.irc.IRC plugin) {
+	public Unmute(org.monstercraft.irc.IRC plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return split[0].contains("irc") && split[1].equalsIgnoreCase("mute");
+		return split[0].contains("irc") && split[1].equalsIgnoreCase("unmute");
 	}
 
 	@Override
@@ -31,22 +31,22 @@ public class Mute extends GameCommand {
 				return false;
 			}
 		}
-		if (!Variables.muted.contains(split[2].toString().toLowerCase())) {
-			Variables.muted.add(split[2].toString().toLowerCase());
+		if (Variables.muted.contains(split[2].toString().toLowerCase())) {
+			Variables.muted.remove(split[2].toString().toLowerCase());
 			IRC.getSettingsManager().saveMuted();
 			sender.sendMessage("Player " + split[2].toString()
-					+ " has been muted from talking via IRC.");
+					+ " has been unmuted from talking via IRC.");
 		} else {
 			sender.sendMessage("Player " + split[2].toString()
-					+ "is already muted from talking via IRC.");
+					+ " is not muted from talking via IRC.");
 			return true;
 		}
-		return Variables.muted.contains(split[2].toString().toLowerCase());
+		return !Variables.muted.contains(split[2].toString().toLowerCase());
 	}
 
 	@Override
 	public String getPermissions() {
-		return "irc.mute";
+		return "irc.unmute";
 	}
 
 }

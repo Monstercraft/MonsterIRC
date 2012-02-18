@@ -18,7 +18,7 @@ import com.dthielke.herochat.Herochat;
 public class IRCChannel extends IRC {
 
 	private String channel;
-	private String heroChatChannel;
+	private String ChatChannel;
 	private ChatType type;
 	private boolean autoJoin;
 	private boolean defaultChannel;
@@ -68,7 +68,7 @@ public class IRCChannel extends IRC {
 		this.userCommands = userCommands;
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
-		this.heroChatChannel = null;
+		this.ChatChannel = null;
 	}
 
 	/**
@@ -97,13 +97,13 @@ public class IRCChannel extends IRC {
 	 */
 	public IRCChannel(final String password, final boolean showJoinLeave,
 			final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final String heroChatChannel,
+			final String channel, final String ChatChannel,
 			final ChatType type, final List<String> opCommands,
 			final List<String> voiceCommands, final List<String> userCommands) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
-		this.heroChatChannel = heroChatChannel;
+		this.ChatChannel = ChatChannel;
 		this.type = type;
 		this.autoJoin = autoJoin;
 		this.defaultChannel = defaultChannel;
@@ -156,7 +156,7 @@ public class IRCChannel extends IRC {
 	 * @return The HeroChat channel to listen in.
 	 */
 	public Channel getHeroChatChannel() {
-		return Herochat.getChannelManager().getChannel(heroChatChannel);
+		return Herochat.getChannelManager().getChannel(ChatChannel);
 	}
 
 	/**
@@ -166,7 +166,17 @@ public class IRCChannel extends IRC {
 	 */
 	public com.herocraftonline.dthielke.herochat.channels.Channel getHeroChatFourChannel() {
 		return IRC.getHookManager().getHeroChatHook().getChannelManager()
-				.getChannel(heroChatChannel);
+				.getChannel(ChatChannel);
+	}
+
+	/**
+	 * Fetches the TownyChat channel to listen in.
+	 * 
+	 * @return The TownyChat channel to listen in.
+	 */
+	public com.palmergames.bukkit.TownyChat.channels.Channel getTownyChannel() {
+		return IRC.getHookManager().getTownyChatHook().getChannelsHandler()
+				.getChannel(ChatChannel);
 	}
 
 	/**

@@ -1,19 +1,20 @@
-package org.monstercraft.irc.command.gamecommands;
+package org.monstercraft.irc.plugin.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.plugin.command.GameCommand;
 
-public class Connect extends GameCommand {
+public class ReloadConfig extends GameCommand {
 
-	public Connect(org.monstercraft.irc.IRC plugin) {
+	public ReloadConfig(org.monstercraft.irc.IRC plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return split[0].contains("irc") && split[1].equalsIgnoreCase("connect");
+		return split[0].equalsIgnoreCase("irc")
+				&& split[1].equalsIgnoreCase("reload");
 	}
 
 	@Override
@@ -22,21 +23,24 @@ public class Connect extends GameCommand {
 			if (IRC.getHandleManager().getPermissionsHandler() != null) {
 				if (!IRC.getHandleManager().getPermissionsHandler()
 						.hasCommandPerms(((Player) sender), this)) {
-					sender.sendMessage("[IRC] You don't have permission to preform that command.");
+					sender.sendMessage("[IRC] You must run this command via the console.");
 					return false;
 				}
 			} else {
-				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
+				sender.sendMessage("[IRC] You must run this command via the console.");
 				return false;
 			}
+			sender.sendMessage("[IRC] You must run this command via the console.");
+			return false;
 		}
+		IRC.getSettingsManager().reload();
 		IRC.getHandleManager().getIRCHandler().connect(IRC.getIRCServer());
 		return true;
 	}
 
 	@Override
 	public String getPermissions() {
-		return "irc.connect";
+		return "irc.console";
 	}
 
 }

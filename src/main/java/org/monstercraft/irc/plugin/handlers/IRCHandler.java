@@ -765,6 +765,26 @@ public class IRCHandler extends IRC {
 								.replace("{world}", StringUtils.getWorld(name))
 								.replace("&", "§")
 								+ IRCColor.WHITE.getMinecraftColor()));
+			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
+				c.getTownyChannel().setMessageColour(
+						IRCColor.formatIRCMessage(Variables.mcformat
+								.replace("{name}", StringUtils.getName(name))
+								.replace("{message}",
+										IRCColor.formatIRCMessage(message))
+
+								.replace("{prefix}",
+										StringUtils.getPrefix(name))
+								.replace("{suffix}",
+										StringUtils.getSuffix(name))
+								.replace("{groupPrefix}",
+										StringUtils.getGroupPrefix(name))
+								.replace("{groupSuffix}",
+										StringUtils.getGroupSuffix(name))
+								.replace("{world}", StringUtils.getWorld(name))
+								.replace("&", "§")
+								+ IRCColor.WHITE.getMinecraftColor()));
+			} else if (c.getChatType() == ChatType.NONE) {
+				return;
 			}
 		} catch (Exception e) {
 			debug(e);

@@ -43,6 +43,12 @@ public class mcMMOHook extends IRC {
 			return;
 		}
 
+		if (!mcMMOPlugin.isEnabled()) {
+			log("mcMMO not enabled.");
+			mcMMOHook = null;
+			return;
+		}
+
 		mcMMOHook = ((mcMMO) mcMMOPlugin);
 		log("mcMMO detected; hooking: "
 				+ ((mcMMO) mcMMOPlugin).getDescription().getFullName());

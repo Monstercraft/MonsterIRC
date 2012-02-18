@@ -1,9 +1,9 @@
-package org.monstercraft.irc.command.gamecommands;
+package org.monstercraft.irc.plugin.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.IRCColor;
 import org.monstercraft.irc.plugin.util.StringUtils;

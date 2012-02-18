@@ -1,4 +1,4 @@
-package org.monstercraft.irc.command;
+package org.monstercraft.irc.plugin.command;
 
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;

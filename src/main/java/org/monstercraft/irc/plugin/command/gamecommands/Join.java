@@ -1,21 +1,21 @@
-package org.monstercraft.irc.command.gamecommands;
+package org.monstercraft.irc.plugin.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-public class Leave extends GameCommand {
+public class Join extends GameCommand {
 
-	public Leave(org.monstercraft.irc.IRC plugin) {
+	public Join(org.monstercraft.irc.IRC plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return split[0].contains("irc") && split[1].equalsIgnoreCase("leave");
+		return split[0].contains("irc") && split[1].equalsIgnoreCase("join");
 	}
 
 	@Override
@@ -33,16 +33,16 @@ public class Leave extends GameCommand {
 			}
 		}
 		if (split.length < 2) {
-			sender.sendMessage("[IRC] Please specify a channel to leave!");
+			sender.sendMessage("[IRC] Please specify a channel to join!");
 			return false;
 		}
 		if (split[2] == null) {
-			sender.sendMessage("[IRC] Please specify a channel to leave!");
+			sender.sendMessage("[IRC] Please specify a channel to join!");
 			return false;
 		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChannel().equalsIgnoreCase(split[2])) {
-				IRC.getHandleManager().getIRCHandler().leave(c);
+				IRC.getHandleManager().getIRCHandler().join(c);
 				return true;
 			}
 		}
@@ -52,7 +52,7 @@ public class Leave extends GameCommand {
 
 	@Override
 	public String getPermissions() {
-		return "irc.leave";
+		return "irc.join";
 	}
 
 }

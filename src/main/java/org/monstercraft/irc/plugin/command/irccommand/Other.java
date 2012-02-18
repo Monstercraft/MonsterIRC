@@ -1,8 +1,8 @@
-package org.monstercraft.irc.command.irccommands;
+package org.monstercraft.irc.plugin.command.irccommand;
 
 import org.bukkit.command.CommandException;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.IRCCommand;
+import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCCommandSender;

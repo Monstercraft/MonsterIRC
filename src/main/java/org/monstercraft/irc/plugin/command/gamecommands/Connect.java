@@ -1,20 +1,19 @@
-package org.monstercraft.irc.command.gamecommands;
+package org.monstercraft.irc.plugin.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.plugin.command.GameCommand;
 
-public class Disconnect extends GameCommand {
+public class Connect extends GameCommand {
 
-	public Disconnect(org.monstercraft.irc.IRC plugin) {
+	public Connect(org.monstercraft.irc.IRC plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return split[0].contains("irc")
-				&& split[1].equalsIgnoreCase("disconnect");
+		return split[0].contains("irc") && split[1].equalsIgnoreCase("connect");
 	}
 
 	@Override
@@ -31,13 +30,13 @@ public class Disconnect extends GameCommand {
 				return false;
 			}
 		}
-		return IRC.getHandleManager().getIRCHandler()
-				.disconnect(IRC.getIRCServer());
+		IRC.getHandleManager().getIRCHandler().connect(IRC.getIRCServer());
+		return true;
 	}
 
 	@Override
 	public String getPermissions() {
-		return "irc.disconnect";
+		return "irc.connect";
 	}
 
 }

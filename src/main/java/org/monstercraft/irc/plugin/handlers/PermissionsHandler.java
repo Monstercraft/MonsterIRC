@@ -6,7 +6,7 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.plugin.command.GameCommand;
 
 /**
  * This handles all of the plugins permissions.

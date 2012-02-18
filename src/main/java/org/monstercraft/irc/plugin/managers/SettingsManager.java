@@ -211,9 +211,15 @@ public class SettingsManager extends IRC {
 						"CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 				boolean global = config.getBoolean(
 						"CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
+				boolean towny = config.getBoolean(
+						"CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
+				boolean none = config
+						.getBoolean("CHANNEL.CHATTYPE.NONE", false);
+				bools.put("None", none);
 				bools.put("Global", global);
 				bools.put("Hero", hero);
 				bools.put("Admin", admin);
+				bools.put("Towny", towny);
 				int count = 0;
 				for (String b : bools.keySet()) {
 					if (bools.get(b)) {
@@ -225,14 +231,15 @@ public class SettingsManager extends IRC {
 							+ " has been successfully enabled!");
 				} else {
 					if (count == 0) {
-						debug("Passing " + f.getName()
+						debug("Passing channel " + f.getName()
 								+ " because no chat types were enabled!");
+						continue;
 					} else {
 						debug("Invalid channel file detected! You have "
 								+ count + " chat types enabled on "
 								+ f.getName() + "!");
+						continue;
 					}
-					continue;
 				}
 				if (global) {
 					Variables.channels
@@ -274,6 +281,33 @@ public class SettingsManager extends IRC {
 									config.getStringList("CHANNEL.COMMANDS.OP"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS")));
+				} else if (towny) {
+					Variables.channels
+							.add(new IRCChannel(
+									config.getString("CHANNEL.SETTINGS.PASSWORD"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
+									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
+									f.getName().substring(0,
+											f.getName().lastIndexOf(".")),
+									config.getString("CHANNEL.CHATTYPE.TOWNY.CHANNEL"),
+									ChatType.TOWNYCHAT,
+									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.VOICE"),
+									config.getStringList("CHANNEL.COMMANDS.USERS")));
+				} else if (none) {
+					Variables.channels
+							.add(new IRCChannel(
+									config.getString("CHANNEL.SETTINGS.PASSWORD"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
+									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
+									f.getName().substring(0,
+											f.getName().lastIndexOf(".")),
+									ChatType.NONE,
+									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.VOICE"),
+									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				}
 			} catch (Exception e) {
 				debug(e);
@@ -300,10 +334,13 @@ public class SettingsManager extends IRC {
 		config.set("CHANNEL.SETTINGS.DEFAULT", false);
 		config.set("CHANNEL.SETTINGS.PASSWORD", "");
 		config.set("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES", true);
+		config.set("CHANNEL.CHATTYPE.NONE", false);
 		config.set("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
+		config.set("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
+		config.set("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
 		config.set("CHANNEL.COMMANDS.OP", op);
 		config.set("CHANNEL.COMMANDS.VOICE", voice);
 		config.set("CHANNEL.COMMANDS.USERS", user);

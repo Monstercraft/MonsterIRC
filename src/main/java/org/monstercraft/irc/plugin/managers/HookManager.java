@@ -4,6 +4,7 @@ import net.milkbowl.vault.chat.Chat;
 
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.plugin.hooks.HeroChatHook;
+import org.monstercraft.irc.plugin.hooks.TownyChatHook;
 import org.monstercraft.irc.plugin.hooks.VaultChatHook;
 import org.monstercraft.irc.plugin.hooks.VaultPermissionsHook;
 import org.monstercraft.irc.plugin.hooks.mcMMOHook;
@@ -23,6 +24,7 @@ public class HookManager {
 	private VaultPermissionsHook permissions = null;
 	private VaultChatHook chat = null;
 	private HeroChatHook herochat = null;
+	private TownyChatHook townychat = null;
 
 	/**
 	 * Creates an instance of the HookManager class.
@@ -35,6 +37,7 @@ public class HookManager {
 		permissions = new VaultPermissionsHook(plugin);
 		chat = new VaultChatHook(plugin);
 		herochat = new HeroChatHook(plugin);
+		townychat = new TownyChatHook(plugin);
 	}
 
 	/**
@@ -76,12 +79,21 @@ public class HookManager {
 	}
 
 	/**
+	 * Fetches the chat hook.
+	 * 
+	 * @return The hook into chat by vault.
+	 */
+	public Chat getChatHook() {
+		return chat.getHook();
+	}
+
+	/**
 	 * Fetches the PermissionsEx hook.
 	 * 
 	 * @return The hook into PermissionsEx.
 	 */
-	public Chat getChatHook() {
-		return chat.getHook();
+	public com.palmergames.bukkit.TownyChat.Chat getTownyChatHook() {
+		return townychat.getHook();
 	}
 
 	/**
@@ -116,6 +128,17 @@ public class HookManager {
 	 */
 	public VaultChatHook setChatHook(final VaultChatHook hook) {
 		return chat = hook;
+	}
+
+	/**
+	 * Creates a new hook into the plugin.
+	 * 
+	 * @param hook
+	 *            A hook into townychat.
+	 * @return The new TownyChatHook.
+	 */
+	public TownyChatHook setTownyChatHook(final TownyChatHook hook) {
+		return townychat = hook;
 	}
 
 }

@@ -1,21 +1,21 @@
-package org.monstercraft.irc.command.gamecommands;
+package org.monstercraft.irc.plugin.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.command.GameCommand;
+import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-public class Join extends GameCommand {
+public class Ban extends GameCommand {
 
-	public Join(org.monstercraft.irc.IRC plugin) {
+	public Ban(org.monstercraft.irc.IRC plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return split[0].contains("irc") && split[1].equalsIgnoreCase("join");
+		return split[0].contains("irc") && split[1].equalsIgnoreCase("ban");
 	}
 
 	@Override
@@ -32,27 +32,22 @@ public class Join extends GameCommand {
 				return false;
 			}
 		}
-		if (split.length < 2) {
-			sender.sendMessage("[IRC] Please specify a channel to join!");
-			return false;
-		}
-		if (split[2] == null) {
-			sender.sendMessage("[IRC] Please specify a channel to join!");
-			return false;
-		}
 		for (IRCChannel c : Variables.channels) {
-			if (c.getChannel().equalsIgnoreCase(split[2])) {
-				IRC.getHandleManager().getIRCHandler().join(c);
+			if (c.getChannel().equalsIgnoreCase(split[3])) {
+				IRC.getHandleManager()
+						.getIRCHandler()
+						.ban(IRC.getIRCServer(), split[2].toString(),
+								c.getChannel());
 				return true;
 			}
 		}
-		sender.sendMessage("[IRC] Could not join that channel!");
+		sender.sendMessage("Invalid usage, proper usage:/irc ban [user] [channel]");
 		return false;
 	}
 
 	@Override
 	public String getPermissions() {
-		return "irc.join";
+		return "irc.ban";
 	}
 
 }

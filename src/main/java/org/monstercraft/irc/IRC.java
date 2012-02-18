@@ -1,6 +1,7 @@
 package org.monstercraft.irc;
 
 import java.net.URL;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -263,5 +264,9 @@ public class IRC extends JavaPlugin {
 	 */
 	protected static PluginHandler getPluginManager() {
 		return pm;
+	}
+
+	public static Set<IRCChannel> getChannels() {
+		return Variables.channels;
 	}
 }
