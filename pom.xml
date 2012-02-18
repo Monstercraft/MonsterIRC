@@ -51,37 +51,33 @@
 	<dependency>
             <groupId>com.dthielke.herochat.Herochat</groupId>
             <artifactId>Herochat</artifactId>
-            <version>4.2.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/dependencies/Herochat4.jar</systemPath>
+            <systemPath>${project.basedir}/dependencies/Herochat4.jar</systemPath>
         </dependency>
 	<dependency>
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>Towny</artifactId>
-            <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/dependencies/Towny.jar</systemPath>
+            <systemPath>${project.basedir}/dependencies/Towny.jar</systemPath>
         </dependency>
 	<dependency>
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>TownyChat</artifactId>
-            <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/dependencies/TownyChat.jar</systemPath>
+            <systemPath>${project.basedir}/dependencies/TownyChat.jar</systemPath>
         </dependency>
 	<dependency>
             <groupId>com.herocraftonline.dthielke.herochat</groupId>
             <artifactId>Herochat</artifactId>
             <version>5.2.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/dependencies/Herochat5.jar</systemPath>
+            <systemPath>${project.basedir}/dependencies/Herochat5.jar</systemPath>
         </dependency>
 	<dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/dependencies/mcMMO.jar</systemPath>
+            <systemPath>${project.basedir}/dependencies/mcMMO.jar</systemPath>
         </dependency>
      </dependencies>
         
