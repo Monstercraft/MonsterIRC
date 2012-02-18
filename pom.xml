@@ -79,24 +79,19 @@
                 </configuration>
             </plugin>
             
-            <plugin> 
-                <groupId>org.apache.maven.plugins</groupId> 
-                <artifactId>maven-dependency-plugin</artifactId> 
-                <executions> 
-                   <execution> 
-                     <id>unpack</id> 
-                     <phase>compile</phase> 
-                     <goals> 
-                        <goal>unpack-dependencies</goal> 
-                     </goals> 
-                     <configuration> 
-                        <includeGroupId>HeroChat4</includeGroupId> 
-                        <includeArtifactId>HeroChat4</includeArtifactId> 
-                        <outputDirectory>${project.build.directory}/tempdir</outputDirectory> 
-                     </configuration> 
-                   </execution> 
-                </executions> 
-            </plugin> 
+	<plugin> 
+         <groupId>org.apache.maven.plugins</groupId> 
+         <artifactId>maven-dependency-plugin</artifactId> 
+         <executions> 
+           <execution> 
+             <id>unpack</id> 
+             <phase>compile</phase> 
+             <goals> 
+               <goal>unpack-dependencies</goal> 
+             </goals> 
+           </execution> 
+         </executions> 
+       </plugin> 
             
         </plugins>
         
