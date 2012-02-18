@@ -116,8 +116,8 @@ public class IRCListener extends IRC implements Listener {
 										.replace(
 												"{world}",
 												StringUtils.getWorld(event
-														.getPlayer().getName()))),
-								c.getChannel());
+														.getPlayer().getName()))
+										.replace("&", "§")), c.getChannel());
 			}
 		}
 	}
@@ -157,8 +157,8 @@ public class IRCListener extends IRC implements Listener {
 										.replace(
 												"{world}",
 												StringUtils.getWorld(event
-														.getPlayer().getName()))),
-								c.getChannel());
+														.getPlayer().getName()))
+										.replace("&", "§")), c.getChannel());
 			}
 		}
 	}
@@ -173,36 +173,10 @@ public class IRCListener extends IRC implements Listener {
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
-								IRCColor.formatMCMessage(Variables.leaveformat
-										.replace(
-												"{name}",
-												StringUtils.getName(event
-														.getPlayer().getName()))
-										.replace(
-												"{prefix}",
-												StringUtils.getPrefix(event
-														.getPlayer().getName()))
-										.replace(
-												"{suffix}",
-												StringUtils.getSuffix(event
-														.getPlayer().getName()))
-										.replace(
-												"{groupPrefix}",
-												StringUtils
-														.getGroupPrefix(event
-																.getPlayer()
-																.getName()))
-										.replace(
-												"{groupSuffix}",
-												StringUtils
-														.getGroupSuffix(event
-																.getPlayer()
-																.getName()))
-										.replace(
-												"{world}",
-												StringUtils.getWorld(event
-														.getPlayer().getName()))),
-								c.getChannel());
+								IRCColor.formatMCMessage(event.getPlayer()
+										.getName()
+										+ IRCColor.RED
+										+ "has been kicked!"), c.getChannel());
 			}
 		}
 	}

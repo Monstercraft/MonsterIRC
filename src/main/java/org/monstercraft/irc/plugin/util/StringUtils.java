@@ -13,14 +13,15 @@ public class StringUtils extends IRC {
 	 * @return The users prefix.
 	 */
 	public static String getPrefix(String name) {
-		StringBuilder sb = new StringBuilder();
 		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
-			String prefix = IRC.getHookManager().getChatHook()
-					.getPlayerPrefix("", name);
-			sb.append(prefix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
+			if (IRC.getHookManager().getChatHook()
+					.getPlayerPrefix(getWorld(name), name) != null) {
+				s = IRC.getHookManager().getChatHook()
+						.getPlayerPrefix(getWorld(name), name)
+						.replace("&", "§");
+
+			}
 		}
 		return s;
 	}
@@ -33,14 +34,15 @@ public class StringUtils extends IRC {
 	 * @return The users suffix.
 	 */
 	public static String getSuffix(String name) {
-		StringBuilder sb = new StringBuilder();
 		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
-			String suffix = IRC.getHookManager().getChatHook()
-					.getPlayerSuffix("", name);
-			sb.append(suffix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
+			if (IRC.getHookManager().getChatHook()
+					.getPlayerSuffix(getWorld(name), name) != null) {
+				s = IRC.getHookManager().getChatHook()
+						.getPlayerSuffix(getWorld(name), name)
+						.replace("&", "§");
+
+			}
 		}
 		return s;
 	}
@@ -53,15 +55,7 @@ public class StringUtils extends IRC {
 	 * @return The users name.
 	 */
 	public static String getName(String name) {
-		StringBuilder sb = new StringBuilder();
-		String s = name;
-		if (IRC.getHookManager().getChatHook() != null) {
-			String color = name;
-			sb.append(color);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
-		}
-		return s;
+		return name.replace("&", "§");
 	}
 
 	/**
@@ -72,19 +66,23 @@ public class StringUtils extends IRC {
 	 * @return The groups suffix.
 	 */
 	public static String getGroupSuffix(String name) {
-		StringBuilder sb = new StringBuilder();
 		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
-			String prefix = IRC
-					.getHookManager()
+			if (IRC.getHookManager()
 					.getChatHook()
 					.getGroupSuffix(
-							"",
+							getWorld(name),
 							IRC.getHookManager().getChatHook()
-									.getPrimaryGroup("", name));
-			sb.append(prefix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
+									.getPrimaryGroup(getWorld(name), name)) != null) {
+				s = IRC.getHookManager()
+						.getChatHook()
+						.getGroupSuffix(
+								getWorld(name),
+								IRC.getHookManager().getChatHook()
+										.getPrimaryGroup(getWorld(name), name))
+						.replace("&", "§");
+
+			}
 		}
 		return s;
 	}
@@ -97,19 +95,23 @@ public class StringUtils extends IRC {
 	 * @return The groups prefix.
 	 */
 	public static String getGroupPrefix(String name) {
-		StringBuilder sb = new StringBuilder();
 		String s = "";
 		if (IRC.getHookManager().getChatHook() != null) {
-			String prefix = IRC
-					.getHookManager()
+			if (IRC.getHookManager()
 					.getChatHook()
 					.getGroupPrefix(
-							"",
+							getWorld(name),
 							IRC.getHookManager().getChatHook()
-									.getPrimaryGroup("", name));
-			sb.append(prefix);
-			String temp = sb.toString();
-			s = temp.replace("&", "§");
+									.getPrimaryGroup(getWorld(name), name)) != null) {
+				s = IRC.getHookManager()
+						.getChatHook()
+						.getGroupPrefix(
+								getWorld(name),
+								IRC.getHookManager().getChatHook()
+										.getPrimaryGroup(getWorld(name), name))
+						.replace("&", "§");
+
+			}
 		}
 		return s;
 	}

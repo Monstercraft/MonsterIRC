@@ -363,7 +363,7 @@ public class IRCHandler extends IRC {
 									plugin.getServer().getPluginManager()
 											.callEvent(pevent);
 								} else if (line.toLowerCase().contains(
-										"QUIT :".toLowerCase())) {
+										"QUIT ".toLowerCase())) {
 									if (c.showJoinLeave()) {
 										name = line.substring(1,
 												line.indexOf("!"));
@@ -454,17 +454,6 @@ public class IRCHandler extends IRC {
 
 								if (msg != null && name != null
 										&& c.getChannel() != null) {
-									if (!line.toLowerCase().contains(
-											c.getChannel().toLowerCase())) {
-										continue;
-									} else if (msg.toLowerCase().contains(
-											c.getChannel().toLowerCase())
-											&& !line.toLowerCase().contains(
-													c.getChannel()
-															.toLowerCase())) {
-										continue;
-									}
-
 									if (msg.startsWith(Variables.commandPrefix)
 											&& !Variables.muted.contains(name
 													.toLowerCase())) {
@@ -752,10 +741,7 @@ public class IRCHandler extends IRC {
 				c.getHeroChatChannel().announce(
 						IRCColor.formatIRCMessage(Variables.mcformat
 								.replace("{name}", StringUtils.getName(name))
-								.replace(
-										"{message}",
-										c.getHeroChatChannel().getColor()
-												+ message)
+								.replace("{message}", message)
 								.replace("{prefix}",
 										StringUtils.getPrefix(name))
 								.replace("{suffix}",
@@ -769,35 +755,24 @@ public class IRCHandler extends IRC {
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
-				c.getHeroChatFourChannel()
-						.sendMessage(
-								Variables.mcformat
-										.replace("{name}",
-												StringUtils.getName(name))
-										.replace("{message}", "")
-										.replace(":", "")
-										.replace("{prefix}",
-												StringUtils.getPrefix(name))
-										.replace("{suffix}",
-												StringUtils.getSuffix(name))
-										.replace(
-												"{groupPrefix}",
-												StringUtils
-														.getGroupPrefix(name))
-										.replace(
-												"{groupSuffix}",
-												StringUtils
-														.getGroupSuffix(name))
-										.replace("{world}",
-												StringUtils.getWorld(name))
-										.replace("&", "§"),
-								IRCColor.formatIRCMessage(IRCColor
-										.formatIRCMessage(c
-												.getHeroChatFourChannel()
-												.getColor()
-												+ message)),
-								c.getHeroChatFourChannel().getMsgFormat(),
-								false);
+				c.getHeroChatFourChannel().sendMessage(
+						Variables.mcformat
+								.replace("{name}", StringUtils.getName(name))
+								.replace("{message}", "")
+								.replace(":", "")
+								.replace("{prefix}",
+										StringUtils.getPrefix(name))
+								.replace("{suffix}",
+										StringUtils.getSuffix(name))
+								.replace("{groupPrefix}",
+										StringUtils.getGroupPrefix(name))
+								.replace("{groupSuffix}",
+										StringUtils.getGroupSuffix(name))
+								.replace("{world}", StringUtils.getWorld(name))
+								.replace("&", "§"),
+						IRCColor.formatIRCMessage(IRCColor
+								.formatIRCMessage(message)),
+						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
 						IRCColor.formatIRCMessage(Variables.mcformat
