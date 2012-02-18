@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>	
     </properties>
          
-	
+
 	<scm>
             <connection>scm:git:git://github.com/Monstercraft/MonsterIRC.git</connection>
             <developerConnection>scm:git:ssh://git@github.com/Monstercraft/MonsterIRC.git</developerConnection>
@@ -24,7 +24,7 @@
 		<system>Jenkins</system>
 		<url>http://voice.monstercraft.org:8080/job/MonsterIRC</url>
 	</ciManagement>
-	
+
     <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -34,9 +34,13 @@
             <id>milkbowl-repo</id>
             <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
         </repository>
+		<repository>
+            <id>herochat-repo</id>
+            <url>http://ci.milkbowl.net/plugin/repository/project/Herochat/LastSuccessful/repository/</url>
+        </repository>
     </repositories>
-	
-	
+
+
         <dependencies>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -47,6 +51,11 @@
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>1.1-R4</version>
+        </dependency>
+	<dependency>
+            <groupId>com.dthielke.herochat.Herochat</groupId>
+            <artifactId>Herochat</artifactId>
+            <version>5.2.0</version>
         </dependency>
         </dependencies>
     <build>
