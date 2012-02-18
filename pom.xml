@@ -37,7 +37,7 @@
     </repositories>
 
 
-        <dependencies>
+     <dependencies>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
@@ -48,29 +48,27 @@
             <artifactId>craftbukkit</artifactId>
             <version>1.1-R4</version>
         </dependency>
-
-
 	<dependency>
             <groupId>com.dthielke.herochat.Herochat</groupId>
             <artifactId>Herochat</artifactId>
+            <version>4.10.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/Herochat4.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>Towny</artifactId>
+            <version>0.79.0.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/Towny.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>TownyChat</artifactId>
+            <version>0.0.16</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/TownyChat.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.herocraftonline.dthielke.herochat</groupId>
             <artifactId>Herochat</artifactId>
@@ -78,14 +76,15 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/Herochat5.jar</systemPath>
         </dependency>
-
 	<dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
+            <version>1.2.08</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/mcMMO.jar</systemPath>
-        </dependency>>
-        </dependencies>
+        </dependency>
+     </dependencies>
+        
     <build>
         <resources>
             <resource>
