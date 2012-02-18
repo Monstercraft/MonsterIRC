@@ -283,173 +283,216 @@ public class IRCHandler extends IRC {
 						}
 						String name = null;
 						String msg = null;
+						String subline = null;
+						if (line.indexOf(" :") != -1) {
+							subline = line.substring(0, line.indexOf(" :"));
+						}
 						for (IRCChannel c : Variables.channels) {
 							try {
-								if (line.toLowerCase().contains(
-										"PRIVMSG ".toLowerCase()
-												+ c.getChannel().toLowerCase())) {
-									name = line.substring(1, line.indexOf("!"));
-									msg = line
-											.substring(line.indexOf(" :") + 2);
-									if (line.contains("ACTION")) {
-										msg = "[Action] * "
-												+ line.substring(
-														line.indexOf(" :") + 2)
-														.replaceFirst("ACTION",
-																name);
-										IRCActionEvent actionEvent = new IRCActionEvent(
-												c, name, msg);
-										plugin.getServer().getPluginManager()
-												.callEvent(actionEvent);
-									} else {
-										IRCMessageEvent msgEvent = new IRCMessageEvent(
-												c, msg, name);
-										plugin.getServer().getPluginManager()
-												.callEvent(msgEvent);
-									}
-								} else if (line.toLowerCase().contains(
-										"JOIN ".toLowerCase()
-												+ c.getChannel().toLowerCase()
-														.toLowerCase())) {
-									if (c.showJoinLeave()) {
+								if (subline != null) {
+									if (subline.toLowerCase().contains(
+											"PRIVMSG ".toLowerCase()
+													+ c.getChannel()
+															.toLowerCase())) {
 										name = line.substring(1,
 												line.indexOf("!"));
-										msg = IRCColor
-												.formatIRCMessage(Variables.joinformat
-														.replace("{name}", "")
-														.replace("{prefix}", "")
-														.replace("{suffix}", "")
-														.replace(
-																"{groupPrefix}",
-																"")
-														.replace(
-																"{groupSuffix}",
-																"")
-														.replace("{world}", "")
-														.replace("&", "§")
-														.replace("<", "")
-														.replace(">", ""))
-												+ " (" + c.getChannel() + ")";
-									}
-									IRCJoinEvent jevent = new IRCJoinEvent(c,
-											name);
-									plugin.getServer().getPluginManager()
-											.callEvent(jevent);
-								} else if (line.toLowerCase().contains(
-										"PART ".toLowerCase()
-												+ c.getChannel().toLowerCase())) {
-									if (c.showJoinLeave()) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										msg = IRCColor
-												.formatIRCMessage(Variables.leaveformat
-														.replace("{name}", "")
-														.replace("{prefix}", "")
-														.replace("{suffix}", "")
-														.replace(
-																"{groupPrefix}",
-																"")
-														.replace(
-																"{groupSuffix}",
-																"")
-														.replace("{world}", "")
-														.replace("&", "§")
-														.replace("<", "")
-														.replace(">", ""))
-												+ " (" + c.getChannel() + ")";
-									}
-									IRCPartEvent pevent = new IRCPartEvent(c,
-											name);
-									plugin.getServer().getPluginManager()
-											.callEvent(pevent);
-								} else if (line.toLowerCase().contains(
-										"QUIT ".toLowerCase())) {
-									if (c.showJoinLeave()) {
-										name = line.substring(1,
-												line.indexOf("!"));
-										msg = IRCColor
-												.formatIRCMessage(Variables.leaveformat
-														.replace("{name}", "")
-														.replace("{prefix}", "")
-														.replace("{suffix}", "")
-														.replace(
-																"{groupPrefix}",
-																"")
-														.replace(
-																"{groupSuffix}",
-																"")
-														.replace("{world}", "")
-														.replace("&", "§")
-														.replace("<", "")
-														.replace(">", ""))
-												+ " (" + c.getChannel() + ")";
-									}
-									IRCQuitEvent qevent = new IRCQuitEvent(c,
-											name);
-									plugin.getServer().getPluginManager()
-											.callEvent(qevent);
-								} else if (line.toLowerCase().contains(
-										"MODE ".toLowerCase()
-												+ c.getChannel().toLowerCase())) {
-									if (line.indexOf("!") != -1) {
-										if (line.substring(1, line.indexOf("!")) != null) {
+										msg = line
+												.substring(line.indexOf(" :") + 2);
+										if (line.contains("ACTION")) {
+											msg = "[Action] * "
+													+ line.substring(
+															line.indexOf(" :") + 2)
+															.replaceFirst(
+																	"ACTION",
+																	name);
+											IRCActionEvent actionEvent = new IRCActionEvent(
+													c, name, msg);
+											plugin.getServer()
+													.getPluginManager()
+													.callEvent(actionEvent);
+										} else {
+											IRCMessageEvent msgEvent = new IRCMessageEvent(
+													c, msg, name);
+											plugin.getServer()
+													.getPluginManager()
+													.callEvent(msgEvent);
+										}
+									} else if (subline.toLowerCase().contains(
+											"QUIT".toLowerCase())) {
+										if (c.showJoinLeave()) {
 											name = line.substring(1,
 													line.indexOf("!"));
+											msg = IRCColor
+													.formatIRCMessage(Variables.leaveformat
+															.replace("{name}",
+																	"")
+															.replace(
+																	"{prefix}",
+																	"")
+															.replace(
+																	"{suffix}",
+																	"")
+															.replace(
+																	"{groupPrefix}",
+																	"")
+															.replace(
+																	"{groupSuffix}",
+																	"")
+															.replace("{world}",
+																	"")
+															.replace("&", "§")
+															.replace("<", "")
+															.replace(">", ""))
+													+ " ("
+													+ c.getChannel()
+													+ ")";
 										}
+										IRCQuitEvent qevent = new IRCQuitEvent(
+												c, name);
+										plugin.getServer().getPluginManager()
+												.callEvent(qevent);
 									}
-									String mode = line.substring(
-											line.toLowerCase().indexOf(
-													c.getChannel()
-															.toLowerCase())
-													+ 1
-													+ c.getChannel().length(),
-											line.toLowerCase().indexOf(
-													c.getChannel()
-															.toLowerCase())
-													+ 3
-													+ c.getChannel().length());
-									String _name = line.substring(line
-											.toLowerCase().indexOf(
-													c.getChannel()
-															.toLowerCase())
-											+ c.getChannel().length() + 4);
-									if (!Variables.hideMode) {
-										msg = "[Mode] " + name + " gave mode "
-												+ mode + " to " + _name + ".";
+								} else {
+									if (line.toLowerCase().contains(
+											"MODE ".toLowerCase()
+													+ c.getChannel()
+															.toLowerCase())) {
+										if (line.indexOf("!") != -1) {
+											if (line.substring(1,
+													line.indexOf("!")) != null) {
+												name = line.substring(1,
+														line.indexOf("!"));
+											}
+										}
+										String mode = line.substring(
+												line.toLowerCase().indexOf(
+														c.getChannel()
+																.toLowerCase())
+														+ 1
+														+ c.getChannel()
+																.length(),
+												line.toLowerCase().indexOf(
+														c.getChannel()
+																.toLowerCase())
+														+ 3
+														+ c.getChannel()
+																.length());
+										String _name = line.substring(line
+												.toLowerCase().indexOf(
+														c.getChannel()
+																.toLowerCase())
+												+ c.getChannel().length() + 4);
+										if (!Variables.hideMode) {
+											msg = "[Mode] " + name
+													+ " gave mode " + mode
+													+ " to " + _name + ".";
+										}
+										if (mode.contains("+v")) {
+											c.getVoiceList().add(_name);
+										} else if (mode.contains("-v")) {
+											c.getVoiceList().remove(_name);
+										} else if (mode.contains("+o")) {
+											c.getOpList().add(_name);
+										} else if (mode.contains("-o")) {
+											c.getOpList().remove(_name);
+										}
+										IRCModeEvent mevent = new IRCModeEvent(
+												c, name, mode, msg);
+										plugin.getServer().getPluginManager()
+												.callEvent(mevent);
+									} else if (line.toLowerCase().contains(
+											"PART ".toLowerCase()
+													+ c.getChannel()
+															.toLowerCase())) {
+										if (c.showJoinLeave()) {
+											name = line.substring(1,
+													line.indexOf("!"));
+											msg = IRCColor
+													.formatIRCMessage(Variables.leaveformat
+															.replace("{name}",
+																	"")
+															.replace(
+																	"{prefix}",
+																	"")
+															.replace(
+																	"{suffix}",
+																	"")
+															.replace(
+																	"{groupPrefix}",
+																	"")
+															.replace(
+																	"{groupSuffix}",
+																	"")
+															.replace("{world}",
+																	"")
+															.replace("&", "§")
+															.replace("<", "")
+															.replace(">", ""))
+													+ " ("
+													+ c.getChannel()
+													+ ")";
+										}
+										IRCPartEvent pevent = new IRCPartEvent(
+												c, name);
+										plugin.getServer().getPluginManager()
+												.callEvent(pevent);
+									} else if (line.toLowerCase().contains(
+											"KICK ".toLowerCase()
+													+ c.getChannel()
+															.toLowerCase())) {
+										name = line.substring(1,
+												line.indexOf("!"));
+										String _name = line.substring(
+												line.toLowerCase().indexOf(
+														c.getChannel()
+																.toLowerCase())
+														+ c.getChannel()
+																.length() + 1,
+												line.indexOf(" :") - 1);
+										msg = _name + " has been kicked from "
+												+ c.getChannel() + ".";
+										IRCKickEvent kevent = new IRCKickEvent(
+												c, name);
+										plugin.getServer().getPluginManager()
+												.callEvent(kevent);
+									} else if (line.toLowerCase().contains(
+											"JOIN ".toLowerCase()
+													+ c.getChannel()
+															.toLowerCase()
+															.toLowerCase())) {
+										if (c.showJoinLeave()) {
+											name = line.substring(1,
+													line.indexOf("!"));
+											msg = IRCColor
+													.formatIRCMessage(Variables.joinformat
+															.replace("{name}",
+																	"")
+															.replace(
+																	"{prefix}",
+																	"")
+															.replace(
+																	"{suffix}",
+																	"")
+															.replace(
+																	"{groupPrefix}",
+																	"")
+															.replace(
+																	"{groupSuffix}",
+																	"")
+															.replace("{world}",
+																	"")
+															.replace("&", "§")
+															.replace("<", "")
+															.replace(">", ""))
+													+ " ("
+													+ c.getChannel()
+													+ ")";
+										}
+										IRCJoinEvent jevent = new IRCJoinEvent(
+												c, name);
+										plugin.getServer().getPluginManager()
+												.callEvent(jevent);
 									}
-									if (mode.contains("+v")) {
-										c.getVoiceList().add(_name);
-									} else if (mode.contains("-v")) {
-										c.getVoiceList().remove(_name);
-									} else if (mode.contains("+o")) {
-										c.getOpList().add(_name);
-									} else if (mode.contains("-o")) {
-										c.getOpList().remove(_name);
-									}
-									IRCModeEvent mevent = new IRCModeEvent(c,
-											name, mode, msg);
-									plugin.getServer().getPluginManager()
-											.callEvent(mevent);
-								} else if (line.toLowerCase().contains(
-										"KICK ".toLowerCase()
-												+ c.getChannel().toLowerCase())) {
-									name = line.substring(1, line.indexOf("!"));
-									String _name = line
-											.substring(
-													line.toLowerCase()
-															.indexOf(
-																	c.getChannel()
-																			.toLowerCase())
-															+ c.getChannel()
-																	.length()
-															+ 1, line
-															.indexOf(" :") - 1);
-									msg = _name + " has been kicked from "
-											+ c.getChannel() + ".";
-									IRCKickEvent kevent = new IRCKickEvent(c,
-											name);
-									plugin.getServer().getPluginManager()
-											.callEvent(kevent);
 								}
 
 								if (msg != null && name != null

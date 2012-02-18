@@ -176,7 +176,9 @@ public class IRCListener extends IRC implements Listener {
 								IRCColor.formatMCMessage(event.getPlayer()
 										.getName()
 										+ IRCColor.RED
-										+ "has been kicked!"), c.getChannel());
+										+ "has been kicked! ("
+										+ event.getReason() + ")"),
+								c.getChannel());
 			}
 		}
 	}
@@ -249,10 +251,9 @@ public class IRCListener extends IRC implements Listener {
 				}
 			}
 			if ((Herochat.getChatterManager().getChatter(player)
-					.getActiveChannel() == c.getHeroChatChannel() ||
-							c.isHeroChatListenChannel(Herochat.getChatterManager().getChatter(player)
-									.getActiveChannel().getName())
-					)
+					.getActiveChannel() == c.getHeroChatChannel() || c
+					.isHeroChatListenChannel(Herochat.getChatterManager()
+							.getChatter(player).getActiveChannel().getName()))
 					&& !Herochat.getChatterManager()
 							.getChatter(player.getName()).isMuted()) {
 				IRC.getHandleManager()
@@ -273,11 +274,10 @@ public class IRCListener extends IRC implements Listener {
 				}
 				if ((IRC.getHookManager().getHeroChatHook().getChannelManager()
 						.getActiveChannel(player.getName()) == c
-						.getHeroChatFourChannel() ||
-						c.isHeroChatListenChannel(IRC.getHookManager()
+						.getHeroChatFourChannel() || c
+						.isHeroChatListenChannel(IRC.getHookManager()
 								.getHeroChatHook().getChannelManager()
-								.getActiveChannel(player.getName()).getName())
-						 )
+								.getActiveChannel(player.getName()).getName()))
 						&& c.getHeroChatFourChannel().isEnabled()
 						&& !IRC.getHookManager().getHeroChatHook()
 								.getChannelManager().getMutelist()
