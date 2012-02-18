@@ -264,11 +264,10 @@ public class IRCChannel extends IRC {
 		return showJoinLeave;
 	}
 
-	public boolean isHeroChatFourListenChannel(
-			com.herocraftonline.dthielke.herochat.channels.Channel activeChannel) {
+	public boolean isHeroChatListenChannel(String activeChannelName) {
 		if (listenChatChannels != null)
 			for (String chTestName : listenChatChannels)
-				if (chTestName.equalsIgnoreCase(activeChannel.getCName())) return true;
+				if (chTestName.equalsIgnoreCase(activeChannelName)) return true;
 		
 		return false;
 	}
