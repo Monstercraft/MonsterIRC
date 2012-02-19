@@ -5,7 +5,7 @@
 
 	<groupId>org.monstercraft.irc</groupId>
 	<artifactId>MonsterIRC</artifactId>
-	<version>1.46</version>
+	<version>1.48</version>
 
 
 	<properties>
@@ -67,6 +67,11 @@
 			<version>5.2.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.herocraftonline.dthielke.herochat</groupId>
+			<artifactId>HeroChat</artifactId>
+			<version>4.10.3</version>
+		</dependency>
+		<dependency>
 			<groupId>com.gmail.nossr50</groupId>
 			<artifactId>mcMMO</artifactId>
 			<version>1.2.08</version>
@@ -97,7 +102,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
-
 	</build>
 </project>

@@ -2,23 +2,20 @@ package org.monstercraft.irc.plugin;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
 import org.monstercraft.irc.IRC;
 
-public class Configuration {
+public class Configuration extends IRC {
 
 	public Configuration() {
 		try {
 			String location = IRC.class.getProtectionDomain().getCodeSource()
 					.getLocation().toURI().getPath();
 			addClassPath(new File(location));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			debug(e);
 		}
 	}
 
