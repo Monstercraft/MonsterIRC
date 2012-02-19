@@ -32,7 +32,7 @@ public class SettingsManager extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public SettingsManager(IRC plugin) {
+	public SettingsManager(final IRC plugin) {
 		this.plugin = plugin;
 		load();
 		populateChannels();

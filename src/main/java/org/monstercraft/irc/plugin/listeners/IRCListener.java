@@ -12,10 +12,6 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.plugin.hooks.HeroChatHook;
-import org.monstercraft.irc.plugin.hooks.TownyChatHook;
-import org.monstercraft.irc.plugin.hooks.VaultChatHook;
-import org.monstercraft.irc.plugin.hooks.VaultPermissionsHook;
-import org.monstercraft.irc.plugin.hooks.mcMMOHook;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.IRCColor;
 import org.monstercraft.irc.plugin.util.StringUtils;
@@ -48,18 +44,16 @@ public class IRCListener extends IRC implements Listener {
 		String PluginName = event.getPlugin().getDescription().getName();
 		if (plugin != null) {
 			if (PluginName.equals("Vault")) {
-				IRC.getHookManager().setPermissionsHook(
-						new VaultPermissionsHook(plugin));
+				IRC.getHookManager().setPermissionsHook();
 				IRC.getHandleManager().setPermissionsHandler(
 						IRC.getHookManager().getPermissionsHook());
-				IRC.getHookManager().setChatHook(new VaultChatHook(plugin));
+				IRC.getHookManager().setChatHook();
 			} else if (PluginName.equals("mcMMO")) {
-				IRC.getHookManager().setmcMMOHook(new mcMMOHook(plugin));
+				IRC.getHookManager().setmcMMOHook();
 			} else if (PluginName.equals("HeroChat")) {
 				IRC.getHookManager().setHeroChatHook(new HeroChatHook(plugin));
 			} else if (PluginName.equals("TownyChat")) {
-				IRC.getHookManager()
-						.setTownyChatHook(new TownyChatHook(plugin));
+				IRC.getHookManager().setTownyChatHook();
 			}
 		}
 	}
@@ -210,7 +204,7 @@ public class IRCListener extends IRC implements Listener {
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix("Console"))
 					.replace("{message}",
-							IRCColor.NORMAL.getIRCColor() + message)
+							IRCColor.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld("Console"))
 					.replace("&", "§"));
 			IRC.getHandleManager()
@@ -229,7 +223,7 @@ public class IRCListener extends IRC implements Listener {
 						StringUtils.getGroupPrefix(player.getName()))
 				.replace("{groupSuffix}",
 						StringUtils.getGroupSuffix(player.getName()))
-				.replace("{message}", IRCColor.NORMAL.getIRCColor() + message)
+				.replace("{message}", IRCColor.NORMAL.getIRCColor() + " " + message)
 				.replace("{world}", StringUtils.getWorld(player.getName()))
 				.replace("&", "§"));
 		if (c.getChatType() == ChatType.ADMINCHAT) {

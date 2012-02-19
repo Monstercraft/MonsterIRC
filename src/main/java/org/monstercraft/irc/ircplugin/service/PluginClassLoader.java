@@ -1,7 +1,6 @@
 package org.monstercraft.irc.ircplugin.service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -15,36 +14,37 @@ public class PluginClassLoader extends ClassLoader {
 		this.base = url;
 	}
 
-	@Override
-	public Class<?> loadClass(final String name, final boolean resolve)
+	public Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
-		byte bytes[];
-		Class<?> clazz = null;
-		clazz = findLoadedClass(name);
+		Class<?> clazz = findLoadedClass(name);
+
 		if (clazz == null) {
 			try {
-				InputStream is = getResourceAsStream(name.replace('.',
-						File.separatorChar) + ".class");
-				ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-				int nextValue = is.read();
-				while (-1 != nextValue) {
-					byteStream.write(nextValue);
-					nextValue = is.read();
+				InputStream in = getResourceAsStream(name.replace('.', '/')
+						+ ".class");
+				byte[] buffer = new byte[4096];
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				int n;
+				while ((n = in.read(buffer, 0, 4096)) != -1) {
+					out.write(buffer, 0, n);
 				}
-				bytes = byteStream.toByteArray();
+				byte[] bytes = out.toByteArray();
 				clazz = defineClass(name, bytes, 0, bytes.length);
 				if (resolve) {
 					resolveClass(clazz);
 				}
-			} catch (final Exception e) {
-				clazz = super.loadClass(name, resolve);
+			} catch (Exception e) {
+				clazz = findSystemClass(name);
+				if (clazz == null) {
+					System.out.println("Clazz is still null " + name);
+					super.loadClass(name, resolve);
+				}
 			}
 		}
 
 		return clazz;
 	}
 
-	@Override
 	public URL getResource(String name) {
 		try {
 			return new URL(base, name);
@@ -53,7 +53,6 @@ public class PluginClassLoader extends ClassLoader {
 		}
 	}
 
-	@Override
 	public InputStream getResourceAsStream(String name) {
 		try {
 			return new URL(base, name).openStream();

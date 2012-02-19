@@ -57,7 +57,9 @@ public class FilePluginSource extends IRC implements PluginSource {
 			throw new IllegalArgumentException("Invalid definition!");
 		}
 		try {
-			return def.clazz.asSubclass(IRCPlugin.class).newInstance();
+			if (IRCPlugin.class.isAssignableFrom(def.clazz)) {
+				return def.clazz.asSubclass(IRCPlugin.class).newInstance();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

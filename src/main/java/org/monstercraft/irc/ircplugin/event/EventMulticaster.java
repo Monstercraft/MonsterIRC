@@ -11,9 +11,9 @@ import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 
 public class EventMulticaster implements EventListener {
 
-	public static final long IRC_EVENT = 0x10;
+	public static final long IRC_EVENT = 1;
 
-	public static final long IRC_MESSAGE_EVENT = 0x02;
+	public static final long IRC_MESSAGE_EVENT = 2;
 
 	private static final Object treeLock = new Object();
 
@@ -85,8 +85,6 @@ public class EventMulticaster implements EventListener {
 				listeners.add(el);
 			}
 			listenerMasks.add(mask);
-			// log.info(("Added mask: " + mask + " " +
-			// listenerMasks.get(listenerMasks.size()-1));
 			cleanMasks();
 		}
 	}

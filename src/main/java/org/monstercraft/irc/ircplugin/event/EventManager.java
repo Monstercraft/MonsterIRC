@@ -4,7 +4,6 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.monstercraft.irc.ircplugin.event.events.IRCEvent;
 
@@ -22,8 +21,6 @@ public class EventManager implements Runnable {
 			return -1;
 		}
 	}
-
-	private final Logger log = Logger.getLogger("MineCraft");
 
 	private final EventMulticaster multicaster = new EventMulticaster();
 	private final Map<Integer, EventObject> queue = new HashMap<Integer, EventObject>();
@@ -107,7 +104,6 @@ public class EventManager implements Runnable {
 				try {
 					event.wait();
 				} catch (InterruptedException e) {
-					log.info("wait for kill event interrupted!");
 				}
 			}
 		}
@@ -161,7 +157,6 @@ public class EventManager implements Runnable {
 						try {
 							queue.wait();
 						} catch (final Exception e) {
-							log.info("Event Queue: " + e.toString());
 						}
 					}
 					int emptySpots = 0;
@@ -194,7 +189,6 @@ public class EventManager implements Runnable {
 					event.notifyAll();
 				}
 			} catch (final Exception e) {
-				log.info("Event Queue: " + e.toString());
 				e.printStackTrace();
 			}
 		}

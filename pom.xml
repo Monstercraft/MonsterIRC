@@ -1,109 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.monstercraft.irc</groupId>
-    <artifactId>MonsterIRC</artifactId>
-    <version>1.46</version>
-    
-    
-    <properties>	
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>	
-    </properties>
-         
+	<groupId>org.monstercraft.irc</groupId>
+	<artifactId>MonsterIRC</artifactId>
+	<version>1.46</version>
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 
 	<scm>
-            <connection>scm:git:git://github.com/Monstercraft/MonsterIRC.git</connection>
-            <developerConnection>scm:git:ssh://git@github.com/Monstercraft/MonsterIRC.git</developerConnection>
-            <url>https://github.com/Monstercraft/MonsterIRC</url>
+		<connection>scm:git:git://github.com/Monstercraft/MonsterIRC.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/Monstercraft/MonsterIRC.git</developerConnection>
+		<url>https://github.com/Monstercraft/MonsterIRC</url>
 	</scm>
-  
+
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>http://voice.monstercraft.org:8080/job/MonsterIRC</url>
 	</ciManagement>
 
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>file:///var/lib/jenkins/workspace/MonsterIRC/.repository/</url>
-        </repository>
-        <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
-        </repository>
-        <repository>
-            <id>milkbowl-repo</id>
-            <url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>file:///var/lib/jenkins/workspace/MonsterIRC/.repository/</url>
+		</repository>
+		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>milkbowl-repo</id>
+			<url>http://ci.milkbowl.net/plugin/repository/project/Vault/LastSuccessful/repository</url>
+		</repository>
+	</repositories>
 
 
-     <dependencies>
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>Vault</artifactId>
-            <version>1.2.9-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.1-R4</version>
-        </dependency>
-	<dependency>
-            <groupId>com.palmergames.bukkit</groupId>
-            <artifactId>Towny</artifactId>
-            <version>0.79.0.0</version>
-        </dependency>
-	<dependency>
-            <groupId>com.palmergames.bukkit</groupId>
-            <artifactId>TownyChat</artifactId>
-            <version>0.0.16</version>
-        </dependency>
-	<dependency>
-            <groupId>com.dthielke.herochat</groupId>
-            <artifactId>Herochat</artifactId>
-            <version>5.2.0</version>
-        </dependency>
-	<dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>1.2.08</version>
-        </dependency>
-        <dependency>
-            <groupId>com.herocraftonline.dthielke.herochat</groupId>
-            <artifactId>HeroChat</artifactId>
-            <version>4.10.3</version>
-        </dependency>
-     </dependencies>
-        
-    <build>
-        <resources>
-            <resource>
-                <targetPath>.</targetPath>
-                <directory>${basedir}/</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>config.yml</include>
-                    <include>plugin.yml</include>
-                    <include>README.md</include>
-                </includes>
-            </resource>
-        </resources>
+	<dependencies>
+		<dependency>
+			<groupId>net.milkbowl.vault</groupId>
+			<artifactId>Vault</artifactId>
+			<version>1.2.9-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>craftbukkit</artifactId>
+			<version>1.1-R4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.palmergames.bukkit</groupId>
+			<artifactId>Towny</artifactId>
+			<version>0.79.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.palmergames.bukkit</groupId>
+			<artifactId>TownyChat</artifactId>
+			<version>0.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dthielke.herochat</groupId>
+			<artifactId>Herochat</artifactId>
+			<version>5.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gmail.nossr50</groupId>
+			<artifactId>mcMMO</artifactId>
+			<version>1.2.08</version>
+		</dependency>
+	</dependencies>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-        </plugins>
-        
-        
-    </build>
+	<build>
+		<resources>
+			<resource>
+				<targetPath>.</targetPath>
+				<directory>${basedir}/</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>config.yml</include>
+					<include>plugin.yml</include>
+					<include>README.md</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+		</plugins>
+
+
+	</build>
 </project>

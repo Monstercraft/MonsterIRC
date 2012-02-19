@@ -316,6 +316,10 @@ public class IRCHandler extends IRC {
 											plugin.getServer()
 													.getPluginManager()
 													.callEvent(msgEvent);
+//											PluginMessageEvent msge = new PluginMessageEvent(
+//													c, name, msg);
+//											IRC.getEventManager()
+//													.dispatchEvent(msge);
 										}
 									} else if (subline.toLowerCase().contains(
 											"QUIT".toLowerCase())) {

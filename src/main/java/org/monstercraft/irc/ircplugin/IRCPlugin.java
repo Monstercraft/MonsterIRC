@@ -4,14 +4,13 @@ import java.io.File;
 import java.util.EventListener;
 
 import org.bukkit.Bukkit;
-import org.monstercraft.irc.ircplugin.event.EventManager;
+import org.monstercraft.irc.IRC;
 
 public abstract class IRCPlugin implements EventListener, Runnable {
 
 	private volatile boolean running = false;
 
 	private int id = -1;
-	private EventManager eventManager;
 
 	/**
 	 * Called before loop() is first called, after this plugin has been
@@ -20,7 +19,7 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 	 * 
 	 * @return <tt>true</tt> if the plugin can start.
 	 */
-	public abstract boolean onEnable();
+	public abstract boolean onStart();
 
 	/**
 	 * The main loop. Called if you return true from onStart, then continuously
@@ -39,7 +38,7 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 	/**
 	 * Perform actions upon stopping the plugin;
 	 */
-	public abstract void onDisable();
+	public abstract void onFinish();
 
 	/**
 	 * For internal use only. Deactivates this plugin if the appropriate id is
@@ -86,16 +85,27 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 
 	@Override
 	public final void run() {
-		eventManager = new EventManager();
 		boolean start = false;
 		try {
-			start = onEnable();
+			start = onStart();
 		} catch (ThreadDeath ignored) {
 		} catch (Throwable ex) {
 		}
 		if (start) {
 			running = true;
-			getEventManager().addListener(this);
+			if (IRC.getChannels() == null) {
+				System.out.println("null channels");
+			}
+			if (IRC.getHandleManager() == null) {
+				System.out.println("null handle manager");
+			}
+			if (IRC.getIRCServer() == null) {
+				System.out.println("null server");
+			}
+			if (IRC.getEventManager() == null) {
+				System.out.println("null events");
+			}
+			IRC.getEventManager().addListener(this);
 			try {
 				while (running) {
 					int timeOut = -1;
@@ -110,18 +120,17 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 					}
 				}
 				try {
-					onDisable();
+					onFinish();
 				} catch (ThreadDeath ignored) {
 				} catch (RuntimeException e) {
 					e.printStackTrace();
 				}
 			} catch (Throwable t) {
-				onDisable();
+				onFinish();
 			}
 			running = false;
-		} else {
 		}
-		getEventManager().removeListener(this);
+		IRC.getEventManager().removeListener(this);
 		id = -1;
 	}
 
@@ -137,9 +146,5 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 	private static File getDataFile() {
 		return Bukkit.getPluginManager().getPlugin("MonsterIRC")
 				.getDataFolder();
-	}
-
-	protected EventManager getEventManager() {
-		return eventManager;
 	}
 }

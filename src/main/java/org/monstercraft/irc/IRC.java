@@ -10,7 +10,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.monstercraft.irc.plugin.handlers.PluginHandler;
+import org.monstercraft.irc.ircplugin.event.EventManager;
+import org.monstercraft.irc.plugin.handlers.IRCPluginHandler;
 import org.monstercraft.irc.plugin.listeners.IRCListener;
 import org.monstercraft.irc.plugin.managers.CommandManager;
 import org.monstercraft.irc.plugin.managers.HandleManager;
@@ -31,7 +32,7 @@ import org.w3c.dom.NodeList;
  * @author Fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRC extends JavaPlugin {
+public class IRC extends JavaPlugin implements Runnable {
 
 	private static HandleManager handles = null;
 	private static HookManager hooks = null;
@@ -40,63 +41,23 @@ public class IRC extends JavaPlugin {
 
 	private static IRCServer IRCserver = null;
 
-	private static Logger logger = Logger.getLogger("MineCraft");
+	private final static Logger logger = Logger.getLogger("MineCraft");
 
 	private static SettingsManager settings = null;
-	private Thread watch = null;
-	private IRC plugin;
 	private Object lock = new Object();
-	private static PluginHandler pm;
+	private static EventManager em = null;
+	private static IRCPluginHandler ph = null;
 
 	/**
 	 * Enables the plugin.
 	 */
 	@Override
 	public void onEnable() {
-		plugin = this;
-		log("Starting plugin.");
-		pm = new PluginHandler();
-		settings = new SettingsManager(plugin);
-		hooks = new HookManager(plugin);
-		handles = new HandleManager(plugin);
-		command = new CommandManager(plugin);
-		listener = new IRCListener(plugin);
-		IRCserver = new IRCServer(Variables.server, Variables.port,
-				Variables.name, Variables.password, Variables.ident,
-				Variables.timeout, Variables.limit, Variables.connectCommands);
-		getServer().getPluginManager().registerEvents(listener, plugin);
-		synchronized (lock) {
-			watch = new Thread(STARTUP);
-			watch.setDaemon(true);
-			watch.setPriority(Thread.MAX_PRIORITY);
-			watch.start();
-		}
+		Thread t = new Thread(this);
+		t.setDaemon(true);
+		t.setPriority(Thread.MAX_PRIORITY);
+		t.start();
 	}
-
-	private final Runnable STARTUP = new Runnable() {
-		@Override
-		public void run() {
-			try {
-				String currentVersion = getDescription().getVersion();
-				String newVersion = updateCheck(currentVersion);
-				if (!newVersion.contains(currentVersion)) {
-					log(newVersion + " is out! You are running "
-							+ currentVersion);
-					log("Update MonsterIRC at: http://dev.bukkit.org/server-mods/monsterirc");
-				} else {
-					log("You are using the latest version of MonsterIRC");
-				}
-				if (!settings.firstRun()) {
-					getHandleManager().getIRCHandler().connect(getIRCServer());
-					log("Successfully started up.");
-				} else {
-					stop();
-				}
-			} catch (Exception e) {
-				debug(e);
-			}
-		}
-	};
 
 	/**
 	 * Disables the plugin.
@@ -119,12 +80,6 @@ public class IRC extends JavaPlugin {
 		}
 		settings.saveMuted();
 		log("Successfully disabled plugin.");
-		synchronized (lock) {
-			if (watch != null) {
-				watch.interrupt();
-			}
-			watch = null;
-		}
 	}
 
 	/**
@@ -144,7 +99,7 @@ public class IRC extends JavaPlugin {
 	 *            The version that is currently running.
 	 * @return The latest version
 	 */
-	protected String updateCheck(String currentVersion) {
+	private String updateCheck(String currentVersion) {
 		String pluginUrlString = "http://dev.bukkit.org/server-mods/monsterirc/files.rss";
 		try {
 			URL url = new URL(pluginUrlString);
@@ -258,15 +213,60 @@ public class IRC extends JavaPlugin {
 	}
 
 	/**
-	 * The CommandManager that Assigns all the commands.
+	 * Fetches the irc channels.
 	 * 
-	 * @return The plugins command manager.
+	 * @return All of the IRCChannels
 	 */
-	protected static PluginHandler getPluginManager() {
-		return pm;
-	}
-
 	public static Set<IRCChannel> getChannels() {
 		return Variables.channels;
+	}
+
+	public static EventManager getEventManager() {
+		return em;
+	}
+
+	public static IRCPluginHandler getPluginHandler() {
+		return ph;
+	}
+
+	@Override
+	public void run() {
+		synchronized (lock) {
+			try {
+				log("Starting plugin.");
+				IRC.settings = new SettingsManager(this);
+				IRC.hooks = new HookManager(this);
+				IRC.command = new CommandManager(this);
+				IRC.listener = new IRCListener(this);
+				IRC.IRCserver = new IRCServer(Variables.server, Variables.port,
+						Variables.name, Variables.password, Variables.ident,
+						Variables.timeout, Variables.limit,
+						Variables.connectCommands);
+				IRC.handles = new HandleManager(this);
+				this.getServer().getPluginManager()
+						.registerEvents(listener, this);
+//				IRC.em = new EventManager();
+//				IRC.em.start();
+//				new Configuration();
+//				IRC.ph = new IRCPluginHandler(this);
+				String currentVersion = getDescription().getVersion();
+				String newVersion = updateCheck(currentVersion);
+				if (!newVersion.contains(currentVersion)) {
+					log(newVersion + " is out! You are running "
+							+ currentVersion);
+					log("Update MonsterIRC at: http://dev.bukkit.org/server-mods/monsterirc");
+				} else {
+					log("You are using the latest version of MonsterIRC");
+				}
+				if (!settings.firstRun()) {
+					getHandleManager().getIRCHandler().connect(getIRCServer());
+					log("Successfully started up.");
+				} else {
+					stop();
+				}
+			} catch (Exception e) {
+				debug(e);
+			}
+		}
 	}
 }

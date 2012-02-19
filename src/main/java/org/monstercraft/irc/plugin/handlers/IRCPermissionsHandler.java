@@ -14,7 +14,7 @@ import org.monstercraft.irc.plugin.command.GameCommand;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class PermissionsHandler extends IRC {
+public class IRCPermissionsHandler extends IRC {
 
 	private Permission perms = null;
 
@@ -24,7 +24,7 @@ public class PermissionsHandler extends IRC {
 	 * @param perms
 	 *            The Permissions hooks handler.
 	 */
-	public PermissionsHandler(final Permission perms) {
+	public IRCPermissionsHandler(final Permission perms) {
 		this.perms = perms;
 	}
 

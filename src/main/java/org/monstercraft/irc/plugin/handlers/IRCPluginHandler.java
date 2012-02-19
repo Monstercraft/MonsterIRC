@@ -12,19 +12,19 @@ import org.monstercraft.irc.ircplugin.service.FilePluginSource;
 import org.monstercraft.irc.ircplugin.service.PluginDefinition;
 import org.monstercraft.irc.plugin.util.Constants;
 
-public class PluginHandler extends IRC {
+public class IRCPluginHandler extends IRC {
 
 	private final HashMap<Integer, IRCPlugin> pluginsToRun = new HashMap<Integer, IRCPlugin>();
-	private final HashMap<Integer, Thread> scriptThreads = new HashMap<Integer, Thread>();
+	private final HashMap<Integer, Thread> pluginThreads = new HashMap<Integer, Thread>();
 	private final List<PluginDefinition> plugins;
 
-	public PluginHandler() {
+	public IRCPluginHandler(IRC plugin) {
 		this.plugins = new ArrayList<PluginDefinition>();
 		plugins.addAll(new FilePluginSource(getPluginsFolder()).list());
 		for (PluginDefinition def : plugins) {
 			try {
-				log("Starting IRC plugin " + def.name);
-				runScript(def.source.load(def));
+				log("Loading IRC plugin " + def.name + ".");
+				runplugin(def.source.load(def));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -37,27 +37,28 @@ public class PluginHandler extends IRC {
 				+ Constants.PLUGINS_FOLDER);
 	}
 
-	public void runScript(IRCPlugin plugin) {
+	public void runplugin(IRCPlugin plugin) {
 		PluginManifest prop = plugin.getClass().getAnnotation(
 				PluginManifest.class);
-		Thread t = new Thread(plugin, "Script-" + prop.name());
-		addScriptToPool(plugin, t);
+		Thread t = new Thread(plugin, "plugin-" + prop.name());
+		addpluginToPool(plugin, t);
 		t.start();
 	}
 
-	private void addScriptToPool(IRCPlugin plugin, Thread t) {
+	private void addpluginToPool(IRCPlugin plugin, Thread t) {
 		plugin.setID(pluginsToRun.size());
 		pluginsToRun.put(pluginsToRun.size(), plugin);
-		scriptThreads.put(scriptThreads.size(), t);
+		pluginThreads.put(pluginThreads.size(), t);
 	}
 
-	public void stopScript() {
+	public void stopplugin() {
 		Thread curThread = Thread.currentThread();
 		for (int i = 0; i < pluginsToRun.size(); i++) {
-			IRCPlugin script = pluginsToRun.get(i);
-			if (script != null && script.isActive()) {
-				if (scriptThreads.get(i) == curThread) {
+			IRCPlugin plugin = pluginsToRun.get(i);
+			if (plugin != null && plugin.isActive()) {
+				if (pluginThreads.get(i) == curThread) {
 					stopPlugin(i);
+					getEventManager().removeListener(plugin);
 				}
 			}
 		}
@@ -71,8 +72,7 @@ public class PluginHandler extends IRC {
 		if (plugin != null) {
 			plugin.deactivate(id);
 			pluginsToRun.remove(id);
-			scriptThreads.remove(id);
+			pluginThreads.remove(id);
 		}
 	}
-
 }

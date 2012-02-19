@@ -24,6 +24,7 @@ public class PluginMessageEvent extends IRCEvent {
 
 	@Override
 	public void dispatch(EventListener el) {
+		System.out.println("It is dispatching..");
 		((IRCListener) el).messageReceived(channel, sender, message);
 	}
 

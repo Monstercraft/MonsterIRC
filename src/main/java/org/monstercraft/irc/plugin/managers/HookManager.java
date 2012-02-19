@@ -25,6 +25,7 @@ public class HookManager {
 	private VaultChatHook chat = null;
 	private HeroChatHook herochat = null;
 	private TownyChatHook townychat = null;
+	private final IRC plugin;
 
 	/**
 	 * Creates an instance of the HookManager class.
@@ -33,6 +34,7 @@ public class HookManager {
 	 *            The parent plugin.
 	 */
 	public HookManager(final IRC plugin) {
+		this.plugin = plugin;
 		mcmmo = new mcMMOHook(plugin);
 		permissions = new VaultPermissionsHook(plugin);
 		chat = new VaultChatHook(plugin);
@@ -99,35 +101,28 @@ public class HookManager {
 	/**
 	 * Creates a new hook into the plugin.
 	 * 
-	 * @param hook
-	 *            A hook into mcMMO.
 	 * @return The new mcMMOHook.
 	 */
-	public mcMMOHook setmcMMOHook(final mcMMOHook hook) {
-		return mcmmo = hook;
+	public void setmcMMOHook() {
+		mcmmo = new mcMMOHook(plugin);
 	}
 
 	/**
 	 * Creates a new hook into the plugin.
 	 * 
-	 * @param hook
-	 *            A hook into Permissions.
 	 * @return The new PermissionsHook.
 	 */
-	public VaultPermissionsHook setPermissionsHook(
-			final VaultPermissionsHook hook) {
-		return permissions = hook;
+	public void setPermissionsHook() {
+		permissions = new VaultPermissionsHook(plugin);
 	}
 
 	/**
 	 * Creates a new hook into the plugin.
 	 * 
-	 * @param hook
-	 *            A hook into PermissionsEx.
-	 * @return The new PermissionsExHook.
+	 * @return The new chatHook.
 	 */
-	public VaultChatHook setChatHook(final VaultChatHook hook) {
-		return chat = hook;
+	public void setChatHook() {
+		chat = new VaultChatHook(plugin);
 	}
 
 	/**
@@ -137,8 +132,8 @@ public class HookManager {
 	 *            A hook into townychat.
 	 * @return The new TownyChatHook.
 	 */
-	public TownyChatHook setTownyChatHook(final TownyChatHook hook) {
-		return townychat = hook;
+	public void setTownyChatHook() {
+		townychat = new TownyChatHook(plugin);
 	}
 
 }
