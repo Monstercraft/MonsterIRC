@@ -6,7 +6,7 @@ import org.monstercraft.irc.ircplugin.event.EventMulticaster;
 import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-public class PluginMessageEvent extends IRCEvent {
+public class PluginActionEvent extends IRCEvent {
 
 	private static final long serialVersionUID = 8708860642802706979L;
 
@@ -14,22 +14,22 @@ public class PluginMessageEvent extends IRCEvent {
 
 	private String sender;
 
-	private String message;
+	private String action;
 
-	public PluginMessageEvent(IRCChannel channel, String sender, String message) {
+	public PluginActionEvent(IRCChannel channel, String sender, String action) {
 		this.channel = channel;
 		this.sender = sender;
-		this.message = message;
+		this.action = action;
 	}
 
 	@Override
 	public void dispatch(EventListener el) {
-		((IRCListener) el).onMessage(channel, sender, message);
+		((IRCListener) el).onAction(channel, sender, action);
 	}
 
 	@Override
 	public long getMask() {
-		return EventMulticaster.IRC_MESSAGE_EVENT;
+		return EventMulticaster.IRC_ACTION_EVENT;
 	}
 
 }

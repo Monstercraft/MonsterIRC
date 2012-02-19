@@ -11,9 +11,18 @@ import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 
 public class EventMulticaster implements EventListener {
 
-	public static final long IRC_EVENT = 1;
+	public static final int IRC_EVENT = 1;
 
-	public static final long IRC_MESSAGE_EVENT = 2;
+	public static final int IRC_MESSAGE_EVENT = 2;
+	public static final int IRC_ACTION_EVENT = 3;
+	public static final int IRC_PRIVATE_MESSAGE_EVENT = 4;
+	public static final int IRC_KICK_EVENT = 5;
+	public static final int IRC_CONNECT_EVENT = 6;
+	public static final int IRC_DISCONNECT_EVENT = 7;
+	public static final int IRC_PART_EVENT = 8;
+	public static final int IRC_JOIN_EVENT = 9;
+	public static final int IRC_MODE_EVENT = 10;
+	public static final int IRC_QUIT_EVENT = 11;
 
 	private static final Object treeLock = new Object();
 
