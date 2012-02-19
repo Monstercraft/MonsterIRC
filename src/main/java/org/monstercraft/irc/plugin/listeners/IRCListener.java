@@ -223,7 +223,8 @@ public class IRCListener extends IRC implements Listener {
 						StringUtils.getGroupPrefix(player.getName()))
 				.replace("{groupSuffix}",
 						StringUtils.getGroupSuffix(player.getName()))
-				.replace("{message}", IRCColor.NORMAL.getIRCColor() + " " + message)
+				.replace("{message}",
+						IRCColor.NORMAL.getIRCColor() + " " + message)
 				.replace("{world}", StringUtils.getWorld(player.getName()))
 				.replace("&", "§"));
 		if (c.getChatType() == ChatType.ADMINCHAT) {

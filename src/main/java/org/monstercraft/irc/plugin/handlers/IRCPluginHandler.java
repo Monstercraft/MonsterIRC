@@ -9,19 +9,19 @@ import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
 import org.monstercraft.irc.ircplugin.service.FilePluginSource;
-import org.monstercraft.irc.ircplugin.service.PluginDefinition;
+import org.monstercraft.irc.ircplugin.service.IRCPluginDefinition;
 import org.monstercraft.irc.plugin.util.Constants;
 
 public class IRCPluginHandler extends IRC {
 
 	private final HashMap<Integer, IRCPlugin> pluginsToRun = new HashMap<Integer, IRCPlugin>();
 	private final HashMap<Integer, Thread> pluginThreads = new HashMap<Integer, Thread>();
-	private final List<PluginDefinition> plugins;
+	private final List<IRCPluginDefinition> plugins;
 
 	public IRCPluginHandler(IRC plugin) {
-		this.plugins = new ArrayList<PluginDefinition>();
+		this.plugins = new ArrayList<IRCPluginDefinition>();
 		plugins.addAll(new FilePluginSource(getPluginsFolder()).list());
-		for (PluginDefinition def : plugins) {
+		for (IRCPluginDefinition def : plugins) {
 			try {
 				log("Loading IRC plugin " + def.name + ".");
 				runplugin(def.source.load(def));

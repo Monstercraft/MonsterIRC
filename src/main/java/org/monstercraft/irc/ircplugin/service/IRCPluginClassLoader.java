@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.SecureClassLoader;
 
-public class PluginClassLoader extends ClassLoader {
+public class IRCPluginClassLoader extends SecureClassLoader {
 
 	private final URL base;
 
-	public PluginClassLoader(URL url) {
+	public IRCPluginClassLoader(URL url) {
 		this.base = url;
 	}
 

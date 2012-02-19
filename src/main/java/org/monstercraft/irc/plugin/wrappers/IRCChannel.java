@@ -99,8 +99,9 @@ public class IRCChannel extends IRC {
 	public IRCChannel(final String password, final boolean showJoinLeave,
 			final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final String ChatChannel,
-			final List<String> listenChatChannels, final ChatType type, final List<String> opCommands,
-			final List<String> voiceCommands, final List<String> userCommands) {
+			final List<String> listenChatChannels, final ChatType type,
+			final List<String> opCommands, final List<String> voiceCommands,
+			final List<String> userCommands) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -115,7 +116,7 @@ public class IRCChannel extends IRC {
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
 	}
-	
+
 	public IRCChannel(final String password, final boolean showJoinLeave,
 			final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final String ChatChannel,
@@ -267,8 +268,9 @@ public class IRCChannel extends IRC {
 	public boolean isHeroChatListenChannel(String activeChannelName) {
 		if (listenChatChannels != null)
 			for (String chTestName : listenChatChannels)
-				if (chTestName.equalsIgnoreCase(activeChannelName)) return true;
-		
+				if (chTestName.equalsIgnoreCase(activeChannelName))
+					return true;
+
 		return false;
 	}
 

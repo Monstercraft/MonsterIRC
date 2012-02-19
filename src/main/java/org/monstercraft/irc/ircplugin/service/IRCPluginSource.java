@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.monstercraft.irc.ircplugin.IRCPlugin;
 
-public interface PluginSource {
+public interface IRCPluginSource {
 
-	List<PluginDefinition> list();
+	List<IRCPluginDefinition> list();
 
-	IRCPlugin load(PluginDefinition def);
+	IRCPlugin load(IRCPluginDefinition def);
 
 }

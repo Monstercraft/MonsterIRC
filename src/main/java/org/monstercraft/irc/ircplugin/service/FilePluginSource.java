@@ -13,7 +13,7 @@ import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
 
-public class FilePluginSource extends IRC implements PluginSource {
+public class FilePluginSource extends IRC implements IRCPluginSource {
 
 	private File file;
 
@@ -22,16 +22,16 @@ public class FilePluginSource extends IRC implements PluginSource {
 	}
 
 	@Override
-	public List<PluginDefinition> list() {
-		LinkedList<PluginDefinition> defs = new LinkedList<PluginDefinition>();
+	public List<IRCPluginDefinition> list() {
+		LinkedList<IRCPluginDefinition> defs = new LinkedList<IRCPluginDefinition>();
 		if (file != null) {
 			if (file.isDirectory()) {
 				try {
-					final ClassLoader ldr = new PluginClassLoader(file.toURI()
-							.toURL());
+					final ClassLoader ldr = new IRCPluginClassLoader(file
+							.toURI().toURL());
 					for (final File f : file.listFiles()) {
 						if (isJar(f)) {
-							load(new PluginClassLoader(getJarUrl(f)), defs,
+							load(new IRCPluginClassLoader(getJarUrl(f)), defs,
 									new JarFile(f));
 						} else {
 							load(ldr, defs, f, "");
@@ -41,7 +41,7 @@ public class FilePluginSource extends IRC implements PluginSource {
 				}
 			} else if (isJar(file)) {
 				try {
-					final ClassLoader ldr = new PluginClassLoader(
+					final ClassLoader ldr = new IRCPluginClassLoader(
 							getJarUrl(file));
 					load(ldr, defs, new JarFile(file));
 				} catch (final IOException ignored) {
@@ -52,8 +52,8 @@ public class FilePluginSource extends IRC implements PluginSource {
 	}
 
 	@Override
-	public IRCPlugin load(PluginDefinition def) {
-		if (!(def instanceof PluginDefinition)) {
+	public IRCPlugin load(IRCPluginDefinition def) {
+		if (!(def instanceof IRCPluginDefinition)) {
 			throw new IllegalArgumentException("Invalid definition!");
 		}
 		try {
@@ -66,8 +66,8 @@ public class FilePluginSource extends IRC implements PluginSource {
 		return null;
 	}
 
-	private void load(ClassLoader loader, LinkedList<PluginDefinition> plugins,
-			JarFile jar) {
+	private void load(ClassLoader loader,
+			LinkedList<IRCPluginDefinition> plugins, JarFile jar) {
 		try {
 			Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {
@@ -86,7 +86,7 @@ public class FilePluginSource extends IRC implements PluginSource {
 	}
 
 	private void load(final ClassLoader loader,
-			final LinkedList<PluginDefinition> Plugins, final File file,
+			final LinkedList<IRCPluginDefinition> Plugins, final File file,
 			final String prefix) {
 		if (file.isDirectory()) {
 			if (!file.getName().startsWith(".")) {
@@ -105,8 +105,8 @@ public class FilePluginSource extends IRC implements PluginSource {
 		}
 	}
 
-	private void load(ClassLoader loader, LinkedList<PluginDefinition> Plugins,
-			String name) {
+	private void load(ClassLoader loader,
+			LinkedList<IRCPluginDefinition> Plugins, String name) {
 		Class<?> clazz;
 		try {
 			clazz = loader.loadClass(name);
@@ -119,7 +119,7 @@ public class FilePluginSource extends IRC implements PluginSource {
 			return;
 		}
 		if (clazz.isAnnotationPresent(PluginManifest.class)) {
-			PluginDefinition def = new PluginDefinition();
+			IRCPluginDefinition def = new IRCPluginDefinition();
 			PluginManifest manifest = clazz.getAnnotation(PluginManifest.class);
 			def.name = manifest.name();
 			def.id = 0;

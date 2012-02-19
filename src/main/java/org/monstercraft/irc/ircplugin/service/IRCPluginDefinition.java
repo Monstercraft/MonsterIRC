@@ -1,6 +1,6 @@
 package org.monstercraft.irc.ircplugin.service;
 
-public class PluginDefinition {
+public class IRCPluginDefinition {
 
 	public Class<?> clazz;
 
@@ -8,6 +8,6 @@ public class PluginDefinition {
 
 	public String name;
 
-	public PluginSource source;
+	public IRCPluginSource source;
 
 }

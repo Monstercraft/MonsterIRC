@@ -2,6 +2,7 @@ package org.monstercraft.irc.plugin.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
+
 import com.palmergames.bukkit.TownyChat.Chat;
 
 /**

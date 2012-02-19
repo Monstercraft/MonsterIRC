@@ -316,10 +316,11 @@ public class IRCHandler extends IRC {
 											plugin.getServer()
 													.getPluginManager()
 													.callEvent(msgEvent);
-//											PluginMessageEvent msge = new PluginMessageEvent(
-//													c, name, msg);
-//											IRC.getEventManager()
-//													.dispatchEvent(msge);
+											// PluginMessageEvent msge = new
+											// PluginMessageEvent(
+											// c, name, msg);
+											// IRC.getEventManager()
+											// .dispatchEvent(msge);
 										}
 									} else if (subline.toLowerCase().contains(
 											"QUIT".toLowerCase())) {
@@ -671,7 +672,7 @@ public class IRCHandler extends IRC {
 	 */
 	public void sendMessage(final String Message, final String channel) {
 		final String prefix = "PRIVMSG " + channel + " :";
-		final int length = 512 - prefix.length();
+		final int length = 500 - prefix.length();
 		final String parts[] = Message.toString().split(
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {
@@ -691,7 +692,7 @@ public class IRCHandler extends IRC {
 	 */
 	public void sendNotice(final String Message, final String reciever) {
 		final String prefix = "NOTICE " + reciever + " :";
-		final int length = 512 - prefix.length();
+		final int length = 500 - prefix.length();
 		final String parts[] = Message.toString().split(
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {

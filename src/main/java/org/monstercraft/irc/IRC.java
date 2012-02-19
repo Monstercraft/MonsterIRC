@@ -245,10 +245,10 @@ public class IRC extends JavaPlugin implements Runnable {
 				IRC.handles = new HandleManager(this);
 				this.getServer().getPluginManager()
 						.registerEvents(listener, this);
-//				IRC.em = new EventManager();
-//				IRC.em.start();
-//				new Configuration();
-//				IRC.ph = new IRCPluginHandler(this);
+				// IRC.em = new EventManager();
+				// IRC.em.start();
+				// new Configuration();
+				// IRC.ph = new IRCPluginHandler(this);
 				String currentVersion = getDescription().getVersion();
 				String newVersion = updateCheck(currentVersion);
 				if (!newVersion.contains(currentVersion)) {
