@@ -799,7 +799,7 @@ public class IRCHandler extends IRC {
 					&& IRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel().sendMessage(
-						Variables.mcformat
+						IRCColor.formatIRCMessage(Variables.mcformat
 								.replace("{name}", StringUtils.getName(name))
 								.replace("{message}", "")
 								.replace(":", "")
@@ -812,9 +812,8 @@ public class IRCHandler extends IRC {
 								.replace("{groupSuffix}",
 										StringUtils.getGroupSuffix(name))
 								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§"),
-						IRCColor.formatIRCMessage(IRCColor
-								.formatIRCMessage(message)),
+								.replace("&", "§")),
+						IRCColor.formatIRCMessage(message),
 						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				plugin.getServer().broadcastMessage(
