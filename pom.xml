@@ -78,20 +78,11 @@
 		<resources>
 			<resource>
 				<targetPath>.</targetPath>
-				<directory>${basedir}/src/main/resources/</directory>
+				<directory>${basedir}/</directory>
 				<filtering>true</filtering>
 				<includes>
 					<include>config.yml</include>
 					<include>plugin.yml</include>
-					<include>README.md</include>
-				</includes>
-			</resource>
-
-			<resource>
-				<targetPath>.</targetPath>
-				<directory>${basedir}/</directory>
-				<filtering>true</filtering>
-				<includes>
 					<include>README.md</include>
 				</includes>
 			</resource>
