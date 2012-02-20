@@ -142,8 +142,8 @@ public abstract class IRCPlugin extends Methods implements EventListener,
 	}
 
 	public File getCacheDirectory() {
-		final File dir = new File(Configuration.Paths.PLUGINS, getClass()
-				.getName());
+		final File dir = new File(Configuration.Paths.PLUGINS, this.getClass()
+				.getSimpleName());
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}

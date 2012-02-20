@@ -81,8 +81,8 @@
 				<directory>${basedir}/</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>config.yml</include>
-					<include>plugin.yml</include>
+					<include>src/main/resources/config.yml</include>
+					<include>src/main/resources/plugin.yml</include>
 					<include>README.md</include>
 				</includes>
 			</resource>
