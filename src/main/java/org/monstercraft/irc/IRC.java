@@ -92,7 +92,7 @@ public class IRC extends JavaPlugin implements Runnable {
 		}
 		settings.saveMuted();
 		getHandleManager().getPluginHandler().stopPlugin();
-		Methods.log("Successfully disabled plugin.");
+		Methods.log("Successfully disabled plugin!");
 	}
 
 	/**
