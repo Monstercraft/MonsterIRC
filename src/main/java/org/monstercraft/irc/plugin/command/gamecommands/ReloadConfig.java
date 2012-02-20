@@ -40,7 +40,7 @@ public class ReloadConfig extends GameCommand {
 
 	@Override
 	public String getPermissions() {
-		return "irc.console";
+		return "irc.reload";
 	}
 
 }
