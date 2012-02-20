@@ -2,6 +2,7 @@ package org.monstercraft.irc.plugin.command.irccommand;
 
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
@@ -36,8 +37,7 @@ public class List extends IRCCommand {
 					sb.append(players[i].getName() + ", ");
 				}
 			}
-			IRC.getHandleManager().getIRCHandler()
-					.sendMessage(sb.toString(), channel.getChannel());
+			Methods.sendMessage(channel, sb.toString());
 			return true;
 		}
 		return false;

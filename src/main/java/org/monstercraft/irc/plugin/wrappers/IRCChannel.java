@@ -187,7 +187,7 @@ public class IRCChannel extends IRC {
 	 * @return The HeroChat channel to listen in.
 	 */
 	public com.herocraftonline.dthielke.herochat.channels.Channel getHeroChatFourChannel() {
-		return IRC.getHookManager().getHeroChatHook().getChannelManager()
+		return getHookManager().getHeroChatHook().getChannelManager()
 				.getChannel(ChatChannel);
 	}
 
@@ -197,7 +197,7 @@ public class IRCChannel extends IRC {
 	 * @return The TownyChat channel to listen in.
 	 */
 	public com.palmergames.bukkit.TownyChat.channels.Channel getTownyChannel() {
-		return IRC.getHookManager().getTownyChatHook().getChannelsHandler()
+		return getHookManager().getTownyChatHook().getChannelsHandler()
 				.getChannel(ChatChannel);
 	}
 

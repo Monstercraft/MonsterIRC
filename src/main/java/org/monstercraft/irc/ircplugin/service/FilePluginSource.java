@@ -11,7 +11,7 @@ import java.util.jar.JarFile;
 
 import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
-import org.monstercraft.irc.plugin.util.Methods;
+import org.monstercraft.irc.ircplugin.util.Methods;
 
 public class FilePluginSource implements IRCPluginSource {
 

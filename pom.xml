@@ -64,7 +64,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.herocraftonline.dthielke.herochat</groupId>
-			<artifactId>HeroChat</artifactId>
+			<artifactId>HeroChat4</artifactId>
 			<version>4.10.3</version>
 		</dependency>
 		<dependency>

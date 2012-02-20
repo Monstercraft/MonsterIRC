@@ -1,4 +1,4 @@
-package org.monstercraft.irc.plugin.handlers;
+package org.monstercraft.irc.plugin.managers.handlers;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.command.GameCommand;
-import org.monstercraft.irc.plugin.util.Methods;
 
 /**
  * This handles all of the plugins permissions.

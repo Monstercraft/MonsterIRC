@@ -1,11 +1,11 @@
-package org.monstercraft.irc.plugin.hooks;
+package org.monstercraft.irc.plugin.managers.hooks;
 
 import net.milkbowl.vault.chat.Chat;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.plugin.util.Methods;
+import org.monstercraft.irc.ircplugin.util.Methods;
 
 /**
  * This class listens for chat ingame to pass to the IRC.

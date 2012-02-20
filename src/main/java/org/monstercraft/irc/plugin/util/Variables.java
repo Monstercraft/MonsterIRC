@@ -81,16 +81,6 @@ public class Variables {
 	public static String ircformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}";
 
 	/**
-	 * The format for the join messages to be recieved in.
-	 */
-	public static String joinformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has joined.";
-
-	/**
-	 * The format for the leave messages to be recieved in.
-	 */
-	public static String leaveformat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has left.\'";
-
-	/**
 	 * The prefix to be used when detecting an IRC command.
 	 */
 	public static String commandPrefix = ".";

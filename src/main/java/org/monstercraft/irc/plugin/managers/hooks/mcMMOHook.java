@@ -1,8 +1,8 @@
-package org.monstercraft.irc.plugin.hooks;
+package org.monstercraft.irc.plugin.managers.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.plugin.util.Methods;
+import org.monstercraft.irc.ircplugin.util.Methods;
 
 import com.gmail.nossr50.mcMMO;
 

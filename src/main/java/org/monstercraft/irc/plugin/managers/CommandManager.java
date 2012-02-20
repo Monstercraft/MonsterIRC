@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.command.gamecommands.Ban;
@@ -21,9 +22,8 @@ import org.monstercraft.irc.plugin.command.gamecommands.Say;
 import org.monstercraft.irc.plugin.command.gamecommands.Unmute;
 import org.monstercraft.irc.plugin.command.irccommand.Announce;
 import org.monstercraft.irc.plugin.command.irccommand.List;
-import org.monstercraft.irc.plugin.command.irccommand.ListCommands;
+import org.monstercraft.irc.plugin.command.irccommand.Commands;
 import org.monstercraft.irc.plugin.command.irccommand.Other;
-import org.monstercraft.irc.plugin.util.Methods;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
@@ -58,7 +58,7 @@ public class CommandManager extends IRC {
 		gameCommands.put(2, new Say(plugin));
 		gameCommands.put(1, new ReloadConfig(plugin));
 		IRCCommands.put(4, new Announce(plugin));
-		IRCCommands.put(3, new ListCommands(plugin));
+		IRCCommands.put(3, new Commands(plugin));
 		IRCCommands.put(2, new List(plugin));
 		if (Variables.ingamecommands) {
 			IRCCommands.put(1, new Other(plugin));

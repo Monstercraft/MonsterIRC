@@ -1,4 +1,4 @@
-package org.monstercraft.irc.plugin.handlers;
+package org.monstercraft.irc.plugin.managers.handlers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,6 +27,8 @@ import org.monstercraft.irc.ircplugin.event.events.PluginModeEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginPartEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginPrivateMessageEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginQuitEvent;
+import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.plugin.Configuration;
 import org.monstercraft.irc.plugin.event.events.IRCActionEvent;
 import org.monstercraft.irc.plugin.event.events.IRCConnectEvent;
 import org.monstercraft.irc.plugin.event.events.IRCDisconnectEvent;
@@ -39,7 +41,6 @@ import org.monstercraft.irc.plugin.event.events.IRCPrivateMessageEvent;
 import org.monstercraft.irc.plugin.event.events.IRCQuitEvent;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.IRCColor;
-import org.monstercraft.irc.plugin.util.Methods;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
@@ -93,7 +94,7 @@ public class IRCHandler extends IRC {
 		int ping = -1;
 		int tries = 0;
 		for (int i = 0; i < server.getRetrys(); i++) {
-			ping = Methods.ping(server.getServer(), server.getPort(),
+			ping = Configuration.ping(server.getServer(), server.getPort(),
 					server.getTimeout());
 			if (ping < server.getTimeout() + 1 && ping != -1) {
 				tries = i;
@@ -358,30 +359,8 @@ public class IRCHandler extends IRC {
 										if (c.showJoinLeave()) {
 											name = line.substring(1,
 													line.indexOf("!"));
-											msg = IRCColor
-													.formatIRCMessage(Variables.leaveformat
-															.replace("{name}",
-																	"")
-															.replace(
-																	"{prefix}",
-																	"")
-															.replace(
-																	"{suffix}",
-																	"")
-															.replace(
-																	"{groupPrefix}",
-																	"")
-															.replace(
-																	"{groupSuffix}",
-																	"")
-															.replace("{world}",
-																	"")
-															.replace("&", "§")
-															.replace("<", "")
-															.replace(">", ""))
-													+ " ("
-													+ c.getChannel()
-													+ ")";
+											msg = name + " has left ("
+													+ c.getChannel() + ")";
 										}
 										IRCQuitEvent qevent = new IRCQuitEvent(
 												c, name);
@@ -451,30 +430,8 @@ public class IRCHandler extends IRC {
 										if (c.showJoinLeave()) {
 											name = line.substring(1,
 													line.indexOf("!"));
-											msg = IRCColor
-													.formatIRCMessage(Variables.leaveformat
-															.replace("{name}",
-																	"")
-															.replace(
-																	"{prefix}",
-																	"")
-															.replace(
-																	"{suffix}",
-																	"")
-															.replace(
-																	"{groupPrefix}",
-																	"")
-															.replace(
-																	"{groupSuffix}",
-																	"")
-															.replace("{world}",
-																	"")
-															.replace("&", "§")
-															.replace("<", "")
-															.replace(">", ""))
-													+ " ("
-													+ c.getChannel()
-													+ ")";
+											msg = name + " has left ("
+													+ c.getChannel() + ")";
 										}
 										IRCPartEvent pevent = new IRCPartEvent(
 												c, name);
@@ -516,30 +473,8 @@ public class IRCHandler extends IRC {
 										if (c.showJoinLeave()) {
 											name = line.substring(1,
 													line.indexOf("!"));
-											msg = IRCColor
-													.formatIRCMessage(Variables.joinformat
-															.replace("{name}",
-																	"")
-															.replace(
-																	"{prefix}",
-																	"")
-															.replace(
-																	"{suffix}",
-																	"")
-															.replace(
-																	"{groupPrefix}",
-																	"")
-															.replace(
-																	"{groupSuffix}",
-																	"")
-															.replace("{world}",
-																	"")
-															.replace("&", "§")
-															.replace("<", "")
-															.replace(">", ""))
-													+ " ("
-													+ c.getChannel()
-													+ ")";
+											msg = name + " has joined ("
+													+ c.getChannel() + ")";
 										}
 										IRCJoinEvent jevent = new IRCJoinEvent(
 												c, name);
@@ -730,7 +665,7 @@ public class IRCHandler extends IRC {
 	 * @param channel
 	 *            The channel to send the message to.
 	 */
-	public void sendMessage(final String Message, final String channel) {
+	public void sendMessage(final String channel, final String Message) {
 		final String prefix = "PRIVMSG " + channel + " :";
 		final int length = 500 - prefix.length();
 		final String parts[] = Message.toString().split(
@@ -750,10 +685,10 @@ public class IRCHandler extends IRC {
 	 * @param channel
 	 *            The channel to send the message to.
 	 */
-	public void sendNotice(final String Message, final String reciever) {
-		final String prefix = "NOTICE " + reciever + " :";
+	public void sendNotice(final String to, final String message) {
+		final String prefix = "NOTICE " + to + " :";
 		final int length = 500 - prefix.length();
-		final String parts[] = Message.toString().split(
+		final String parts[] = message.toString().split(
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {
 			String msg = prefix + parts[i];

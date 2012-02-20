@@ -1,11 +1,14 @@
 package org.monstercraft.irc.ircplugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.EventListener;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.Configuration;
-import org.monstercraft.irc.plugin.util.Methods;
 
 public abstract class IRCPlugin extends Methods implements EventListener,
 		Runnable {
@@ -124,6 +127,18 @@ public abstract class IRCPlugin extends Methods implements EventListener,
 		IRC.getEventManager().removeListener(this);
 		IRC.getHandleManager().getPluginHandler().stopPlugin(id);
 		id = -1;
+	}
+
+	public void saveConfig(final FileConfiguration config, final File file) {
+		try {
+			config.save(file);
+		} catch (IOException e) {
+			Methods.debug(e);
+		}
+	}
+
+	public FileConfiguration getConfig() {
+		return new YamlConfiguration();
 	}
 
 	public File getCacheDirectory() {

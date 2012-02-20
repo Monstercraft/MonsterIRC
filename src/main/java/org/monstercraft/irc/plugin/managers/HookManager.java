@@ -3,11 +3,11 @@ package org.monstercraft.irc.plugin.managers;
 import net.milkbowl.vault.chat.Chat;
 
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.plugin.hooks.HeroChatHook;
-import org.monstercraft.irc.plugin.hooks.TownyChatHook;
-import org.monstercraft.irc.plugin.hooks.VaultChatHook;
-import org.monstercraft.irc.plugin.hooks.VaultPermissionsHook;
-import org.monstercraft.irc.plugin.hooks.mcMMOHook;
+import org.monstercraft.irc.plugin.managers.hooks.HeroChatHook;
+import org.monstercraft.irc.plugin.managers.hooks.TownyChatHook;
+import org.monstercraft.irc.plugin.managers.hooks.VaultChatHook;
+import org.monstercraft.irc.plugin.managers.hooks.VaultPermissionsHook;
+import org.monstercraft.irc.plugin.managers.hooks.mcMMOHook;
 
 import com.gmail.nossr50.mcMMO;
 import com.herocraftonline.dthielke.herochat.HeroChat;

@@ -9,6 +9,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.util.IRCColor;
 
 /**
@@ -30,7 +31,7 @@ public class IRCCommandSender implements CommandSender {
 	 * @param sender
 	 *            The command sender's name.
 	 */
-	public IRCCommandSender(IRC plugin, String sender) {
+	public IRCCommandSender(final IRC plugin, final String sender) {
 		this.sender = sender;
 		this.plugin = plugin;
 	}
@@ -40,8 +41,7 @@ public class IRCCommandSender implements CommandSender {
 	 */
 	@Override
 	public void sendMessage(String message) {
-		IRC.getHandleManager().getIRCHandler()
-				.sendNotice(IRCColor.formatMCMessage(message), sender);
+		Methods.sendNotice(sender, IRCColor.formatMCMessage(message));
 	}
 
 	/**

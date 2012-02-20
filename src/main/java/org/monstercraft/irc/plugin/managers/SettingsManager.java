@@ -11,9 +11,9 @@ import java.util.Set;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.Configuration;
 import org.monstercraft.irc.plugin.util.ChatType;
-import org.monstercraft.irc.plugin.util.Methods;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
@@ -131,7 +131,7 @@ public class SettingsManager extends IRC {
 					Variables.timeout);
 			Variables.tries = config.getInt("IRC.OPTIONS.RETRYS",
 					Variables.tries);
-			Variables.debug = config.getBoolean("IRC.OPTIONS.Methods.debug",
+			Variables.debug = config.getBoolean("IRC.OPTIONS.DEBUG",
 					Variables.debug);
 			Variables.passOnName = config.getBoolean(
 					"IRC.OPTIONS.PASS_ON_NAME", Variables.passOnName);
@@ -148,10 +148,6 @@ public class SettingsManager extends IRC {
 					Variables.mcformat);
 			Variables.ircformat = config.getString("IRC.FORMAT.IRC",
 					Variables.ircformat);
-			Variables.joinformat = config.getString("IRC.FORMAT.JOIN",
-					Variables.joinformat);
-			Variables.leaveformat = config.getString("IRC.FORMAT.LEAVE",
-					Variables.leaveformat);
 			Variables.connectCommands = config
 					.getStringList("IRC.ON_CONNECT_COMMANDS");
 			Variables.muted = config.getStringList("IRC.MUTED");
@@ -160,8 +156,6 @@ public class SettingsManager extends IRC {
 			Methods.debug(e);
 		}
 		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
-		String defaultjoin = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has joined.";
-		String defaultleave = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}> has left.";
 		if (Variables.mcformat.contains("{name}")
 				&& Variables.mcformat.contains("{message}")) {
 		} else {
@@ -173,14 +167,6 @@ public class SettingsManager extends IRC {
 		} else {
 			Methods.debug("Invalid IRC format detected!", Variables.debug);
 			Variables.ircformat = defaultFormat;
-		}
-		if (!Variables.joinformat.contains("{name}")) {
-			Methods.debug("Invalid IRC format detected!", Variables.debug);
-			Variables.ircformat = defaultjoin;
-		}
-		if (!Variables.leaveformat.contains("{name}")) {
-			Methods.debug("Invalid IRC format detected!", Variables.debug);
-			Variables.ircformat = defaultleave;
 		}
 		if (Variables.name.contains("default")) {
 			firstRun = true;

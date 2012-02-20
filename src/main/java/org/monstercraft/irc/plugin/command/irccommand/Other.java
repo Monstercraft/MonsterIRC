@@ -2,6 +2,7 @@ package org.monstercraft.irc.plugin.command.irccommand;
 
 import org.bukkit.command.CommandException;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
@@ -34,10 +35,11 @@ public class Other extends IRCCommand {
 				} catch (CommandException e) {
 					IRC.getHandleManager()
 							.getIRCHandler()
-							.sendMessage(
+							.sendNotice(
+									sender,
 									sender
 											+ ": Error executing ingame command! "
-											+ e.toString(), sender);
+											+ e.toString());
 				}
 			} else if (!channel.getOpCommands().isEmpty()) {
 				for (String s : channel.getOpCommands()) {
@@ -57,10 +59,11 @@ public class Other extends IRCCommand {
 							} catch (CommandException e) {
 								IRC.getHandleManager()
 										.getIRCHandler()
-										.sendMessage(
+										.sendNotice(
+												sender,
 												sender
 														+ ": Error executing ingame command! "
-														+ e.toString(), sender);
+														+ e.toString());
 							}
 						}
 
@@ -124,16 +127,11 @@ public class Other extends IRCCommand {
 						}
 					}
 				}
-				IRC.getHandleManager()
-						.getIRCHandler()
-						.sendNotice("You cannot use that command from IRC.",
-								sender);
+				Methods.sendNotice(sender,
+						"You cannot use that command from IRC.");
 			} else {
-				IRC.getHandleManager()
-						.getIRCHandler()
-						.sendNotice(
-								"You are not allowed to execute that command from IRC.",
-								sender);
+				Methods.sendNotice(sender,
+						"You are not allowed to execute that command from IRC.");
 				return true;
 			}
 		} else if (IRC.getHandleManager().getIRCHandler()
@@ -211,16 +209,11 @@ public class Other extends IRCCommand {
 						}
 					}
 				}
-				IRC.getHandleManager()
-						.getIRCHandler()
-						.sendNotice("You cannot use that command from IRC.",
-								sender);
+				Methods.sendNotice(sender,
+						"You cannot use that command from IRC.");
 			} else {
-				IRC.getHandleManager()
-						.getIRCHandler()
-						.sendNotice(
-								"You are not allowed to execute that command from IRC.",
-								sender);
+				Methods.sendNotice(sender,
+						"You are not allowed to execute that command from IRC.");
 				return true;
 			}
 		} else {
@@ -268,16 +261,11 @@ public class Other extends IRCCommand {
 
 					}
 				}
-				IRC.getHandleManager()
-						.getIRCHandler()
-						.sendNotice("You cannot use that command from IRC.",
-								sender);
+				Methods.sendNotice(sender,
+						"You cannot use that command from IRC.");
 			} else {
-				IRC.getHandleManager()
-						.getIRCHandler()
-						.sendNotice(
-								"You are not allowed to execute that command from IRC.",
-								sender);
+				Methods.sendNotice(sender,
+						"You are not allowed to execute that command from IRC.");
 				return true;
 			}
 		}

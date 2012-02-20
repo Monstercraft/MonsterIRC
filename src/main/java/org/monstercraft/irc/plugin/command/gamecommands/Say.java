@@ -66,14 +66,14 @@ public class Say extends GameCommand {
 			if (channel != null) {
 				if (c.getChannel().equalsIgnoreCase(channel)) {
 					IRC.getHandleManager().getIRCHandler()
-							.sendMessage(result.toString(), c.getChannel());
+							.sendMessage(c.getChannel(), result.toString());
 					handleMessage(c, sender.getName(), result2.toString());
 					break;
 				}
 			} else {
 				if (c.isDefaultChannel()) {
 					IRC.getHandleManager().getIRCHandler()
-							.sendMessage(result.toString(), c.getChannel());
+							.sendMessage(c.getChannel(), result.toString());
 					handleMessage(c, sender.getName(), result2.toString());
 				}
 			}

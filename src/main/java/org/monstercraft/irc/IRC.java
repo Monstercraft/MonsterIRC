@@ -2,17 +2,19 @@ package org.monstercraft.irc;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.monstercraft.irc.ircplugin.event.EventManager;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.Configuration;
-import org.monstercraft.irc.plugin.listeners.IRCListener;
 import org.monstercraft.irc.plugin.managers.CommandManager;
 import org.monstercraft.irc.plugin.managers.HandleManager;
 import org.monstercraft.irc.plugin.managers.HookManager;
 import org.monstercraft.irc.plugin.managers.SettingsManager;
-import org.monstercraft.irc.plugin.util.Methods;
+import org.monstercraft.irc.plugin.managers.listeners.JavaPluginListener;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
@@ -29,7 +31,7 @@ public class IRC extends JavaPlugin implements Runnable {
 	private static HandleManager handles = null;
 	private static HookManager hooks = null;
 	private static CommandManager command = null;
-	private static IRCListener listener = null;
+	private static JavaPluginListener listener = null;
 
 	private static IRCServer IRCserver = null;
 
@@ -48,7 +50,7 @@ public class IRC extends JavaPlugin implements Runnable {
 		em.start();
 		hooks = new HookManager(this);
 		command = new CommandManager(this);
-		listener = new IRCListener(this);
+		listener = new JavaPluginListener(this);
 		IRCserver = new IRCServer(Variables.server, Variables.port,
 				Variables.name, Variables.password, Variables.ident,
 				Variables.timeout, Variables.limit, Variables.connectCommands);
@@ -79,7 +81,7 @@ public class IRC extends JavaPlugin implements Runnable {
 				if (getHandleManager().getIRCHandler().isConnected(
 						getIRCServer())) {
 					for (IRCChannel c : Variables.channels) {
-						IRC.getHandleManager().getIRCHandler().part(c);
+						getHandleManager().getIRCHandler().part(c);
 					}
 					getHandleManager().getIRCHandler().disconnect(
 							getIRCServer());
@@ -165,6 +167,16 @@ public class IRC extends JavaPlugin implements Runnable {
 		return em;
 	}
 
+	/**
+	 * Stops the plugin.
+	 * 
+	 * @param plugin
+	 *            The plugin to stop.
+	 */
+	protected static void stop(final Plugin plugin) {
+		Bukkit.getServer().getPluginManager().disablePlugin(plugin);
+	}
+
 	@Override
 	public void run() {
 		synchronized (lock) {
@@ -173,7 +185,7 @@ public class IRC extends JavaPlugin implements Runnable {
 					getHandleManager().getIRCHandler().connect(getIRCServer());
 					Methods.log("Successfully started up.");
 				} else {
-					Methods.stop(this);
+					stop(this);
 				}
 			} catch (Exception e) {
 				Methods.debug(e);

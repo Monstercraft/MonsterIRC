@@ -1,10 +1,10 @@
 package org.monstercraft.irc.plugin.managers;
 
 import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.plugin.handlers.IRCHandler;
-import org.monstercraft.irc.plugin.handlers.IRCPermissionsHandler;
-import org.monstercraft.irc.plugin.handlers.IRCPluginHandler;
-import org.monstercraft.irc.plugin.hooks.VaultPermissionsHook;
+import org.monstercraft.irc.plugin.managers.handlers.IRCHandler;
+import org.monstercraft.irc.plugin.managers.handlers.IRCPermissionsHandler;
+import org.monstercraft.irc.plugin.managers.handlers.IRCPluginHandler;
+import org.monstercraft.irc.plugin.managers.hooks.VaultPermissionsHook;
 
 /**
  * This class contains all of the plugins handles.

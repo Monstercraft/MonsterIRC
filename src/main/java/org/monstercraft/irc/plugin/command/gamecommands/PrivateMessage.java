@@ -44,14 +44,14 @@ public class PrivateMessage extends GameCommand {
 			if (!first.contains(split[2])) {
 				IRC.getHandleManager()
 						.getIRCHandler()
-						.sendMessage(
-								"You have revieved a private message from MonsterIRC!",
-								split[2]);
+						.sendMessage(split[2],
+								"You have revieved a private message from MonsterIRC!");
 				IRC.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
+								split[2],
 								"To reply type \"" + sender.getName()
-										+ ":\" (message)", split[2]);
+										+ ":\" (message)");
 				first.add(split[2]);
 			}
 			StringBuffer result = new StringBuffer();
@@ -60,7 +60,7 @@ public class PrivateMessage extends GameCommand {
 				result.append(" ");
 			}
 			IRC.getHandleManager().getIRCHandler()
-					.sendMessage(result.toString(), split[2]);
+					.sendMessage(split[2], result.toString());
 			sender.sendMessage(IRCColor.LIGHT_GRAY.getMinecraftColor()
 					+ "([IRC] to " + split[2] + "): " + result.toString());
 			return true;

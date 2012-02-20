@@ -1,4 +1,4 @@
-package org.monstercraft.irc.plugin.handlers;
+package org.monstercraft.irc.plugin.managers.handlers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
 import org.monstercraft.irc.ircplugin.service.FilePluginSource;
 import org.monstercraft.irc.ircplugin.service.IRCPluginDefinition;
+import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.Configuration;
-import org.monstercraft.irc.plugin.util.Methods;
 
 public class IRCPluginHandler extends IRC {
 
