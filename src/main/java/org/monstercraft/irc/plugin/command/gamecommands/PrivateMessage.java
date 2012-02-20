@@ -29,17 +29,17 @@ public class PrivateMessage extends GameCommand {
 				if (!IRC.getHandleManager().getPermissionsHandler()
 						.hasCommandPerms(((Player) sender), this)) {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
-					return false;
+					return true;
 				}
 			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
-				return false;
+				return true;
 			}
 		}
 		if (split.length < 4) {
 			sender.sendMessage("Invalid usage!");
 			sender.sendMessage("Proper usage: irc pm [user] [message]");
-			return false;
+			return true;
 		} else {
 			if (!first.contains(split[2])) {
 				IRC.getHandleManager()

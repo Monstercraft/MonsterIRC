@@ -31,11 +31,11 @@ public class Say extends GameCommand {
 				if (!IRC.getHandleManager().getPermissionsHandler()
 						.hasCommandPerms(((Player) sender), this)) {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
-					return false;
+					return true;
 				}
 			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
-				return false;
+				return true;
 			}
 		}
 		if (split.length <= 2) {
@@ -43,7 +43,7 @@ public class Say extends GameCommand {
 			sender.sendMessage("Proper usage: irc say -c:[irc channel] [message]");
 			sender.sendMessage("or");
 			sender.sendMessage("Proper usage: irc say [message]");
-			return false;
+			return true;
 		}
 		String channel = null;
 		int j = 2;
@@ -78,7 +78,7 @@ public class Say extends GameCommand {
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private void handleMessage(IRCChannel c, String name, String message) {

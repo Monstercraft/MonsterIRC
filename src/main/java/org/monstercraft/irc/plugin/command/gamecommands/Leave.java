@@ -25,11 +25,11 @@ public class Leave extends GameCommand {
 				if (!IRC.getHandleManager().getPermissionsHandler()
 						.hasCommandPerms(((Player) sender), this)) {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
-					return false;
+					return true;
 				}
 			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
-				return false;
+				return true;
 			}
 		}
 		if (split.length < 2) {
