@@ -6,10 +6,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.monstercraft.irc.ircplugin.IRCPlugin;
-import org.monstercraft.irc.ircplugin.PluginManifest;
-import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
-
 public class IRCPluginClassLoader extends ClassLoader {
 
 	private final URL base;
@@ -21,17 +17,13 @@ public class IRCPluginClassLoader extends ClassLoader {
 	public Class<?> loadClass(final String name, final boolean resolve)
 			throws ClassNotFoundException {
 		Class<?> clazz = findLoadedClass(name);
-		if (clazz == null && name.contains("org.monstercraft.irc")) {
-			if (name.equalsIgnoreCase("org.monstercraft.irc.ircplugin.event.listeners.irclistener")) {
-				clazz = IRCListener.class;
-			} else if (name
-					.equalsIgnoreCase("org.monstercraft.irc.ircplugin.ircplugin")) {
-				clazz = IRCPlugin.class;
-			} else if (name
-					.equalsIgnoreCase("org.monstercraft.irc.ircplugin.PluginManifest")) {
-				clazz = PluginManifest.class;
+		if (clazz == null) {
+			try {
+				clazz = Class.forName(name);
+				return clazz;
+			} catch (ClassNotFoundException e) {
+				clazz = null;
 			}
-			return clazz;
 		}
 		if (clazz == null) {
 			try {
