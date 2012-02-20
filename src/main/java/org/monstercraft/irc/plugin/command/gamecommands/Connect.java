@@ -21,13 +21,13 @@ public class Connect extends GameCommand {
 		if (sender instanceof Player) {
 			if (IRC.getHandleManager().getPermissionsHandler() != null) {
 				if (!IRC.getHandleManager().getPermissionsHandler()
-						.hasCommandPerms(((Player) sender), this)) {
+						.hasCommandPerms(((Player)sender), this)) {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
-					return false;
+					return true;
 				}
 			} else {
 				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
-				return false;
+				return true;
 			}
 		}
 		IRC.getHandleManager().getIRCHandler().connect(IRC.getIRCServer());

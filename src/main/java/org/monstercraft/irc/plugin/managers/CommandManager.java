@@ -5,6 +5,8 @@ import java.util.Hashtable;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.command.GameCommand;
@@ -92,15 +94,28 @@ public class CommandManager extends IRC {
 				GameCommand c = gameCommands.get(key);
 				if (c.canExecute(sender, split)) {
 					try {
-						c.execute(sender, split);
+						boolean b = c.execute(sender, split);
+						if (!b) {
+							if (sender instanceof ConsoleCommandSender) {
+								sendMenu((ConsoleCommandSender) sender);
+							} else if (sender instanceof CommandSender) {
+								sendMenu(sender);
+							}
+						}
 					} catch (Exception ex) {
 						Methods.debug(ex);
 					}
-					return true;
 				}
 			}
+		} else {
+			if (sender instanceof ConsoleCommandSender) {
+				sendMenu((ConsoleCommandSender) sender);
+			} else if (sender instanceof CommandSender) {
+				sendMenu(sender);
+			}
+			return true;
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -128,6 +143,69 @@ public class CommandManager extends IRC {
 		}
 		Methods.log("Invalid IRC command");
 		return false;
+	}
+
+	public void sendMenu(CommandSender sender) {
+		sender.sendMessage("----- MonsterIRCs Commands ----");
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Connect(null))) {
+			sender.sendMessage("irc connect - Connects the Bot to the IRC server.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Disconnect(null))) {
+			sender.sendMessage("irc disconnect - Disconnects the Bot from the IRC server.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Join(null))) {
+			sender.sendMessage("irc join (channel) - Connects the Bot to the channel");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Leave(null))) {
+			sender.sendMessage("irc leave (channel) - Disconnects the bot from the channel.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Ban(null))) {
+			sender.sendMessage("irc ban (user) - Kicks and Bans a user from the IRC channel if your bot has OP.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Mute(null))) {
+			sender.sendMessage("irc mute (user) - Stops a IRC users chat from appearing ingame.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Unmute(null))) {
+			sender.sendMessage("irc unmute (user) - Allows a muted IRC users chat to appear ingame.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Nick(null))) {
+			sender.sendMessage("irc nick (new nick) - Changes the IRC bots nickname in IRC for that session.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Say(null))) {
+			sender.sendMessage("irc say (message) - An alternate way to talk to people in IRC.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new ReloadConfig(null))) {
+			sender.sendMessage("irc reload - Reloads the configuration file.");
+		}
+		if (IRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new PrivateMessage(null))) {
+			sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
+		}
+	}
+
+	private void sendMenu(ConsoleCommandSender sender) {
+		sender.sendMessage("----- MonsterIRCs Commands ----");
+		sender.sendMessage("irc connect - Connects the Bot to the IRC server.");
+		sender.sendMessage("irc disconnect - Disconnects the Bot from the IRC server.");
+		sender.sendMessage("irc join (channel) - Connects the Bot to the channel");
+		sender.sendMessage("irc leave (channel) - Disconnects the bot from the channel.");
+		sender.sendMessage("irc ban (user) - Kicks and Bans a user from the IRC channel if your bot has OP.");
+		sender.sendMessage("irc mute (user) - Stops a IRC users chat from appearing ingame.");
+		sender.sendMessage("irc unmute (user) - Allows a muted IRC users chat to appear ingame.");
+		sender.sendMessage("irc nick (new nick) - Changes the IRC bots nickname in IRC for that session.");
+		sender.sendMessage("irc say (message) - An alternate way to talk to people in IRC.");
+		sender.sendMessage("irc reload - Reloads the configuration file.");
+		sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
 	}
 
 }
