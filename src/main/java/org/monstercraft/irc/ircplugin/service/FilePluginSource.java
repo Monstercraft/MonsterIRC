@@ -73,7 +73,7 @@ public class FilePluginSource implements IRCPluginSource {
 			while (entries.hasMoreElements()) {
 				final JarEntry e = entries.nextElement();
 				final String name = e.getName()
-						.replace(File.separatorChar, '.');
+						.replace('/', '.');
 				final String ext = ".class";
 				if (name.endsWith(ext) && !name.contains("$")) {
 					load(loader, plugins,

@@ -18,7 +18,7 @@ public class IRCPluginClassLoader extends ClassLoader {
 		this.base = url;
 	}
 
-	public Class<?> loadClass(String name, boolean resolve)
+	public Class<?> loadClass(final String name, final boolean resolve)
 			throws ClassNotFoundException {
 		Class<?> clazz = findLoadedClass(name);
 		if (clazz == null && name.contains("org.monstercraft.irc")) {
