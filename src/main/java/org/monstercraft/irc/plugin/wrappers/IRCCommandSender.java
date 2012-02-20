@@ -3,7 +3,7 @@ package org.monstercraft.irc.plugin.wrappers;
 import java.util.Set;
 
 import org.bukkit.Server;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -18,7 +18,7 @@ import org.monstercraft.irc.plugin.util.IRCColor;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRCCommandSender implements CommandSender {
+public class IRCCommandSender implements ConsoleCommandSender {
 
 	private IRC plugin;
 	private String sender;
