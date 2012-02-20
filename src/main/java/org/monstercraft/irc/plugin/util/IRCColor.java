@@ -8,11 +8,11 @@ package org.monstercraft.irc.plugin.util;
  */
 public enum IRCColor {
 	WHITE("\u000300", "f"), BLACK("\u000301", "0"), DARK_BLUE("\u000302", "1"), DARK_GREEN(
-			"\u000303", "2"), RED("\u000304", "c"), BROWN("\u000305", "4"), PURPLE(
+			"\u000303", "2"), RED("\u000304", "4"), BROWN("\u000305", "8"), PURPLE(
 			"\u000306", "5"), OLIVE("\u000307", "6"), YELLOW("\u000308", "e"), GREEN(
 			"\u000309", "a"), TEAL("\u000310", "3"), CYAN("\u000311", "b"), BLUE(
 			"\u000312", "9"), MAGENTA("\u000313", "d"), DARK_GRAY("\u000314",
-			"8"), LIGHT_GRAY("\u000315", "7"), NORMAL("\u0003", "");
+			"c"), LIGHT_GRAY("\u000315", "7"), NORMAL("\u000f", "");
 
 	/**
 	 * Colors in minecraft and IRC.
