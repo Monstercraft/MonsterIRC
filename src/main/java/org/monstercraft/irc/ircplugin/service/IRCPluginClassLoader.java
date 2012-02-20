@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.SecureClassLoader;
 
-public class IRCPluginClassLoader extends SecureClassLoader {
+import org.monstercraft.irc.ircplugin.IRCPlugin;
+import org.monstercraft.irc.ircplugin.PluginManifest;
+import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
+
+public class IRCPluginClassLoader extends ClassLoader {
 
 	private final URL base;
 
@@ -18,7 +21,18 @@ public class IRCPluginClassLoader extends SecureClassLoader {
 	public Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
 		Class<?> clazz = findLoadedClass(name);
-
+		if (clazz == null && name.contains("org.monstercraft.irc")) {
+			if (name.equalsIgnoreCase("org.monstercraft.irc.ircplugin.event.listeners.irclistener")) {
+				clazz = IRCListener.class;
+			} else if (name
+					.equalsIgnoreCase("org.monstercraft.irc.ircplugin.ircplugin")) {
+				clazz = IRCPlugin.class;
+			} else if (name
+					.equalsIgnoreCase("org.monstercraft.irc.ircplugin.PluginManifest")) {
+				clazz = PluginManifest.class;
+			}
+			return clazz;
+		}
 		if (clazz == null) {
 			try {
 				InputStream in = getResourceAsStream(name.replace('.', '/')
@@ -35,7 +49,9 @@ public class IRCPluginClassLoader extends SecureClassLoader {
 					resolveClass(clazz);
 				}
 			} catch (Exception e) {
-				clazz = findSystemClass(name);
+				if (clazz == null) {
+					clazz = findSystemClass(name);
+				}
 				if (clazz == null) {
 					System.out.println("Clazz is still null " + name);
 					super.loadClass(name, resolve);

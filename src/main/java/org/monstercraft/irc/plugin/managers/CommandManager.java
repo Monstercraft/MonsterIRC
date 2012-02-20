@@ -23,6 +23,7 @@ import org.monstercraft.irc.plugin.command.irccommand.Announce;
 import org.monstercraft.irc.plugin.command.irccommand.List;
 import org.monstercraft.irc.plugin.command.irccommand.ListCommands;
 import org.monstercraft.irc.plugin.command.irccommand.Other;
+import org.monstercraft.irc.plugin.util.Methods;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
@@ -93,7 +94,7 @@ public class CommandManager extends IRC {
 					try {
 						c.execute(sender, split);
 					} catch (Exception ex) {
-						debug(ex);
+						Methods.debug(ex);
 					}
 					return true;
 				}
@@ -120,12 +121,12 @@ public class CommandManager extends IRC {
 				try {
 					c.execute(sender, arg, channel);
 				} catch (Exception ex) {
-					debug(ex);
+					Methods.debug(ex);
 				}
 				return true;
 			}
 		}
-		log("Invalid IRC command");
+		Methods.log("Invalid IRC command");
 		return false;
 	}
 

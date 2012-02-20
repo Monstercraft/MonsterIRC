@@ -33,7 +33,7 @@ public class Variables {
 	/**
 	 * The option to debug.
 	 */
-	public static boolean debug = false;
+	public static boolean debug = true;
 
 	/**
 	 * Hero chat 4 compatiblilty.

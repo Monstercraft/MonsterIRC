@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
+import org.monstercraft.irc.plugin.util.Methods;
 
-public class FilePluginSource extends IRC implements IRCPluginSource {
+public class FilePluginSource implements IRCPluginSource {
 
 	private File file;
 
@@ -111,11 +111,11 @@ public class FilePluginSource extends IRC implements IRCPluginSource {
 		try {
 			clazz = loader.loadClass(name);
 		} catch (Exception e) {
-			log(name + " is not a valid Plugin and was ignored!");
+			Methods.log(name + " is not a valid Plugin and was ignored!");
 			e.printStackTrace();
 			return;
 		} catch (VerifyError e) {
-			log(name + " is not a valid Plugin and was ignored!");
+			Methods.log(name + " is not a valid Plugin and was ignored!");
 			return;
 		}
 		if (clazz.isAnnotationPresent(PluginManifest.class)) {

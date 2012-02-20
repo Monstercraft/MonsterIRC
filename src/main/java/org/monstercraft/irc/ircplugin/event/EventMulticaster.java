@@ -1,7 +1,6 @@
 package org.monstercraft.irc.ircplugin.event;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
@@ -11,29 +10,39 @@ import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 
 public class EventMulticaster implements EventListener {
 
-	public static final int IRC_EVENT = 1;
+	public static final long IRC_EVENT = 0x100;
 
-	public static final int IRC_MESSAGE_EVENT = 2;
-	public static final int IRC_ACTION_EVENT = 3;
-	public static final int IRC_PRIVATE_MESSAGE_EVENT = 4;
-	public static final int IRC_KICK_EVENT = 5;
-	public static final int IRC_CONNECT_EVENT = 6;
-	public static final int IRC_DISCONNECT_EVENT = 7;
-	public static final int IRC_PART_EVENT = 8;
-	public static final int IRC_JOIN_EVENT = 9;
-	public static final int IRC_MODE_EVENT = 10;
-	public static final int IRC_QUIT_EVENT = 11;
+	public static final long IRC_MESSAGE_EVENT = 0x200;
+
+	public static final long IRC_ACTION_EVENT = 0x300;
+
+	public static final long IRC_PRIVATE_MESSAGE_EVENT = 0x400;
+
+	public static final long IRC_KICK_EVENT = 0x500;
+
+	public static final long IRC_CONNECT_EVENT = 0x600;
+
+	public static final long IRC_DISCONNECT_EVENT = 0x700;
+
+	public static final long IRC_PART_EVENT = 0x800;
+
+	public static final long IRC_JOIN_EVENT = 0x900;
+
+	public static final long IRC_MODE_EVENT = 0x1000;
+
+	public static final long IRC_QUIT_EVENT = 0x1100;
 
 	private static final Object treeLock = new Object();
+
+	private final List<Long> listenerMasks = new ArrayList<Long>();
+
+	private final List<EventListener> listeners = new ArrayList<EventListener>(
+			5);
 
 	/**
 	 * Gets the default mask for an event listener.
 	 */
 	public static long getDefaultMask(EventListener el) {
-		if (el instanceof EventMulticaster) {
-			EventMulticaster em = (EventMulticaster) el;
-			return em.enabledMask;
-		}
 		int mask = 0;
 		if (el instanceof IRCListener) {
 			mask |= EventMulticaster.IRC_EVENT;
@@ -48,31 +57,18 @@ public class EventMulticaster implements EventListener {
 	public static long getDefaultMask(EventObject e) {
 		long mask = 0;
 		if (e instanceof IRCEvent) {
-			final IRCEvent rse = (IRCEvent) e;
-			mask |= rse.getMask();
+			final IRCEvent irc = (IRCEvent) e;
+			mask |= irc.getMask();
 		}
 		return mask;
 	}
-
-	private long enabledMask;
-	private final List<Long> listenerMasks = new ArrayList<Long>();
-
-	private final List<EventListener> listeners = new ArrayList<EventListener>(
-			5);
-
-	private EventMulticaster parent;
 
 	/**
 	 * Adds the listener to the tree with a default mask.
 	 */
 	public void addListener(EventListener el) {
 		long mask;
-		if (el instanceof EventMulticaster) {
-			final EventMulticaster em = (EventMulticaster) el;
-			mask = em.enabledMask;
-		} else {
-			mask = EventMulticaster.getDefaultMask(el);
-		}
+		mask = EventMulticaster.getDefaultMask(el);
 		addListener(el, mask);
 	}
 
@@ -85,64 +81,8 @@ public class EventMulticaster implements EventListener {
 			if (listeners.contains(el)) {
 				return;
 			}
-
-			if (el instanceof EventMulticaster) {
-				final EventMulticaster em = (EventMulticaster) el;
-				addMulticaster(em);
-				mask = em.enabledMask;
-			} else {
-				listeners.add(el);
-			}
+			listeners.add(el);
 			listenerMasks.add(mask);
-			cleanMasks();
-		}
-	}
-
-	/**
-	 * Ensures the multicaster tree is clean and adds it.
-	 * <p/>
-	 * Has to hold tree lock.
-	 */
-	private void addMulticaster(EventMulticaster em) {
-		if (em.parent != null) {
-			throw new IllegalArgumentException(
-					"adding multicaster to multiple multicasters");
-		}
-		for (EventMulticaster cur = this; cur != null; cur = cur.parent) {
-			if (cur == em) {
-				throw new IllegalArgumentException(
-						"adding multicaster's parent to itself");
-			}
-		}
-		listeners.add(em);
-		em.parent = this;
-	}
-
-	/**
-	 * Walks up the tree as necessary reseting the masks to the minimum.
-	 * <p/>
-	 * Has to hold TreeLock.
-	 */
-	private void cleanMasks() {
-		for (EventMulticaster cur = this; cur != null; cur = cur.parent) {
-			int mask = 0;
-			final int len = cur.listeners.size();
-			for (int i = 0; i < len; i++) {
-				final EventListener el = cur.listeners.get(i);
-				long m = cur.listenerMasks.get(i);
-				if (el instanceof EventMulticaster) {
-					final EventMulticaster em = (EventMulticaster) el;
-					if (em.enabledMask != m) {
-						m = em.enabledMask;
-						cur.listenerMasks.set(i, m);
-					}
-				}
-				mask |= m;
-			}
-			if (mask == cur.enabledMask) {
-				break;
-			}
-			cur.enabledMask = mask;
 		}
 	}
 
@@ -161,37 +101,16 @@ public class EventMulticaster implements EventListener {
 			final int len = listeners.size();
 			for (int i = 0; i < len; i++) {
 				long m = listenerMasks.get(i);
-				if (m != 12288 && (m & mask) == 0) {
+				if (m != 12288 && (m + mask) == 0) {
 					continue;
 				}
 				EventListener el = listeners.get(i);
 				if (e instanceof IRCEvent) {
-					IRCEvent rse = (IRCEvent) e;
-					rse.dispatch(el);
+					IRCEvent irc = (IRCEvent) e;
+					irc.dispatch(el);
 				}
 			}
 		}
-	}
-
-	/**
-	 * Gets the masks enabled for this multicaster.
-	 */
-	public long getEnabledMask() {
-		return enabledMask;
-	}
-
-	/**
-	 * Returns an unmodifiable list of the backing list of listeners.
-	 */
-	public List<EventListener> getListeners() {
-		return Collections.unmodifiableList(listeners);
-	}
-
-	/**
-	 * Returns whether the mask is enabled on this multicaster.
-	 */
-	public final boolean isEnabled(long mask) {
-		return (enabledMask & mask) != 0;
 	}
 
 	/**
@@ -204,12 +123,7 @@ public class EventMulticaster implements EventListener {
 				return;
 			}
 			el = listeners.remove(idx);
-			if (el instanceof EventMulticaster) {
-				final EventMulticaster em = (EventMulticaster) el;
-				em.parent = null;
-			}
 			listenerMasks.remove(idx);
-			cleanMasks();
 		}
 	}
 }

@@ -7,6 +7,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.Methods;
 
 /**
  * This handles all of the plugins permissions.
@@ -84,7 +85,7 @@ public class IRCPermissionsHandler extends IRC {
 				String name = player.getName();
 				return perms.getPlayerGroups(world, name);
 			} catch (Exception e) {
-				log(e.getMessage());
+				Methods.log(e.getMessage());
 			}
 		}
 		return new String[0];

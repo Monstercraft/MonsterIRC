@@ -2,6 +2,7 @@ package org.monstercraft.irc.plugin.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.plugin.util.Methods;
 
 import com.palmergames.bukkit.TownyChat.Chat;
 
@@ -35,19 +36,19 @@ public class TownyChatHook extends IRC {
 				.getPlugin("TownyChat");
 
 		if (TownyChatPlugin == null) {
-			log("TownyChat not detected.");
+			Methods.log("TownyChat not detected.");
 			TownyChatHook = null;
 			return;
 		}
 
 		if (!TownyChatPlugin.isEnabled()) {
-			log("HeroChat 4 not enabled.");
+			Methods.log("HeroChat 4 not enabled.");
 			TownyChatHook = null;
 			return;
 		}
 
 		TownyChatHook = ((Chat) TownyChatPlugin);
-		log("TownyChat detected; hooking: "
+		Methods.log("TownyChat detected; hooking: "
 				+ ((Chat) TownyChatPlugin).getDescription().getFullName());
 	}
 

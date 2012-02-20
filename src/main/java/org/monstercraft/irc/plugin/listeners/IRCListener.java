@@ -14,6 +14,7 @@ import org.monstercraft.irc.IRC;
 import org.monstercraft.irc.plugin.hooks.HeroChatHook;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.IRCColor;
+import org.monstercraft.irc.plugin.util.Methods;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
@@ -71,7 +72,7 @@ public class IRCListener extends IRC implements Listener {
 				}
 			}
 		} catch (Exception e) {
-			debug(e);
+			Methods.debug(e);
 		}
 	}
 

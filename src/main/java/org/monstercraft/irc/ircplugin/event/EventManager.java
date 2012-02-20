@@ -71,7 +71,7 @@ public class EventManager implements Runnable {
 	 * @return <tt>true</tt> if the thread is an event thread; otherwise
 	 *         <tt>false</tt>.
 	 */
-	public boolean isEventThread() {
+	private boolean isEventThread() {
 		synchronized (threadLock) {
 			return Thread.currentThread() == eventThread;
 		}

@@ -10,7 +10,8 @@ import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
 import org.monstercraft.irc.ircplugin.service.FilePluginSource;
 import org.monstercraft.irc.ircplugin.service.IRCPluginDefinition;
-import org.monstercraft.irc.plugin.util.Constants;
+import org.monstercraft.irc.plugin.Configuration;
+import org.monstercraft.irc.plugin.util.Methods;
 
 public class IRCPluginHandler extends IRC {
 
@@ -23,18 +24,17 @@ public class IRCPluginHandler extends IRC {
 		plugins.addAll(new FilePluginSource(getPluginsFolder()).list());
 		for (IRCPluginDefinition def : plugins) {
 			try {
-				log("Loading IRC plugin " + def.name + ".");
+				Methods.log("Loading IRC plugin " + def.name + ".");
 				runplugin(def.source.load(def));
 			} catch (Exception e) {
-				e.printStackTrace();
+				Methods.debug(e);
 			}
 		}
 
 	}
 
 	private static File getPluginsFolder() {
-		return new File(Constants.SETTINGS_PATH + File.separator
-				+ Constants.PLUGINS_FOLDER);
+		return new File(Configuration.Paths.PLUGINS);
 	}
 
 	public void runplugin(IRCPlugin plugin) {
@@ -51,14 +51,13 @@ public class IRCPluginHandler extends IRC {
 		pluginThreads.put(pluginThreads.size(), t);
 	}
 
-	public void stopplugin() {
+	public void stopPlugin() {
 		Thread curThread = Thread.currentThread();
 		for (int i = 0; i < pluginsToRun.size(); i++) {
 			IRCPlugin plugin = pluginsToRun.get(i);
 			if (plugin != null && plugin.isActive()) {
 				if (pluginThreads.get(i) == curThread) {
 					stopPlugin(i);
-					getEventManager().removeListener(plugin);
 				}
 			}
 		}

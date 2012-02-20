@@ -42,7 +42,7 @@ public class Leave extends GameCommand {
 		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChannel().equalsIgnoreCase(split[2])) {
-				IRC.getHandleManager().getIRCHandler().leave(c);
+				IRC.getHandleManager().getIRCHandler().part(c);
 				return true;
 			}
 		}

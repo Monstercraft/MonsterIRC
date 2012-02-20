@@ -2,6 +2,7 @@ package org.monstercraft.irc.plugin.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.plugin.util.Methods;
 import org.monstercraft.irc.plugin.util.Variables;
 
 import com.herocraftonline.dthielke.herochat.HeroChat;
@@ -36,19 +37,19 @@ public class HeroChatHook extends IRC {
 				.getPlugin("HeroChat");
 
 		if (HeroChatPlugin == null) {
-			log("HeroChat 4 not detected.");
+			Methods.log("HeroChat 4 not detected.");
 			HeroChatHook = null;
 			return;
 		}
 
 		if (!HeroChatPlugin.isEnabled()) {
-			log("HeroChat 4 not enabled.");
+			Methods.log("HeroChat 4 not enabled.");
 			HeroChatHook = null;
 			return;
 		}
 
 		HeroChatHook = ((HeroChat) HeroChatPlugin);
-		log("HeroChat detected; hooking: "
+		Methods.log("HeroChat detected; hooking: "
 				+ ((HeroChat) HeroChatPlugin).getDescription().getFullName());
 		String ver = ((HeroChat) HeroChatPlugin).getDescription().getVersion();
 		if (!ver.startsWith("5")) {

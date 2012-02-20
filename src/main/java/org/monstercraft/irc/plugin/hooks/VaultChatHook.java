@@ -5,6 +5,7 @@ import net.milkbowl.vault.chat.Chat;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.plugin.util.Methods;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -31,14 +32,14 @@ public class VaultChatHook extends IRC {
 					.getPlugin(ChatHook.getName());
 			if (ChatHook != null) {
 				if (permsPlugin != null) {
-					log("Vault chat detected; hooking: "
+					Methods.log("Vault chat detected; hooking: "
 							+ permsPlugin.getDescription().getFullName());
 				} else {
-					log("Chat found!");
+					Methods.log("Chat found!");
 				}
 			}
 		} else {
-			log("Could not hook into chat using vault! (no prefix's or suffix's this means)");
+			Methods.log("Could not hook into chat using vault! (no prefix's or suffix's this means)");
 		}
 	}
 

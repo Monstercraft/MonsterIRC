@@ -5,6 +5,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.plugin.util.Methods;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -31,14 +32,14 @@ public class VaultPermissionsHook extends IRC {
 					.getPlugin(PermissionsHook.getName());
 			if (PermissionsHook != null) {
 				if (permsPlugin != null) {
-					log("Vault permissions detected; hooking: "
+					Methods.log("Vault permissions detected; hooking: "
 							+ permsPlugin.getDescription().getFullName());
 				} else {
-					log("Permissions found!");
+					Methods.log("Permissions found!");
 				}
 			}
 		} else {
-			log("Could not hook into permissions using vault! (Permissions not found?)");
+			Methods.log("Could not hook into permissions using vault! (Permissions not found?)");
 		}
 	}
 

@@ -2,6 +2,7 @@ package org.monstercraft.irc.plugin.hooks;
 
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.plugin.util.Methods;
 
 import com.gmail.nossr50.mcMMO;
 
@@ -38,19 +39,19 @@ public class mcMMOHook extends IRC {
 				.getPlugin("mcMMO");
 
 		if (mcMMOPlugin == null) {
-			log("mcMMO not detected.");
+			Methods.log("mcMMO not detected.");
 			mcMMOHook = null;
 			return;
 		}
 
 		if (!mcMMOPlugin.isEnabled()) {
-			log("mcMMO not enabled.");
+			Methods.log("mcMMO not enabled.");
 			mcMMOHook = null;
 			return;
 		}
 
 		mcMMOHook = ((mcMMO) mcMMOPlugin);
-		log("mcMMO detected; hooking: "
+		Methods.log("mcMMO detected; hooking: "
 				+ ((mcMMO) mcMMOPlugin).getDescription().getFullName());
 	}
 

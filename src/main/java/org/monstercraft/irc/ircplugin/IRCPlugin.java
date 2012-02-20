@@ -3,10 +3,12 @@ package org.monstercraft.irc.ircplugin;
 import java.io.File;
 import java.util.EventListener;
 
-import org.bukkit.Bukkit;
 import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.plugin.Configuration;
+import org.monstercraft.irc.plugin.util.Methods;
 
-public abstract class IRCPlugin implements EventListener, Runnable {
+public abstract class IRCPlugin extends Methods implements EventListener,
+		Runnable {
 
 	private volatile boolean running = false;
 
@@ -93,18 +95,6 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 		}
 		if (start) {
 			running = true;
-			if (IRC.getChannels() == null) {
-				System.out.println("null channels");
-			}
-			if (IRC.getHandleManager() == null) {
-				System.out.println("null handle manager");
-			}
-			if (IRC.getIRCServer() == null) {
-				System.out.println("null server");
-			}
-			if (IRC.getEventManager() == null) {
-				System.out.println("null events");
-			}
 			IRC.getEventManager().addListener(this);
 			try {
 				while (running) {
@@ -118,6 +108,7 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 					if (timeOut == -1) {
 						break;
 					}
+					Thread.sleep(timeOut);
 				}
 				try {
 					onFinish();
@@ -131,20 +122,16 @@ public abstract class IRCPlugin implements EventListener, Runnable {
 			running = false;
 		}
 		IRC.getEventManager().removeListener(this);
+		IRC.getHandleManager().getPluginHandler().stopPlugin(id);
 		id = -1;
 	}
 
 	public File getCacheDirectory() {
-		final File dir = new File(getDataFile() + File.separator + "Plugins",
-				getClass().getName());
+		final File dir = new File(Configuration.Paths.PLUGINS, getClass()
+				.getName());
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
 		return dir;
-	}
-
-	private static File getDataFile() {
-		return Bukkit.getPluginManager().getPlugin("MonsterIRC")
-				.getDataFolder();
 	}
 }
