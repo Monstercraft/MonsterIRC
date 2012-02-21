@@ -1,5 +1,6 @@
 package org.monstercraft.irc.plugin.command.gamecommands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
@@ -82,7 +83,7 @@ public class Say extends GameCommand {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				String format = "§b" + "{" + "§f" + "[IRC] " + name + "§b"
 						+ "} " + message;
-				for (Player p : getServer().getOnlinePlayers()) {
+				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (p.isOp() || mcPermissions.getInstance().adminChat(p))
 						p.sendMessage(format);
 				}
@@ -122,7 +123,7 @@ public class Say extends GameCommand {
 							.formatIRCMessage(message)),
 					c.getHeroChatFourChannel().getMsgFormat(), false);
 		} else if (c.getChatType() == ChatType.GLOBAL) {
-			getServer().broadcastMessage(
+			Bukkit.getServer().broadcastMessage(
 					Variables.mcformat
 							.replace("{name}", StringUtils.getName(name))
 							.replace("{message}",
