@@ -2,7 +2,7 @@ package org.monstercraft.irc.plugin.managers;
 
 import net.milkbowl.vault.chat.Chat;
 
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.managers.hooks.HeroChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.TownyChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.VaultChatHook;
@@ -25,7 +25,7 @@ public class HookManager {
 	private VaultChatHook chat = null;
 	private HeroChatHook herochat = null;
 	private TownyChatHook townychat = null;
-	private final IRC plugin;
+	private final MonsterIRC plugin;
 
 	/**
 	 * Creates an instance of the HookManager class.
@@ -33,7 +33,7 @@ public class HookManager {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public HookManager(final IRC plugin) {
+	public HookManager(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		mcmmo = new mcMMOHook(plugin);
 		permissions = new VaultPermissionsHook(plugin);
@@ -67,8 +67,8 @@ public class HookManager {
 	 *            A hook into HeroChat.
 	 * @return The new HeroChatHook.
 	 */
-	public HeroChatHook setHeroChatHook(final HeroChatHook hook) {
-		return herochat = hook;
+	public HeroChatHook setHeroChatHook() {
+		return herochat = new HeroChatHook(plugin);
 	}
 
 	/**

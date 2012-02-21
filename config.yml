@@ -16,6 +16,7 @@ IRC:
   ADMIN:
     INGAME_COMMANDS: false
     INGAME_COMMANDS_PREFIX: '.'
+    PASS_SAY_COMMAND: false
   FORMAT:
     MINECRAFT: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
     IRC: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'

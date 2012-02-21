@@ -6,12 +6,10 @@ import java.util.EventListener;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration;
 
-public abstract class IRCPlugin extends Methods implements EventListener,
-		Runnable {
+public abstract class IRCPlugin extends IRC implements EventListener, Runnable {
 
 	private volatile boolean running = false;
 
@@ -25,20 +23,6 @@ public abstract class IRCPlugin extends Methods implements EventListener,
 	 * @return <tt>true</tt> if the plugin can start.
 	 */
 	public abstract boolean onStart();
-
-	/**
-	 * The main loop. Called if you return true from onStart, then continuously
-	 * until a negative integer is returned or the plugin stopped externally.
-	 * When this plugin is paused this method will not be called until the
-	 * plugin is resumed. Avoid causing execution to pause using sleep() within
-	 * this method in favor of returning the number of milliseconds to sleep.
-	 * This ensures that pausing and anti-randoms perform normally.
-	 * 
-	 * @return The number of milliseconds that the manager should sleep before
-	 *         calling it again. Returning a negative number will deactivate the
-	 *         plugin.
-	 */
-	public abstract int loop();
 
 	/**
 	 * Perform actions upon stopping the plugin;
@@ -98,12 +82,12 @@ public abstract class IRCPlugin extends Methods implements EventListener,
 		}
 		if (start) {
 			running = true;
-			IRC.getEventManager().addListener(this);
+			MonsterIRC.getEventManager().addListener(this);
 			try {
 				while (running) {
 					int timeOut = -1;
 					try {
-						timeOut = loop();
+						timeOut = 100;
 					} catch (ThreadDeath td) {
 						break;
 					} catch (Exception ex) {
@@ -124,8 +108,8 @@ public abstract class IRCPlugin extends Methods implements EventListener,
 			}
 			running = false;
 		}
-		IRC.getEventManager().removeListener(this);
-		IRC.getHandleManager().getPluginHandler().stopPlugin(id);
+		MonsterIRC.getEventManager().removeListener(this);
+		MonsterIRC.getHandleManager().getPluginHandler().stopPlugin(id);
 		id = -1;
 	}
 
@@ -133,7 +117,7 @@ public abstract class IRCPlugin extends Methods implements EventListener,
 		try {
 			config.save(file);
 		} catch (IOException e) {
-			Methods.debug(e);
+			debug(e);
 		}
 	}
 

@@ -1,7 +1,7 @@
 package org.monstercraft.irc.plugin.command;
 
 import org.bukkit.command.CommandSender;
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 
 /**
  * This class is the Abstract Game command.
@@ -9,19 +9,7 @@ import org.monstercraft.irc.IRC;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public abstract class GameCommand extends IRC {
-
-	protected IRC plugin;
-
-	/**
-	 * Creates an instance of the GameCommand class.
-	 * 
-	 * @param plugin
-	 *            The parent plugin.
-	 */
-	public GameCommand(final IRC plugin) {
-		this.plugin = plugin;
-	}
+public abstract class GameCommand extends MonsterIRC {
 
 	/**
 	 * The permission node to check.

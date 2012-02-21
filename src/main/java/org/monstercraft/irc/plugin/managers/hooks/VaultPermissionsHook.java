@@ -4,8 +4,8 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -13,10 +13,10 @@ import org.monstercraft.irc.ircplugin.util.Methods;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class VaultPermissionsHook extends IRC {
+public class VaultPermissionsHook extends MonsterIRC {
 
 	private Permission PermissionsHook;
-	private IRC plugin;
+	private MonsterIRC plugin;
 
 	/**
 	 * Creates an instance of the PermissionsHook class.
@@ -24,7 +24,7 @@ public class VaultPermissionsHook extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public VaultPermissionsHook(final IRC plugin) {
+	public VaultPermissionsHook(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		boolean b = setupPermissions();
 		if (b) {
@@ -32,14 +32,14 @@ public class VaultPermissionsHook extends IRC {
 					.getPlugin(PermissionsHook.getName());
 			if (PermissionsHook != null) {
 				if (permsPlugin != null) {
-					Methods.log("Vault permissions detected; hooking: "
+					IRC.log("Vault permissions detected; hooking: "
 							+ permsPlugin.getDescription().getFullName());
 				} else {
-					Methods.log("Permissions found!");
+					IRC.log("Permissions found!");
 				}
 			}
 		} else {
-			Methods.log("Could not hook into permissions using vault! (Permissions not found?)");
+			IRC.log("Could not hook into permissions using vault! (Permissions not found?)");
 		}
 	}
 

@@ -114,4 +114,9 @@ public class Variables {
 	 * Option to hide MODE messages in irc.
 	 */
 	public static boolean hideMode = false;
+
+	/**
+	 * The option to pass the console commands "say".
+	 */
+	public static boolean passSay = false;
 }

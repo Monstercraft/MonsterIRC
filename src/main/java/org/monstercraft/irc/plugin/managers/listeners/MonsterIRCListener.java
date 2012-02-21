@@ -10,9 +10,8 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerCommandEvent;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
-import org.monstercraft.irc.plugin.managers.hooks.HeroChatHook;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.IRCColor;
 import org.monstercraft.irc.plugin.util.StringUtils;
@@ -27,8 +26,8 @@ import com.dthielke.herochat.Herochat;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class JavaPluginListener extends IRC implements Listener {
-	private IRC plugin;
+public class MonsterIRCListener extends MonsterIRC implements Listener {
+	private MonsterIRC plugin;
 
 	/**
 	 * Creates an instance of the IRCPlayerListener class.
@@ -36,7 +35,7 @@ public class JavaPluginListener extends IRC implements Listener {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public JavaPluginListener(final IRC plugin) {
+	public MonsterIRCListener(final MonsterIRC plugin) {
 		this.plugin = plugin;
 	}
 
@@ -45,16 +44,16 @@ public class JavaPluginListener extends IRC implements Listener {
 		String PluginName = event.getPlugin().getDescription().getName();
 		if (plugin != null) {
 			if (PluginName.equals("Vault")) {
-				IRC.getHookManager().setPermissionsHook();
-				IRC.getHandleManager().setPermissionsHandler(
-						IRC.getHookManager().getPermissionsHook());
-				IRC.getHookManager().setChatHook();
+				MonsterIRC.getHookManager().setPermissionsHook();
+				MonsterIRC.getHandleManager().setPermissionsHandler(
+						MonsterIRC.getHookManager().getPermissionsHook());
+				MonsterIRC.getHookManager().setChatHook();
 			} else if (PluginName.equals("mcMMO")) {
-				IRC.getHookManager().setmcMMOHook();
+				MonsterIRC.getHookManager().setmcMMOHook();
 			} else if (PluginName.equals("HeroChat")) {
-				IRC.getHookManager().setHeroChatHook(new HeroChatHook(plugin));
+				MonsterIRC.getHookManager().setHeroChatHook();
 			} else if (PluginName.equals("TownyChat")) {
-				IRC.getHookManager().setTownyChatHook();
+				MonsterIRC.getHookManager().setTownyChatHook();
 			}
 		}
 	}
@@ -67,12 +66,12 @@ public class JavaPluginListener extends IRC implements Listener {
 		try {
 			if (plugin.isEnabled()) {
 				Player player = event.getPlayer();
-				for (IRCChannel c : IRC.getChannels()) {
+				for (IRCChannel c : MonsterIRC.getChannels()) {
 					handleMessage(player, c, event.getMessage());
 				}
 			}
 		} catch (Exception e) {
-			Methods.debug(e);
+			IRC.debug(e);
 		}
 	}
 
@@ -80,7 +79,7 @@ public class JavaPluginListener extends IRC implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				Methods.sendMessage(c.getChannel(), event.getPlayer().getName()
+				IRC.sendMessage(c.getChannel(), event.getPlayer().getName()
 						+ " has joined.");
 			}
 		}
@@ -90,7 +89,7 @@ public class JavaPluginListener extends IRC implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				Methods.sendMessage(c.getChannel(), event.getPlayer().getName()
+				IRC.sendMessage(c.getChannel(), event.getPlayer().getName()
 						+ " has quit.");
 			}
 		}
@@ -103,7 +102,7 @@ public class JavaPluginListener extends IRC implements Listener {
 		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				Methods.sendMessage(c.getChannel(), event.getPlayer().getName()
+				IRC.sendMessage(c.getChannel(), event.getPlayer().getName()
 						+ " has been kicked.");
 			}
 		}
@@ -111,10 +110,12 @@ public class JavaPluginListener extends IRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onServerCommand(ServerCommandEvent event) {
-		if (event.getCommand().startsWith("say")) {
-			for (IRCChannel c : IRC.getChannels()) {
-				handleMessage(null, c,
-						event.getCommand().toString().substring(4));
+		if (Variables.passSay) {
+			if (event.getCommand().startsWith("say")) {
+				for (IRCChannel c : MonsterIRC.getChannels()) {
+					handleMessage(null, c, event.getCommand().toString()
+							.substring(4));
+				}
 			}
 		}
 	}
@@ -139,7 +140,7 @@ public class JavaPluginListener extends IRC implements Listener {
 							IRCColor.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld("Console"))
 					.replace("&", "§"));
-			Methods.sendMessage(c.getChannel(),
+			IRC.sendMessage(c.getChannel(),
 					IRCColor.formatMCMessage(result2.toString()));
 			return;
 		}
@@ -158,16 +159,16 @@ public class JavaPluginListener extends IRC implements Listener {
 				.replace("{world}", StringUtils.getWorld(player.getName()))
 				.replace("&", "§"));
 		if (c.getChatType() == ChatType.ADMINCHAT) {
-			if (IRC.getHookManager().getmcMMOHook() != null) {
-				if (IRC.getHookManager().getmcMMOHook()
+			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
-					Methods.sendMessage(c.getChannel(),
+					IRC.sendMessage(c.getChannel(),
 							IRCColor.formatMCMessage(result.toString()));
 				}
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
-			if (IRC.getHookManager().getmcMMOHook() != null) {
-				if (IRC.getHookManager().getmcMMOHook()
+			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
 					return;
 				}
@@ -178,27 +179,27 @@ public class JavaPluginListener extends IRC implements Listener {
 							.getChatter(player).getActiveChannel().getName()))
 					&& !Herochat.getChatterManager()
 							.getChatter(player.getName()).isMuted()) {
-				Methods.sendMessage(c.getChannel(),
+				IRC.sendMessage(c.getChannel(),
 						IRCColor.formatMCMessage(result.toString()));
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT
-				&& IRC.getHookManager().getHeroChatHook() != null
+				&& MonsterIRC.getHookManager().getHeroChatHook() != null
 				&& Variables.hc4) {
-			if (IRC.getHookManager().getHeroChatHook().isEnabled()) {
-				if (IRC.getHookManager().getmcMMOHook() != null) {
-					if (IRC.getHookManager().getmcMMOHook()
+			if (MonsterIRC.getHookManager().getHeroChatHook().isEnabled()) {
+				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+					if (MonsterIRC.getHookManager().getmcMMOHook()
 							.getPlayerProfile(player).getAdminChatMode()) {
 						return;
 					}
 				}
-				if ((IRC.getHookManager().getHeroChatHook().getChannelManager()
-						.getActiveChannel(player.getName()) == c
+				if ((MonsterIRC.getHookManager().getHeroChatHook()
+						.getChannelManager().getActiveChannel(player.getName()) == c
 						.getHeroChatFourChannel() || c
-						.isHeroChatListenChannel(IRC.getHookManager()
+						.isHeroChatListenChannel(MonsterIRC.getHookManager()
 								.getHeroChatHook().getChannelManager()
 								.getActiveChannel(player.getName()).getName()))
 						&& c.getHeroChatFourChannel().isEnabled()
-						&& !IRC.getHookManager().getHeroChatHook()
+						&& !MonsterIRC.getHookManager().getHeroChatHook()
 								.getChannelManager().getMutelist()
 								.contains(player.getName())
 						&& !c.getHeroChatFourChannel().getMutelist()
@@ -206,11 +207,12 @@ public class JavaPluginListener extends IRC implements Listener {
 					if (getHandleManager().getPermissionsHandler()
 							.anyGroupsInList(
 									player,
-									IRC.getHookManager().getHeroChatHook()
+									MonsterIRC.getHookManager()
+											.getHeroChatHook()
 											.getChannelManager()
 											.getActiveChannel(player.getName())
 											.getVoicelist())
-							|| IRC.getHookManager().getHeroChatHook()
+							|| MonsterIRC.getHookManager().getHeroChatHook()
 									.getChannelManager()
 									.getActiveChannel(player.getName())
 									.getVoicelist().isEmpty()) {
@@ -221,8 +223,8 @@ public class JavaPluginListener extends IRC implements Listener {
 				}
 			}
 		} else if (c.getChatType() == ChatType.GLOBAL) {
-			if (IRC.getHookManager().getmcMMOHook() != null) {
-				if (IRC.getHookManager().getmcMMOHook()
+			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
 					return;
 				}
@@ -230,8 +232,8 @@ public class JavaPluginListener extends IRC implements Listener {
 			getHandleManager().getIRCHandler().sendMessage(c.getChannel(),
 					IRCColor.formatMCMessage(result.toString()));
 		} else if (c.getChatType() == ChatType.TOWNYCHAT) {
-			if (IRC.getHookManager().getmcMMOHook() != null) {
-				if (IRC.getHookManager().getmcMMOHook()
+			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
 					return;
 				}

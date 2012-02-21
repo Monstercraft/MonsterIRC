@@ -1,27 +1,23 @@
 package org.monstercraft.irc.plugin.command.irccommand;
 
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Commands extends IRCCommand {
 
-	public Commands(org.monstercraft.irc.IRC plugin) {
-		super(plugin);
-	}
-
 	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler()
-				.isConnected(IRC.getIRCServer())
+		return MonsterIRC.getHandleManager().getIRCHandler()
+				.isConnected(MonsterIRC.getIRCServer())
 				&& message.startsWith(Variables.commandPrefix + "commands");
 	}
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (IRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
+		if (MonsterIRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("As an OP you can use ");
 			for (String string : channel.getOpCommands()) {
@@ -33,9 +29,9 @@ public class Commands extends IRCCommand {
 			for (String string : channel.getUserCommands()) {
 				sb.append("\"" + string + "\" ");
 			}
-			Methods.sendNotice(sender, sb.toString());
+			IRC.sendNotice(sender, sb.toString());
 			return true;
-		} else if (IRC.getHandleManager().getIRCHandler()
+		} else if (MonsterIRC.getHandleManager().getIRCHandler()
 				.isVoice(channel, sender)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("As an Voice you can use ");
@@ -45,7 +41,7 @@ public class Commands extends IRCCommand {
 			for (String string : channel.getUserCommands()) {
 				sb.append("\"" + string + "\" ");
 			}
-			Methods.sendNotice(sender, sb.toString());
+			IRC.sendNotice(sender, sb.toString());
 			return true;
 		} else {
 			StringBuilder sb = new StringBuilder();
@@ -53,7 +49,7 @@ public class Commands extends IRCCommand {
 			for (String string : channel.getUserCommands()) {
 				sb.append("\"" + string + "\" ");
 			}
-			Methods.sendNotice(sender, sb.toString());
+			IRC.sendNotice(sender, sb.toString());
 			return true;
 		}
 	}

@@ -2,14 +2,14 @@ package org.monstercraft.irc.plugin.wrappers;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.util.IRCColor;
 
 /**
@@ -20,7 +20,6 @@ import org.monstercraft.irc.plugin.util.IRCColor;
  */
 public class IRCCommandSender implements ConsoleCommandSender {
 
-	private IRC plugin;
 	private String sender;
 
 	/**
@@ -31,9 +30,8 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	 * @param sender
 	 *            The command sender's name.
 	 */
-	public IRCCommandSender(final IRC plugin, final String sender) {
+	public IRCCommandSender(final String sender) {
 		this.sender = sender;
-		this.plugin = plugin;
 	}
 
 	/**
@@ -41,7 +39,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	 */
 	@Override
 	public void sendMessage(String message) {
-		Methods.sendNotice(sender, IRCColor.formatMCMessage(message));
+		IRC.sendNotice(sender, IRCColor.formatMCMessage(message));
 	}
 
 	/**
@@ -61,7 +59,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	 */
 	@Override
 	public Server getServer() {
-		return plugin.getServer();
+		return Bukkit.getServer();
 	}
 
 	/**
