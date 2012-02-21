@@ -1,5 +1,6 @@
 package org.monstercraft.irc.plugin.command.irccommand;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandException;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
@@ -22,12 +23,13 @@ public class Other extends IRCCommand {
 			if (channel.getOpCommands().contains("*")) {
 				try {
 					IRCCommandSender console = new IRCCommandSender(sender);
-					getServer().dispatchCommand(
+					Bukkit.getServer().dispatchCommand(
 							console,
 							message.substring(message
 									.indexOf(Variables.commandPrefix) + 1));
 					return true;
 				} catch (CommandException e) {
+					IRC.debug(e);
 					MonsterIRC
 							.getHandleManager()
 							.getIRCHandler()
@@ -46,13 +48,14 @@ public class Other extends IRCCommand {
 							try {
 								IRCCommandSender console = new IRCCommandSender(
 										sender);
-								getServer()
+								Bukkit.getServer()
 										.dispatchCommand(
 												console,
 												message.substring(message
 														.indexOf(Variables.commandPrefix) + 1));
 								return true;
 							} catch (CommandException e) {
+								IRC.debug(e);
 								MonsterIRC
 										.getHandleManager()
 										.getIRCHandler()
@@ -75,13 +78,14 @@ public class Other extends IRCCommand {
 								try {
 									IRCCommandSender console = new IRCCommandSender(
 											sender);
-									getServer()
+									Bukkit.getServer()
 											.dispatchCommand(
 													console,
 													message.substring(message
 															.indexOf(Variables.commandPrefix) + 1));
 									return true;
 								} catch (CommandException e) {
+									IRC.debug(e);
 									MonsterIRC
 											.getHandleManager()
 											.getIRCHandler()
@@ -105,13 +109,14 @@ public class Other extends IRCCommand {
 								try {
 									IRCCommandSender console = new IRCCommandSender(
 											sender);
-									getServer()
+									Bukkit.getServer()
 											.dispatchCommand(
 													console,
 													message.substring(message
 															.indexOf(Variables.commandPrefix) + 1));
 									return true;
 								} catch (CommandException e) {
+									IRC.debug(e);
 									MonsterIRC
 											.getHandleManager()
 											.getIRCHandler()
@@ -137,12 +142,13 @@ public class Other extends IRCCommand {
 			if (channel.getVoiceCommands().contains("*")) {
 				try {
 					IRCCommandSender console = new IRCCommandSender(sender);
-					getServer().dispatchCommand(
+					Bukkit.getServer().dispatchCommand(
 							console,
 							message.substring(message
 									.indexOf(Variables.commandPrefix) + 1));
 					return true;
 				} catch (CommandException e) {
+					IRC.debug(e);
 					MonsterIRC
 							.getHandleManager()
 							.getIRCHandler()
@@ -160,13 +166,14 @@ public class Other extends IRCCommand {
 							try {
 								IRCCommandSender console = new IRCCommandSender(
 										sender);
-								getServer()
+								Bukkit.getServer()
 										.dispatchCommand(
 												console,
 												message.substring(message
 														.indexOf(Variables.commandPrefix) + 1));
 								return true;
 							} catch (CommandException e) {
+								IRC.debug(e);
 								MonsterIRC
 										.getHandleManager()
 										.getIRCHandler()
@@ -188,13 +195,14 @@ public class Other extends IRCCommand {
 								try {
 									IRCCommandSender console = new IRCCommandSender(
 											sender);
-									getServer()
+									Bukkit.getServer()
 											.dispatchCommand(
 													console,
 													message.substring(message
 															.indexOf(Variables.commandPrefix) + 1));
 									return true;
 								} catch (CommandException e) {
+									IRC.debug(e);
 									MonsterIRC
 											.getHandleManager()
 											.getIRCHandler()
@@ -219,12 +227,13 @@ public class Other extends IRCCommand {
 			if (channel.getUserCommands().contains("*")) {
 				try {
 					IRCCommandSender console = new IRCCommandSender(sender);
-					getServer().dispatchCommand(
+					Bukkit.getServer().dispatchCommand(
 							console,
 							message.substring(message
 									.indexOf(Variables.commandPrefix) + 1));
 					return true;
 				} catch (CommandException e) {
+					IRC.debug(e);
 					MonsterIRC
 							.getHandleManager()
 							.getIRCHandler()
@@ -242,13 +251,14 @@ public class Other extends IRCCommand {
 							try {
 								IRCCommandSender console = new IRCCommandSender(
 										sender);
-								getServer()
+								Bukkit.getServer()
 										.dispatchCommand(
 												console,
 												message.substring(message
 														.indexOf(Variables.commandPrefix) + 1));
 								return true;
 							} catch (CommandException e) {
+								IRC.debug(e);
 								MonsterIRC
 										.getHandleManager()
 										.getIRCHandler()
