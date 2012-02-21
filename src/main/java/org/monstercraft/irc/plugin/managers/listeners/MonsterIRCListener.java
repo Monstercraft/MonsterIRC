@@ -193,8 +193,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					}
 				}
 				if ((MonsterIRC.getHookManager().getHeroChatHook()
-						.getChannelManager().getActiveChannel(player.getName()) == c
-						.getHeroChatFourChannel() || c
+						.getChannelManager().getActiveChannel(player.getName())
+						.equals(c.getHeroChatFourChannel()) || c
 						.isHeroChatListenChannel(MonsterIRC.getHookManager()
 								.getHeroChatHook().getChannelManager()
 								.getActiveChannel(player.getName()).getName()))
