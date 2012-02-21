@@ -7,10 +7,11 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.URL;
 import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.bukkit.plugin.Plugin;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -99,7 +100,7 @@ public class Configuration {
 				return firstNodes.item(0).getNodeValue();
 			}
 		} catch (Exception e) {
-			Methods.debug(e);
+			IRC.debug(e);
 		}
 		return currentVersion;
 	}
@@ -128,7 +129,7 @@ public class Configuration {
 			s.connect(sockaddr, timeoutMs);
 			end = (int) System.currentTimeMillis();
 		} catch (Exception e) {
-			Methods.debug(e);
+			IRC.debug(e);
 			start = -1;
 			end = -1;
 			total = -1;
@@ -137,7 +138,7 @@ public class Configuration {
 				try {
 					s.close();
 				} catch (Exception e) {
-					Methods.debug(e);
+					IRC.debug(e);
 				}
 			}
 			if ((start != -1) && (end != -1)) {

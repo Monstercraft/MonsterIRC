@@ -1,5 +1,5 @@
 name: MonsterIRC
-main: org.monstercraft.irc.IRC
+main: org.monstercraft.irc.MonsterIRC
 version: 1.50
 author: Fletch_to_99
 description: Using your servers IRC channel we allow communication between IRC and Ingame.

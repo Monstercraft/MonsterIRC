@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.Variables;
@@ -23,9 +23,9 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class SettingsManager extends IRC {
+public class SettingsManager extends MonsterIRC {
 	private boolean firstRun = false;
-	private IRC plugin = null;
+	private MonsterIRC plugin = null;
 
 	/**
 	 * Creates an instance of the Settings class.
@@ -33,7 +33,7 @@ public class SettingsManager extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public SettingsManager(final IRC plugin) {
+	public SettingsManager(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		load();
 		populateChannels();
@@ -59,7 +59,7 @@ public class SettingsManager extends IRC {
 		try {
 			config.save(file);
 		} catch (IOException e) {
-			Methods.debug(e);
+			IRC.debug(e);
 		}
 	}
 
@@ -75,18 +75,18 @@ public class SettingsManager extends IRC {
 			try {
 				config.load(CONFIGURATION_FILE);
 			} catch (Exception e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 			config.set("IRC.MUTED", Variables.muted);
 		} else {
-			Methods.debug("No file found, can not save muted users!",
+			IRC.debug("No file found, can not save muted users!",
 					Variables.debug);
 			return;
 		}
 		try {
 			config.save(CONFIGURATION_FILE);
 		} catch (IOException e) {
-			Methods.debug(e);
+			IRC.debug(e);
 		}
 	}
 
@@ -98,19 +98,19 @@ public class SettingsManager extends IRC {
 		final File CONFIGURATION_FILE = new File(
 				Configuration.Paths.SETTINGS_FILE);
 		boolean exists = CONFIGURATION_FILE.exists();
-		Methods.log("Loading settings.yml file");
+		IRC.log("Loading settings.yml file");
 		if (exists) {
 			try {
-				Methods.log("Loading settings!");
+				IRC.log("Loading settings!");
 				config.options()
 						.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \nDo not remove the ' ' around the strings!");
 				config.options().copyDefaults(true);
 				config.load(CONFIGURATION_FILE);
 			} catch (Exception e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 		} else {
-			Methods.log("Loading default settings!");
+			IRC.log("Loading default settings!");
 			config.options()
 					.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/settings/\" for help \nDo not remove the ' ' around the strings!");
 			config.options().copyDefaults(true);
@@ -144,6 +144,8 @@ public class SettingsManager extends IRC {
 			Variables.commandPrefix = config
 					.getString("IRC.ADMIN.INGAME_COMMANDS_PREFIX",
 							Variables.commandPrefix);
+			Variables.passSay = config.getBoolean("IRC.ADMIN.PASS_SAY_COMMAND",
+					Variables.passSay);
 			Variables.mcformat = config.getString("IRC.FORMAT.MINECRAFT",
 					Variables.mcformat);
 			Variables.ircformat = config.getString("IRC.FORMAT.IRC",
@@ -153,19 +155,19 @@ public class SettingsManager extends IRC {
 			Variables.muted = config.getStringList("IRC.MUTED");
 			save(config, CONFIGURATION_FILE);
 		} catch (Exception e) {
-			Methods.debug(e);
+			IRC.debug(e);
 		}
 		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
 		if (Variables.mcformat.contains("{name}")
 				&& Variables.mcformat.contains("{message}")) {
 		} else {
-			Methods.debug("Invalid Minecraft format detected!", Variables.debug);
+			IRC.debug("Invalid Minecraft format detected!", Variables.debug);
 			Variables.mcformat = defaultFormat;
 		}
 		if (Variables.ircformat.contains("{name}")
 				&& Variables.ircformat.contains("{message}")) {
 		} else {
-			Methods.debug("Invalid IRC format detected!", Variables.debug);
+			IRC.debug("Invalid IRC format detected!", Variables.debug);
 			Variables.ircformat = defaultFormat;
 		}
 		if (Variables.name.contains("default")) {
@@ -202,7 +204,7 @@ public class SettingsManager extends IRC {
 			try {
 				config.load(f);
 			} catch (Exception e1) {
-				Methods.debug(e1);
+				IRC.debug(e1);
 			}
 			try {
 				Map<String, Boolean> bools = new HashMap<String, Boolean>();
@@ -228,16 +230,16 @@ public class SettingsManager extends IRC {
 					}
 				}
 				if (count == 1) {
-					Methods.log("Channel " + f.getName()
+					IRC.log("Channel " + f.getName()
 							+ " has been successfully enabled!");
 				} else {
 					if (count == 0) {
-						Methods.debug("Passing channel " + f.getName()
+						IRC.debug("Passing channel " + f.getName()
 								+ " because no chat types were enabled!",
 								Variables.debug);
 						continue;
 					} else {
-						Methods.debug(
+						IRC.debug(
 								"Invalid channel file detected! You have "
 										+ count + " chat types enabled on "
 										+ f.getName() + "!", Variables.debug);
@@ -314,7 +316,7 @@ public class SettingsManager extends IRC {
 									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				}
 			} catch (Exception e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 		}
 	}

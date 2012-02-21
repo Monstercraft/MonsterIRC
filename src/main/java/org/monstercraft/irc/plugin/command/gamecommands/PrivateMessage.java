@@ -4,17 +4,13 @@ import java.util.ArrayList;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.IRCColor;
 
 public class PrivateMessage extends GameCommand {
 
 	ArrayList<String> first = new ArrayList<String>();
-
-	public PrivateMessage(org.monstercraft.irc.IRC plugin) {
-		super(plugin);
-	}
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
@@ -25,8 +21,8 @@ public class PrivateMessage extends GameCommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
-			if (IRC.getHandleManager().getPermissionsHandler() != null) {
-				if (!IRC.getHandleManager().getPermissionsHandler()
+			if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
+				if (!MonsterIRC.getHandleManager().getPermissionsHandler()
 						.hasCommandPerms(((Player) sender), this)) {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return true;
@@ -42,11 +38,13 @@ public class PrivateMessage extends GameCommand {
 			return true;
 		} else {
 			if (!first.contains(split[2])) {
-				IRC.getHandleManager()
+				MonsterIRC
+						.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(split[2],
 								"You have revieved a private message from MonsterIRC!");
-				IRC.getHandleManager()
+				MonsterIRC
+						.getHandleManager()
 						.getIRCHandler()
 						.sendMessage(
 								split[2],
@@ -59,7 +57,7 @@ public class PrivateMessage extends GameCommand {
 				result.append(split[i]);
 				result.append(" ");
 			}
-			IRC.getHandleManager().getIRCHandler()
+			MonsterIRC.getHandleManager().getIRCHandler()
 					.sendMessage(split[2], result.toString());
 			sender.sendMessage(IRCColor.LIGHT_GRAY.getMinecraftColor()
 					+ "([IRC] to " + split[2] + "): " + result.toString());

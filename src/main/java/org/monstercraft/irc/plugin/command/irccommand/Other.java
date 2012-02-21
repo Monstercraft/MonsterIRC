@@ -1,8 +1,8 @@
 package org.monstercraft.irc.plugin.command.irccommand;
 
 import org.bukkit.command.CommandException;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
@@ -10,30 +10,26 @@ import org.monstercraft.irc.plugin.wrappers.IRCCommandSender;
 
 public class Other extends IRCCommand {
 
-	public Other(org.monstercraft.irc.IRC plugin) {
-		super(plugin);
-	}
-
 	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler()
-				.isConnected(IRC.getIRCServer());
+		return MonsterIRC.getHandleManager().getIRCHandler()
+				.isConnected(MonsterIRC.getIRCServer());
 	}
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (IRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
+		if (MonsterIRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
 			if (channel.getOpCommands().contains("*")) {
 				try {
-					IRCCommandSender console = new IRCCommandSender(plugin,
-							sender);
-					plugin.getServer().dispatchCommand(
+					IRCCommandSender console = new IRCCommandSender(sender);
+					getServer().dispatchCommand(
 							console,
 							message.substring(message
 									.indexOf(Variables.commandPrefix) + 1));
 					return true;
 				} catch (CommandException e) {
-					IRC.getHandleManager()
+					MonsterIRC
+							.getHandleManager()
 							.getIRCHandler()
 							.sendNotice(
 									sender,
@@ -49,15 +45,16 @@ public class Other extends IRCCommand {
 						if (lol.toLowerCase().startsWith(s.toLowerCase())) {
 							try {
 								IRCCommandSender console = new IRCCommandSender(
-										plugin, sender);
-								plugin.getServer()
+										sender);
+								getServer()
 										.dispatchCommand(
 												console,
 												message.substring(message
 														.indexOf(Variables.commandPrefix) + 1));
 								return true;
 							} catch (CommandException e) {
-								IRC.getHandleManager()
+								MonsterIRC
+										.getHandleManager()
 										.getIRCHandler()
 										.sendNotice(
 												sender,
@@ -77,15 +74,16 @@ public class Other extends IRCCommand {
 							if (lol.toLowerCase().startsWith(s.toLowerCase())) {
 								try {
 									IRCCommandSender console = new IRCCommandSender(
-											plugin, sender);
-									plugin.getServer()
+											sender);
+									getServer()
 											.dispatchCommand(
 													console,
 													message.substring(message
 															.indexOf(Variables.commandPrefix) + 1));
 									return true;
 								} catch (CommandException e) {
-									IRC.getHandleManager()
+									MonsterIRC
+											.getHandleManager()
 											.getIRCHandler()
 											.sendMessage(
 													sender
@@ -106,15 +104,16 @@ public class Other extends IRCCommand {
 							if (lol.toLowerCase().startsWith(s.toLowerCase())) {
 								try {
 									IRCCommandSender console = new IRCCommandSender(
-											plugin, sender);
-									plugin.getServer()
+											sender);
+									getServer()
 											.dispatchCommand(
 													console,
 													message.substring(message
 															.indexOf(Variables.commandPrefix) + 1));
 									return true;
 								} catch (CommandException e) {
-									IRC.getHandleManager()
+									MonsterIRC
+											.getHandleManager()
 											.getIRCHandler()
 											.sendMessage(
 													sender
@@ -127,26 +126,25 @@ public class Other extends IRCCommand {
 						}
 					}
 				}
-				Methods.sendNotice(sender,
-						"You cannot use that command from IRC.");
+				IRC.sendNotice(sender, "You cannot use that command from IRC.");
 			} else {
-				Methods.sendNotice(sender,
+				IRC.sendNotice(sender,
 						"You are not allowed to execute that command from IRC.");
 				return true;
 			}
-		} else if (IRC.getHandleManager().getIRCHandler()
+		} else if (MonsterIRC.getHandleManager().getIRCHandler()
 				.isVoice(channel, sender)) {
 			if (channel.getVoiceCommands().contains("*")) {
 				try {
-					IRCCommandSender console = new IRCCommandSender(plugin,
-							sender);
-					plugin.getServer().dispatchCommand(
+					IRCCommandSender console = new IRCCommandSender(sender);
+					getServer().dispatchCommand(
 							console,
 							message.substring(message
 									.indexOf(Variables.commandPrefix) + 1));
 					return true;
 				} catch (CommandException e) {
-					IRC.getHandleManager()
+					MonsterIRC
+							.getHandleManager()
 							.getIRCHandler()
 							.sendMessage(
 									sender
@@ -161,15 +159,16 @@ public class Other extends IRCCommand {
 						if (lol.toLowerCase().startsWith(s.toLowerCase())) {
 							try {
 								IRCCommandSender console = new IRCCommandSender(
-										plugin, sender);
-								plugin.getServer()
+										sender);
+								getServer()
 										.dispatchCommand(
 												console,
 												message.substring(message
 														.indexOf(Variables.commandPrefix) + 1));
 								return true;
 							} catch (CommandException e) {
-								IRC.getHandleManager()
+								MonsterIRC
+										.getHandleManager()
 										.getIRCHandler()
 										.sendMessage(
 												sender
@@ -188,15 +187,16 @@ public class Other extends IRCCommand {
 							if (lol.toLowerCase().startsWith(s.toLowerCase())) {
 								try {
 									IRCCommandSender console = new IRCCommandSender(
-											plugin, sender);
-									plugin.getServer()
+											sender);
+									getServer()
 											.dispatchCommand(
 													console,
 													message.substring(message
 															.indexOf(Variables.commandPrefix) + 1));
 									return true;
 								} catch (CommandException e) {
-									IRC.getHandleManager()
+									MonsterIRC
+											.getHandleManager()
 											.getIRCHandler()
 											.sendMessage(
 													sender
@@ -209,25 +209,24 @@ public class Other extends IRCCommand {
 						}
 					}
 				}
-				Methods.sendNotice(sender,
-						"You cannot use that command from IRC.");
+				IRC.sendNotice(sender, "You cannot use that command from IRC.");
 			} else {
-				Methods.sendNotice(sender,
+				IRC.sendNotice(sender,
 						"You are not allowed to execute that command from IRC.");
 				return true;
 			}
 		} else {
 			if (channel.getUserCommands().contains("*")) {
 				try {
-					IRCCommandSender console = new IRCCommandSender(plugin,
-							sender);
-					plugin.getServer().dispatchCommand(
+					IRCCommandSender console = new IRCCommandSender(sender);
+					getServer().dispatchCommand(
 							console,
 							message.substring(message
 									.indexOf(Variables.commandPrefix) + 1));
 					return true;
 				} catch (CommandException e) {
-					IRC.getHandleManager()
+					MonsterIRC
+							.getHandleManager()
 							.getIRCHandler()
 							.sendMessage(
 									sender
@@ -242,15 +241,16 @@ public class Other extends IRCCommand {
 						if (lol.toLowerCase().startsWith(s.toLowerCase())) {
 							try {
 								IRCCommandSender console = new IRCCommandSender(
-										plugin, sender);
-								plugin.getServer()
+										sender);
+								getServer()
 										.dispatchCommand(
 												console,
 												message.substring(message
 														.indexOf(Variables.commandPrefix) + 1));
 								return true;
 							} catch (CommandException e) {
-								IRC.getHandleManager()
+								MonsterIRC
+										.getHandleManager()
 										.getIRCHandler()
 										.sendMessage(
 												sender
@@ -261,10 +261,9 @@ public class Other extends IRCCommand {
 
 					}
 				}
-				Methods.sendNotice(sender,
-						"You cannot use that command from IRC.");
+				IRC.sendNotice(sender, "You cannot use that command from IRC.");
 			} else {
-				Methods.sendNotice(sender,
+				IRC.sendNotice(sender,
 						"You are not allowed to execute that command from IRC.");
 				return true;
 			}

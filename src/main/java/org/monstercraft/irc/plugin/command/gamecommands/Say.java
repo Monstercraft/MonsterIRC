@@ -2,7 +2,7 @@ package org.monstercraft.irc.plugin.command.gamecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.IRCColor;
@@ -14,10 +14,6 @@ import com.gmail.nossr50.mcPermissions;
 
 public class Say extends GameCommand {
 
-	public Say(org.monstercraft.irc.IRC plugin) {
-		super(plugin);
-	}
-
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return split[0].equalsIgnoreCase("irc")
@@ -27,8 +23,8 @@ public class Say extends GameCommand {
 	@Override
 	public boolean execute(CommandSender sender, String[] split) {
 		if (sender instanceof Player) {
-			if (IRC.getHandleManager().getPermissionsHandler() != null) {
-				if (!IRC.getHandleManager().getPermissionsHandler()
+			if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
+				if (!MonsterIRC.getHandleManager().getPermissionsHandler()
 						.hasCommandPerms(((Player) sender), this)) {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return true;
@@ -65,14 +61,14 @@ public class Say extends GameCommand {
 		for (IRCChannel c : Variables.channels) {
 			if (channel != null) {
 				if (c.getChannel().equalsIgnoreCase(channel)) {
-					IRC.getHandleManager().getIRCHandler()
+					MonsterIRC.getHandleManager().getIRCHandler()
 							.sendMessage(c.getChannel(), result.toString());
 					handleMessage(c, sender.getName(), result2.toString());
 					break;
 				}
 			} else {
 				if (c.isDefaultChannel()) {
-					IRC.getHandleManager().getIRCHandler()
+					MonsterIRC.getHandleManager().getIRCHandler()
 							.sendMessage(c.getChannel(), result.toString());
 					handleMessage(c, sender.getName(), result2.toString());
 				}
@@ -83,10 +79,10 @@ public class Say extends GameCommand {
 
 	private void handleMessage(IRCChannel c, String name, String message) {
 		if (c.getChatType() == ChatType.ADMINCHAT) {
-			if (IRC.getHookManager().getmcMMOHook() != null) {
+			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				String format = "§b" + "{" + "§f" + "[IRC] " + name + "§b"
 						+ "} " + message;
-				for (Player p : plugin.getServer().getOnlinePlayers()) {
+				for (Player p : getServer().getOnlinePlayers()) {
 					if (p.isOp() || mcPermissions.getInstance().adminChat(p))
 						p.sendMessage(format);
 				}
@@ -107,7 +103,7 @@ public class Say extends GameCommand {
 							.replace("&", "§")
 							+ c.getHeroChatChannel().getColor());
 		} else if (c.getChatType() == ChatType.HEROCHAT
-				&& IRC.getHookManager().getHeroChatHook() != null
+				&& MonsterIRC.getHookManager().getHeroChatHook() != null
 				&& Variables.hc4) {
 			c.getHeroChatFourChannel().sendMessage(
 					Variables.mcformat
@@ -126,7 +122,7 @@ public class Say extends GameCommand {
 							.formatIRCMessage(message)),
 					c.getHeroChatFourChannel().getMsgFormat(), false);
 		} else if (c.getChatType() == ChatType.GLOBAL) {
-			plugin.getServer().broadcastMessage(
+			getServer().broadcastMessage(
 					Variables.mcformat
 							.replace("{name}", StringUtils.getName(name))
 							.replace("{message}",

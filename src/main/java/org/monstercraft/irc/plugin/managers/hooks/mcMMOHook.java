@@ -1,8 +1,8 @@
 package org.monstercraft.irc.plugin.managers.hooks;
 
 import org.bukkit.plugin.Plugin;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 
 import com.gmail.nossr50.mcMMO;
 
@@ -12,10 +12,10 @@ import com.gmail.nossr50.mcMMO;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class mcMMOHook extends IRC {
+public class mcMMOHook extends MonsterIRC {
 
 	private mcMMO mcMMOHook;
-	private IRC plugin;
+	private MonsterIRC plugin;
 
 	/**
 	 * Creates a hook into mcmmo.
@@ -23,7 +23,7 @@ public class mcMMOHook extends IRC {
 	 * @param plugin
 	 *            The IRC plugin.
 	 */
-	public mcMMOHook(final IRC plugin) {
+	public mcMMOHook(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		initmcMMOHook();
 	}
@@ -39,19 +39,19 @@ public class mcMMOHook extends IRC {
 				.getPlugin("mcMMO");
 
 		if (mcMMOPlugin == null) {
-			Methods.log("mcMMO not detected.");
+			IRC.log("mcMMO not detected.");
 			mcMMOHook = null;
 			return;
 		}
 
 		if (!mcMMOPlugin.isEnabled()) {
-			Methods.log("mcMMO not enabled.");
+			IRC.log("mcMMO not enabled.");
 			mcMMOHook = null;
 			return;
 		}
 
 		mcMMOHook = ((mcMMO) mcMMOPlugin);
-		Methods.log("mcMMO detected; hooking: "
+		IRC.log("mcMMO detected; hooking: "
 				+ ((mcMMO) mcMMOPlugin).getDescription().getFullName());
 	}
 

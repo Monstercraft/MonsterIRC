@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
-import org.monstercraft.irc.ircplugin.util.Methods;
 
 public class FilePluginSource implements IRCPluginSource {
 
@@ -72,8 +72,7 @@ public class FilePluginSource implements IRCPluginSource {
 			Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {
 				final JarEntry e = entries.nextElement();
-				final String name = e.getName()
-						.replace('/', '.');
+				final String name = e.getName().replace('/', '.');
 				final String ext = ".class";
 				if (name.endsWith(ext) && !name.contains("$")) {
 					load(loader, plugins,
@@ -111,11 +110,11 @@ public class FilePluginSource implements IRCPluginSource {
 		try {
 			clazz = loader.loadClass(name);
 		} catch (Exception e) {
-			Methods.log(name + " is not a valid Plugin and was ignored!");
+			IRC.log(name + " is not a valid Plugin and was ignored!");
 			e.printStackTrace();
 			return;
 		} catch (VerifyError e) {
-			Methods.log(name + " is not a valid Plugin and was ignored!");
+			IRC.log(name + " is not a valid Plugin and was ignored!");
 			return;
 		}
 		if (clazz.isAnnotationPresent(PluginManifest.class)) {

@@ -1,8 +1,8 @@
 package org.monstercraft.irc.plugin.managers.hooks;
 
 import org.bukkit.plugin.Plugin;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 
 import com.palmergames.bukkit.TownyChat.Chat;
 
@@ -12,10 +12,10 @@ import com.palmergames.bukkit.TownyChat.Chat;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class TownyChatHook extends IRC {
+public class TownyChatHook extends MonsterIRC {
 
 	private Chat TownyChatHook;
-	private IRC plugin;
+	private MonsterIRC plugin;
 
 	/**
 	 * Creates an instance of the TownyChatHook class.
@@ -23,7 +23,7 @@ public class TownyChatHook extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public TownyChatHook(final IRC plugin) {
+	public TownyChatHook(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		initTownyChatHook();
 	}
@@ -36,19 +36,19 @@ public class TownyChatHook extends IRC {
 				.getPlugin("TownyChat");
 
 		if (TownyChatPlugin == null) {
-			Methods.log("TownyChat not detected.");
+			IRC.log("TownyChat not detected.");
 			TownyChatHook = null;
 			return;
 		}
 
 		if (!TownyChatPlugin.isEnabled()) {
-			Methods.log("HeroChat 4 not enabled.");
+			IRC.log("HeroChat 4 not enabled.");
 			TownyChatHook = null;
 			return;
 		}
 
 		TownyChatHook = ((Chat) TownyChatPlugin);
-		Methods.log("TownyChat detected; hooking: "
+		IRC.log("TownyChat detected; hooking: "
 				+ ((Chat) TownyChatPlugin).getDescription().getFullName());
 	}
 

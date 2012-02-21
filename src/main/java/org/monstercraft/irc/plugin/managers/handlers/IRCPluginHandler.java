@@ -5,29 +5,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
 import org.monstercraft.irc.ircplugin.service.FilePluginSource;
 import org.monstercraft.irc.ircplugin.service.IRCPluginDefinition;
-import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.Configuration;
 
-public class IRCPluginHandler extends IRC {
+public class IRCPluginHandler extends MonsterIRC {
 
 	private final HashMap<Integer, IRCPlugin> pluginsToRun = new HashMap<Integer, IRCPlugin>();
 	private final HashMap<Integer, Thread> pluginThreads = new HashMap<Integer, Thread>();
 	private final List<IRCPluginDefinition> plugins;
 
-	public IRCPluginHandler(IRC plugin) {
+	public IRCPluginHandler(MonsterIRC plugin) {
 		this.plugins = new ArrayList<IRCPluginDefinition>();
 		plugins.addAll(new FilePluginSource(getPluginsFolder()).list());
 		for (IRCPluginDefinition def : plugins) {
 			try {
-				Methods.log("Loading IRC plugin " + def.name + ".");
+				IRC.log("Loading IRC plugin " + def.name + ".");
 				runplugin(def.source.load(def));
 			} catch (Exception e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 		}
 
@@ -51,7 +51,7 @@ public class IRCPluginHandler extends IRC {
 		pluginThreads.put(pluginThreads.size(), t);
 	}
 
-	public void stopPlugin() {
+	public void stopPlugins() {
 		Thread curThread = Thread.currentThread();
 		for (int i = 0; i < pluginsToRun.size(); i++) {
 			IRCPlugin plugin = pluginsToRun.get(i);

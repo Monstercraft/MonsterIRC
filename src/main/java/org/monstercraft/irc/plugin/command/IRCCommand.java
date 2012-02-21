@@ -1,6 +1,6 @@
 package org.monstercraft.irc.plugin.command;
 
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**
@@ -9,19 +9,7 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public abstract class IRCCommand extends IRC {
-
-	protected IRC plugin;
-
-	/**
-	 * Creates an instance of the IRCCommand class.
-	 * 
-	 * @param plugin
-	 *            The parent plugin.
-	 */
-	public IRCCommand(final IRC plugin) {
-		this.plugin = plugin;
-	}
+public abstract class IRCCommand extends MonsterIRC {
 
 	/**
 	 * Checks if the command can be executed by the certian user.

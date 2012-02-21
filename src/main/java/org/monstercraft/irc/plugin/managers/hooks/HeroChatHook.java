@@ -1,8 +1,8 @@
 package org.monstercraft.irc.plugin.managers.hooks;
 
 import org.bukkit.plugin.Plugin;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.util.Variables;
 
 import com.herocraftonline.dthielke.herochat.HeroChat;
@@ -13,10 +13,10 @@ import com.herocraftonline.dthielke.herochat.HeroChat;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class HeroChatHook extends IRC {
+public class HeroChatHook extends MonsterIRC {
 
 	private HeroChat HeroChatHook;
-	private IRC plugin;
+	private MonsterIRC plugin;
 
 	/**
 	 * Creates an instance of the HeroChatHook class.
@@ -24,7 +24,7 @@ public class HeroChatHook extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public HeroChatHook(final IRC plugin) {
+	public HeroChatHook(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		initHeroChatHook();
 	}
@@ -37,19 +37,19 @@ public class HeroChatHook extends IRC {
 				.getPlugin("HeroChat");
 
 		if (HeroChatPlugin == null) {
-			Methods.log("HeroChat 4 not detected.");
+			IRC.log("HeroChat 4 not detected.");
 			HeroChatHook = null;
 			return;
 		}
 
 		if (!HeroChatPlugin.isEnabled()) {
-			Methods.log("HeroChat 4 not enabled.");
+			IRC.log("HeroChat 4 not enabled.");
 			HeroChatHook = null;
 			return;
 		}
 
 		HeroChatHook = ((HeroChat) HeroChatPlugin);
-		Methods.log("HeroChat detected; hooking: "
+		IRC.log("HeroChat detected; hooking: "
 				+ ((HeroChat) HeroChatPlugin).getDescription().getFullName());
 		String ver = ((HeroChat) HeroChatPlugin).getDescription().getVersion();
 		if (!ver.startsWith("5")) {
