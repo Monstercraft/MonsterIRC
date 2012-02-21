@@ -267,8 +267,8 @@ public class IRCChannel extends MonsterIRC {
 
 	public boolean isHeroChatListenChannel(String activeChannelName) {
 		if (listenChatChannels != null)
-			for (String chTestName : listenChatChannels)
-				if (chTestName.equalsIgnoreCase(activeChannelName))
+			for (String chName : listenChatChannels)
+				if (chName.equalsIgnoreCase(activeChannelName))
 					return true;
 
 		return false;
