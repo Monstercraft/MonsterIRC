@@ -330,6 +330,9 @@ public class SettingsManager extends MonsterIRC {
 		ArrayList<String> op = new ArrayList<String>();
 		ArrayList<String> voice = new ArrayList<String>();
 		ArrayList<String> user = new ArrayList<String>();
+		ArrayList<String> channels = new ArrayList<String>();
+		channels.add("Global");
+		channels.add("Overworld");
 		op.add("*");
 		voice.add("give");
 		user.add("help");
@@ -345,7 +348,7 @@ public class SettingsManager extends MonsterIRC {
 		config.set("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
-		config.set("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", "G");
+		config.set("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
 		config.set("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
 		config.set("CHANNEL.COMMANDS.OP", op);
