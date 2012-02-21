@@ -16,7 +16,8 @@ import java.util.StringTokenizer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.ircplugin.event.events.PluginActionEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginConnectEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginDisconnectEvent;
@@ -27,7 +28,6 @@ import org.monstercraft.irc.ircplugin.event.events.PluginModeEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginPartEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginPrivateMessageEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginQuitEvent;
-import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.Configuration;
 import org.monstercraft.irc.plugin.event.events.IRCActionEvent;
 import org.monstercraft.irc.plugin.event.events.IRCConnectEvent;
@@ -56,14 +56,14 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRCHandler extends IRC {
+public class IRCHandler extends MonsterIRC {
 
 	private BufferedWriter writer = null;
 	private Socket connection = null;
 	private BufferedReader reader = null;
 	private Thread watch = null;
 	private Thread print = null;
-	private IRC plugin;
+	private final MonsterIRC plugin;
 	private Hashtable<Integer, String> MessageQueue = new Hashtable<Integer, String>();
 	int counter = -1;
 
@@ -73,7 +73,7 @@ public class IRCHandler extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public IRCHandler(final IRC plugin) {
+	public IRCHandler(final MonsterIRC plugin) {
 		this.plugin = plugin;
 	}
 
@@ -102,7 +102,7 @@ public class IRCHandler extends IRC {
 			}
 		}
 		if (ping < server.getTimeout() + 1 && ping != -1) {
-			Methods.log("The IRC server took " + ping + " MS to respond with "
+			IRC.log("The IRC server took " + ping + " MS to respond with "
 					+ tries + " retrys.");
 			try {
 				connection = null;
@@ -115,7 +115,7 @@ public class IRCHandler extends IRC {
 						connection.getOutputStream()));
 				reader = new BufferedReader(new InputStreamReader(
 						connection.getInputStream()));
-				Methods.log("Attempting to connect to chat.");
+				IRC.log("Attempting to connect to chat.");
 				if (server.isIdentifing()) {
 					writer.write("PASS " + server.getPassword() + "\r\n");
 					writer.flush();
@@ -125,9 +125,9 @@ public class IRCHandler extends IRC {
 				writer.write("USER " + server.getNick() + " 8 * :"
 						+ plugin.getDescription().getVersion() + "\r\n");
 				writer.flush();
-				Methods.log("Processing connection....");
+				IRC.log("Processing connection....");
 				while ((line = reader.readLine()) != null) {
-					Methods.debug(line, Variables.debug);
+					IRC.debug(line, Variables.debug);
 					if (line.contains("004") || line.contains("376")) {
 						for (String s : server.getConnectCommands()) {
 							writer.write(s + "\r\n");
@@ -136,12 +136,12 @@ public class IRCHandler extends IRC {
 						break;
 					} else if (line.contains("433")) {
 						if (!server.isIdentifing()) {
-							Methods.log("Your nickname is already in use, please switch it");
-							Methods.log("using \"nick [NAME]\" and try to connect again.");
+							IRC.log("Your nickname is already in use, please switch it");
+							IRC.log("using \"nick [NAME]\" and try to connect again.");
 							disconnect(server);
 							return false;
 						} else {
-							Methods.log("Sending ghost command....");
+							IRC.log("Sending ghost command....");
 							writer.write("NICKSERV GHOST " + server.getNick()
 									+ " " + server.getPassword() + "\r\n");
 							writer.flush();
@@ -154,7 +154,7 @@ public class IRCHandler extends IRC {
 					}
 				}
 				if (server.isIdentifing()) {
-					Methods.log("Identifying with Nickserv....");
+					IRC.log("Identifying with Nickserv....");
 					writer.write("NICKSERV IDENTIFY " + server.getPassword()
 							+ "\r\n");
 					writer.flush();
@@ -162,10 +162,10 @@ public class IRCHandler extends IRC {
 				IRCConnectEvent cevent = new IRCConnectEvent(server);
 				plugin.getServer().getPluginManager().callEvent(cevent);
 				PluginConnectEvent pce = new PluginConnectEvent(server);
-				IRC.getEventManager().dispatchEvent(pce);
+				MonsterIRC.getEventManager().dispatchEvent(pce);
 				for (IRCChannel c : Variables.channels) {
 					if (c.isAutoJoin()) {
-						IRC.getHandleManager().getIRCHandler().join(c);
+						MonsterIRC.getHandleManager().getIRCHandler().join(c);
 					}
 				}
 				watch = new Thread(KEEP_ALIVE);
@@ -177,12 +177,12 @@ public class IRCHandler extends IRC {
 				print.setPriority(Thread.NORM_PRIORITY);
 				print.start();
 			} catch (Exception e) {
-				Methods.log("Failed to connect to IRC! Try again in about 1 minute!");
+				IRC.log("Failed to connect to IRC! Try again in about 1 minute!");
 				disconnect(server);
 			}
 		} else {
-			Methods.log("The IRC server seems to be down or running slowly!");
-			Methods.log("To try conencting again run the command /irc connect");
+			IRC.log("The IRC server seems to be down or running slowly!");
+			IRC.log("To try conencting again run the command /irc connect");
 			return false;
 		}
 		return isConnected(server);
@@ -205,7 +205,7 @@ public class IRCHandler extends IRC {
 					print = null;
 				}
 				if (!connection.isClosed()) {
-					Methods.log("Closing connection.");
+					IRC.log("Closing connection.");
 					connection.shutdownInput();
 					connection.shutdownOutput();
 					if (writer != null) {
@@ -216,15 +216,15 @@ public class IRCHandler extends IRC {
 					connection.close();
 					connection = null;
 				}
-				Methods.log("Successfully disconnected from IRC.");
+				IRC.log("Successfully disconnected from IRC.");
 			} catch (Exception e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 		}
 		IRCDisconnectEvent devent = new IRCDisconnectEvent(server);
 		plugin.getServer().getPluginManager().callEvent(devent);
 		PluginDisconnectEvent pde = new PluginDisconnectEvent(server);
-		IRC.getEventManager().dispatchEvent(pde);
+		MonsterIRC.getEventManager().dispatchEvent(pde);
 		return !isConnected(server);
 	}
 
@@ -257,12 +257,12 @@ public class IRCHandler extends IRC {
 			MessageQueue.put(counter, nopass);
 			counter--;
 		}
-		IRCJoinEvent jevent = new IRCJoinEvent(channel, IRC.getIRCServer()
-				.getNick());
+		IRCJoinEvent jevent = new IRCJoinEvent(channel, MonsterIRC
+				.getIRCServer().getNick());
 		plugin.getServer().getPluginManager().callEvent(jevent);
-		PluginJoinEvent pje = new PluginJoinEvent(channel, IRC.getIRCServer()
-				.getNick());
-		IRC.getEventManager().dispatchEvent(pje);
+		PluginJoinEvent pje = new PluginJoinEvent(channel, MonsterIRC
+				.getIRCServer().getNick());
+		MonsterIRC.getEventManager().dispatchEvent(pje);
 	}
 
 	/**
@@ -274,33 +274,33 @@ public class IRCHandler extends IRC {
 	 */
 	public void part(final IRCChannel channel) {
 		try {
-			if (isConnected(IRC.getIRCServer())) {
+			if (isConnected(MonsterIRC.getIRCServer())) {
 				writer.write("PART " + channel.getChannel() + "\r\n");
 				writer.flush();
 			}
 		} catch (IOException e) {
-			Methods.debug(e);
+			IRC.debug(e);
 		}
-		IRCPartEvent levent = new IRCPartEvent(channel, IRC.getIRCServer()
-				.getNick());
+		IRCPartEvent levent = new IRCPartEvent(channel, MonsterIRC
+				.getIRCServer().getNick());
 		plugin.getServer().getPluginManager().callEvent(levent);
-		PluginPartEvent ppe = new PluginPartEvent(channel, IRC.getIRCServer()
-				.getNick());
-		IRC.getEventManager().dispatchEvent(ppe);
+		PluginPartEvent ppe = new PluginPartEvent(channel, MonsterIRC
+				.getIRCServer().getNick());
+		MonsterIRC.getEventManager().dispatchEvent(ppe);
 	}
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
 		@Override
 		public void run() {
 			try {
-				if (isConnected(IRC.getIRCServer()) && reader != null) {
+				if (isConnected(MonsterIRC.getIRCServer()) && reader != null) {
 					String line;
 					while ((line = reader.readLine()) != null) {
-						Methods.debug(line, Variables.debug);
+						IRC.debug(line, Variables.debug);
 						if (line.toLowerCase().startsWith("ping")) {
 							writer.write("PONG " + line.substring(5) + "\r\n");
 							writer.flush();
-							Methods.debug("PONG " + line.substring(5),
+							IRC.debug("PONG " + line.substring(5),
 									Variables.debug);
 							continue;
 						}
@@ -341,7 +341,7 @@ public class IRCHandler extends IRC {
 															.replaceFirst(
 																	"ACTION",
 																	name));
-											IRC.getEventManager()
+											MonsterIRC.getEventManager()
 													.dispatchEvent(pae);
 										} else {
 											IRCMessageEvent msgEvent = new IRCMessageEvent(
@@ -351,7 +351,7 @@ public class IRCHandler extends IRC {
 													.callEvent(msgEvent);
 											PluginMessageEvent pme = new PluginMessageEvent(
 													c, name, msg);
-											IRC.getEventManager()
+											MonsterIRC.getEventManager()
 													.dispatchEvent(pme);
 										}
 									} else if (subline.toLowerCase().contains(
@@ -368,7 +368,7 @@ public class IRCHandler extends IRC {
 												.callEvent(qevent);
 										PluginQuitEvent pqe = new PluginQuitEvent(
 												c, name);
-										IRC.getEventManager()
+										MonsterIRC.getEventManager()
 												.dispatchEvent(pqe);
 									}
 								} else {
@@ -421,7 +421,7 @@ public class IRCHandler extends IRC {
 												.callEvent(mevent);
 										PluginModeEvent pme = new PluginModeEvent(
 												c, _name, _name, mode);
-										IRC.getEventManager()
+										MonsterIRC.getEventManager()
 												.dispatchEvent(pme);
 									} else if (line.toLowerCase().contains(
 											"PART ".toLowerCase()
@@ -439,7 +439,7 @@ public class IRCHandler extends IRC {
 												.callEvent(pevent);
 										PluginPartEvent ppe = new PluginPartEvent(
 												c, name);
-										IRC.getEventManager()
+										MonsterIRC.getEventManager()
 												.dispatchEvent(ppe);
 									} else if (line.toLowerCase().contains(
 											"KICK ".toLowerCase()
@@ -454,8 +454,13 @@ public class IRCHandler extends IRC {
 														+ c.getChannel()
 																.length() + 1,
 												line.indexOf(" :") - 1);
-										msg = _name + " has been kicked from "
-												+ c.getChannel() + ".";
+										msg = _name
+												+ " has been kicked from "
+												+ c.getChannel()
+												+ ". ("
+												+ line.substring(line
+														.indexOf(" :") + 1)
+												+ ")";
 										IRCKickEvent kevent = new IRCKickEvent(
 												c, name);
 										plugin.getServer().getPluginManager()
@@ -463,7 +468,7 @@ public class IRCHandler extends IRC {
 										PluginKickEvent pke = new PluginKickEvent(
 												c, _name, line.substring(line
 														.indexOf(" :") + 1));
-										IRC.getEventManager()
+										MonsterIRC.getEventManager()
 												.dispatchEvent(pke);
 									} else if (line.toLowerCase().contains(
 											"JOIN ".toLowerCase()
@@ -482,7 +487,7 @@ public class IRCHandler extends IRC {
 												.callEvent(jevent);
 										PluginJoinEvent pje = new PluginJoinEvent(
 												c, name);
-										IRC.getEventManager()
+										MonsterIRC.getEventManager()
 												.dispatchEvent(pje);
 									}
 								}
@@ -492,8 +497,8 @@ public class IRCHandler extends IRC {
 									if (msg.startsWith(Variables.commandPrefix)
 											&& !Variables.muted.contains(name
 													.toLowerCase())) {
-										IRC.getCommandManager().onIRCCommand(
-												name, msg, c);
+										MonsterIRC.getCommandManager()
+												.onIRCCommand(name, msg, c);
 										break;
 									} else if (!Variables.passOnName
 											&& !Variables.muted.contains(name
@@ -511,13 +516,13 @@ public class IRCHandler extends IRC {
 									}
 								}
 							} catch (final Exception e) {
-								Methods.debug(e);
+								IRC.debug(e);
 							}
 						}
 
 						if (line.toLowerCase().contains(
 								"PRIVMSG ".toLowerCase()
-										+ IRC.getIRCServer().getNick()
+										+ MonsterIRC.getIRCServer().getNick()
 												.toLowerCase())) {
 							for (Player p : Bukkit.getServer()
 									.getOnlinePlayers()) {
@@ -539,8 +544,8 @@ public class IRCHandler extends IRC {
 												.callEvent(pmevent);
 										PluginPrivateMessageEvent ppme = new PluginPrivateMessageEvent(
 												to, name, _msg);
-										IRC.getEventManager().dispatchEvent(
-												ppme);
+										MonsterIRC.getEventManager()
+												.dispatchEvent(ppme);
 										p.sendMessage(IRCColor.LIGHT_GRAY
 												.getMinecraftColor()
 												+ "([IRC] from "
@@ -575,32 +580,28 @@ public class IRCHandler extends IRC {
 											chan.getOpList()
 													.add(s.substring(s
 															.indexOf("@") + 1));
-											Methods.log(s.substring(s
-													.indexOf("@") + 1)
+											IRC.log(s.substring(s.indexOf("@") + 1)
 													+ " is an OP in "
 													+ chan.getChannel());
 										} else if (s.contains("+")) {
 											chan.getVoiceList()
 													.add(s.substring(s
 															.indexOf("+") + 1));
-											Methods.log(s.substring(s
-													.indexOf("+") + 1)
+											IRC.log(s.substring(s.indexOf("+") + 1)
 													+ " is voice in "
 													+ chan.getChannel());
 										} else if (s.contains("~")) {
 											chan.getOpList()
 													.add(s.substring(s
 															.indexOf("~") + 1));
-											Methods.log(s.substring(s
-													.indexOf("~") + 1)
+											IRC.log(s.substring(s.indexOf("~") + 1)
 													+ " is an OP in "
 													+ chan.getChannel());
 										} else if (s.contains("%")) {
 											chan.getVoiceList()
 													.add(s.substring(s
 															.indexOf("%") + 1));
-											Methods.log(s.substring(s
-													.indexOf("%") + 1)
+											IRC.log(s.substring(s.indexOf("%") + 1)
 													+ " is voice in "
 													+ chan.getChannel());
 										}
@@ -627,7 +628,7 @@ public class IRCHandler extends IRC {
 		public void run() {
 			while (true) {
 				try {
-					if (isConnected(IRC.getIRCServer())) {
+					if (isConnected(MonsterIRC.getIRCServer())) {
 						int i = 0;
 						for (Enumeration<Integer> e = MessageQueue.keys(); e
 								.hasMoreElements();) {
@@ -709,7 +710,7 @@ public class IRCHandler extends IRC {
 				writer.write("NICK " + Nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 		}
 	}
@@ -731,7 +732,7 @@ public class IRCHandler extends IRC {
 				writer.write("MODE " + channel + " +b" + Nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 		}
 	}
@@ -768,7 +769,7 @@ public class IRCHandler extends IRC {
 			final String message) {
 		try {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
-				if (IRC.getHookManager().getmcMMOHook() != null) {
+				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 					String format = "§b" + "{" + "§f" + "[IRC] "
 							+ StringUtils.getPrefix(name)
 							+ StringUtils.getName(name)
@@ -796,7 +797,7 @@ public class IRCHandler extends IRC {
 								.replace("{world}", StringUtils.getWorld(name))
 								.replace("&", "§")));
 			} else if (c.getChatType() == ChatType.HEROCHAT
-					&& IRC.getHookManager().getHeroChatHook() != null
+					&& MonsterIRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel().sendMessage(
 						IRCColor.formatIRCMessage(Variables.mcformat
@@ -862,7 +863,7 @@ public class IRCHandler extends IRC {
 				return;
 			}
 		} catch (Exception e) {
-			Methods.debug(e);
+			IRC.debug(e);
 		}
 	}
 }

@@ -3,7 +3,7 @@ package org.monstercraft.irc.plugin.wrappers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.util.ChatType;
 
 import com.dthielke.herochat.Channel;
@@ -15,7 +15,7 @@ import com.dthielke.herochat.Herochat;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRCChannel extends IRC {
+public class IRCChannel extends MonsterIRC {
 
 	private String channel;
 	private String ChatChannel;

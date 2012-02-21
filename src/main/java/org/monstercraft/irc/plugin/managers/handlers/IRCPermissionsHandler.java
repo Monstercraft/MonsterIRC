@@ -5,8 +5,8 @@ import java.util.List;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.entity.Player;
-import org.monstercraft.irc.IRC;
-import org.monstercraft.irc.ircplugin.util.Methods;
+import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
 
 /**
@@ -15,7 +15,7 @@ import org.monstercraft.irc.plugin.command.GameCommand;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRCPermissionsHandler extends IRC {
+public class IRCPermissionsHandler extends MonsterIRC {
 
 	private Permission perms = null;
 
@@ -40,7 +40,7 @@ public class IRCPermissionsHandler extends IRC {
 	 */
 	public boolean hasCommandPerms(final Player player,
 			final GameCommand command) {
-		if (IRC.getHookManager().getPermissionsHook() != null) {
+		if (MonsterIRC.getHookManager().getPermissionsHook() != null) {
 			if (perms != null) {
 				return perms.has(player, "irc.admin")
 						|| perms.has(player, command.getPermissions())
@@ -85,7 +85,7 @@ public class IRCPermissionsHandler extends IRC {
 				String name = player.getName();
 				return perms.getPlayerGroups(world, name);
 			} catch (Exception e) {
-				Methods.log(e.getMessage());
+				IRC.log(e.getMessage());
 			}
 		}
 		return new String[0];

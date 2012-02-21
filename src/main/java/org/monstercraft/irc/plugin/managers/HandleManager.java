@@ -1,6 +1,6 @@
 package org.monstercraft.irc.plugin.managers;
 
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.managers.handlers.IRCHandler;
 import org.monstercraft.irc.plugin.managers.handlers.IRCPermissionsHandler;
 import org.monstercraft.irc.plugin.managers.handlers.IRCPluginHandler;
@@ -12,11 +12,12 @@ import org.monstercraft.irc.plugin.managers.hooks.VaultPermissionsHook;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class HandleManager extends IRC {
+public class HandleManager extends MonsterIRC {
 
 	private IRCHandler irc = null;
 	private IRCPermissionsHandler perms = null;
 	private IRCPluginHandler ph = null;
+	private MonsterIRC plugin = null;
 
 	/**
 	 * Creates an instance of the Handle class.
@@ -24,7 +25,8 @@ public class HandleManager extends IRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public HandleManager(final IRC plugin) {
+	public HandleManager(final MonsterIRC plugin) {
+		this.plugin = plugin;
 		irc = new IRCHandler(plugin);
 		perms = new IRCPermissionsHandler(getHookManager().getPermissionsHook()
 				.getHook());
@@ -73,6 +75,15 @@ public class HandleManager extends IRC {
 			}
 		}
 		return perms;
+	}
+
+	/**
+	 * Sets the new plugin handler.
+	 * 
+	 * @return The new plugin Handler.
+	 */
+	public void setIRCPluginHandler() {
+		ph = new IRCPluginHandler(plugin);
 	}
 
 }

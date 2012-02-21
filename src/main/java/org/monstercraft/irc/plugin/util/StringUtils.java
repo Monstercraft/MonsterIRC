@@ -1,9 +1,9 @@
 package org.monstercraft.irc.plugin.util;
 
 import org.bukkit.Bukkit;
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 
-public class StringUtils extends IRC {
+public class StringUtils extends MonsterIRC {
 
 	/**
 	 * Fetches the users prefix.

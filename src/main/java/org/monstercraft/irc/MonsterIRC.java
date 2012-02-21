@@ -7,14 +7,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.ircplugin.event.EventManager;
-import org.monstercraft.irc.ircplugin.util.Methods;
 import org.monstercraft.irc.plugin.Configuration;
 import org.monstercraft.irc.plugin.managers.CommandManager;
 import org.monstercraft.irc.plugin.managers.HandleManager;
 import org.monstercraft.irc.plugin.managers.HookManager;
 import org.monstercraft.irc.plugin.managers.SettingsManager;
-import org.monstercraft.irc.plugin.managers.listeners.JavaPluginListener;
+import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
@@ -26,12 +26,12 @@ import org.monstercraft.irc.plugin.wrappers.IRCServer;
  * @author Fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRC extends JavaPlugin implements Runnable {
+public class MonsterIRC extends JavaPlugin implements Runnable {
 
 	private static HandleManager handles = null;
 	private static HookManager hooks = null;
 	private static CommandManager command = null;
-	private static JavaPluginListener listener = null;
+	private static MonsterIRCListener listener = null;
 
 	private static IRCServer IRCserver = null;
 
@@ -44,13 +44,14 @@ public class IRC extends JavaPlugin implements Runnable {
 	 */
 	@Override
 	public void onEnable() {
-		Methods.log("Starting plugin.");
+		IRC.log("Starting plugin.");
+		new Configuration();
 		settings = new SettingsManager(this);
 		em = new EventManager();
 		em.start();
 		hooks = new HookManager(this);
 		command = new CommandManager(this);
-		listener = new JavaPluginListener(this);
+		listener = new MonsterIRCListener(this);
 		IRCserver = new IRCServer(Variables.server, Variables.port,
 				Variables.name, Variables.password, Variables.ident,
 				Variables.timeout, Variables.limit, Variables.connectCommands);
@@ -59,11 +60,11 @@ public class IRC extends JavaPlugin implements Runnable {
 		String newVersion = Configuration.checkForUpdates(this,
 				Configuration.URLS.UPDATE_URL);
 		if (!newVersion.contains(Configuration.getCurrentVerison(this))) {
-			Methods.log(newVersion + " is out! You are running "
+			IRC.log(newVersion + " is out! You are running "
 					+ Configuration.getCurrentVerison(this));
-			Methods.log("Update MonsterIRC at: http://dev.bukkit.org/server-mods/monsterirc");
+			IRC.log("Update MonsterIRC at: http://dev.bukkit.org/server-mods/monsterirc");
 		} else {
-			Methods.log("You are using the latest version of MonsterIRC");
+			IRC.log("You are using the latest version of MonsterIRC");
 		}
 		Thread t = new Thread(this);
 		t.setDaemon(true);
@@ -88,11 +89,11 @@ public class IRC extends JavaPlugin implements Runnable {
 				}
 			}
 		} else {
-			Methods.log("Please go edit your config!");
+			IRC.log("Please go edit your config!");
 		}
 		settings.saveMuted();
-		getHandleManager().getPluginHandler().stopPlugin();
-		Methods.log("Successfully disabled plugin!");
+		getHandleManager().getPluginHandler().stopPlugins();
+		IRC.log("Successfully disabled plugin!");
 	}
 
 	/**
@@ -183,12 +184,12 @@ public class IRC extends JavaPlugin implements Runnable {
 			try {
 				if (!settings.firstRun()) {
 					getHandleManager().getIRCHandler().connect(getIRCServer());
-					Methods.log("Successfully started up.");
+					IRC.log("Successfully started up.");
 				} else {
 					stop(this);
 				}
 			} catch (Exception e) {
-				Methods.debug(e);
+				IRC.debug(e);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package org.monstercraft.irc.plugin.command.irccommand;
 
-import org.monstercraft.irc.IRC;
+import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.util.IRCColor;
 import org.monstercraft.irc.plugin.util.Variables;
@@ -8,23 +8,21 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Announce extends IRCCommand {
 
-	public Announce(org.monstercraft.irc.IRC plugin) {
-		super(plugin);
-	}
-
 	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return IRC.getHandleManager().getIRCHandler()
-				.isConnected(IRC.getIRCServer())
+		return MonsterIRC.getHandleManager().getIRCHandler()
+				.isConnected(MonsterIRC.getIRCServer())
 				&& message.toLowerCase().startsWith(
 						Variables.commandPrefix + "announce");
 	}
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (IRC.getHandleManager().getIRCHandler().isVoice(channel, sender)
-				|| IRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
-			plugin.getServer().broadcastMessage(
+		if (MonsterIRC.getHandleManager().getIRCHandler()
+				.isVoice(channel, sender)
+				|| MonsterIRC.getHandleManager().getIRCHandler()
+						.isOp(channel, sender)) {
+			getServer().broadcastMessage(
 					"§4[IRC]<" + sender + ">: "
 							+ IRCColor.formatMCMessage(message.substring(10)));
 		}
