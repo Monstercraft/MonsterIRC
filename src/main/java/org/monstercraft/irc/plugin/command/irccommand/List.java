@@ -1,5 +1,6 @@
 package org.monstercraft.irc.plugin.command.irccommand;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
@@ -22,10 +23,10 @@ public class List extends IRCCommand {
 		if (MonsterIRC.getHandleManager().getIRCHandler().isOp(channel, sender)
 				|| MonsterIRC.getHandleManager().getIRCHandler()
 						.isVoice(channel, sender)) {
-			Player[] players = getServer().getOnlinePlayers();
+			Player[] players = Bukkit.getServer().getOnlinePlayers();
 			StringBuilder sb = new StringBuilder();
 			sb.append("Players currently online" + "(" + players.length + "/"
-					+ getServer().getMaxPlayers() + "): ");
+					+ Bukkit.getServer().getMaxPlayers() + "): ");
 			for (int i = 0; i < players.length; i++) {
 				if (i == players.length - 1) {
 					sb.append(players[i].getName());
