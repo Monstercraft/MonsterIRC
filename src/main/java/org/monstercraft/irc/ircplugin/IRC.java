@@ -11,6 +11,15 @@ public class IRC {
 	private final static Logger logger = Logger.getLogger("MineCraft");
 
 	/**
+	 * Fetches the logger.
+	 * 
+	 * @return The logger.
+	 */
+	public static Logger getLogger() {
+		return logger;
+	}
+
+	/**
 	 * Logs a message to the console.
 	 * 
 	 * @param msg
