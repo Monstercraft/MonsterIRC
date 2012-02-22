@@ -189,7 +189,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 						c.getChannel(),
 						IRCColor.formatMCMessage(Herochat.getChatterManager()
 								.getChatter(player).getActiveChannel()
-								.getName()
+								.getNick()
 								+ ": "
 								+ IRCColor.NORMAL.getIRCColor()
 								+ result.toString()));
@@ -234,8 +234,16 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 										.getHookManager().getHeroChatHook()
 										.getChannelManager()
 										.getActiveChannel(player.getName())
-										.getCName()
-										+ ": "
+										.getColor().str
+										+ "["
+										+ MonsterIRC
+												.getHookManager()
+												.getHeroChatHook()
+												.getChannelManager()
+												.getActiveChannel(
+														player.getName())
+												.getNick()
+										+ "] : "
 										+ IRCColor.NORMAL.getIRCColor()
 										+ result.toString()));
 					}
