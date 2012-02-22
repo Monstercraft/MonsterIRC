@@ -185,8 +185,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.getChatter(player).getActiveChannel().getName()))
 					&& !Herochat.getChatterManager()
 							.getChatter(player.getName()).isMuted()) {
-				IRC.sendMessage(c.getChannel(),
-						IRCColor.formatMCMessage(result.toString()));
+				IRC.sendMessage(
+						c.getChannel(),
+						IRCColor.formatMCMessage(Herochat.getChatterManager()
+								.getChatter(player).getActiveChannel()
+								.getName()
+								+ ": "
+								+ IRCColor.NORMAL.getIRCColor()
+								+ result.toString()));
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& MonsterIRC.getHookManager().getHeroChatHook() != null
@@ -222,8 +228,16 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									.getChannelManager()
 									.getActiveChannel(player.getName())
 									.getVoicelist().isEmpty()) {
-						IRC.sendMessage(c,
-								IRCColor.formatMCMessage(result.toString()));
+						IRC.sendMessage(
+								c,
+								IRCColor.formatMCMessage(MonsterIRC
+										.getHookManager().getHeroChatHook()
+										.getChannelManager()
+										.getActiveChannel(player.getName())
+										.getCName()
+										+ ": "
+										+ IRCColor.NORMAL.getIRCColor()
+										+ result.toString()));
 					}
 				}
 			}
