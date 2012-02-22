@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -26,6 +27,7 @@ import org.w3c.dom.NodeList;
 public class Configuration {
 
 	static {
+		IRC.getLogger().setLevel(Level.ALL);
 		final ArrayList<String> dirs = new ArrayList<String>();
 		dirs.add(Paths.PLUGINS);
 		dirs.add(Paths.CHANNELS);

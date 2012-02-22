@@ -8,7 +8,7 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class IRC {
 
-	private final static Logger logger = Logger.getLogger("MineCraft");
+	private final static Logger logger = Logger.getLogger(IRC.class.getSimpleName());
 
 	/**
 	 * Fetches the logger.
