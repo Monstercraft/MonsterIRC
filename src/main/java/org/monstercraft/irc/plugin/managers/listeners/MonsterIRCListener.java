@@ -60,7 +60,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChat(PlayerChatEvent event) {
-		if (event.isCancelled()) {
+		if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+			if (!MonsterIRC.getHookManager().getmcMMOHook()
+					.getPlayerProfile(event.getPlayer()).getAdminChatMode()) {
+				if (event.isCancelled()) {
+					return;
+				}
+			}
+		} else if (event.isCancelled()) {
 			return;
 		}
 		try {
@@ -140,8 +147,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							IRCColor.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld("Console"))
 					.replace("&", "§"));
-			IRC.sendMessage(c.getChannel(),
-					IRCColor.formatMCMessage(result2.toString()));
+			IRC.sendMessage(c, IRCColor.formatMCMessage(result2.toString()));
 			return;
 		}
 		StringBuffer result = new StringBuffer();
@@ -162,7 +168,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
-					IRC.sendMessage(c.getChannel(),
+					IRC.sendMessage(c,
 							IRCColor.formatMCMessage(result.toString()));
 				}
 			}
@@ -216,8 +222,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									.getChannelManager()
 									.getActiveChannel(player.getName())
 									.getVoicelist().isEmpty()) {
-						getHandleManager().getIRCHandler().sendMessage(
-								c.getChannel(),
+						IRC.sendMessage(c,
 								IRCColor.formatMCMessage(result.toString()));
 					}
 				}
@@ -229,8 +234,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
-			getHandleManager().getIRCHandler().sendMessage(c.getChannel(),
-					IRCColor.formatMCMessage(result.toString()));
+			IRC.sendMessage(c, IRCColor.formatMCMessage(result.toString()));
 		} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
@@ -238,8 +242,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
-			getHandleManager().getIRCHandler().sendMessage(c.getChannel(),
-					IRCColor.formatMCMessage(result.toString()));
+			IRC.sendMessage(c, IRCColor.formatMCMessage(result.toString()));
 		}
 	}
 }
