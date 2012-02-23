@@ -34,6 +34,22 @@ public class FilePluginSource implements IRCPluginSource {
 							load(new IRCPluginClassLoader(getJarUrl(f)), defs,
 									new JarFile(f));
 						} else {
+							// final String javaExt = ".java";
+							// final String name = f.getName();
+							// if (name.endsWith(javaExt) &&
+							// !name.startsWith(".")
+							// && !name.contains("!")
+							// && !name.contains("$")) {
+							// if (JavaCompiler.isAvailable()) {
+							// boolean result = JavaCompiler.run(f);
+							// if (result) {
+							// IRC.log("Compiled: " + name);
+							// }
+							// }
+							// }
+							// f.renameTo(new File(f.getAbsolutePath()
+							// + f.getName().replace(f.getName(),
+							// "test.class")));
 							load(ldr, defs, f, "");
 						}
 					}
@@ -95,10 +111,10 @@ public class FilePluginSource implements IRCPluginSource {
 			}
 		} else {
 			String name = prefix + file.getName();
-			final String ext = ".class";
-			if (name.endsWith(ext) && !name.startsWith(".")
+			final String classExt = ".class";
+			if (name.endsWith(classExt) && !name.startsWith(".")
 					&& !name.contains("!") && !name.contains("$")) {
-				name = name.substring(0, name.length() - ext.length());
+				name = name.substring(0, name.length() - classExt.length());
 				load(loader, Plugins, name);
 			}
 		}
@@ -111,7 +127,7 @@ public class FilePluginSource implements IRCPluginSource {
 			clazz = loader.loadClass(name);
 		} catch (Exception e) {
 			IRC.log(name + " is not a valid Plugin and was ignored!");
-			e.printStackTrace();
+			IRC.debug(e);
 			return;
 		} catch (VerifyError e) {
 			IRC.log(name + " is not a valid Plugin and was ignored!");

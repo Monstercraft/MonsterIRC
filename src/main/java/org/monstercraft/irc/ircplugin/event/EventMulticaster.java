@@ -5,6 +5,9 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.ircplugin.event.events.IRCEvent;
 import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 
@@ -77,7 +80,10 @@ public class EventMulticaster implements EventListener {
 			if (listeners.contains(el)) {
 				return;
 			}
-
+			if (el instanceof Listener) {
+				Bukkit.getServer().getPluginManager()
+						.registerEvents((Listener) el, IRC.getPlugin());
+			}
 			if (el instanceof IRCListener) {
 				listeners.add((IRCListener) el);
 			}
