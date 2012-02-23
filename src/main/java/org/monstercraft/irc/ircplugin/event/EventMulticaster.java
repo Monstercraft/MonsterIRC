@@ -34,14 +34,8 @@ public class EventMulticaster implements EventListener {
 
 	private static final Object treeLock = new Object();
 
-	private final List<Long> listenerMasks = new ArrayList<Long>();
+	private final List<IRCListener> listeners = new ArrayList<IRCListener>(5);
 
-	private final List<EventListener> listeners = new ArrayList<EventListener>(
-			5);
-
-	/**
-	 * Gets the default mask for an event listener.
-	 */
 	public static long getDefaultMask(EventListener el) {
 		int mask = 0;
 		if (el instanceof IRCListener) {
@@ -57,8 +51,8 @@ public class EventMulticaster implements EventListener {
 	public static long getDefaultMask(EventObject e) {
 		long mask = 0;
 		if (e instanceof IRCEvent) {
-			final IRCEvent irc = (IRCEvent) e;
-			mask |= irc.getMask();
+			final IRCEvent rse = (IRCEvent) e;
+			mask |= rse.getMask();
 		}
 		return mask;
 	}
@@ -67,8 +61,10 @@ public class EventMulticaster implements EventListener {
 	 * Adds the listener to the tree with a default mask.
 	 */
 	public void addListener(EventListener el) {
-		long mask;
-		mask = EventMulticaster.getDefaultMask(el);
+		long mask = 0;
+		if (el instanceof IRCListener) {
+			mask = EventMulticaster.getDefaultMask(el);
+		}
 		addListener(el, mask);
 	}
 
@@ -81,8 +77,10 @@ public class EventMulticaster implements EventListener {
 			if (listeners.contains(el)) {
 				return;
 			}
-			listeners.add(el);
-			listenerMasks.add(mask);
+
+			if (el instanceof IRCListener) {
+				listeners.add((IRCListener) el);
+			}
 		}
 	}
 
@@ -96,18 +94,17 @@ public class EventMulticaster implements EventListener {
 	/**
 	 * Fires an event to all listeners, restricted by the mask.
 	 */
-	public void fireEvent(EventObject e, long mask) {
+	private void fireEvent(EventObject e, long mask) {
 		synchronized (EventMulticaster.treeLock) {
 			final int len = listeners.size();
 			for (int i = 0; i < len; i++) {
-				long m = listenerMasks.get(i);
-				if (m != 12288 && (m + mask) == 0) {
+				if (mask != 12288 && mask == 0) {
 					continue;
 				}
-				EventListener el = listeners.get(i);
+				IRCListener el = listeners.get(i);
 				if (e instanceof IRCEvent) {
-					IRCEvent irc = (IRCEvent) e;
-					irc.dispatch(el);
+					IRCEvent rse = (IRCEvent) e;
+					rse.dispatch(el);
 				}
 			}
 		}
@@ -123,7 +120,6 @@ public class EventMulticaster implements EventListener {
 				return;
 			}
 			el = listeners.remove(idx);
-			listenerMasks.remove(idx);
 		}
 	}
 }

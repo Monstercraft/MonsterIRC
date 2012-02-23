@@ -4,6 +4,7 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.monstercraft.irc.ircplugin.event.events.IRCEvent;
 
@@ -22,6 +23,8 @@ public class EventManager implements Runnable {
 		}
 	}
 
+	private final Logger log = Logger.getLogger(EventManager.class.getName());
+
 	private final EventMulticaster multicaster = new EventMulticaster();
 	private final Map<Integer, EventObject> queue = new HashMap<Integer, EventObject>();
 
@@ -31,9 +34,10 @@ public class EventManager implements Runnable {
 
 	/**
 	 * Adds the event to the queue for the EventManager to process.
-	 * 
-	 * @param e
-	 *            The event object to dispatch.
+	 * <p/>
+	 * Events are processed with the default mask.
+	 *
+	 * @param e The event object to dispatch.
 	 */
 	public void dispatchEvent(EventObject e) {
 		synchronized (queue) {
@@ -53,11 +57,10 @@ public class EventManager implements Runnable {
 	}
 
 	/**
-	 * Dispatches the given event. Calling this avoids the use of the event
-	 * queue.
-	 * 
-	 * @param event
-	 *            The event to fire.
+	 * Dispatches the given event. Calling this avoids the use
+	 * of the event queue.
+	 *
+	 * @param event The event to fire.
 	 */
 	public void processEvent(EventObject event) {
 		multicaster.fireEvent(event);
@@ -65,11 +68,10 @@ public class EventManager implements Runnable {
 
 	/**
 	 * Is this thread the event thread?
-	 * 
-	 * @return <tt>true</tt> if the thread is an event thread; otherwise
-	 *         <tt>false</tt>.
+	 *
+	 * @return <tt>true</tt> if the thread is an event thread; otherwise <tt>false</tt>.
 	 */
-	private boolean isEventThread() {
+	public boolean isEventThread() {
 		synchronized (threadLock) {
 			return Thread.currentThread() == eventThread;
 		}
@@ -77,7 +79,7 @@ public class EventManager implements Runnable {
 
 	/**
 	 * Is the event thread alive?
-	 * 
+	 *
 	 * @return <tt>true</tt> if the thread is alive; otherwise <tt>false</tt>.
 	 */
 	public boolean isEventThreadAlive() {
@@ -88,11 +90,11 @@ public class EventManager implements Runnable {
 
 	/**
 	 * Kills the event manager thread.
-	 * 
-	 * @param wait
-	 *            <tt>true</tt> to wait for the kill event to be processed
-	 *            before returning; otherwise <tt>false</tt> to submit the kill
-	 *            event and return immediately.
+	 *
+	 * @param wait <tt>true</tt> to wait for the kill
+	 *             event to be processed before returning; otherwise
+	 *             <tt>false</tt> to submit the kill event and return
+	 *             immediately.
 	 */
 	public void killThread(boolean wait) {
 		EventObject event = new KillEvent();
@@ -102,6 +104,7 @@ public class EventManager implements Runnable {
 				try {
 					event.wait();
 				} catch (InterruptedException e) {
+					log.info("wait for kill event interrupted!");
 				}
 			}
 		}
@@ -109,9 +112,8 @@ public class EventManager implements Runnable {
 
 	/**
 	 * Registers a listener.
-	 * 
-	 * @param listener
-	 *            the listener to add.
+	 *
+	 * @param listener the listener to add.
 	 */
 	public void addListener(EventListener listener) {
 		multicaster.addListener(listener);
@@ -119,11 +121,9 @@ public class EventManager implements Runnable {
 
 	/**
 	 * Registers a listener.
-	 * 
-	 * @param listener
-	 *            the listener to add.
-	 * @param mask
-	 *            the event type mask.
+	 *
+	 * @param listener the listener to add.
+	 * @param mask     the event type mask.
 	 */
 	public void addListener(EventListener listener, long mask) {
 		multicaster.addListener(listener, mask);
@@ -131,9 +131,8 @@ public class EventManager implements Runnable {
 
 	/**
 	 * Removes a listener.
-	 * 
-	 * @param listener
-	 *            the listener to remove.
+	 *
+	 * @param listener the listener to remove.
 	 */
 	public void removeListener(EventListener listener) {
 		multicaster.removeListener(listener);
@@ -142,7 +141,6 @@ public class EventManager implements Runnable {
 	/**
 	 * The thread entry point.
 	 */
-	@Override
 	public void run() {
 		if (!isEventThread()) {
 			throw new IllegalThreadStateException();
@@ -155,6 +153,7 @@ public class EventManager implements Runnable {
 						try {
 							queue.wait();
 						} catch (final Exception e) {
+							log.info("Event Queue: " + e.toString());
 						}
 					}
 					int emptySpots = 0;
@@ -187,6 +186,7 @@ public class EventManager implements Runnable {
 					event.notifyAll();
 				}
 			} catch (final Exception e) {
+				log.info("Event Queue: " + e.toString());
 				e.printStackTrace();
 			}
 		}
