@@ -3,12 +3,15 @@ package org.monstercraft.irc.ircplugin;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class IRC {
 
-	private final static Logger logger = Logger.getLogger(IRC.class.getSimpleName());
+	private final static Logger logger = Logger.getLogger(IRC.class
+			.getSimpleName());
 
 	/**
 	 * Fetches the logger.
@@ -88,6 +91,10 @@ public class IRC {
 	public static void debug(final Exception error) {
 		logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
 		error.printStackTrace();
+	}
+
+	public static Plugin getPlugin() {
+		return Bukkit.getServer().getPluginManager().getPlugin("MonsterIRC");
 	}
 
 }
