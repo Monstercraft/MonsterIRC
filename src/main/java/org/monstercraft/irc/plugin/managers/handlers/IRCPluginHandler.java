@@ -11,6 +11,7 @@ import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
 import org.monstercraft.irc.ircplugin.service.FilePluginSource;
 import org.monstercraft.irc.ircplugin.service.IRCPluginDefinition;
+import org.monstercraft.irc.ircplugin.service.JavaCompiler;
 import org.monstercraft.irc.plugin.Configuration;
 
 public class IRCPluginHandler extends MonsterIRC {
@@ -20,6 +21,7 @@ public class IRCPluginHandler extends MonsterIRC {
 	private final List<IRCPluginDefinition> plugins;
 
 	public IRCPluginHandler(MonsterIRC plugin) {
+		loadSources();
 		this.plugins = new ArrayList<IRCPluginDefinition>();
 		plugins.addAll(new FilePluginSource(getPluginsFolder()).list());
 		for (IRCPluginDefinition def : plugins) {
@@ -72,6 +74,24 @@ public class IRCPluginHandler extends MonsterIRC {
 			plugin.deactivate(id);
 			pluginsToRun.remove(id);
 			pluginThreads.remove(id);
+		}
+	}
+
+	private void loadSources() {
+		final String javaExt = ".java";
+		File[] files = getPluginsFolder().listFiles();
+		for (File f : files) {
+			String name = f.getName();
+			if (name.endsWith(javaExt) && !name.startsWith(".")
+					&& !name.contains("!") && !name.contains("$")) {
+				if (JavaCompiler.isAvailable()) {
+					boolean result = JavaCompiler.run(f,
+							Configuration.getRunningJarPath());
+					if (result) {
+						IRC.log("Compiled: " + name);
+					}
+				}
+			}
 		}
 	}
 }

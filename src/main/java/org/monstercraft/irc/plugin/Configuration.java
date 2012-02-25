@@ -2,12 +2,14 @@ package org.monstercraft.irc.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -156,6 +158,16 @@ public class Configuration {
 			}
 		}
 		return total;
+	}
+
+	public static String getRunningJarPath() {
+		String path = new File(Configuration.class.getProtectionDomain()
+				.getCodeSource().getLocation().getPath()).getAbsolutePath();
+		try {
+			path = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException ignored) {
+		}
+		return path;
 	}
 
 }

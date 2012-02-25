@@ -14,14 +14,15 @@ import org.monstercraft.irc.plugin.Configuration;
 public class JavaCompiler {
 	private final static String JAVACARGS = "-g:none";
 
-	public static boolean run(final File source) {
+	public static boolean run(final File source, final String classPath) {
 		final javax.tools.JavaCompiler javac = ToolProvider
 				.getSystemJavaCompiler();
 		try {
 			if (javac != null) {
-				return compileNative(javac, new FileInputStream(source)) == 0;
+				return compileNative(javac, new FileInputStream(source),
+						classPath) == 0;
 			} else {
-				compileSystem(source);
+				compileSystem(source, classPath);
 				return true;
 			}
 		} catch (final IOException ignored) {
@@ -34,22 +35,25 @@ public class JavaCompiler {
 	}
 
 	private static int compileNative(final javax.tools.JavaCompiler javac,
-			final InputStream source) throws FileNotFoundException {
+			final InputStream source, final String classPath)
+			throws FileNotFoundException {
 		final FileOutputStream[] out = new FileOutputStream[2];
 		for (int i = 0; i < 2; i++) {
 			out[i] = new FileOutputStream(new File(Configuration.Paths.PLUGINS,
 					"compile." + Integer.toString(i) + ".txt"));
 		}
-		return javac.run(source, out[0], out[1], JAVACARGS);
+		return javac.run(source, out[0], out[1], JAVACARGS, "-cp", classPath);
 	}
 
-	private static void compileSystem(final File source) throws IOException {
+	private static void compileSystem(final File source, final String classPath)
+			throws IOException {
 		String javac = findJavac();
 		if (javac == null) {
 			throw new IOException();
 		}
 		Runtime.getRuntime().exec(
-				new String[] { javac, JAVACARGS, source.getAbsolutePath() });
+				new String[] { javac, JAVACARGS, "-cp", classPath,
+						source.getAbsolutePath() });
 	}
 
 	private static String findJavac() {
