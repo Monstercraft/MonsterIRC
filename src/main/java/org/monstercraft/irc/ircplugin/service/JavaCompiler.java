@@ -22,11 +22,11 @@ public class JavaCompiler extends IRC {
 				.getSystemJavaCompiler();
 		try {
 			if (javac != null) {
-				return compileNative(javac, new FileInputStream(source),
+				return compileNative(javac,
+						new FileInputStream(source.getAbsoluteFile()),
 						classPath) == 0;
 			} else {
-				compileSystem(source, classPath);
-				return true;
+				return compileSystem(source, classPath);
 			}
 		} catch (final Exception e) {
 			debug(e);
