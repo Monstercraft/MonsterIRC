@@ -85,10 +85,13 @@ public class IRCPluginHandler extends MonsterIRC {
 			if (name.endsWith(javaExt) && !name.startsWith(".")
 					&& !name.contains("!") && !name.contains("$")) {
 				if (JavaCompiler.isAvailable()) {
-					boolean result = JavaCompiler.run(f,
-							Configuration.getRunningJarPath());
+					String classpath = Configuration.getClassPath() + ";"
+							+ Configuration.getBukkitClassPath();
+					boolean result = JavaCompiler.run(f, classpath);
 					if (result) {
 						IRC.log("Compiled: " + name);
+					} else {
+						IRC.log("Error compiling: " + name);
 					}
 				}
 			}

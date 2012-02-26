@@ -74,14 +74,14 @@ public class FilePluginSource implements IRCPluginSource {
 	}
 
 	private static void load(final ClassLoader loader,
-			final LinkedList<IRCPluginDefinition> scripts, final JarFile jar) {
+			final LinkedList<IRCPluginDefinition> plugins, final JarFile jar) {
 		final Enumeration<JarEntry> entries = jar.entries();
 		while (entries.hasMoreElements()) {
 			final JarEntry e = entries.nextElement();
 			final String name = e.getName().replace('/', '.');
 			final String ext = ".class";
 			if (name.endsWith(ext) && !name.contains("$")) {
-				load(loader, scripts,
+				load(loader, plugins,
 						name.substring(0, name.length() - ext.length()),
 						jar.getName());
 			}
@@ -89,12 +89,12 @@ public class FilePluginSource implements IRCPluginSource {
 	}
 
 	private static void load(final ClassLoader loader,
-			final LinkedList<IRCPluginDefinition> scripts, final File file,
+			final LinkedList<IRCPluginDefinition> plugins, final File file,
 			final String prefix) {
 		if (file.isDirectory()) {
 			if (!file.getName().startsWith(".")) {
 				for (final File f : file.listFiles()) {
-					load(loader, scripts, f, prefix + file.getName() + ".");
+					load(loader, plugins, f, prefix + file.getName() + ".");
 				}
 			}
 		} else {
@@ -103,24 +103,23 @@ public class FilePluginSource implements IRCPluginSource {
 			if (name.endsWith(ext) && !name.startsWith(".")
 					&& !name.contains("!") && !name.contains("$")) {
 				name = name.substring(0, name.length() - ext.length());
-				load(loader, scripts, name, file.getAbsolutePath());
+				load(loader, plugins, name, file.getAbsolutePath());
 			}
 		}
 	}
 
 	private static void load(final ClassLoader loader,
-			final LinkedList<IRCPluginDefinition> scripts, final String name,
+			final LinkedList<IRCPluginDefinition> plugins, final String name,
 			final String path) {
 		Class<?> clazz;
 		try {
 			clazz = loader.loadClass(name);
-			IRC.log(name + " is loading!");
 		} catch (final Exception e) {
-			IRC.log(name + " is not a valid script and was ignored!");
+			IRC.log(name + " is not a valid plugin and was ignored!");
 			e.printStackTrace();
 			return;
 		} catch (final VerifyError e) {
-			IRC.log(name + " is not a valid script and was ignored!");
+			IRC.log(name + " is not a valid plugin and was ignored!");
 			return;
 		}
 		if (clazz.isAnnotationPresent(PluginManifest.class)) {
@@ -130,7 +129,7 @@ public class FilePluginSource implements IRCPluginSource {
 			def.id = 0;
 			def.name = manifest.name();
 			def.clazz = clazz;
-			scripts.add(def);
+			plugins.add(def);
 		}
 	}
 
