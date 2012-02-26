@@ -61,6 +61,47 @@ public class IRC {
 	/**
 	 * Sends a message to the MonsterIRC channel.
 	 * 
+	 * @param channel
+	 *            The channel to send it to.
+	 * @param message
+	 *            The message to send.
+	 */
+	public static void kick(final String channel, final String nick,
+			final String reason) {
+		MonsterIRC.getHandleManager().getIRCHandler()
+				.kick(MonsterIRC.getIRCServer(), nick, channel, reason);
+	}
+
+	/**
+	 * Sends a message to the MonsterIRC channel.
+	 * 
+	 * @param channel
+	 *            The channel to send it to.
+	 * @param message
+	 *            The message to send.
+	 */
+	public static void ban(final String channel, final String nick) {
+		MonsterIRC.getHandleManager().getIRCHandler()
+				.ban(MonsterIRC.getIRCServer(), nick, channel);
+	}
+
+	/**
+	 * Sends a message to the MonsterIRC channel.
+	 * 
+	 * @param channel
+	 *            The channel to send it to.
+	 * @param message
+	 *            The message to send.
+	 */
+	public static void mode(final String channel, final String nick,
+			final String mode) {
+		MonsterIRC.getHandleManager().getIRCHandler()
+				.mode(MonsterIRC.getIRCServer(), nick, channel, mode);
+	}
+
+	/**
+	 * Sends a message to the MonsterIRC channel.
+	 * 
 	 * @param to
 	 *            The person to send the message to.
 	 * @param message
