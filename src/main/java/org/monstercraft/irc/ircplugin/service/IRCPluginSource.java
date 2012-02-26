@@ -8,6 +8,7 @@ public interface IRCPluginSource {
 
 	List<IRCPluginDefinition> list();
 
-	IRCPlugin load(IRCPluginDefinition def);
+	IRCPlugin load(IRCPluginDefinition def) throws InstantiationException,
+			IllegalAccessException;
 
 }

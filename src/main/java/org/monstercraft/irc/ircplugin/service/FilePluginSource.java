@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -14,44 +13,29 @@ import org.monstercraft.irc.ircplugin.IRCPlugin;
 import org.monstercraft.irc.ircplugin.PluginManifest;
 
 public class FilePluginSource implements IRCPluginSource {
+	private final File[] files;
 
-	private File file;
-
-	public FilePluginSource(File file) {
-		this.file = file;
+	public FilePluginSource(final File... file) {
+		this.files = file;
 	}
 
-	@Override
-	public List<IRCPluginDefinition> list() {
-		LinkedList<IRCPluginDefinition> defs = new LinkedList<IRCPluginDefinition>();
+	public LinkedList<IRCPluginDefinition> list() {
+		final LinkedList<IRCPluginDefinition> defs = new LinkedList<IRCPluginDefinition>();
+		for (final File file : files) {
+			list(file, defs);
+		}
+		return defs;
+	}
+
+	private void list(final File file,
+			final LinkedList<IRCPluginDefinition> defs) {
 		if (file != null) {
 			if (file.isDirectory()) {
 				try {
-					final ClassLoader ldr = new IRCPluginClassLoader(file
+					final ClassLoader loader = new IRCPluginClassLoader(file
 							.toURI().toURL());
-					for (final File f : file.listFiles()) {
-						if (isJar(f)) {
-							load(new IRCPluginClassLoader(getJarUrl(f)), defs,
-									new JarFile(f));
-						} else {
-							// final String javaExt = ".java";
-							// final String name = f.getName();
-							// if (name.endsWith(javaExt) &&
-							// !name.startsWith(".")
-							// && !name.contains("!")
-							// && !name.contains("$")) {
-							// if (JavaCompiler.isAvailable()) {
-							// boolean result = JavaCompiler.run(f);
-							// if (result) {
-							// IRC.log("Compiled: " + name);
-							// }
-							// }
-							// }
-							// f.renameTo(new File(f.getAbsolutePath()
-							// + f.getName().replace(f.getName(),
-							// "test.class")));
-							load(ldr, defs, f, "");
-						}
+					for (final File item : file.listFiles()) {
+						load(item, defs, loader);
 					}
 				} catch (final IOException ignored) {
 				}
@@ -64,93 +48,99 @@ public class FilePluginSource implements IRCPluginSource {
 				}
 			}
 		}
-		return defs;
+		for (final IRCPluginDefinition def : defs) {
+			def.source = this;
+		}
 	}
 
-	@Override
-	public IRCPlugin load(IRCPluginDefinition def) {
-		if (!(def instanceof IRCPluginDefinition)) {
-			throw new IllegalArgumentException("Invalid definition!");
-		}
-		try {
-			if (IRCPlugin.class.isAssignableFrom(def.clazz)) {
-				return def.clazz.asSubclass(IRCPlugin.class).newInstance();
+	public IRCPlugin load(final IRCPluginDefinition def)
+			throws InstantiationException, IllegalAccessException {
+		return def.clazz.asSubclass(IRCPlugin.class).newInstance();
+	}
+
+	public static void load(final File file,
+			final LinkedList<IRCPluginDefinition> defs, ClassLoader loader)
+			throws IOException {
+		if (isJar(file)) {
+			load(new IRCPluginClassLoader(getJarUrl(file)), defs, new JarFile(
+					file));
+		} else {
+			if (loader == null) {
+				loader = new IRCPluginClassLoader(file.getParentFile().toURI()
+						.toURL());
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			load(loader, defs, file, "");
 		}
-		return null;
 	}
 
-	private void load(ClassLoader loader,
-			LinkedList<IRCPluginDefinition> plugins, JarFile jar) {
-		try {
-			Enumeration<JarEntry> entries = jar.entries();
-			while (entries.hasMoreElements()) {
-				final JarEntry e = entries.nextElement();
-				final String name = e.getName().replace('/', '.');
-				final String ext = ".class";
-				if (name.endsWith(ext) && !name.contains("$")) {
-					load(loader, plugins,
-							name.substring(0, name.length() - ext.length()));
-				}
+	private static void load(final ClassLoader loader,
+			final LinkedList<IRCPluginDefinition> plugins, final JarFile jar) {
+		final Enumeration<JarEntry> entries = jar.entries();
+		while (entries.hasMoreElements()) {
+			final JarEntry e = entries.nextElement();
+			final String name = e.getName().replace('/', '.');
+			final String ext = ".class";
+			if (name.endsWith(ext) && !name.contains("$")) {
+				load(loader, plugins,
+						name.substring(0, name.length() - ext.length()),
+						jar.getName());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
-	private void load(final ClassLoader loader,
-			final LinkedList<IRCPluginDefinition> Plugins, final File file,
+	private static void load(final ClassLoader loader,
+			final LinkedList<IRCPluginDefinition> plugins, final File file,
 			final String prefix) {
 		if (file.isDirectory()) {
 			if (!file.getName().startsWith(".")) {
 				for (final File f : file.listFiles()) {
-					load(loader, Plugins, f, prefix + file.getName() + ".");
+					load(loader, plugins, f, prefix + file.getName() + ".");
 				}
 			}
 		} else {
 			String name = prefix + file.getName();
-			final String classExt = ".class";
-			if (name.endsWith(classExt) && !name.startsWith(".")
+			final String ext = ".class";
+			if (name.endsWith(ext) && !name.startsWith(".")
 					&& !name.contains("!") && !name.contains("$")) {
-				name = name.substring(0, name.length() - classExt.length());
-				load(loader, Plugins, name);
+				name = name.substring(0, name.length() - ext.length());
+				load(loader, plugins, name, file.getAbsolutePath());
 			}
 		}
 	}
 
-	private void load(ClassLoader loader,
-			LinkedList<IRCPluginDefinition> Plugins, String name) {
+	private static void load(final ClassLoader loader,
+			final LinkedList<IRCPluginDefinition> plugins, final String name,
+			final String path) {
 		Class<?> clazz;
 		try {
 			clazz = loader.loadClass(name);
-		} catch (Exception e) {
-			IRC.log(name + " is not a valid Plugin and was ignored!");
-			IRC.debug(e);
+		} catch (final Exception e) {
+			IRC.log(name + " is not a valid plugin and was ignored!");
+			e.printStackTrace();
 			return;
-		} catch (VerifyError e) {
-			IRC.log(name + " is not a valid Plugin and was ignored!");
+		} catch (final VerifyError e) {
+			IRC.log(name + " is not a valid plugin and was ignored!");
 			return;
 		}
 		if (clazz.isAnnotationPresent(PluginManifest.class)) {
-			IRCPluginDefinition def = new IRCPluginDefinition();
-			PluginManifest manifest = clazz.getAnnotation(PluginManifest.class);
-			def.name = manifest.name();
+			final IRCPluginDefinition def = new IRCPluginDefinition();
+			final PluginManifest manifest = clazz
+					.getAnnotation(PluginManifest.class);
 			def.id = 0;
+			def.name = manifest.name();
 			def.clazz = clazz;
-			def.source = this;
-			Plugins.add(def);
+			plugins.add(def);
 		}
 	}
 
-	private boolean isJar(File file) {
-		return file.getName().endsWith(".jar")
-				|| file.getName().endsWith(".dat");
+	public static URL getJarUrl(final File file) throws IOException {
+		URL url = file.toURI().toURL();
+		url = new URL("jar:" + url.toExternalForm() + "!/");
+		return url;
 	}
 
-	private URL getJarUrl(File file) throws IOException {
-		return new URL("jar:" + file.toURI().toURL().toExternalForm() + "!/");
+	private static boolean isJar(File file) {
+		return file.getName().endsWith(".jar");
 	}
 
 }
