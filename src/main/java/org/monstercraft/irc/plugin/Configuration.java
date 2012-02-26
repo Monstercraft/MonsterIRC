@@ -15,7 +15,6 @@ import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.w3c.dom.Document;
@@ -170,15 +169,4 @@ public class Configuration {
 		}
 		return path;
 	}
-
-	public static String getBukkitClassPath() {
-		String path = new File(Bukkit.class.getProtectionDomain()
-				.getCodeSource().getLocation().getPath()).getAbsolutePath();
-		try {
-			path = URLDecoder.decode(path, "UTF-8");
-		} catch (UnsupportedEncodingException ignored) {
-		}
-		return path;
-	}
-
 }

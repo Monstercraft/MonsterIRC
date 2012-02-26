@@ -27,13 +27,23 @@ public class ReloadConfig extends GameCommand {
 				return true;
 			}
 		}
-		MonsterIRC.getSettingsManager().reload();
-		MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();
-		MonsterIRC.getHandleManager().setIRCPluginHandler();
-		MonsterIRC.getHandleManager().getIRCHandler()
-				.connect(MonsterIRC.getIRCServer());
+		Thread t = new Thread(connect);
+		t.setPriority(Thread.MAX_PRIORITY);
+		t.setDaemon(false);
+		t.start();
 		return true;
 	}
+
+	private Runnable connect = new Runnable() {
+		@Override
+		public void run() {
+			MonsterIRC.getSettingsManager().reload();
+			MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();
+			MonsterIRC.getHandleManager().setIRCPluginHandler();
+			MonsterIRC.getHandleManager().getIRCHandler()
+					.connect(MonsterIRC.getIRCServer());
+		}
+	};
 
 	@Override
 	public String getPermissions() {
