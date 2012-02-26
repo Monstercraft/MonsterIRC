@@ -719,17 +719,58 @@ public class IRCHandler extends MonsterIRC {
 	 * Bans a user from the IRC channel if the bot is OP.
 	 * 
 	 * @param Nick
+	 *            The user to kick.
+	 * @param channel
+	 *            The channel to ban in.
+	 */
+	public void kick(final IRCServer server, final String Nick,
+			final String channel, final String reason) {
+		if (isConnected(server)) {
+			try {
+				writer.write("KICK " + channel + " " + Nick + " " + reason
+						+ "\r\n");
+				writer.flush();
+			} catch (IOException e) {
+				IRC.debug(e);
+			}
+		}
+	}
+
+	/**
+	 * Bans a user from the IRC channel if the bot is OP.
+	 * 
+	 * @param Nick
+	 *            The user to kick.
+	 * @param channel
+	 *            The channel to ban in.
+	 */
+	public void mode(final IRCServer server, final String nick,
+			final String channel, final String mode) {
+		if (isConnected(server)) {
+			try {
+				writer.write("MODE " + channel + " " + mode + " " + nick
+						+ "\r\n");
+				writer.flush();
+			} catch (IOException e) {
+				IRC.debug(e);
+			}
+		}
+	}
+
+	/**
+	 * Bans a user from the IRC channel if the bot is OP.
+	 * 
+	 * @param Nick
 	 *            The user to ban.
 	 * @param channel
 	 *            The channel to ban in.
 	 */
-	public void ban(final IRCServer server, final String Nick,
+	public void ban(final IRCServer server, final String nick,
 			final String channel) {
 		if (isConnected(server)) {
 			try {
-				writer.write("KICK " + channel + " " + Nick + "\r\n");
-				writer.flush();
-				writer.write("MODE " + channel + " +b" + Nick + "\r\n");
+				kick(server, nick, channel, "Derp.");
+				writer.write("MODE " + channel + " +b" + nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
 				IRC.debug(e);
