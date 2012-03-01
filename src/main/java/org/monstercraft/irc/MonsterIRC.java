@@ -128,7 +128,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	 * 
 	 * @return The hooks.
 	 */
-	protected static HookManager getHookManager() {
+	public static HookManager getHookManager() {
 		return hooks;
 	}
 
