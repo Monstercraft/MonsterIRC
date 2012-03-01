@@ -10,8 +10,6 @@ public class IRCActionEvent extends IRCEvent {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	private static final long serialVersionUID = 6167425751903134777L;
-
 	private IRCChannel channel;
 
 	private String sender;
@@ -19,7 +17,6 @@ public class IRCActionEvent extends IRCEvent {
 	private String action;
 
 	public IRCActionEvent(IRCChannel channel, String sender, String action) {
-		super(CUSTOM_TYPE);
 		this.channel = channel;
 		this.sender = sender;
 		this.action = action;

@@ -10,8 +10,6 @@ public class IRCModeEvent extends IRCEvent {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	private static final long serialVersionUID = 6167425751903134777L;
-
 	private IRCChannel channel;
 
 	private String name;
@@ -22,7 +20,6 @@ public class IRCModeEvent extends IRCEvent {
 
 	public IRCModeEvent(IRCChannel channel, String name, String mode,
 			String message) {
-		super(CUSTOM_TYPE);
 		this.name = name;
 		this.channel = channel;
 		this.message = message;
