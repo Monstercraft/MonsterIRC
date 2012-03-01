@@ -9,8 +9,6 @@ public class IRCPrivateMessageEvent extends IRCEvent {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	private static final long serialVersionUID = 6167425751903134777L;
-
 	private String from;
 
 	private String to;
@@ -18,7 +16,6 @@ public class IRCPrivateMessageEvent extends IRCEvent {
 	private String message;
 
 	public IRCPrivateMessageEvent(String to, String from, String message) {
-		super(CUSTOM_TYPE);
 		this.to = to;
 		this.from = from;
 		this.message = message;

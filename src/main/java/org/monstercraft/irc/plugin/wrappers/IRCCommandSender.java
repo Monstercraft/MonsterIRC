@@ -5,6 +5,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.conversations.Conversation;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -163,6 +164,42 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	public PermissionAttachment addAttachment(Plugin arg0, String arg1,
 			boolean arg2, int arg3) {
 		return null;
+	}
+
+	@Override
+	public void sendMessage(String[] arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void abandonConversation(Conversation arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void acceptConversationInput(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean beginConversation(Conversation arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isConversing() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void sendRawMessage(String arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

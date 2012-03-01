@@ -10,14 +10,11 @@ public class IRCPartEvent extends IRCEvent {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	private static final long serialVersionUID = 6167425751903134777L;
-
 	private IRCChannel channel;
 
 	private String user;
 
 	public IRCPartEvent(IRCChannel channel, String user) {
-		super(CUSTOM_TYPE);
 		this.channel = channel;
 		this.user = user;
 	}

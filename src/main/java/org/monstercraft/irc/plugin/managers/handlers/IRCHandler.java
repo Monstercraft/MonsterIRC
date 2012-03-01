@@ -39,16 +39,10 @@ import org.monstercraft.irc.plugin.event.events.IRCModeEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPartEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPrivateMessageEvent;
 import org.monstercraft.irc.plugin.event.events.IRCQuitEvent;
-import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.IRCColor;
-import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
-
-import com.gmail.nossr50.mcPermissions;
-import com.palmergames.bukkit.towny.TownyMessaging;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 /**
  * This handles all of the IRC related stuff.
@@ -503,14 +497,14 @@ public class IRCHandler extends MonsterIRC {
 									} else if (!Variables.passOnName
 											&& !Variables.muted.contains(name
 													.toLowerCase())) {
-										handleMessage(c, name, msg);
+										IRC.sendGameMessage(c, name, msg);
 										break;
 									} else if (Variables.passOnName
 											&& msg.startsWith(Variables.name)
 											&& !Variables.muted.contains(name
 													.toLowerCase())) {
-										handleMessage(c, name,
-												msg.substring(Variables.name
+										IRC.sendGameMessage(c, name, msg
+												.substring(Variables.name
 														.length()));
 										break;
 									}
@@ -794,117 +788,5 @@ public class IRCHandler extends MonsterIRC {
 	 */
 	public boolean isVoice(final IRCChannel channel, final String sender) {
 		return channel.getVoiceList().contains(sender);
-	}
-
-	/**
-	 * Handles a message accoradingly.
-	 * 
-	 * @param c
-	 *            The IRCChannel to handle the message for.
-	 * @param name
-	 *            The sender's name.
-	 * @param message
-	 *            The message to handle.
-	 */
-	private void handleMessage(final IRCChannel c, final String name,
-			final String message) {
-		try {
-			if (c.getChatType() == ChatType.ADMINCHAT) {
-				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-					String format = "§b" + "{" + "§f" + "[IRC] "
-							+ StringUtils.getPrefix(name)
-							+ StringUtils.getName(name)
-							+ StringUtils.getSuffix(name) + "§b" + "} "
-							+ message;
-					for (Player p : plugin.getServer().getOnlinePlayers()) {
-						if (p.isOp()
-								|| mcPermissions.getInstance().adminChat(p))
-							p.sendMessage(IRCColor.formatIRCMessage(format));
-					}
-				}
-			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
-				c.getHeroChatChannel().announce(
-						IRCColor.formatIRCMessage(Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}", message)
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")));
-			} else if (c.getChatType() == ChatType.HEROCHAT
-					&& MonsterIRC.getHookManager().getHeroChatHook() != null
-					&& Variables.hc4) {
-				c.getHeroChatFourChannel().sendMessage(
-						IRCColor.formatIRCMessage(Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}", "")
-								.replace(":", "")
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")),
-						IRCColor.formatIRCMessage(message),
-						c.getHeroChatFourChannel().getMsgFormat(), false);
-			} else if (c.getChatType() == ChatType.GLOBAL) {
-				plugin.getServer().broadcastMessage(
-						IRCColor.formatIRCMessage(Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace(
-										"{message}",
-										IRCColor.WHITE.getMinecraftColor()
-												+ message)
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")));
-			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
-				for (Player p : TownyUniverse.getOnlinePlayers()) {
-					TownyMessaging.sendMessage(p, IRCColor.formatIRCMessage(c
-							.getTownyChannel().getChannelTag()
-							.replace("&", "§")
-							+ Variables.mcformat
-									.replace("{name}",
-											StringUtils.getName(name))
-									.replace(
-											"{message}",
-											c.getTownyChannel()
-													.getMessageColour()
-													+ message)
-									.replace("{prefix}",
-											StringUtils.getPrefix(name))
-									.replace("{suffix}",
-											StringUtils.getSuffix(name))
-									.replace("{groupPrefix}",
-											StringUtils.getGroupPrefix(name))
-									.replace("{groupSuffix}",
-											StringUtils.getGroupSuffix(name))
-									.replace("{world}",
-											StringUtils.getWorld(name))
-									.replace("&", "§")));
-				}
-			} else if (c.getChatType() == ChatType.NONE) {
-				return;
-			}
-		} catch (Exception e) {
-			IRC.debug(e);
-		}
 	}
 }

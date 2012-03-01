@@ -10,12 +10,9 @@ public class IRCDisconnectEvent extends IRCEvent {
 
 	private static final HandlerList handlers = new HandlerList();
 
-	private static final long serialVersionUID = 6167425751903134777L;
-
 	private IRCServer server;
 
 	public IRCDisconnectEvent(IRCServer server) {
-		super(CUSTOM_TYPE);
 		this.server = server;
 	}
 

@@ -15,7 +15,7 @@ import com.dthielke.herochat.Herochat;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class IRCChannel extends MonsterIRC {
+public class IRCChannel {
 
 	private String channel;
 	private String ChatChannel;
@@ -187,8 +187,8 @@ public class IRCChannel extends MonsterIRC {
 	 * @return The HeroChat channel to listen in.
 	 */
 	public com.herocraftonline.dthielke.herochat.channels.Channel getHeroChatFourChannel() {
-		return getHookManager().getHeroChatHook().getChannelManager()
-				.getChannel(ChatChannel);
+		return MonsterIRC.getHookManager().getHeroChatHook()
+				.getChannelManager().getChannel(ChatChannel);
 	}
 
 	/**
@@ -197,8 +197,8 @@ public class IRCChannel extends MonsterIRC {
 	 * @return The TownyChat channel to listen in.
 	 */
 	public com.palmergames.bukkit.TownyChat.channels.Channel getTownyChannel() {
-		return getHookManager().getTownyChatHook().getChannelsHandler()
-				.getChannel(ChatChannel);
+		return MonsterIRC.getHookManager().getTownyChatHook()
+				.getChannelsHandler().getChannel(ChatChannel);
 	}
 
 	/**
