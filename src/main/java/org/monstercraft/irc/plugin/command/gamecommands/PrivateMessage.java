@@ -23,7 +23,7 @@ public class PrivateMessage extends GameCommand {
 		if (sender instanceof Player) {
 			if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
 				if (!MonsterIRC.getHandleManager().getPermissionsHandler()
-						.hasCommandPerms(((Player) sender), this)) {
+						.hasCommandPerms((Player) sender, this)) {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return true;
 				}
@@ -53,6 +53,7 @@ public class PrivateMessage extends GameCommand {
 				first.add(split[2]);
 			}
 			StringBuffer result = new StringBuffer();
+			result.append("[MC] " + sender.getName() + ": ");
 			for (int i = 3; i < split.length; i++) {
 				result.append(split[i]);
 				result.append(" ");
@@ -60,13 +61,17 @@ public class PrivateMessage extends GameCommand {
 			MonsterIRC.getHandleManager().getIRCHandler()
 					.sendMessage(split[2], result.toString());
 			sender.sendMessage(IRCColor.LIGHT_GRAY.getMinecraftColor()
-					+ "([IRC] to " + split[2] + "): " + result.toString());
+					+ "([IRC] to "
+					+ split[2]
+					+ "): "
+					+ result.toString()
+							.substring(7 + sender.getName().length()));
 			return true;
 		}
 	}
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.pm";
 	}
 

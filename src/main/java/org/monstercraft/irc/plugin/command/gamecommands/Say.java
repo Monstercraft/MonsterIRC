@@ -74,7 +74,7 @@ public class Say extends GameCommand {
 	}
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.say";
 	}
 

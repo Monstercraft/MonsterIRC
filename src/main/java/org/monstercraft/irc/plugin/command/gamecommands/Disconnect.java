@@ -32,7 +32,7 @@ public class Disconnect extends GameCommand {
 	}
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.disconnect";
 	}
 

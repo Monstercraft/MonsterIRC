@@ -41,7 +41,7 @@ public class Unmute extends GameCommand {
 	}
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.unmute";
 	}
 

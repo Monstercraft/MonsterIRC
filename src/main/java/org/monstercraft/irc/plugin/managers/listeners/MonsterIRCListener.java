@@ -30,7 +30,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	private MonsterIRC plugin;
 
 	/**
-	 * Creates an instance of the IRCPlayerListener class.
 	 * 
 	 * @param plugin
 	 *            The parent plugin.
@@ -146,7 +145,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{message}",
 							IRCColor.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld("Console"))
-					.replace("&", "ยง"));
+					.replace("&", "ง"));
 			IRC.sendMessage(
 					c,
 					IRCColor.formatMCMessage(result2.toString().replace("ยงf",
@@ -178,7 +177,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											+ message)
 							.replace("{world}",
 									StringUtils.getWorld(player.getName()))
-							.replace("&", "ยง"));
+							.replace("&", "ง"));
 					IRC.sendMessage(
 							c,
 							IRCColor.formatMCMessage(result.toString().replace(
@@ -218,7 +217,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 						.replace("{message}", colorizer + " " + message)
 						.replace("{world}",
 								StringUtils.getWorld(player.getName()))
-						.replace("&", "ยง"));
+						.replace("&", "ง"));
 				IRC.sendMessage(
 						c.getChannel(),
 						IRCColor.formatMCMessage("ยง"
@@ -292,7 +291,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 								.replace("{message}", colorizer + " " + message)
 								.replace("{world}",
 										StringUtils.getWorld(player.getName()))
-								.replace("&", "ยง"));
+								.replace("&", "ง"));
 						IRC.sendMessage(
 								c,
 								IRCColor.formatMCMessage("ย"
@@ -339,7 +338,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{message}",
 							IRCColor.NORMAL.getIRCColor() + message)
 					.replace("{world}", StringUtils.getWorld(player.getName()))
-					.replace("&", "ยง"));
+					.replace("&", "ง"));
 			IRC.sendMessage(
 					c,
 					IRCColor.formatMCMessage(result.toString().replace("ยงf",
@@ -365,7 +364,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{message}",
 							IRCColor.NORMAL.getIRCColor() + message)
 					.replace("{world}", StringUtils.getWorld(player.getName()))
-					.replace("&", "ยง"));
+					.replace("&", "ง"));
 			IRC.sendMessage(
 					c,
 					IRCColor.formatMCMessage(result.toString().replace("ยงf",
