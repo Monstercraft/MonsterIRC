@@ -41,7 +41,7 @@ public class Mute extends GameCommand {
 	}
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.mute";
 	}
 

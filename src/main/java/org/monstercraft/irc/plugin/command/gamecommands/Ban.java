@@ -43,7 +43,7 @@ public class Ban extends GameCommand {
 	}
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.ban";
 	}
 

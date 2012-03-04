@@ -1,10 +1,11 @@
 package org.monstercraft.irc.plugin.managers;
 
+import net.milkbowl.vault.permission.Permission;
+
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.managers.handlers.IRCHandler;
 import org.monstercraft.irc.plugin.managers.handlers.IRCPermissionsHandler;
 import org.monstercraft.irc.plugin.managers.handlers.IRCPluginHandler;
-import org.monstercraft.irc.plugin.managers.hooks.VaultPermissionsHook;
 
 /**
  * This class contains all of the plugins handles.
@@ -17,7 +18,7 @@ public class HandleManager extends MonsterIRC {
 	private IRCHandler irc = null;
 	private IRCPermissionsHandler perms = null;
 	private IRCPluginHandler ph = null;
-	private MonsterIRC plugin = null;
+	private final MonsterIRC plugin;
 
 	/**
 	 * Creates an instance of the Handle class.
@@ -28,8 +29,7 @@ public class HandleManager extends MonsterIRC {
 	public HandleManager(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		irc = new IRCHandler(plugin);
-		perms = new IRCPermissionsHandler(getHookManager().getPermissionsHook()
-				.getHook());
+		perms = new IRCPermissionsHandler(getHookManager().getPermissionsHook());
 		ph = new IRCPluginHandler(plugin);
 	}
 
@@ -67,12 +67,9 @@ public class HandleManager extends MonsterIRC {
 	 *            The hook into Permissions.
 	 * @return The new permissions Handler.
 	 */
-	public IRCPermissionsHandler setPermissionsHandler(
-			final VaultPermissionsHook hook) {
+	public IRCPermissionsHandler setPermissionsHandler(final Permission hook) {
 		if (hook != null) {
-			if (perms.isEnabled()) {
-				return perms = new IRCPermissionsHandler(hook.getHook());
-			}
+			return perms = new IRCPermissionsHandler(hook);
 		}
 		return perms;
 	}
