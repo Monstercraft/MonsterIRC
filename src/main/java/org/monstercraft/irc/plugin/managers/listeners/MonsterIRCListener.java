@@ -187,14 +187,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.getChatter(player.getName()).isMuted()) {
 				IRC.sendMessage(
 						c.getChannel(),
-						IRCColor.formatMCMessage(Herochat.getChatterManager()
-								.getChatter(player).getActiveChannel()
-								.getColor().getChar()
+						IRCColor.formatMCMessage("§"
+								+ Herochat.getChatterManager()
+										.getChatter(player).getActiveChannel()
+										.getColor().getChar()
 								+ "["
 								+ Herochat.getChatterManager()
 										.getChatter(player).getActiveChannel()
-										.getNick()
-								+ "]: "
+										.getNick() + "]: "
 								+ IRCColor.NORMAL.getIRCColor()
 								+ result.toString()));
 			}
