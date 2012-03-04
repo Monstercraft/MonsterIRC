@@ -268,6 +268,31 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									.getChannelManager()
 									.getActiveChannel(player.getName())
 									.getVoicelist().isEmpty()) {
+						String colorizer = IRCColor.NORMAL.getIRCColor();
+						if (c.getHeroChatFourChannel().getColor().str != "f") {
+							colorizer = "§"
+									+ c.getHeroChatFourChannel().getColor().str;
+						}
+						result.append(Variables.ircformat
+								.replace("{prefix}",
+										StringUtils.getPrefix(player.getName()))
+								.replace("{name}",
+										StringUtils.getName(player.getName()))
+								.replace("{suffix}",
+										StringUtils.getSuffix(player.getName()))
+
+								.replace(
+										"{groupPrefix}",
+										StringUtils.getGroupPrefix(player
+												.getName()))
+								.replace(
+										"{groupSuffix}",
+										StringUtils.getGroupSuffix(player
+												.getName()))
+								.replace("{message}", colorizer + " " + message)
+								.replace("{world}",
+										StringUtils.getWorld(player.getName()))
+								.replace("&", "§"));
 						IRC.sendMessage(
 								c,
 								IRCColor.formatMCMessage("�"
@@ -300,6 +325,21 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
+			result.append(Variables.ircformat
+					.replace("{prefix}",
+							StringUtils.getPrefix(player.getName()))
+					.replace("{name}", StringUtils.getName(player.getName()))
+					.replace("{suffix}",
+							StringUtils.getSuffix(player.getName()))
+
+					.replace("{groupPrefix}",
+							StringUtils.getGroupPrefix(player.getName()))
+					.replace("{groupSuffix}",
+							StringUtils.getGroupSuffix(player.getName()))
+					.replace("{message}",
+							IRCColor.NORMAL.getIRCColor() + message)
+					.replace("{world}", StringUtils.getWorld(player.getName()))
+					.replace("&", "§"));
 			IRC.sendMessage(
 					c,
 					IRCColor.formatMCMessage(result.toString().replace("§f",
@@ -311,6 +351,21 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
+			result.append(Variables.ircformat
+					.replace("{prefix}",
+							StringUtils.getPrefix(player.getName()))
+					.replace("{name}", StringUtils.getName(player.getName()))
+					.replace("{suffix}",
+							StringUtils.getSuffix(player.getName()))
+
+					.replace("{groupPrefix}",
+							StringUtils.getGroupPrefix(player.getName()))
+					.replace("{groupSuffix}",
+							StringUtils.getGroupSuffix(player.getName()))
+					.replace("{message}",
+							IRCColor.NORMAL.getIRCColor() + message)
+					.replace("{world}", StringUtils.getWorld(player.getName()))
+					.replace("&", "§"));
 			IRC.sendMessage(
 					c,
 					IRCColor.formatMCMessage(result.toString().replace("§f",
