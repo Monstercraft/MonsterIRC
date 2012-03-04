@@ -30,7 +30,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	private MonsterIRC plugin;
 
 	/**
-	 * Creates an instance of the IRCPlayerListener class.
 	 * 
 	 * @param plugin
 	 *            The parent plugin.
@@ -292,7 +291,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 								.replace("{message}", colorizer + " " + message)
 								.replace("{world}",
 										StringUtils.getWorld(player.getName()))
-								.replace("&", "ง").replace("ง", "ยง"));
+								.replace("&", "ง"));
 						IRC.sendMessage(
 								c,
 								IRCColor.formatMCMessage("ย"
