@@ -38,7 +38,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Sends a message.
 	 */
-	@Override
+
 	public void sendMessage(String message) {
 		IRC.sendNotice(sender, IRCColor.formatMCMessage(message));
 	}
@@ -48,7 +48,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	 * 
 	 * @return The name.
 	 */
-	@Override
+
 	public String getName() {
 		return sender;
 	}
@@ -58,7 +58,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	 * 
 	 * @return The server.
 	 */
-	@Override
+
 	public Server getServer() {
 		return Bukkit.getServer();
 	}
@@ -66,7 +66,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
 		return null;
 	}
@@ -74,7 +74,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public boolean hasPermission(String arg0) {
 		return true;
 	}
@@ -82,7 +82,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public boolean hasPermission(Permission arg0) {
 		return true;
 	}
@@ -90,7 +90,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public boolean isPermissionSet(String arg0) {
 		return true;
 	}
@@ -98,7 +98,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public boolean isPermissionSet(Permission arg0) {
 		return true;
 	}
@@ -106,21 +106,21 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public void recalculatePermissions() {
 	}
 
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public void removeAttachment(PermissionAttachment arg0) {
 	}
 
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public boolean isOp() {
 		return true;
 	}
@@ -128,14 +128,14 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public void setOp(boolean op) {
 	}
 
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public PermissionAttachment addAttachment(Plugin arg0) {
 		return null;
 	}
@@ -143,7 +143,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public PermissionAttachment addAttachment(Plugin arg0, int arg1) {
 		return null;
 	}
@@ -151,7 +151,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public PermissionAttachment addAttachment(Plugin arg0, String arg1,
 			boolean arg2) {
 		return null;
@@ -160,46 +160,32 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	/**
 	 * Ignored.
 	 */
-	@Override
+
 	public PermissionAttachment addAttachment(Plugin arg0, String arg1,
 			boolean arg2, int arg3) {
 		return null;
 	}
 
-	@Override
-	public void sendMessage(String[] arg0) {
-		// TODO Auto-generated method stub
-		
+	public void sendMessage(String[] message) {
 	}
 
-	@Override
 	public void abandonConversation(Conversation arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
-	@Override
 	public void acceptConversationInput(String arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
-	@Override
 	public boolean beginConversation(Conversation arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public boolean isConversing() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
-	public void sendRawMessage(String arg0) {
-		// TODO Auto-generated method stub
-		
+	public void sendRawMessage(String message) {
+		IRC.sendNotice(sender, IRCColor.formatMCMessage(message));
 	}
 
 }

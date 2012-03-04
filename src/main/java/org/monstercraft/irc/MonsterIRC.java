@@ -42,7 +42,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	/**
 	 * Enables the plugin.
 	 */
-	@Override
+
 	public void onEnable() {
 		IRC.log("Starting plugin.");
 		new Configuration();
@@ -75,7 +75,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	/**
 	 * Disables the plugin.
 	 */
-	@Override
+
 	public void onDisable() {
 		if (!settings.firstRun()) {
 			if (getHandleManager().getIRCHandler() != null) {
@@ -99,7 +99,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	/**
 	 * Handles commands.
 	 */
-	@Override
+
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		return getCommandManager().onGameCommand(sender, command, label, args);
@@ -178,7 +178,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 		Bukkit.getServer().getPluginManager().disablePlugin(plugin);
 	}
 
-	@Override
+
 	public void run() {
 		synchronized (lock) {
 			try {
