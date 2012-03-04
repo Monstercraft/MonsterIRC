@@ -1,6 +1,7 @@
 package org.monstercraft.irc.plugin.managers;
 
 import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.managers.hooks.HeroChatHook;
@@ -76,8 +77,8 @@ public class HookManager {
 	 * 
 	 * @return The hook into Permissions.
 	 */
-	public VaultPermissionsHook getPermissionsHook() {
-		return permissions;
+	public Permission getPermissionsHook() {
+		return permissions.getHook();
 	}
 
 	/**

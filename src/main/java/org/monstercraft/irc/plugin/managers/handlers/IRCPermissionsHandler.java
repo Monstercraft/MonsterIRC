@@ -17,7 +17,7 @@ import org.monstercraft.irc.plugin.command.GameCommand;
  */
 public class IRCPermissionsHandler extends MonsterIRC {
 
-	private Permission perms = null;
+	private final Permission perms;
 
 	/**
 	 * Creates an instance of the PermissionsHandler class.
@@ -43,8 +43,8 @@ public class IRCPermissionsHandler extends MonsterIRC {
 		if (MonsterIRC.getHookManager().getPermissionsHook() != null) {
 			if (perms != null) {
 				return perms.has(player, "irc.admin")
-						|| perms.has(player, command.getPermissions())
-						|| player.isOp() || perms.has(player, "*");
+						|| perms.has(player, command.getPermission())
+						|| player.isOp();
 			} else {
 				return player.isOp();
 			}
@@ -90,14 +90,4 @@ public class IRCPermissionsHandler extends MonsterIRC {
 		}
 		return new String[0];
 	}
-
-	/**
-	 * Fetches the permissions.
-	 * 
-	 * @return The permission.
-	 */
-	public Permission getPermission() {
-		return perms;
-	}
-
 }

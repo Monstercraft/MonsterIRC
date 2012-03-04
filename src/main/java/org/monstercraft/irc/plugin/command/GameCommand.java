@@ -16,7 +16,7 @@ public abstract class GameCommand extends MonsterIRC {
 	 * 
 	 * @return The permission node.
 	 */
-	public abstract String getPermissions();
+	public abstract String getPermission();
 
 	/**
 	 * Checks if the command can be executed by the certian user.

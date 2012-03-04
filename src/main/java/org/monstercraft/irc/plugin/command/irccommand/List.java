@@ -37,6 +37,7 @@ public class List extends IRCCommand {
 			IRC.sendMessage(channel, sb.toString());
 			return true;
 		}
-		return false;
+		IRC.sendNotice(sender, "You are not allowed to exectue that command.");
+		return true;
 	}
 }

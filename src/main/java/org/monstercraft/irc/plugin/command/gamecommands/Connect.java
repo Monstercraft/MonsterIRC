@@ -42,7 +42,7 @@ public class Connect extends GameCommand {
 	};
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.connect";
 	}
 

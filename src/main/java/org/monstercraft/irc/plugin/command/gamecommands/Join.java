@@ -47,7 +47,7 @@ public class Join extends GameCommand {
 	}
 
 	@Override
-	public String getPermissions() {
+	public String getPermission() {
 		return "irc.join";
 	}
 
