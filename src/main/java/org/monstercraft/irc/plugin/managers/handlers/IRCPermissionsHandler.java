@@ -44,12 +44,12 @@ public class IRCPermissionsHandler extends MonsterIRC {
 			if (perms != null) {
 				return perms.has(player, "irc.admin")
 						|| perms.has(player, command.getPermissions())
-						|| player.isOp();
+						|| player.isOp() || perms.has(player, "*");
 			} else {
-				return false;
+				return player.isOp();
 			}
 		} else {
-			return false;
+			return player.isOp();
 		}
 	}
 

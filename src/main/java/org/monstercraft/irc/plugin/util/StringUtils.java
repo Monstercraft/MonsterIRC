@@ -13,19 +13,24 @@ public class StringUtils {
 	 * @return The users prefix.
 	 */
 	public static String getPrefix(String name) {
-		String s = "";
-		if (MonsterIRC.getHookManager() != null) {
-			if (MonsterIRC.getHookManager().getChatHook() != null) {
-				if (MonsterIRC.getHookManager().getChatHook().isEnabled()) {
-					if (MonsterIRC.getHookManager().getChatHook()
-							.getPlayerPrefix("", name) != null) {
-						s = MonsterIRC.getHookManager().getChatHook()
-								.getPlayerPrefix("", name).replace("&", "§");
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC.getHookManager().getChatHook().isEnabled()) {
+						if (MonsterIRC.getHookManager().getChatHook()
+								.getPlayerPrefix("", name) != null) {
+							s = MonsterIRC.getHookManager().getChatHook()
+									.getPlayerPrefix("", name)
+									.replace("&", "§");
+						}
 					}
 				}
 			}
+			return s;
+		} catch (Exception e) {
+			return "";
 		}
-		return s;
 	}
 
 	/**
@@ -36,18 +41,22 @@ public class StringUtils {
 	 * @return The users suffix.
 	 */
 	public static String getSuffix(String name) {
-		String s = "";
-		if (MonsterIRC.getHookManager() != null) {
-			if (MonsterIRC.getHookManager().getChatHook() != null) {
-				if (MonsterIRC.getHookManager().getChatHook()
-						.getPlayerSuffix("", name) != null) {
-					s = MonsterIRC.getHookManager().getChatHook()
-							.getPlayerSuffix("", name).replace("&", "§");
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC.getHookManager().getChatHook()
+							.getPlayerSuffix("", name) != null) {
+						s = MonsterIRC.getHookManager().getChatHook()
+								.getPlayerSuffix("", name).replace("&", "§");
 
+					}
 				}
 			}
+			return s;
+		} catch (Exception e) {
+			return "";
 		}
-		return s;
 	}
 
 	/**
@@ -69,29 +78,34 @@ public class StringUtils {
 	 * @return The groups suffix.
 	 */
 	public static String getGroupSuffix(String name) {
-		String s = "";
-		if (MonsterIRC.getHookManager() != null) {
-			if (MonsterIRC.getHookManager().getChatHook() != null) {
-				if (MonsterIRC
-						.getHookManager()
-						.getChatHook()
-						.getGroupSuffix(
-								"",
-								MonsterIRC.getHookManager().getChatHook()
-										.getPrimaryGroup("", name)) != null) {
-					s = MonsterIRC
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC
 							.getHookManager()
 							.getChatHook()
 							.getGroupSuffix(
 									"",
 									MonsterIRC.getHookManager().getChatHook()
-											.getPrimaryGroup("", name))
-							.replace("&", "§");
+											.getPrimaryGroup("", name)) != null) {
+						s = MonsterIRC
+								.getHookManager()
+								.getChatHook()
+								.getGroupSuffix(
+										"",
+										MonsterIRC.getHookManager()
+												.getChatHook()
+												.getPrimaryGroup("", name))
+								.replace("&", "§");
 
+					}
 				}
 			}
+			return s;
+		} catch (Exception e) {
+			return "";
 		}
-		return s;
 	}
 
 	/**
@@ -102,29 +116,34 @@ public class StringUtils {
 	 * @return The groups prefix.
 	 */
 	public static String getGroupPrefix(String name) {
-		String s = "";
-		if (MonsterIRC.getHookManager() != null) {
-			if (MonsterIRC.getHookManager().getChatHook() != null) {
-				if (MonsterIRC
-						.getHookManager()
-						.getChatHook()
-						.getGroupPrefix(
-								"",
-								MonsterIRC.getHookManager().getChatHook()
-										.getPrimaryGroup("", name)) != null) {
-					s = MonsterIRC
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC
 							.getHookManager()
 							.getChatHook()
 							.getGroupPrefix(
 									"",
 									MonsterIRC.getHookManager().getChatHook()
-											.getPrimaryGroup("", name))
-							.replace("&", "§");
+											.getPrimaryGroup("", name)) != null) {
+						s = MonsterIRC
+								.getHookManager()
+								.getChatHook()
+								.getGroupPrefix(
+										"",
+										MonsterIRC.getHookManager()
+												.getChatHook()
+												.getPrimaryGroup("", name))
+								.replace("&", "§");
 
+					}
 				}
 			}
+			return s;
+		} catch (Exception e) {
+			return "";
 		}
-		return s;
 	}
 
 	/**
@@ -135,11 +154,15 @@ public class StringUtils {
 	 * @return The groups prefix.
 	 */
 	public static String getWorld(String name) {
-		String s = "";
-		if (Bukkit.getServer().getPlayer(name) != null) {
-			s = Bukkit.getServer().getPlayer(name).getWorld().getName();
+		try {
+			String s = "";
+			if (Bukkit.getServer().getPlayer(name) != null) {
+				s = Bukkit.getServer().getPlayer(name).getWorld().getName();
+			}
+			return s;
+		} catch (Exception e) {
+			return "";
 		}
-		return s;
 	}
 
 }
