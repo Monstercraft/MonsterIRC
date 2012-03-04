@@ -286,7 +286,7 @@ public class IRCHandler extends MonsterIRC {
 	}
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
-	
+
 		public void run() {
 			try {
 				if (isConnected(MonsterIRC.getIRCServer()) && reader != null) {
@@ -687,7 +687,7 @@ public class IRCHandler extends MonsterIRC {
 	};
 
 	private final Runnable DISPATCH = new Runnable() {
-	
+
 		public void run() {
 			while (true) {
 				try {

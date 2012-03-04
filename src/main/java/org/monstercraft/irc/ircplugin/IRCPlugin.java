@@ -72,7 +72,6 @@ public abstract class IRCPlugin extends IRC implements EventListener, Runnable {
 		this.running = false;
 	}
 
-	
 	public final void run() {
 		boolean start = false;
 		try {
