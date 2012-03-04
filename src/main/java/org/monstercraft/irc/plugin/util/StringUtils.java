@@ -20,7 +20,7 @@ public class StringUtils {
 					if (MonsterIRC.getHookManager().getChatHook()
 							.getPlayerPrefix("", name) != null) {
 						s = MonsterIRC.getHookManager().getChatHook()
-								.getPlayerPrefix("", name).replace("&", "ง");
+								.getPlayerPrefix("", name).replace("&", "ยง");
 					}
 				}
 			}
@@ -42,7 +42,7 @@ public class StringUtils {
 				if (MonsterIRC.getHookManager().getChatHook()
 						.getPlayerSuffix("", name) != null) {
 					s = MonsterIRC.getHookManager().getChatHook()
-							.getPlayerSuffix("", name).replace("&", "ง");
+							.getPlayerSuffix("", name).replace("&", "ยง");
 
 				}
 			}
@@ -58,7 +58,7 @@ public class StringUtils {
 	 * @return The users name.
 	 */
 	public static String getName(String name) {
-		return name.replace("&", "ง");
+		return name.replace("&", "ยง");
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class StringUtils {
 									"",
 									MonsterIRC.getHookManager().getChatHook()
 											.getPrimaryGroup("", name))
-							.replace("&", "ง");
+							.replace("&", "ยง");
 
 				}
 			}
@@ -119,7 +119,7 @@ public class StringUtils {
 									"",
 									MonsterIRC.getHookManager().getChatHook()
 											.getPrimaryGroup("", name))
-							.replace("&", "ง");
+							.replace("&", "ยง");
 
 				}
 			}

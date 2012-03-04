@@ -1,17 +1,12 @@
 package org.monstercraft.irc.plugin.command.gamecommands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
-import org.monstercraft.irc.plugin.util.ChatType;
-import org.monstercraft.irc.plugin.util.IRCColor;
-import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
-
-import com.gmail.nossr50.mcPermissions;
 
 public class Say extends GameCommand {
 
@@ -64,80 +59,18 @@ public class Say extends GameCommand {
 				if (c.getChannel().equalsIgnoreCase(channel)) {
 					MonsterIRC.getHandleManager().getIRCHandler()
 							.sendMessage(c.getChannel(), result.toString());
-					handleMessage(c, sender.getName(), result2.toString());
+					IRC.sendGameMessage(c, sender.getName(), result2.toString());
 					break;
 				}
 			} else {
 				if (c.isDefaultChannel()) {
 					MonsterIRC.getHandleManager().getIRCHandler()
 							.sendMessage(c.getChannel(), result.toString());
-					handleMessage(c, sender.getName(), result2.toString());
+					IRC.sendGameMessage(c, sender.getName(), result2.toString());
 				}
 			}
 		}
 		return true;
-	}
-
-	private void handleMessage(IRCChannel c, String name, String message) {
-		if (c.getChatType() == ChatType.ADMINCHAT) {
-			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-				String format = "§b" + "{" + "§f" + "[IRC] " + name + "§b"
-						+ "} " + message;
-				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-					if (p.isOp() || mcPermissions.getInstance().adminChat(p))
-						p.sendMessage(format);
-				}
-			}
-		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
-			c.getHeroChatChannel().announce(
-					Variables.mcformat
-							.replace("{name}", StringUtils.getName(name))
-							.replace("{message}",
-									IRCColor.formatIRCMessage(message))
-							.replace("{prefix}", StringUtils.getPrefix(name))
-							.replace("{suffix}", StringUtils.getSuffix(name))
-							.replace("{groupPrefix}",
-									StringUtils.getGroupPrefix(name))
-							.replace("{groupSuffix}",
-									StringUtils.getGroupSuffix(name))
-							.replace("{world}", StringUtils.getWorld(name))
-							.replace("&", "§")
-							+ c.getHeroChatChannel().getColor());
-		} else if (c.getChatType() == ChatType.HEROCHAT
-				&& MonsterIRC.getHookManager().getHeroChatHook() != null
-				&& Variables.hc4) {
-			c.getHeroChatFourChannel().sendMessage(
-					Variables.mcformat
-							.replace("{name}", StringUtils.getName(name))
-							.replace("{message}", "")
-							.replace("{colon}", "")
-							.replace("{prefix}", StringUtils.getPrefix(name))
-							.replace("{suffix}", StringUtils.getSuffix(name))
-							.replace("{groupPrefix}",
-									StringUtils.getGroupPrefix(name))
-							.replace("{groupSuffix}",
-									StringUtils.getGroupSuffix(name))
-							.replace("{world}", StringUtils.getWorld(name))
-							.replace("&", "§"),
-					IRCColor.formatIRCMessage(IRCColor
-							.formatIRCMessage(message)),
-					c.getHeroChatFourChannel().getMsgFormat(), false);
-		} else if (c.getChatType() == ChatType.GLOBAL) {
-			Bukkit.getServer().broadcastMessage(
-					Variables.mcformat
-							.replace("{name}", StringUtils.getName(name))
-							.replace("{message}",
-									IRCColor.formatIRCMessage(message))
-							.replace("{prefix}", StringUtils.getPrefix(name))
-							.replace("{suffix}", StringUtils.getSuffix(name))
-							.replace("{groupPrefix}",
-									StringUtils.getGroupPrefix(name))
-							.replace("{groupSuffix}",
-									StringUtils.getGroupSuffix(name))
-							.replace("&", "§")
-							.replace("{world}", StringUtils.getWorld(name))
-							+ "§f");
-		}
 	}
 
 	@Override

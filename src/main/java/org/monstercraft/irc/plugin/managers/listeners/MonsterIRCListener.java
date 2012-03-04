@@ -146,8 +146,11 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{message}",
 							IRCColor.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld("Console"))
-					.replace("&", "�"));
-			IRC.sendMessage(c, IRCColor.formatMCMessage(result2.toString()));
+					.replace("&", "§"));
+			IRC.sendMessage(
+					c,
+					IRCColor.formatMCMessage(result2.toString().replace("§f",
+							IRCColor.NORMAL.getIRCColor())));
 			return;
 		}
 		StringBuffer result = new StringBuffer();
@@ -163,13 +166,15 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				.replace("{message}",
 						IRCColor.NORMAL.getIRCColor() + " " + message)
 				.replace("{world}", StringUtils.getWorld(player.getName()))
-				.replace("&", "�"));
+				.replace("&", "§"));
 		if (c.getChatType() == ChatType.ADMINCHAT) {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
-					IRC.sendMessage(c,
-							IRCColor.formatMCMessage(result.toString()));
+					IRC.sendMessage(
+							c,
+							IRCColor.formatMCMessage(result.toString().replace(
+									"§f", IRCColor.NORMAL.getIRCColor())));
 				}
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
@@ -187,16 +192,18 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.getChatter(player.getName()).isMuted()) {
 				IRC.sendMessage(
 						c.getChannel(),
-						IRCColor.formatMCMessage("�"
+						IRCColor.formatMCMessage("§"
 								+ Herochat.getChatterManager()
 										.getChatter(player).getActiveChannel()
 										.getColor().getChar()
 								+ "["
 								+ Herochat.getChatterManager()
 										.getChatter(player).getActiveChannel()
-										.getNick() + "]: "
+										.getNick()
+								+ "]: "
 								+ IRCColor.NORMAL.getIRCColor()
-								+ result.toString()));
+								+ result.toString().replace("§f",
+										IRCColor.NORMAL.getIRCColor())));
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& MonsterIRC.getHookManager().getHeroChatHook() != null
@@ -234,11 +241,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									.getVoicelist().isEmpty()) {
 						IRC.sendMessage(
 								c,
-								IRCColor.formatMCMessage(MonsterIRC
-										.getHookManager().getHeroChatHook()
-										.getChannelManager()
-										.getActiveChannel(player.getName())
-										.getColor().str
+								IRCColor.formatMCMessage("�"
+										+ MonsterIRC
+												.getHookManager()
+												.getHeroChatHook()
+												.getChannelManager()
+												.getActiveChannel(
+														player.getName())
+												.getColor().str
 										+ "["
 										+ MonsterIRC
 												.getHookManager()
@@ -249,7 +259,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 												.getNick()
 										+ "] : "
 										+ IRCColor.NORMAL.getIRCColor()
-										+ result.toString()));
+										+ result.toString().replace("§f",
+												IRCColor.NORMAL.getIRCColor())));
 					}
 				}
 			}
@@ -260,7 +271,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
-			IRC.sendMessage(c, IRCColor.formatMCMessage(result.toString()));
+			IRC.sendMessage(
+					c,
+					IRCColor.formatMCMessage(result.toString().replace("§f",
+							IRCColor.NORMAL.getIRCColor())));
 		} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
@@ -268,7 +282,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
-			IRC.sendMessage(c, IRCColor.formatMCMessage(result.toString()));
+			IRC.sendMessage(
+					c,
+					IRCColor.formatMCMessage(result.toString().replace("§f",
+							IRCColor.NORMAL.getIRCColor())));
 		}
 	}
 }

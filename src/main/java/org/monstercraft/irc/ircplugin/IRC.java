@@ -162,10 +162,10 @@ public class IRC {
 		try {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
 				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-					String format = "งb" + "{" + "งf" + "[IRC] "
+					String format = "ยงb" + "{" + "ยงf" + "[IRC] "
 							+ StringUtils.getPrefix(name)
 							+ StringUtils.getName(name)
-							+ StringUtils.getSuffix(name) + "งb" + "} "
+							+ StringUtils.getSuffix(name) + "ยงb" + "} "
 							+ message;
 					for (Player p : getPlugin().getServer().getOnlinePlayers()) {
 						if (p.isOp()
@@ -187,7 +187,7 @@ public class IRC {
 								.replace("{groupSuffix}",
 										StringUtils.getGroupSuffix(name))
 								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "ง")));
+								.replace("&", "ยง")));
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& MonsterIRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
@@ -205,7 +205,7 @@ public class IRC {
 								.replace("{groupSuffix}",
 										StringUtils.getGroupSuffix(name))
 								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "ง")),
+								.replace("&", "ยง")),
 						IRCColor.formatIRCMessage(message),
 						c.getHeroChatFourChannel().getMsgFormat(), false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
@@ -225,12 +225,12 @@ public class IRC {
 								.replace("{groupSuffix}",
 										StringUtils.getGroupSuffix(name))
 								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "ง")));
+								.replace("&", "ยง")));
 			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 				for (Player p : TownyUniverse.getOnlinePlayers()) {
 					TownyMessaging.sendMessage(p, IRCColor.formatIRCMessage(c
 							.getTownyChannel().getChannelTag()
-							.replace("&", "ง")
+							.replace("&", "ยง")
 							+ Variables.mcformat
 									.replace("{name}",
 											StringUtils.getName(name))
@@ -249,7 +249,7 @@ public class IRC {
 											StringUtils.getGroupSuffix(name))
 									.replace("{world}",
 											StringUtils.getWorld(name))
-									.replace("&", "ง")));
+									.replace("&", "ยง")));
 				}
 			} else if (c.getChatType() == ChatType.NONE) {
 				return;

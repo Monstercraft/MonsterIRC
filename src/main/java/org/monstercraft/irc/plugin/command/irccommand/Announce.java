@@ -24,7 +24,7 @@ public class Announce extends IRCCommand {
 				|| MonsterIRC.getHandleManager().getIRCHandler()
 						.isOp(channel, sender)) {
 			Bukkit.getServer().broadcastMessage(
-					"ง4[IRC]<" + sender + ">: "
+					"ยง4[IRC]<" + sender + ">: "
 							+ IRCColor.formatMCMessage(message.substring(10)));
 		}
 		return true;
