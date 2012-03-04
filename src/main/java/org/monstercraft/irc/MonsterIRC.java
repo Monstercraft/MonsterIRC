@@ -178,7 +178,6 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 		Bukkit.getServer().getPluginManager().disablePlugin(plugin);
 	}
 
-
 	public void run() {
 		synchronized (lock) {
 			try {
