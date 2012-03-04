@@ -9,7 +9,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
@@ -284,7 +286,7 @@ public class IRCHandler extends MonsterIRC {
 	}
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
-		@Override
+	
 		public void run() {
 			try {
 				if (isConnected(MonsterIRC.getIRCServer()) && reader != null) {
@@ -296,6 +298,49 @@ public class IRCHandler extends MonsterIRC {
 							writer.flush();
 							IRC.debug("PONG " + line.substring(5),
 									Variables.debug);
+							continue;
+						} else if (isCTCP(line)) {
+							final String _name = line.substring(1,
+									line.indexOf("!"));
+							final String ctcpMsg = getCTCPMessage(line)
+									.toUpperCase();
+							if (ctcpMsg.equals("VERSION")) {
+								writer.write("NOTICE "
+										+ _name
+										+ " :"
+										+ (char) ctcpControl
+										+ "VERSION "
+										+ "MonsterIRC for Bukkit written by Fletch_to_99"
+										+ (char) ctcpControl + "\r\n");
+								writer.flush();
+							} else if (ctcpMsg.equals("TIME")) {
+								final SimpleDateFormat sdf = new SimpleDateFormat(
+										"dd MMM yyyy hh:mm:ss zzz");
+								writer.write("NOTICE " + _name + " :"
+										+ (char) ctcpControl + " TIME "
+										+ sdf.format(new Date())
+										+ (char) ctcpControl + "\r\n");
+								writer.flush();
+							} else if (ctcpMsg.equals("PING")) {
+								writer.write("NOTICE "
+										+ _name
+										+ " :"
+										+ (char) ctcpControl
+										+ " PING "
+										+ "MonsterIRC by fletch to 99 is to fast to ping."
+										+ (char) ctcpControl + "\r\n");
+								writer.flush();
+							} else if (ctcpMsg.equals("FINGER")) {
+								writer.write("NOTICE "
+										+ _name
+										+ " :"
+										+ (char) ctcpControl
+										+ " FINGER "
+										+ "MonsterIRC written by fletch to 99 slaps "
+										+ _name + " across the face."
+										+ (char) ctcpControl + "\r\n");
+								writer.flush();
+							}
 							continue;
 						}
 						String name = null;
@@ -615,10 +660,34 @@ public class IRCHandler extends MonsterIRC {
 				}
 			}
 		}
+
+		private final byte ctcpControl = 1;
+
+		private boolean isCTCP(final String input) {
+			if (input.length() != 0) {
+				String message = input.substring(input.indexOf(":", 1) + 1);
+				if (message.length() != 0) {
+					char[] messageArray = message.toCharArray();
+					return ((byte) messageArray[0]) == 1
+							&& ((byte) messageArray[messageArray.length - 1]) == 1;
+				}
+			}
+			return false;
+		}
+
+		private String getCTCPMessage(final String input) {
+			if (input.length() != 0) {
+				String message = input.substring(input.indexOf(":", 1) + 1);
+				return message.substring(
+						message.indexOf((char) ctcpControl) + 1,
+						message.indexOf((char) ctcpControl, 1));
+			}
+			return null;
+		}
 	};
 
 	private final Runnable DISPATCH = new Runnable() {
-		@Override
+	
 		public void run() {
 			while (true) {
 				try {

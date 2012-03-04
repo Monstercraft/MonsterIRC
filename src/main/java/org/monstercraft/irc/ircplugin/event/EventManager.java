@@ -13,11 +13,9 @@ public class EventManager implements Runnable {
 	public static class KillEvent extends IRCEvent {
 		private static final long serialVersionUID = 3426050317048250049L;
 
-		@Override
 		public void dispatch(final EventListener el) {
 		}
 
-		@Override
 		public long getMask() {
 			return -1;
 		}

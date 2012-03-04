@@ -266,11 +266,13 @@ public class IRCChannel {
 	}
 
 	public boolean isHeroChatListenChannel(String activeChannelName) {
-		if (listenChatChannels != null)
-			for (String chName : listenChatChannels)
-				if (chName.equalsIgnoreCase(activeChannelName))
+		if (listenChatChannels != null) {
+			for (String chName : listenChatChannels) {
+				if (chName.equalsIgnoreCase(activeChannelName)) {
 					return true;
-
+				}
+			}
+		}
 		return false;
 	}
 
