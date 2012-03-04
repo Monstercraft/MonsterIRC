@@ -174,58 +174,86 @@ public class IRC {
 					}
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
-				c.getHeroChatChannel().announce(
-						IRCColor.formatIRCMessage(Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}", message)
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")));
+				c.getHeroChatChannel()
+						.announce(
+								IRCColor.formatIRCMessage(Variables.mcformat
+										.replace("{name}",
+												StringUtils.getName(name))
+										.replace(
+												"{message}",
+												"§"
+														+ c.getHeroChatChannel()
+																.getColor()
+																.getChar()
+														+ message)
+										.replace("{prefix}",
+												StringUtils.getPrefix(name))
+										.replace("{suffix}",
+												StringUtils.getSuffix(name))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(name))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(name))
+										.replace("{world}",
+												StringUtils.getWorld(name))));
 			} else if (c.getChatType() == ChatType.HEROCHAT
 					&& MonsterIRC.getHookManager().getHeroChatHook() != null
 					&& Variables.hc4) {
-				c.getHeroChatFourChannel().sendMessage(
-						IRCColor.formatIRCMessage(Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace("{message}", "")
-								.replace(":", "")
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")),
-						IRCColor.formatIRCMessage(message),
-						c.getHeroChatFourChannel().getMsgFormat(), false);
+				c.getHeroChatFourChannel()
+						.sendMessage(
+								IRCColor.formatIRCMessage(Variables.mcformat
+										.replace("{name}",
+												StringUtils.getName(name))
+										.replace("{message}", "")
+										.replace(":", "")
+										.replace("{prefix}",
+												StringUtils.getPrefix(name))
+										.replace("{suffix}",
+												StringUtils.getSuffix(name))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(name))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(name))
+										.replace("{world}",
+												StringUtils.getWorld(name))),
+								IRCColor.formatIRCMessage(message),
+								c.getHeroChatFourChannel().getMsgFormat(),
+								false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
-				getPlugin().getServer().broadcastMessage(
-						IRCColor.formatIRCMessage(Variables.mcformat
-								.replace("{name}", StringUtils.getName(name))
-								.replace(
-										"{message}",
-										IRCColor.WHITE.getMinecraftColor()
-												+ message)
-								.replace("{prefix}",
-										StringUtils.getPrefix(name))
-								.replace("{suffix}",
-										StringUtils.getSuffix(name))
-								.replace("{groupPrefix}",
-										StringUtils.getGroupPrefix(name))
-								.replace("{groupSuffix}",
-										StringUtils.getGroupSuffix(name))
-								.replace("{world}", StringUtils.getWorld(name))
-								.replace("&", "§")));
+				getPlugin().getServer()
+						.broadcastMessage(
+								IRCColor.formatIRCMessage(Variables.mcformat
+										.replace(
+												"{name}",
+												StringUtils.getName(name)
+														+ "§f")
+										.replace(
+												"{message}",
+												IRCColor.WHITE
+														.getMinecraftColor()
+														+ message)
+										.replace("{prefix}",
+												StringUtils.getPrefix(name))
+										.replace("{suffix}",
+												StringUtils.getSuffix(name))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(name))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(name))
+										.replace("{world}",
+												StringUtils.getWorld(name))));
 			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 				for (Player p : TownyUniverse.getOnlinePlayers()) {
 					TownyMessaging.sendMessage(p, IRCColor.formatIRCMessage(c
@@ -248,8 +276,7 @@ public class IRC {
 									.replace("{groupSuffix}",
 											StringUtils.getGroupSuffix(name))
 									.replace("{world}",
-											StringUtils.getWorld(name))
-									.replace("&", "§")));
+											StringUtils.getWorld(name))));
 				}
 			} else if (c.getChatType() == ChatType.NONE) {
 				return;
@@ -258,5 +285,4 @@ public class IRC {
 			IRC.debug(e);
 		}
 	}
-
 }
