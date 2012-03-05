@@ -37,6 +37,15 @@ public enum IRCColor {
 	}
 
 	/**
+	 * Fetches the color in minecraft.
+	 * 
+	 * @return The minecraft color code.
+	 */
+	public String getOldMinecraftColor() {
+		return "§" + MinecraftColor;
+	}
+
+	/**
 	 * Fetches the color in IRC.
 	 * 
 	 * @return The IRC color code.
@@ -83,6 +92,10 @@ public enum IRCColor {
 			for (IRCColor c : values()) {
 				if (msg.contains(c.getMinecraftColor())) {
 					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
+				}
+				if (msg.contains(c.getOldMinecraftColor())) {
+					msg = msg
+							.replace(c.getOldMinecraftColor(), c.getIRCColor());
 				}
 			}
 		} else {
