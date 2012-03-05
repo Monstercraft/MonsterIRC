@@ -285,4 +285,40 @@ public class IRC {
 			IRC.debug(e);
 		}
 	}
+
+	/**
+	 * Fetches the list of Operaters in the current IRC channel.
+	 * 
+	 * @return The list of Operators.
+	 */
+	public static boolean isOp(final IRCChannel channel, final String sender) {
+		return channel.getOpList().contains(sender);
+	}
+
+	/**
+	 * Fetches the list of Operaters in the current IRC channel.
+	 * 
+	 * @return The list of Operators.
+	 */
+	public static boolean isHop(final IRCChannel channel, final String sender) {
+		return channel.getOpList().contains(sender);
+	}
+
+	/**
+	 * Fetches the list of Admins in the current IRC channel.
+	 * 
+	 * @return True if the user is admin; otherwise false.
+	 */
+	public static boolean isAdmin(final IRCChannel channel, final String sender) {
+		return channel.getOpList().contains(sender);
+	}
+
+	/**
+	 * Fetches the list of Voices in the current IRC channel.
+	 * 
+	 * @return The list of Voices.
+	 */
+	public static boolean isVoice(final IRCChannel channel, final String sender) {
+		return channel.getVoiceList().contains(sender);
+	}
 }

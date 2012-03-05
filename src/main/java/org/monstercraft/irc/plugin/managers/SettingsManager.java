@@ -257,6 +257,8 @@ public class SettingsManager extends MonsterIRC {
 											f.getName().lastIndexOf(".")),
 									ChatType.GLOBAL,
 									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.HOP"),
+									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (admin) {
@@ -270,6 +272,8 @@ public class SettingsManager extends MonsterIRC {
 											f.getName().lastIndexOf(".")),
 									ChatType.ADMINCHAT,
 									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.HOP"),
+									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (hero) {
@@ -285,6 +289,8 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.CHATTYPE.HEROCHAT.LISTEN"),
 									ChatType.HEROCHAT,
 									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.HOP"),
+									config.getStringList("CHANNEL.COMMANDS.ADMIN"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (towny) {
@@ -299,6 +305,8 @@ public class SettingsManager extends MonsterIRC {
 									config.getString("CHANNEL.CHATTYPE.TOWNY.CHANNEL"),
 									ChatType.TOWNYCHAT,
 									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.HOP"),
+									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (none) {
@@ -312,6 +320,8 @@ public class SettingsManager extends MonsterIRC {
 											f.getName().lastIndexOf(".")),
 									ChatType.NONE,
 									config.getStringList("CHANNEL.COMMANDS.OP"),
+									config.getStringList("CHANNEL.COMMANDS.HOP"),
+									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				}
@@ -328,12 +338,16 @@ public class SettingsManager extends MonsterIRC {
 		File SAMPLE_CHANNEL = new File(Configuration.Paths.CHANNELS
 				+ File.separator + "#Sample.channel");
 		ArrayList<String> op = new ArrayList<String>();
+		ArrayList<String> hop = new ArrayList<String>();
+		ArrayList<String> admin = new ArrayList<String>();
 		ArrayList<String> voice = new ArrayList<String>();
 		ArrayList<String> user = new ArrayList<String>();
 		ArrayList<String> channels = new ArrayList<String>();
 		channels.add("Global");
 		channels.add("Overworld");
 		op.add("*");
+		hop.add("*");
+		admin.add("list");
 		voice.add("give");
 		user.add("help");
 		FileConfiguration config = new YamlConfiguration();
@@ -352,6 +366,8 @@ public class SettingsManager extends MonsterIRC {
 		config.set("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
 		config.set("CHANNEL.COMMANDS.OP", op);
+		config.set("CHANNEL.COMMANDS.HOP", hop);
+		config.set("CHANNEL.COMMANDS.ADMIN", admin);
 		config.set("CHANNEL.COMMANDS.VOICE", voice);
 		config.set("CHANNEL.COMMANDS.USERS", user);
 		save(config, SAMPLE_CHANNEL);

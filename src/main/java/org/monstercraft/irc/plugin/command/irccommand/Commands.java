@@ -17,7 +17,7 @@ public class Commands extends IRCCommand {
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (MonsterIRC.getHandleManager().getIRCHandler().isOp(channel, sender)) {
+		if (IRC.isOp(channel, sender)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("As an OP you can use ");
 			for (String string : channel.getOpCommands()) {
@@ -31,8 +31,7 @@ public class Commands extends IRCCommand {
 			}
 			IRC.sendNotice(sender, sb.toString());
 			return true;
-		} else if (MonsterIRC.getHandleManager().getIRCHandler()
-				.isVoice(channel, sender)) {
+		} else if (IRC.isVoice(channel, sender)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("As an Voice you can use ");
 			for (String string : channel.getVoiceCommands()) {

@@ -20,9 +20,7 @@ public class List extends IRCCommand {
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (MonsterIRC.getHandleManager().getIRCHandler().isOp(channel, sender)
-				|| MonsterIRC.getHandleManager().getIRCHandler()
-						.isVoice(channel, sender)) {
+		if (IRC.isOp(channel, sender) || IRC.isVoice(channel, sender)) {
 			Player[] players = Bukkit.getServer().getOnlinePlayers();
 			StringBuilder sb = new StringBuilder();
 			sb.append("Players currently online" + "(" + players.length + "/"
