@@ -461,6 +461,10 @@ public class IRCHandler extends MonsterIRC {
 											c.getAdminList().add(_name);
 										} else if (mode.contains("-a")) {
 											c.getAdminList().remove(_name);
+										} else if (mode.contains("+q")) {
+											c.getOpList().add(_name);
+										} else if (mode.contains("-q")) {
+											c.getOpList().remove(_name);
 										}
 										IRCModeEvent mevent = new IRCModeEvent(
 												c, name, mode, msg);
