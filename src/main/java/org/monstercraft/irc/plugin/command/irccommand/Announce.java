@@ -2,6 +2,7 @@ package org.monstercraft.irc.plugin.command.irccommand;
 
 import org.bukkit.Bukkit;
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.util.IRCColor;
 import org.monstercraft.irc.plugin.util.Variables;
@@ -19,10 +20,7 @@ public class Announce extends IRCCommand {
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (MonsterIRC.getHandleManager().getIRCHandler()
-				.isVoice(channel, sender)
-				|| MonsterIRC.getHandleManager().getIRCHandler()
-						.isOp(channel, sender)) {
+		if (IRC.isVoice(channel, sender) || IRC.isOp(channel, sender)) {
 			Bukkit.getServer().broadcastMessage(
 					"§4[IRC]<" + sender + ">: "
 							+ IRCColor.formatMCMessage(message.substring(10)));
