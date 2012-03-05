@@ -453,6 +453,18 @@ public class IRCHandler extends MonsterIRC {
 											c.getOpList().add(_name);
 										} else if (mode.contains("-o")) {
 											c.getOpList().remove(_name);
+										} else if (mode.contains("+h")) {
+											c.getHOpList().add(_name);
+										} else if (mode.contains("-h")) {
+											c.getHOpList().remove(_name);
+										} else if (mode.contains("+a")) {
+											c.getAdminList().add(_name);
+										} else if (mode.contains("-a")) {
+											c.getAdminList().remove(_name);
+										} else if (mode.contains("+q")) {
+											c.getOpList().add(_name);
+										} else if (mode.contains("-q")) {
+											c.getOpList().remove(_name);
 										}
 										IRCModeEvent mevent = new IRCModeEvent(
 												c, name, mode, msg);
@@ -637,11 +649,11 @@ public class IRCHandler extends MonsterIRC {
 													+ " is an OP in "
 													+ chan.getChannel());
 										} else if (s.contains("%")) {
-											chan.getVoiceList()
+											chan.getHOpList()
 													.add(s.substring(s
 															.indexOf("%") + 1));
 											IRC.log(s.substring(s.indexOf("%") + 1)
-													+ " is voice in "
+													+ " is half op in "
 													+ chan.getChannel());
 										}
 									}
@@ -839,23 +851,5 @@ public class IRCHandler extends MonsterIRC {
 				IRC.debug(e);
 			}
 		}
-	}
-
-	/**
-	 * Fetches the list of Operaters in the current IRC channel.
-	 * 
-	 * @return The list of Operators.
-	 */
-	public boolean isOp(final IRCChannel channel, final String sender) {
-		return channel.getOpList().contains(sender);
-	}
-
-	/**
-	 * Fetches the list of Voices in the current IRC channel.
-	 * 
-	 * @return The list of Voices.
-	 */
-	public boolean isVoice(final IRCChannel channel, final String sender) {
-		return channel.getVoiceList().contains(sender);
 	}
 }

@@ -24,8 +24,12 @@ public class IRCChannel {
 	private boolean defaultChannel;
 	private List<String> opCommands;
 	private List<String> voiceCommands;
+	private List<String> hopCommands;
+	private List<String> adminCommands;
 	private List<String> userCommands;
 	private List<String> ops;
+	private List<String> admins;
+	private List<String> hops;
 	private List<String> voices;
 	private List<String> listenChatChannels;
 	private String password;
@@ -56,7 +60,8 @@ public class IRCChannel {
 	public IRCChannel(final String password, final boolean showJoinLeave,
 			final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final ChatType type,
-			final List<String> opCommands, final List<String> voiceCommands,
+			final List<String> opCommands, final List<String> hopCommands,
+			final List<String> adminCommands, final List<String> voiceCommands,
 			final List<String> userCommands) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
@@ -65,9 +70,13 @@ public class IRCChannel {
 		this.autoJoin = autoJoin;
 		this.defaultChannel = defaultChannel;
 		this.opCommands = opCommands;
+		this.hopCommands = hopCommands;
+		this.adminCommands = hopCommands;
 		this.voiceCommands = voiceCommands;
 		this.userCommands = userCommands;
 		this.ops = new ArrayList<String>();
+		this.hops = new ArrayList<String>();
+		this.admins = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
 		this.ChatChannel = null;
 	}
@@ -100,7 +109,8 @@ public class IRCChannel {
 			final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final String ChatChannel,
 			final List<String> listenChatChannels, final ChatType type,
-			final List<String> opCommands, final List<String> voiceCommands,
+			final List<String> opCommands, final List<String> hopCommands,
+			final List<String> adminCommands, final List<String> voiceCommands,
 			final List<String> userCommands) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
@@ -111,16 +121,21 @@ public class IRCChannel {
 		this.autoJoin = autoJoin;
 		this.defaultChannel = defaultChannel;
 		this.opCommands = opCommands;
+		this.hopCommands = hopCommands;
+		this.adminCommands = hopCommands;
 		this.voiceCommands = voiceCommands;
 		this.userCommands = userCommands;
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
+		this.hops = new ArrayList<String>();
+		this.admins = new ArrayList<String>();
 	}
 
 	public IRCChannel(final String password, final boolean showJoinLeave,
 			final boolean autoJoin, final boolean defaultChannel,
 			final String channel, final String ChatChannel,
 			final ChatType type, final List<String> opCommands,
+			final List<String> hopCommands, final List<String> adminCommands,
 			final List<String> voiceCommands, final List<String> userCommands) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
@@ -130,10 +145,14 @@ public class IRCChannel {
 		this.autoJoin = autoJoin;
 		this.defaultChannel = defaultChannel;
 		this.opCommands = opCommands;
+		this.hopCommands = hopCommands;
+		this.adminCommands = hopCommands;
 		this.voiceCommands = voiceCommands;
 		this.userCommands = userCommands;
 		this.ops = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
+		this.hops = new ArrayList<String>();
+		this.admins = new ArrayList<String>();
 	}
 
 	/**
@@ -220,6 +239,24 @@ public class IRCChannel {
 	}
 
 	/**
+	 * Fetches the commands list for channel HOPS.
+	 * 
+	 * @return The commands list for channel HOPS.
+	 */
+	public List<String> getHopCommands() {
+		return hopCommands;
+	}
+
+	/**
+	 * Fetches the commands list for channel Admins.
+	 * 
+	 * @return The commands list for channel Admins.
+	 */
+	public List<String> getAdminCommands() {
+		return adminCommands;
+	}
+
+	/**
 	 * Fetches the commands list for channel voices.
 	 * 
 	 * @return The commands list for channel voices.
@@ -244,6 +281,24 @@ public class IRCChannel {
 	 */
 	public List<String> getOpList() {
 		return ops;
+	}
+
+	/**
+	 * Fetches the OPS in this channel.
+	 * 
+	 * @return The OPS in this channel.
+	 */
+	public List<String> getHOpList() {
+		return hops;
+	}
+
+	/**
+	 * Fetches the OPS in this channel.
+	 * 
+	 * @return The OPS in this channel.
+	 */
+	public List<String> getAdminList() {
+		return admins;
 	}
 
 	/**
