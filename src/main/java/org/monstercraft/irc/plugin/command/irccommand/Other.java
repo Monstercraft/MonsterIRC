@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandException;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.IRCCommand;
-import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCCommandSender;
 
@@ -199,7 +199,7 @@ public class Other extends IRCCommand {
 						"You are not allowed to execute that command from IRC.");
 				return true;
 			}
-		} else if (IRC.isHop(channel, sender)) {
+		} else if (IRC.isHalfOP(channel, sender)) {
 			if (channel.getHopCommands().contains("*")) {
 				try {
 					IRCCommandSender console = new IRCCommandSender(sender);

@@ -13,7 +13,7 @@ import javax.tools.ToolProvider;
 
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration;
-import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 
 public class JavaCompiler extends IRC {
 

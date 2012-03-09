@@ -34,6 +34,8 @@ public class IRCChannel {
 	private List<String> listenChatChannels;
 	private String password;
 	private boolean showJoinLeave;
+	private boolean passToIRC;
+	private boolean passToGame;
 
 	/**
 	 * Creates an IRCChannel to join. .
@@ -62,7 +64,8 @@ public class IRCChannel {
 			final String channel, final ChatType type,
 			final List<String> opCommands, final List<String> hopCommands,
 			final List<String> adminCommands, final List<String> voiceCommands,
-			final List<String> userCommands) {
+			final List<String> userCommands, final boolean passToGame,
+			final boolean passToIRC) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -111,7 +114,8 @@ public class IRCChannel {
 			final List<String> listenChatChannels, final ChatType type,
 			final List<String> opCommands, final List<String> hopCommands,
 			final List<String> adminCommands, final List<String> voiceCommands,
-			final List<String> userCommands) {
+			final List<String> userCommands, final boolean passToGame,
+			final boolean passToIRC) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -136,7 +140,8 @@ public class IRCChannel {
 			final String channel, final String ChatChannel,
 			final ChatType type, final List<String> opCommands,
 			final List<String> hopCommands, final List<String> adminCommands,
-			final List<String> voiceCommands, final List<String> userCommands) {
+			final List<String> voiceCommands, final List<String> userCommands,
+			final boolean passToGame, final boolean passToIRC) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -153,6 +158,8 @@ public class IRCChannel {
 		this.voices = new ArrayList<String>();
 		this.hops = new ArrayList<String>();
 		this.admins = new ArrayList<String>();
+		this.passToGame = passToGame;
+		this.passToIRC = passToIRC;
 	}
 
 	/**
@@ -329,6 +336,14 @@ public class IRCChannel {
 			}
 		}
 		return false;
+	}
+
+	public boolean passToGame() {
+		return passToGame;
+	}
+
+	public boolean passToIRC() {
+		return passToIRC;
 	}
 
 }

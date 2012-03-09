@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
-import org.monstercraft.irc.plugin.util.IRCColor;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class PrivateMessage extends GameCommand {
 
@@ -60,7 +60,7 @@ public class PrivateMessage extends GameCommand {
 			}
 			MonsterIRC.getHandleManager().getIRCHandler()
 					.sendMessage(split[2], result.toString());
-			sender.sendMessage(IRCColor.LIGHT_GRAY.getMinecraftColor()
+			sender.sendMessage(ColorUtils.LIGHT_GRAY.getMinecraftColor()
 					+ "([IRC] to "
 					+ split[2]
 					+ "): "

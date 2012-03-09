@@ -13,11 +13,12 @@ public class IRCServer {
 	private String server;
 	private int port;
 	private String nick;
-	private String password;
+	private String nserv_password;
 	private boolean identify;
 	private int timeoutMs;
 	private int retrys;
 	private List<String> connectCommands;
+	private String password;
 
 	/**
 	 * Creates an IRCServer to connect to.
@@ -39,46 +40,19 @@ public class IRCServer {
 	 * @param connectCommands
 	 *            The commands to connect with.
 	 */
-	public IRCServer(final String server, final int port, final String nick,
-			final String password, final boolean identify, final int timeoutMs,
-			final int retrys, final List<String> connectCommands) {
-		this.server = server;
-		this.port = port;
-		this.nick = nick;
-		this.password = password;
-		this.identify = identify;
-		this.timeoutMs = timeoutMs;
-		this.retrys = retrys;
-		this.connectCommands = connectCommands;
-	}
-
-	/**
-	 * Creates an IRCServer to connect to.
-	 * 
-	 * @param server
-	 *            The IRC server to connect to.
-	 * @param port
-	 *            The port to bind to.
-	 * @param nick
-	 *            The users nick name.
-	 * @param timeoutMs
-	 *            The time to wait when connecting.
-	 * @param retrys
-	 *            The amount of times to attempt conencting.
-	 * @param connectCommands
-	 *            The commands to connect with.
-	 */
-	public IRCServer(final String server, final int port, final String nick,
-			final int timeoutMs, final int retrys,
+	public IRCServer(final String server, final String password,
+			final int port, final String nick, final String nserv_password,
+			final boolean identify, final int timeoutMs, final int retrys,
 			final List<String> connectCommands) {
 		this.server = server;
 		this.port = port;
 		this.nick = nick;
-		this.password = "";
-		this.identify = false;
+		this.nserv_password = nserv_password;
+		this.identify = identify;
 		this.timeoutMs = timeoutMs;
 		this.retrys = retrys;
 		this.connectCommands = connectCommands;
+		this.password = password;
 	}
 
 	/**
@@ -88,6 +62,15 @@ public class IRCServer {
 	 */
 	public String getServer() {
 		return server;
+	}
+
+	/**
+	 * Fetches the servers address.
+	 * 
+	 * @return The servers password.
+	 */
+	public String getPassword() {
+		return password;
 	}
 
 	/**
@@ -113,8 +96,8 @@ public class IRCServer {
 	 * 
 	 * @return The users password.
 	 */
-	public String getPassword() {
-		return password;
+	public String getNickservPassword() {
+		return nserv_password;
 	}
 
 	/**

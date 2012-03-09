@@ -10,12 +10,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.ircplugin.event.EventManager;
 import org.monstercraft.irc.plugin.Configuration;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.managers.CommandManager;
 import org.monstercraft.irc.plugin.managers.HandleManager;
 import org.monstercraft.irc.plugin.managers.HookManager;
 import org.monstercraft.irc.plugin.managers.SettingsManager;
 import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
-import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
@@ -52,7 +52,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 		hooks = new HookManager(this);
 		command = new CommandManager(this);
 		listener = new MonsterIRCListener(this);
-		IRCserver = new IRCServer(Variables.server, Variables.port,
+		IRCserver = new IRCServer(Variables.server,Variables.serverPass, Variables.port,
 				Variables.name, Variables.password, Variables.ident,
 				Variables.timeout, Variables.limit, Variables.connectCommands);
 		handles = new HandleManager(this);
