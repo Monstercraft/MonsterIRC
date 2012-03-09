@@ -67,7 +67,7 @@ public class StringUtils {
 	 * @return The users name.
 	 */
 	public static String getName(String name) {
-		return name.replace("&", "§");
+		return name.trim();
 	}
 
 	/**

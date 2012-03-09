@@ -9,6 +9,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.command.gamecommands.Ban;
@@ -26,7 +27,6 @@ import org.monstercraft.irc.plugin.command.irccommand.Announce;
 import org.monstercraft.irc.plugin.command.irccommand.Commands;
 import org.monstercraft.irc.plugin.command.irccommand.List;
 import org.monstercraft.irc.plugin.command.irccommand.Other;
-import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**

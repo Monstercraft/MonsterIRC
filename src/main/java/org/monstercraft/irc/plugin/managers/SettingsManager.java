@@ -13,8 +13,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.util.ChatType;
-import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**
@@ -124,6 +124,8 @@ public class SettingsManager extends MonsterIRC {
 					Variables.password);
 			Variables.server = config.getString("IRC.SETTINGS.SERVER",
 					Variables.server);
+			Variables.serverPass = config.getString(
+					"IRC.SETTINGS.SERVER_PASSWORD", Variables.serverPass);
 			Variables.port = config.getInt("IRC.SETTINGS.PORT", Variables.port);
 			Variables.limit = config.getInt(
 					"IRC.OPTIONS.MESSAGE_LIMIT_PER_SEC", Variables.limit);
@@ -216,9 +218,6 @@ public class SettingsManager extends MonsterIRC {
 						"CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
 				boolean towny = config.getBoolean(
 						"CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
-				boolean none = config
-						.getBoolean("CHANNEL.CHATTYPE.NONE", false);
-				bools.put("None", none);
 				bools.put("Global", global);
 				bools.put("Hero", hero);
 				bools.put("Admin", admin);
@@ -260,7 +259,9 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.HOP"),
 									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS")));
+									config.getStringList("CHANNEL.COMMANDS.USERS"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
 				} else if (admin) {
 					Variables.channels
 							.add(new IRCChannel(
@@ -275,7 +276,9 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.HOP"),
 									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS")));
+									config.getStringList("CHANNEL.COMMANDS.USERS"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
 				} else if (hero) {
 					Variables.channels
 							.add(new IRCChannel(
@@ -292,7 +295,9 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.HOP"),
 									config.getStringList("CHANNEL.COMMANDS.ADMIN"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS")));
+									config.getStringList("CHANNEL.COMMANDS.USERS"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
 				} else if (towny) {
 					Variables.channels
 							.add(new IRCChannel(
@@ -308,22 +313,9 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.HOP"),
 									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS")));
-				} else if (none) {
-					Variables.channels
-							.add(new IRCChannel(
-									config.getString("CHANNEL.SETTINGS.PASSWORD"),
-									config.getBoolean("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES"),
-									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
-									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
-									f.getName().substring(0,
-											f.getName().lastIndexOf(".")),
-									ChatType.NONE,
-									config.getStringList("CHANNEL.COMMANDS.OP"),
-									config.getStringList("CHANNEL.COMMANDS.HOP"),
-									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
-									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS")));
+									config.getStringList("CHANNEL.COMMANDS.USERS"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
 				}
 			} catch (Exception e) {
 				IRC.debug(e);
@@ -356,8 +348,10 @@ public class SettingsManager extends MonsterIRC {
 		config.set("CHANNEL.SETTINGS.AUTOJOIN", false);
 		config.set("CHANNEL.SETTINGS.DEFAULT", false);
 		config.set("CHANNEL.SETTINGS.PASSWORD", "");
+		config.set("CHANNEL.SETTINGS.PASS_TO_GAME", false);
+		config.set("CHANNEL.SETTINGS.PASS_TO_IRC", false);
+		config.set("CHANNEL.SETTINGS.PASSWORD", "");
 		config.set("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES", true);
-		config.set("CHANNEL.CHATTYPE.NONE", false);
 		config.set("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 		config.set("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);

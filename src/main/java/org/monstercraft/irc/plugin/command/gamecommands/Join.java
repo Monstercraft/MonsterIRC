@@ -3,8 +3,8 @@ package org.monstercraft.irc.plugin.command.gamecommands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
-import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Join extends GameCommand {

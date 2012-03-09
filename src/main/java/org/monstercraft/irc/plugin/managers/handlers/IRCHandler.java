@@ -31,6 +31,7 @@ import org.monstercraft.irc.ircplugin.event.events.PluginPartEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginPrivateMessageEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginQuitEvent;
 import org.monstercraft.irc.plugin.Configuration;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.event.events.IRCActionEvent;
 import org.monstercraft.irc.plugin.event.events.IRCConnectEvent;
 import org.monstercraft.irc.plugin.event.events.IRCDisconnectEvent;
@@ -41,8 +42,7 @@ import org.monstercraft.irc.plugin.event.events.IRCModeEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPartEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPrivateMessageEvent;
 import org.monstercraft.irc.plugin.event.events.IRCQuitEvent;
-import org.monstercraft.irc.plugin.util.IRCColor;
-import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
@@ -139,7 +139,8 @@ public class IRCHandler extends MonsterIRC {
 						} else {
 							IRC.log("Sending ghost command....");
 							writer.write("NICKSERV GHOST " + server.getNick()
-									+ " " + server.getPassword() + "\r\n");
+									+ " " + server.getNickservPassword()
+									+ "\r\n");
 							writer.flush();
 							continue;
 						}
@@ -151,8 +152,8 @@ public class IRCHandler extends MonsterIRC {
 				}
 				if (server.isIdentifing()) {
 					IRC.log("Identifying with Nickserv....");
-					writer.write("NICKSERV IDENTIFY " + server.getPassword()
-							+ "\r\n");
+					writer.write("NICKSERV IDENTIFY "
+							+ server.getNickservPassword() + "\r\n");
 					writer.flush();
 				}
 				IRCConnectEvent cevent = new IRCConnectEvent(server);
@@ -597,7 +598,7 @@ public class IRCHandler extends MonsterIRC {
 												to, name, _msg);
 										MonsterIRC.getEventManager()
 												.dispatchEvent(ppme);
-										p.sendMessage(IRCColor.LIGHT_GRAY
+										p.sendMessage(ColorUtils.LIGHT_GRAY
 												.getMinecraftColor()
 												+ "([IRC] from "
 												+ name

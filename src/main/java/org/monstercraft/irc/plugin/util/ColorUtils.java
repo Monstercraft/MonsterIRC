@@ -6,7 +6,7 @@ package org.monstercraft.irc.plugin.util;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public enum IRCColor {
+public enum ColorUtils {
 	WHITE("\u000300", "f"), BLACK("\u000301", "0"), DARK_BLUE("\u000302", "1"), DARK_GREEN(
 			"\u000303", "2"), RED("\u000304", "4"), BROWN("\u000305", "8"), PURPLE(
 			"\u000306", "5"), OLIVE("\u000307", "6"), YELLOW("\u000308", "e"), GREEN(
@@ -22,7 +22,7 @@ public enum IRCColor {
 	 * @param MinecraftColor
 	 *            The color code in Minecraft.
 	 */
-	IRCColor(String IRCColor, String MinecraftColor) {
+	ColorUtils(String IRCColor, String MinecraftColor) {
 		this.IRCColor = IRCColor;
 		this.MinecraftColor = MinecraftColor;
 	}
@@ -34,15 +34,6 @@ public enum IRCColor {
 	 */
 	public String getMinecraftColor() {
 		return "ยง" + MinecraftColor;
-	}
-
-	/**
-	 * Fetches the color in minecraft.
-	 * 
-	 * @return The minecraft color code.
-	 */
-	public String getOldMinecraftColor() {
-		return "ง" + MinecraftColor;
 	}
 
 	/**
@@ -63,17 +54,9 @@ public enum IRCColor {
 	 */
 	public static String formatIRCMessage(final String message) {
 		String msg = message;
-		if (Variables.colors) {
-			for (IRCColor c : values()) {
-				if (msg.contains(c.getIRCColor())) {
-					msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
-				}
-			}
-		} else {
-			for (IRCColor c : values()) {
-				if (msg.contains(c.getIRCColor())) {
-					msg = msg.replace(c.getIRCColor(), "");
-				}
+		for (ColorUtils c : values()) {
+			if (msg.contains(c.getIRCColor())) {
+				msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
 			}
 		}
 		return msg;
@@ -86,23 +69,11 @@ public enum IRCColor {
 	 *            The inital message to format.
 	 * @return The formatted message.
 	 */
-	public static String formatMCMessage(final String message) {
+	public static String formatGameMessage(final String message) {
 		String msg = message;
-		if (Variables.colors) {
-			for (IRCColor c : values()) {
-				if (msg.contains(c.getMinecraftColor())) {
-					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
-				}
-				if (msg.contains(c.getOldMinecraftColor())) {
-					msg = msg
-							.replace(c.getOldMinecraftColor(), c.getIRCColor());
-				}
-			}
-		} else {
-			for (IRCColor c : values()) {
-				if (msg.contains(c.getMinecraftColor())) {
-					msg = msg.replace(c.getMinecraftColor(), "");
-				}
+		for (ColorUtils c : values()) {
+			if (msg.contains(c.getMinecraftColor())) {
+				msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
 			}
 		}
 		return msg;
