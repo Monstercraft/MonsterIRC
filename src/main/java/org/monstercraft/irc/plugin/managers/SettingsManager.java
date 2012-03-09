@@ -204,9 +204,13 @@ public class SettingsManager extends MonsterIRC {
 		FileConfiguration config = new YamlConfiguration();
 		for (File f : files) {
 			try {
+				FileConfiguration defaultConfig = getSampleChannel();
+				config.setDefaults(defaultConfig.getDefaults());
+				config.options().copyDefaults(true);
 				config.load(f);
-			} catch (Exception e1) {
-				IRC.debug(e1);
+				save(config, f);
+			} catch (Exception e) {
+				IRC.debug(e);
 			}
 			try {
 				Map<String, Boolean> bools = new HashMap<String, Boolean>();
@@ -323,12 +327,7 @@ public class SettingsManager extends MonsterIRC {
 		}
 	}
 
-	/**
-	 * This methods creates the default sample channel files for the plugin.
-	 */
-	public void createDefaultChannel() {
-		File SAMPLE_CHANNEL = new File(Configuration.Paths.CHANNELS
-				+ File.separator + "#Sample.channel");
+	private FileConfiguration getSampleChannel() {
 		ArrayList<String> op = new ArrayList<String>();
 		ArrayList<String> hop = new ArrayList<String>();
 		ArrayList<String> admin = new ArrayList<String>();
@@ -345,25 +344,36 @@ public class SettingsManager extends MonsterIRC {
 		FileConfiguration config = new YamlConfiguration();
 		config.options()
 				.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
-		config.set("CHANNEL.SETTINGS.AUTOJOIN", false);
-		config.set("CHANNEL.SETTINGS.DEFAULT", false);
-		config.set("CHANNEL.SETTINGS.PASSWORD", "");
-		config.set("CHANNEL.SETTINGS.PASS_TO_GAME", false);
-		config.set("CHANNEL.SETTINGS.PASS_TO_IRC", false);
-		config.set("CHANNEL.SETTINGS.PASSWORD", "");
-		config.set("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES", true);
-		config.set("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
-		config.set("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
-		config.set("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
-		config.set("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
-		config.set("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
-		config.set("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
-		config.set("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
-		config.set("CHANNEL.COMMANDS.OP", op);
-		config.set("CHANNEL.COMMANDS.HOP", hop);
-		config.set("CHANNEL.COMMANDS.ADMIN", admin);
-		config.set("CHANNEL.COMMANDS.VOICE", voice);
-		config.set("CHANNEL.COMMANDS.USERS", user);
+		config.addDefault("CHANNEL.SETTINGS.AUTOJOIN", false);
+		config.addDefault("CHANNEL.SETTINGS.DEFAULT", false);
+		config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
+		config.addDefault("CHANNEL.SETTINGS.PASS_TO_GAME", false);
+		config.addDefault("CHANNEL.SETTINGS.PASS_TO_IRC", false);
+		config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
+		config.addDefault("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES", true);
+		config.addDefault("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
+		config.addDefault("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
+		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
+		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
+		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
+		config.addDefault("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
+		config.addDefault("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
+		config.addDefault("CHANNEL.COMMANDS.OP", op);
+		config.addDefault("CHANNEL.COMMANDS.HOP", hop);
+		config.addDefault("CHANNEL.COMMANDS.ADMIN", admin);
+		config.addDefault("CHANNEL.COMMANDS.VOICE", voice);
+		config.addDefault("CHANNEL.COMMANDS.USERS", user);
+		return config;
+	}
+
+	/**
+	 * This methods creates the default sample channel files for the plugin.
+	 */
+	public void createDefaultChannel() {
+		File SAMPLE_CHANNEL = new File(Configuration.Paths.CHANNELS
+				+ File.separator + "#Sample.channel");
+		FileConfiguration config = getSampleChannel();
+		config.options().copyDefaults(true);
 		save(config, SAMPLE_CHANNEL);
 		firstRun = true;
 	}
