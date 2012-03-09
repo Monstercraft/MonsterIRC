@@ -7,10 +7,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.util.ChatType;
-import org.monstercraft.irc.plugin.util.IRCColor;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
-import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.gmail.nossr50.mcPermissions;
@@ -159,24 +159,29 @@ public class IRC {
 	 */
 	public static void sendGameMessage(final IRCChannel c, final String name,
 			final String message) {
+		if (!c.passToGame()) {
+			return;
+		}
 		try {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
 				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-					String format = "§b" + "{" + "§f" + "[IRC] "
+					String format = ColorUtils.CYAN.getMinecraftColor() + "{"
+							+ ColorUtils.WHITE.getMinecraftColor() + "[IRC] "
 							+ StringUtils.getPrefix(name)
 							+ StringUtils.getName(name)
-							+ StringUtils.getSuffix(name) + "§b" + "} "
+							+ StringUtils.getSuffix(name)
+							+ ColorUtils.CYAN.getMinecraftColor() + "} "
 							+ message;
 					for (Player p : getPlugin().getServer().getOnlinePlayers()) {
 						if (p.isOp()
 								|| mcPermissions.getInstance().adminChat(p))
-							p.sendMessage(IRCColor.formatIRCMessage(format));
+							p.sendMessage(ColorUtils.formatIRCMessage(format));
 					}
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
 				c.getHeroChatChannel()
 						.announce(
-								IRCColor.formatIRCMessage(Variables.mcformat
+								ColorUtils.formatIRCMessage(Variables.mcformat
 										.replace("{name}",
 												StringUtils.getName(name))
 										.replace(
@@ -205,11 +210,10 @@ public class IRC {
 					&& Variables.hc4) {
 				c.getHeroChatFourChannel()
 						.sendMessage(
-								IRCColor.formatIRCMessage(Variables.mcformat
+								ColorUtils.formatIRCMessage(Variables.mcformat
 										.replace("{name}",
 												StringUtils.getName(name))
 										.replace("{message}", "")
-										.replace(":", "")
 										.replace("{prefix}",
 												StringUtils.getPrefix(name))
 										.replace("{suffix}",
@@ -224,20 +228,18 @@ public class IRC {
 														.getGroupSuffix(name))
 										.replace("{world}",
 												StringUtils.getWorld(name))),
-								IRCColor.formatIRCMessage(message),
+								ColorUtils.formatIRCMessage(message),
 								c.getHeroChatFourChannel().getMsgFormat(),
 								false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				getPlugin().getServer()
 						.broadcastMessage(
-								IRCColor.formatIRCMessage(Variables.mcformat
-										.replace(
-												"{name}",
-												StringUtils.getName(name)
-														+ "§f")
+								ColorUtils.formatIRCMessage(Variables.mcformat
+										.replace("{name}",
+												StringUtils.getName(name))
 										.replace(
 												"{message}",
-												IRCColor.WHITE
+												ColorUtils.WHITE
 														.getMinecraftColor()
 														+ message)
 										.replace("{prefix}",
@@ -256,7 +258,7 @@ public class IRC {
 												StringUtils.getWorld(name))));
 			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 				for (Player p : TownyUniverse.getOnlinePlayers()) {
-					TownyMessaging.sendMessage(p, IRCColor.formatIRCMessage(c
+					TownyMessaging.sendMessage(p, ColorUtils.formatIRCMessage(c
 							.getTownyChannel().getChannelTag()
 							.replace("&", "§")
 							+ Variables.mcformat
@@ -278,8 +280,6 @@ public class IRC {
 									.replace("{world}",
 											StringUtils.getWorld(name))));
 				}
-			} else if (c.getChatType() == ChatType.NONE) {
-				return;
 			}
 		} catch (Exception e) {
 			IRC.debug(e);
@@ -300,7 +300,7 @@ public class IRC {
 	 * 
 	 * @return The list of Operators.
 	 */
-	public static boolean isHop(final IRCChannel channel, final String sender) {
+	public static boolean isHalfOP(final IRCChannel channel, final String sender) {
 		return channel.getOpList().contains(sender);
 	}
 

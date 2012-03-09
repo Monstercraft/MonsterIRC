@@ -12,10 +12,10 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.util.ChatType;
-import org.monstercraft.irc.plugin.util.IRCColor;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
-import org.monstercraft.irc.plugin.util.Variables;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.dthielke.herochat.Herochat;
@@ -128,7 +128,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	private void handleMessage(final Player player, final IRCChannel c,
 			final String message) {
-		if (c.getChatType() == ChatType.NONE) {
+		if (!c.passToIRC()) {
 			return;
 		}
 		if (player == null) {
@@ -137,19 +137,19 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{prefix}", StringUtils.getPrefix("Console"))
 					.replace("{name}", StringUtils.getName("Console"))
 					.replace("{suffix}", StringUtils.getSuffix("Console"))
-
 					.replace("{groupPrefix}",
 							StringUtils.getGroupPrefix("Console"))
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix("Console"))
 					.replace("{message}",
-							IRCColor.NORMAL.getIRCColor() + " " + message)
+							ColorUtils.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld("Console"))
-					.replace("&", "�"));
+					.replace("&", "§"));
 			IRC.sendMessage(
 					c,
-					IRCColor.formatMCMessage(result2.toString().replace("§f",
-							IRCColor.NORMAL.getIRCColor())));
+					ColorUtils.formatGameMessage(result2.toString().replace(
+							ColorUtils.WHITE.getMinecraftColor(),
+							ColorUtils.NORMAL.getIRCColor())));
 			return;
 		}
 		StringBuffer result = new StringBuffer();
@@ -173,15 +173,15 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									StringUtils.getGroupSuffix(player.getName()))
 							.replace(
 									"{message}",
-									IRCColor.NORMAL.getIRCColor() + " "
+									ColorUtils.NORMAL.getIRCColor() + " "
 											+ message)
 							.replace("{world}",
 									StringUtils.getWorld(player.getName()))
-							.replace("&", "�"));
-					IRC.sendMessage(
-							c,
-							IRCColor.formatMCMessage(result.toString().replace(
-									"§f", IRCColor.NORMAL.getIRCColor())));
+							.replace("&", "§"));
+					IRC.sendMessage(c, ColorUtils.formatGameMessage(result
+							.toString().replace(
+									ColorUtils.WHITE.getMinecraftColor(),
+									ColorUtils.NORMAL.getIRCColor())));
 				}
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
@@ -197,11 +197,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.getChatter(player).getActiveChannel().getName()))
 					&& !Herochat.getChatterManager()
 							.getChatter(player.getName()).isMuted()) {
-				String colorizer = IRCColor.NORMAL.getIRCColor();
-				if (c.getHeroChatChannel().getColor().getChar() != 'f') {
-					colorizer = "§"
-							+ c.getHeroChatChannel().getColor().getChar();
-				}
 				result.append(Variables.ircformat
 						.replace("{prefix}",
 								StringUtils.getPrefix(player.getName()))
@@ -214,13 +209,13 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 								StringUtils.getGroupPrefix(player.getName()))
 						.replace("{groupSuffix}",
 								StringUtils.getGroupSuffix(player.getName()))
-						.replace("{message}", colorizer + " " + message)
+						.replace("{message}", message)
 						.replace("{world}",
 								StringUtils.getWorld(player.getName()))
-						.replace("&", "�"));
+						.replace("&", "§"));
 				IRC.sendMessage(
 						c.getChannel(),
-						IRCColor.formatMCMessage("§"
+						ColorUtils.formatGameMessage("§"
 								+ Herochat.getChatterManager()
 										.getChatter(player).getActiveChannel()
 										.getColor().getChar()
@@ -229,9 +224,11 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 										.getChatter(player).getActiveChannel()
 										.getNick()
 								+ "]: "
-								+ IRCColor.NORMAL.getIRCColor()
-								+ result.toString().replace("§f",
-										IRCColor.NORMAL.getIRCColor())));
+								+ ColorUtils.NORMAL.getIRCColor()
+								+ " "
+								+ result.toString().replace(
+										ColorUtils.WHITE.getMinecraftColor(),
+										ColorUtils.NORMAL.getIRCColor())));
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& MonsterIRC.getHookManager().getHeroChatHook() != null
@@ -267,11 +264,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									.getChannelManager()
 									.getActiveChannel(player.getName())
 									.getVoicelist().isEmpty()) {
-						String colorizer = IRCColor.NORMAL.getIRCColor();
-						if (c.getHeroChatFourChannel().getColor().str != "f") {
-							colorizer = "§"
-									+ c.getHeroChatFourChannel().getColor().str;
-						}
 						result.append(Variables.ircformat
 								.replace("{prefix}",
 										StringUtils.getPrefix(player.getName()))
@@ -288,32 +280,26 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 										"{groupSuffix}",
 										StringUtils.getGroupSuffix(player
 												.getName()))
-								.replace("{message}", colorizer + " " + message)
+								.replace("{message}", message)
 								.replace("{world}",
 										StringUtils.getWorld(player.getName()))
-								.replace("&", "�"));
-						IRC.sendMessage(
-								c,
-								IRCColor.formatMCMessage("�"
-										+ MonsterIRC
-												.getHookManager()
-												.getHeroChatHook()
-												.getChannelManager()
-												.getActiveChannel(
-														player.getName())
-												.getColor().str
-										+ "["
-										+ MonsterIRC
-												.getHookManager()
-												.getHeroChatHook()
-												.getChannelManager()
-												.getActiveChannel(
-														player.getName())
-												.getNick()
-										+ "] : "
-										+ IRCColor.NORMAL.getIRCColor()
-										+ result.toString().replace("§f",
-												IRCColor.NORMAL.getIRCColor())));
+								.replace("&", "§"));
+						IRC.sendMessage(c, ColorUtils.formatGameMessage("�"
+								+ MonsterIRC.getHookManager().getHeroChatHook()
+										.getChannelManager()
+										.getActiveChannel(player.getName())
+										.getColor().str
+								+ "["
+								+ MonsterIRC.getHookManager().getHeroChatHook()
+										.getChannelManager()
+										.getActiveChannel(player.getName())
+										.getNick()
+								+ "] : "
+								+ ColorUtils.NORMAL.getIRCColor()
+								+ " "
+								+ result.toString().replace(
+										ColorUtils.WHITE.getMinecraftColor(),
+										ColorUtils.NORMAL.getIRCColor())));
 					}
 				}
 			}
@@ -336,13 +322,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player.getName()))
 					.replace("{message}",
-							IRCColor.NORMAL.getIRCColor() + message)
+							ColorUtils.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld(player.getName()))
-					.replace("&", "�"));
+					.replace("&", "§"));
 			IRC.sendMessage(
 					c,
-					IRCColor.formatMCMessage(result.toString().replace("§f",
-							IRCColor.NORMAL.getIRCColor())));
+					ColorUtils.formatGameMessage(result.toString().replace(
+							ColorUtils.WHITE.getMinecraftColor(),
+							ColorUtils.NORMAL.getIRCColor())));
 		} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
@@ -362,13 +349,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player.getName()))
 					.replace("{message}",
-							IRCColor.NORMAL.getIRCColor() + message)
+							ColorUtils.NORMAL.getIRCColor() + " " + message)
 					.replace("{world}", StringUtils.getWorld(player.getName()))
-					.replace("&", "�"));
+					.replace("&", "§"));
 			IRC.sendMessage(
 					c,
-					IRCColor.formatMCMessage(result.toString().replace("§f",
-							IRCColor.NORMAL.getIRCColor())));
+					ColorUtils.formatGameMessage(result.toString().replace(
+							ColorUtils.WHITE.getMinecraftColor(),
+							ColorUtils.NORMAL.getIRCColor())));
 		}
 	}
 }

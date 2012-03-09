@@ -3,7 +3,7 @@ package org.monstercraft.irc.plugin.managers.hooks;
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
-import org.monstercraft.irc.plugin.util.Variables;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 
 import com.herocraftonline.dthielke.herochat.HeroChat;
 
