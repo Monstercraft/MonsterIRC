@@ -162,6 +162,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
 					result.append(Variables.ircformat
+							.replace("{heroChatTag}", "")
 							.replace("{prefix}",
 									StringUtils.getPrefix(player.getName()))
 							.replace("{name}",
@@ -204,6 +205,19 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					&& !Herochat.getChatterManager()
 							.getChatter(player.getName()).isMuted()) {
 				result.append(Variables.ircformat
+						.replace(
+								"{heroChatTag}",
+								"§"
+										+ Herochat.getChatterManager()
+												.getChatter(player)
+												.getActiveChannel().getColor()
+												.getChar()
+										+ "["
+										+ Herochat.getChatterManager()
+												.getChatter(player)
+												.getActiveChannel().getNick()
+										+ "]: "
+										+ ColorUtils.NORMAL.getIRCColor() + " ")
 						.replace("{prefix}",
 								StringUtils.getPrefix(player.getName()))
 						.replace("{name}",
@@ -225,20 +239,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 						.replace("&", "§"));
 				IRC.sendMessage(
 						c.getChannel(),
-						ColorUtils.formatGameMessage("§"
-								+ Herochat.getChatterManager()
-										.getChatter(player).getActiveChannel()
-										.getColor().getChar()
-								+ "["
-								+ Herochat.getChatterManager()
-										.getChatter(player).getActiveChannel()
-										.getNick()
-								+ "]: "
-								+ ColorUtils.NORMAL.getIRCColor()
-								+ " "
-								+ result.toString().replace(
-										ColorUtils.WHITE.getMinecraftColor(),
-										ColorUtils.NORMAL.getIRCColor())));
+						ColorUtils.formatGameMessage(result.toString().replace(
+								ColorUtils.WHITE.getMinecraftColor(),
+								ColorUtils.NORMAL.getIRCColor())));
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT
 				&& MonsterIRC.getHookManager().getHeroChatHook() != null
@@ -275,6 +278,27 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									.getActiveChannel(player.getName())
 									.getVoicelist().isEmpty()) {
 						result.append(Variables.ircformat
+								.replace(
+										"{heroChatTag}",
+										"�"
+												+ MonsterIRC
+														.getHookManager()
+														.getHeroChatHook()
+														.getChannelManager()
+														.getActiveChannel(
+																player.getName())
+														.getColor().str
+												+ "["
+												+ MonsterIRC
+														.getHookManager()
+														.getHeroChatHook()
+														.getChannelManager()
+														.getActiveChannel(
+																player.getName())
+														.getNick()
+												+ "] : "
+												+ ColorUtils.NORMAL
+														.getIRCColor() + " ")
 								.replace("{prefix}",
 										StringUtils.getPrefix(player.getName()))
 								.replace("{name}",
@@ -298,20 +322,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 								.replace("{world}",
 										StringUtils.getWorld(player.getName()))
 								.replace("&", "§"));
-						IRC.sendMessage(c, ColorUtils.formatGameMessage("�"
-								+ MonsterIRC.getHookManager().getHeroChatHook()
-										.getChannelManager()
-										.getActiveChannel(player.getName())
-										.getColor().str
-								+ "["
-								+ MonsterIRC.getHookManager().getHeroChatHook()
-										.getChannelManager()
-										.getActiveChannel(player.getName())
-										.getNick()
-								+ "] : "
-								+ ColorUtils.NORMAL.getIRCColor()
-								+ " "
-								+ result.toString().replace(
+						IRC.sendMessage(c, ColorUtils.formatGameMessage(result
+								.toString().replace(
 										ColorUtils.WHITE.getMinecraftColor(),
 										ColorUtils.NORMAL.getIRCColor())));
 					}
@@ -325,6 +337,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				}
 			}
 			result.append(Variables.ircformat
+					.replace("{heroChatTag}", "")
 					.replace("{prefix}",
 							StringUtils.getPrefix(player.getName()))
 					.replace("{name}", StringUtils.getName(player.getName()))
@@ -356,6 +369,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				}
 			}
 			result.append(Variables.ircformat
+					.replace("{heroChatTag}", "")
 					.replace("{prefix}",
 							StringUtils.getPrefix(player.getName()))
 					.replace("{name}", StringUtils.getName(player.getName()))
