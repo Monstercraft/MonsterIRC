@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -186,6 +187,10 @@ public class IRCCommandSender implements ConsoleCommandSender {
 
 	public void sendRawMessage(String message) {
 		IRC.sendNotice(sender, ColorUtils.formatGameMessage(message));
+	}
+
+	public void abandonConversation(Conversation arg0,
+			ConversationAbandonedEvent arg1) {
 	}
 
 }
