@@ -1,5 +1,5 @@
 groups:
-  Squatters:
+  Newguys:
     default: true
     prefix: '&d[Squatters]&f'
     permissions:
@@ -306,7 +306,7 @@ groups:
     - Moderator
     options:
       rank: '100'
-  Manager:
+  NQanO:
     prefix: '&4[Manager]&6'
     permissions:
     - XcraftGate.gate
