@@ -141,8 +141,12 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							StringUtils.getGroupPrefix("Console"))
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix("Console"))
-					.replace("{message}",
-							ColorUtils.NORMAL.getIRCColor() + " " + message)
+					.replace(
+							"{message}",
+							ColorUtils.NORMAL.getIRCColor()
+									+ " "
+									+ message.replace("�", "§").replace("&",
+											"§"))
 					.replace("{world}", StringUtils.getWorld("Console"))
 					.replace("&", "§"));
 			IRC.sendMessage(
@@ -173,8 +177,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									StringUtils.getGroupSuffix(player.getName()))
 							.replace(
 									"{message}",
-									ColorUtils.NORMAL.getIRCColor() + " "
-											+ message)
+									ColorUtils.NORMAL.getIRCColor()
+											+ " "
+											+ message.replace("�", "§")
+													.replace("&", "§"))
 							.replace("{world}",
 									StringUtils.getWorld(player.getName()))
 							.replace("&", "§"));
@@ -209,7 +215,11 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 								StringUtils.getGroupPrefix(player.getName()))
 						.replace("{groupSuffix}",
 								StringUtils.getGroupSuffix(player.getName()))
-						.replace("{message}", message)
+						.replace(
+								"{message}",
+								ColorUtils.NORMAL.getIRCColor()
+										+ message.replace("�", "§").replace(
+												"&", "§"))
 						.replace("{world}",
 								StringUtils.getWorld(player.getName()))
 						.replace("&", "§"));
@@ -280,7 +290,11 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 										"{groupSuffix}",
 										StringUtils.getGroupSuffix(player
 												.getName()))
-								.replace("{message}", message)
+								.replace(
+										"{message}",
+										ColorUtils.NORMAL.getIRCColor()
+												+ message.replace("�", "§")
+														.replace("&", "§"))
 								.replace("{world}",
 										StringUtils.getWorld(player.getName()))
 								.replace("&", "§"));
@@ -321,8 +335,12 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							StringUtils.getGroupPrefix(player.getName()))
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player.getName()))
-					.replace("{message}",
-							ColorUtils.NORMAL.getIRCColor() + " " + message)
+					.replace(
+							"{message}",
+							ColorUtils.NORMAL.getIRCColor()
+									+ " "
+									+ message.replace("�", "§").replace("&",
+											"§"))
 					.replace("{world}", StringUtils.getWorld(player.getName()))
 					.replace("&", "§"));
 			IRC.sendMessage(
@@ -348,8 +366,12 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							StringUtils.getGroupPrefix(player.getName()))
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player.getName()))
-					.replace("{message}",
-							ColorUtils.NORMAL.getIRCColor() + " " + message)
+					.replace(
+							"{message}",
+							ColorUtils.NORMAL.getIRCColor()
+									+ " "
+									+ message.replace("�", "§").replace("&",
+											"§"))
 					.replace("{world}", StringUtils.getWorld(player.getName()))
 					.replace("&", "§"));
 			IRC.sendMessage(

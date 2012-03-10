@@ -82,6 +82,8 @@ public class IRCChannel {
 		this.admins = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
 		this.ChatChannel = null;
+		this.passToGame = passToGame;
+		this.passToIRC = passToIRC;
 	}
 
 	/**
@@ -133,6 +135,8 @@ public class IRCChannel {
 		this.voices = new ArrayList<String>();
 		this.hops = new ArrayList<String>();
 		this.admins = new ArrayList<String>();
+		this.passToGame = passToGame;
+		this.passToIRC = passToIRC;
 	}
 
 	public IRCChannel(final String password, final boolean showJoinLeave,

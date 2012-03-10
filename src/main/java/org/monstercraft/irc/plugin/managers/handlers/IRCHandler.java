@@ -112,7 +112,7 @@ public class IRCHandler extends MonsterIRC {
 				reader = new BufferedReader(new InputStreamReader(
 						connection.getInputStream()));
 				IRC.log("Attempting to connect to chat.");
-				if (server.isIdentifing()) {
+				if (!server.getPassword().equalsIgnoreCase("")) {
 					writer.write("PASS " + server.getPassword() + "\r\n");
 					writer.flush();
 				}
