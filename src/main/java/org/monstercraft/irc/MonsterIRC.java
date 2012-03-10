@@ -52,20 +52,12 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 		hooks = new HookManager(this);
 		command = new CommandManager(this);
 		listener = new MonsterIRCListener(this);
-		IRCserver = new IRCServer(Variables.server,Variables.serverPass, Variables.port,
-				Variables.name, Variables.password, Variables.ident,
-				Variables.timeout, Variables.limit, Variables.connectCommands);
+		IRCserver = new IRCServer(Variables.server, Variables.serverPass,
+				Variables.port, Variables.name, Variables.password,
+				Variables.ident, Variables.timeout, Variables.limit,
+				Variables.connectCommands);
 		handles = new HandleManager(this);
 		getServer().getPluginManager().registerEvents(listener, this);
-		String newVersion = Configuration.checkForUpdates(this,
-				Configuration.URLS.UPDATE_URL);
-		if (!newVersion.contains(Configuration.getCurrentVerison(this))) {
-			IRC.log(newVersion + " is out! You are running "
-					+ Configuration.getCurrentVerison(this));
-			IRC.log("Update MonsterIRC at: http://dev.bukkit.org/server-mods/monsterirc");
-		} else {
-			IRC.log("You are using the latest version of MonsterIRC");
-		}
 		Thread t = new Thread(this);
 		t.setDaemon(true);
 		t.setPriority(Thread.MAX_PRIORITY);
@@ -181,6 +173,15 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	public void run() {
 		synchronized (lock) {
 			try {
+				String newVersion = Configuration.checkForUpdates(this,
+						Configuration.URLS.UPDATE_URL);
+				if (!newVersion.contains(Configuration.getCurrentVerison(this))) {
+					IRC.log(newVersion + " is out! You are running "
+							+ Configuration.getCurrentVerison(this));
+					IRC.log("Update MonsterIRC at: http://dev.bukkit.org/server-mods/monsterirc");
+				} else {
+					IRC.log("You are using the latest version of MonsterIRC");
+				}
 				if (!settings.firstRun()) {
 					getHandleManager().getIRCHandler().connect(getIRCServer());
 					IRC.log("Successfully started up.");
