@@ -1,346 +1,329 @@
 groups:
-    Helpdesk:
-        prefix: '&7[helpdesk]&f'
-        permissions:
-        - mcmmo.commands.ptp
-        - tpp.tp.menu
-        - simpleclans.leader.*
-        - mywarp.warp.soc.private
-        - mywarp.warp.soc.public
-        - mywarp.warp.soc.uninvite
-        - mywarp.warp.soc.invite
-        - mywarp.warp.basic.createpublic
-        - mywarp.warp.sign.create
-        - ChestShop.shop.create
-        - mywarp.warp.basic.welcome
-        - mywarp.warp.basic.delete
-        - mywarp.warp.basic.createprivate
-        inheritance:
-        - Irregulars
-        options:
-            rank: '890'
-    Regulars:
-        prefix: '&2[Regulars]&f'
-        permissions:
-        - preciousstones.limit3
-        - mcmmo.commands.ptp
-        - commandbook.msg
-        worlds:
-            SquattersburgHeights:
-                permissions:
-                - -lwc.*
-                - -preciousstones.*
-        inheritance:
-        - Irregulars
-        options:
-            rank: '800'
-    Irregulars:
-        prefix: '&e[Irregular]&f'
-        permissions:
-        - herochat.speak.(overworld|ircchat|trade)
-        - cbTS3.excluded
-        - broadcastdonator.exemptfrommessage
-        - commandbook.spawn
-        - mywarp.warp.basic.warp
-        - preciousstones.limit2
-        - mcmmo.commands.whois
-        - -preciousstones.benefit.density
-        - preciousstones.benefit.*
-        worlds:
-            SquattersburgHeights:
-                permissions:
-                - -lwc.*
-                - -preciousstones.*
-        inheritance:
-        - Newguys
-        options:
-            rank: '900'
-    Operator:
-        prefix: '&6[OPs]&4'
-        permissions:
-        - vanish.*
-        - mcbans.admin
-        - '*'
-        inheritance:
-        - Moderator
-        options:
-            rank: '0'
-    Newguys:
+  Squatters:
+    default: true
+    prefix: '&d[Squatters]&f'
+    permissions:
+    - irc.say
+    - herochat.leave.(overworld|trade|ircchat|local|helpme)
+    - herochat.speak.(superlocal|helpme|local)
+    - herochat.pm
+    - herochat.forcejoin.*
+    - herochat.join.*
+    - simpleclans.member.home
+    - lottery.buy
+    - helperbot.read.*
+    - lwc.mode.droptransfer
+    - lwc.protect
+    - playerflow.receivesummary
+    - simpleclans.member.*
+    - simpleclans.anyone.*
+    - preciousstones.limit1
+    - preciousstones.benefit.ps
+    - preciousstones.benefit.scoping
+    - preciousstones.benefit.who
+    - preciousstones.benefit.giveair
+    - preciousstones.benefit.heal
+    - preciousstones.benefit.bounce
+    - preciousstones.benefit.launch
+    - preciousstones.benefit.visualize
+    - preciousstones.whitelist.*
+    - XcraftGate.use.*
+    - modifyworld.entity.damage.*
+    - modifyworld.blocks.interact.*
+    - modifyworld.chat.*
+    - PvPable.enable
+    - factions.participate
+    - mcbans.trust
+    - iConomy.payment
+    - ChestShop.command.iteminfo
+    - mywarp.warp.sign.warp
+    - mywarp.warp.basic.list
+    - iConomy.list
+    - commandbook.msg
+    - commandbook.rules
+    - commandbook.clear
+    - commandbook.who
+    - myhome.home.basic.home
+    - myhome.home.basic.set
+    - myhome.home.basic.delete
+    - iConomy.access
+    - mcmmo.commands.ability
+    - mcmmo.ability.*
+    - mcmmo.commands.party
+    - mcmmo.chat.partychat
+    - mcmmo.skills.*
+    - jobs.world.*
+    - jobs.join.*
+    - ChestShop.shop.exclude.264
+    - ChestShop.shop.buy
+    - ChestShop.shop.sell
+    - commandbook.kit.kits.new
+    - -preciousstones.benefit.density
+    worlds:
+      SquattersburgHeights:
         default: true
-        prefix: '&d[Squatters]&f'
         permissions:
-        - herochat.leave.(overworld|trade|ircchat|local|helpme)
-        - herochat.speak.(superlocal|helpme|local)
-        - herochat.pm
-        - herochat.forcejoin.*
-        - herochat.join.*
-        - simpleclans.member.home
-        - lottery.buy
-        - helperbot.read.*
-        - lwc.mode.droptransfer
-        - lwc.protect
-        - playerflow.receivesummary
-        - simpleclans.member.*
-        - simpleclans.anyone.*
-        - preciousstones.limit1
-        - preciousstones.benefit.ps
-        - preciousstones.benefit.scoping
-        - preciousstones.benefit.who
-        - preciousstones.benefit.giveair
-        - preciousstones.benefit.heal
-        - preciousstones.benefit.bounce
-        - preciousstones.benefit.launch
-        - preciousstones.benefit.visualize
-        - preciousstones.whitelist.*
-        - XcraftGate.use.*
-        - modifyworld.entity.damage.*
-        - modifyworld.blocks.interact.*
-        - modifyworld.chat.*
-        - PvPable.enable
-        - factions.participate
-        - mcbans.trust
-        - iConomy.payment
-        - ChestShop.command.iteminfo
-        - mywarp.warp.sign.warp
-        - mywarp.warp.basic.list
-        - iConomy.list
-        - commandbook.msg
-        - commandbook.rules
-        - commandbook.clear
-        - commandbook.who
-        - myhome.home.basic.home
-        - myhome.home.basic.set
-        - myhome.home.basic.delete
-        - iConomy.access
-        - mcmmo.commands.ability
-        - mcmmo.ability.*
-        - mcmmo.commands.party
-        - mcmmo.chat.partychat
-        - mcmmo.skills.*
-        - jobs.world.*
-        - jobs.join.*
-        - ChestShop.shop.exclude.264
-        - ChestShop.shop.buy
-        - ChestShop.shop.sell
-        - commandbook.kit.kits.new
-        - -preciousstones.benefit.density
-        worlds:
-            SquattersburgHeights:
-                default: true
-                permissions:
-                - -lwc.*
-                - -preciousstones.*
-        options:
-            rank: '1000'
-    Helpboss:
-        prefix: '&8[helpboss]&f'
+        - -lwc.*
+        - -preciousstones.*
+    options:
+      rank: '1000'
+  Irregulars:
+    prefix: '&e[Irregular]&f'
+    permissions:
+    - irc.pm
+    - irc.say
+    - herochat.speak.(overworld|ircchat|trade)
+    - broadcastdonator.exemptfrommessage
+    - commandbook.spawn
+    - mywarp.warp.basic.warp
+    - preciousstones.limit2
+    - mcmmo.commands.whois
+    - -preciousstones.benefit.density
+    - preciousstones.benefit.*
+    worlds:
+      SquattersburgHeights:
         permissions:
-        - permissions.user.promote.*
-        - mywarp.warp.basic.createprivate
-        - mywarp.warp.basic.delete
-        - mywarp.warp.basic.welcome
-        - ChestShop.shop.create
-        - mywarp.warp.sign.create
-        - mywarp.warp.basic.createpublic
-        - mywarp.warp.soc.invite
-        - mywarp.warp.soc.uninvite
-        - mywarp.warp.soc.public
-        - mywarp.warp.soc.private
-        - simpleclans.leader.*
-        - tpp.others.*
-        - tpp.tp.menu
-        - mcmmo.commands.ptp
-        - preciousstones.limit3
-        - permissions.user.demote.*
-        inheritance:
-        - Irregulars
-        options:
-            rank: '880'
-    Admin:
-        prefix: '&4[&1Admin&4]&f'
+        - -lwc.*
+        - -preciousstones.*
+    inheritance:
+    - Newguys
+    options:
+      rank: '950'
+  Helpdesk:
+    prefix: '&7[helpdesk]&f'
+    permissions:
+    - mcmmo.commands.ptp
+    - tpp.tp.menu
+    - simpleclans.leader.*
+    - mywarp.warp.soc.private
+    - mywarp.warp.soc.public
+    - mywarp.warp.soc.uninvite
+    - mywarp.warp.soc.invite
+    - mywarp.warp.basic.createpublic
+    - mywarp.warp.sign.create
+    - ChestShop.shop.create
+    - mywarp.warp.basic.welcome
+    - mywarp.warp.basic.delete
+    - mywarp.warp.basic.createprivate
+    inheritance:
+    - Irregulars
+    options:
+      rank: '900'
+  Helpboss:
+    prefix: '&8[helpboss]&f'
+    permissions:
+    - permissions.user.promote.*
+    - permissions.user.demote.*
+    - ChestShop.shop.create
+    - simpleclans.leader.*
+    - tpp.others.*
+    - preciousstones.limit3
+    inheritance:
+    - Helpdesk
+    options:
+      rank: '850'
+  Regulars:
+    prefix: '&2[Regulars]&f'
+    permissions:
+    - preciousstones.limit3
+    - mcmmo.commands.ptp
+    - commandbook.msg
+    worlds:
+      SquattersburgHeights:
         permissions:
-        - herochat.speak.(announce|announce2)
-        - worldedit.tool.*
-        - preciousstones.admin.superpickaxe
-        - irc.admin
-        - myhome.admin.*
-        - worldguard.god
-        - mcmmo.tools.mmoedit
-        - preciousstones.bypass.*
-        - commandbook.slap.other
-        - worldedit.navigation.*
-        - worldedit.selection.*
-        - worldedit.generation.*
-        - worldedit.clipboard.*
-        - worldedit.brush.*
-        - worldedit.regen
-        - worldedit.region.*
-        - worldedit.remove
-        - worldedit.butcher
-        - worldedit.extinguish
-        - worldguard.halt-activity.*
-        - worldguard.slay.*
-        - worldguard.heal.*
-        - commandbook.kit.kits.*
-        - commandbook.debug.*
-        - vanish.*
-        - nocheat.*
-        - permissions.user.demote.*
-        - hawkeye.tool
-        - hawkeye.search
-        - commandbook.clear.other
-        - commandbook.rocket.other
-        - worldedit.superpickaxe
-        worlds:
-            Admin&6]&f:
-                prefix: '&6[&c'
-                options:
-                    prefix: '&6[&c'
-        inheritance:
-        - Moderator
-        options:
-            rank: '100'
-    NQanO:
-        prefix: '&4[&3Admin&4]&f'
+        - -lwc.*
+        - -preciousstones.*
+    inheritance:
+    - Irregulars
+    options:
+      rank: '800'
+  Trusted:
+    prefix: '&c[Trusted]&f'
+    worlds:
+      SquattersburgHeights:
         permissions:
-        - XcraftGate.gate
-        - XcraftGate.gate.*
-        - ChestShop.admin
-        - worldguard.region.*
-        - lwc.mod
-        inheritance:
-        - Admin
-        options:
-            rank: '50'
-    Trusted:
-        prefix: '&c[Trusted]&f'
-        worlds:
-            SquattersburgHeights:
-                permissions:
-                - -lwc.*
-                - -preciousstones.*
-        inheritance:
-        - Regulars
-        options:
-            rank: '700'
-    WorldMod:
-        prefix: '&1[Mods]&f'
+        - -lwc.*
+        - -preciousstones.*
+    inheritance:
+    - Regulars
+    options:
+      rank: '700'
+  Iron:
+    prefix: '&7[Iron]&f'
+    permissions:
+    - preciousstones.whitelist
+    - simpleclans.leader.home-set
+    - simpleclans.leader.*
+    - mywarp.warp.basic.createprivate
+    - mywarp.warp.basic.delete
+    - mywarp.warp.basic.welcome
+    - ChestShop.shop.create
+    - mywarp.warp.sign.create
+    - mywarp.warp.basic.createpublic
+    - mywarp.warp.soc.invite
+    - mywarp.warp.soc.uninvite
+    - mywarp.warp.soc.public
+    - mywarp.warp.soc.private
+    - tpp.tp.menu
+    - signColours.*
+    worlds:
+      SquattersburgHeights:
         permissions:
-        - mcbans.ban.view
-        - commandbook.kit.list
-        - worldguard.notify
-        - herochat.admin
-        - mcmmo.chat.adminchat
-        inheritance:
-        - Diamond
-        options:
-            rank: '300'
-    Obsidian:
-        prefix: '&5[Obsidian]&f'
+        - -lwc.*
+        - -preciousstones.*
+    inheritance:
+    - Trusted
+    options:
+      rank: '600'
+  Gold:
+    prefix: '&6[Gold]&f'
+    permissions:
+    - commandbook.kit.kits.iron
+    worlds:
+      SquattersburgHeights:
         permissions:
-        - preciousstones.whitelist.*
-        - worldguard.region.removemember.own.*
-        - worldguard.region.addmember.own.*
-        - commandbook.kit.kits.obsidian
-        inheritance:
-        - Diamond
-        options:
-            rank: '350'
-    Gold:
-        prefix: '&6[Gold]&f'
+        - -lwc.*
+        - -preciousstones.*
+    inheritance:
+    - Iron
+    options:
+      rank: '500'
+  Diamond:
+    prefix: '&3[Diamond]&f'
+    permissions:
+    - commandbook.kit.kits.diamond
+    - commandbook.kit.list
+    worlds:
+      SquattersburgHeights:
         permissions:
-        - commandbook.kit.kits.iron
-        worlds:
-            SquattersburgHeights:
-                permissions:
-                - -lwc.*
-                - -preciousstones.*
-        inheritance:
-        - Iron
-        options:
-            rank: '500'
-    Diamond:
-        prefix: '&3[Diamond]&f'
-        permissions:
-        - factions.create
-        - commandbook.kit.kits.diamond
-        - commandbook.kit.list
-        worlds:
-            SquattersburgHeights:
-                permissions:
-                - -lwc.*
-                - -preciousstones.*
-        inheritance:
-        - Gold
-        options:
-            rank: '400'
-    Moderator:
-        prefix: '&4[&3Moderator&4]&f'
-        permissions:
-        - myhome.admin.home.any
-        - hawkeye.tool
-        - spamhammer.*
-        - mcbans.unban
-        - powertool.use
-        - permissions.user.promote.*
-        - worldedit.history.redo
-        - worldedit.history.undo
-        - worldedit.clipboard.load
-        - worldedit.clipboard.paste
-        - PvPable.override
-        - mcbans.mod
-        - tpp.mod.notify
-        - tpp.mod.notp
-        - tpp.mod.above
-        - tpp.mod.take
-        - tpp.others.*
-        - tpp.tp.*
-        - mcbans.ban.local
-        - mcbans.ban.temp
-        - mcbans.lookup
-        - mcbans.kick
-        - permissions.user.demote.*
-        - commandbook.clear.other
-        - commandbook.kit.kits.mod
-        inheritance:
-        - WorldMod
-        options:
-            rank: '200'
-    Bedrock:
-        prefix: '&0*&f*&0*[&fBedrock&0]*&f*&0*&7'
-        permissions:
-        - preciousstones.limit4
-        - tpp.jump.up
-        - fadeout.fade
-        - vanish.preventoutgoingdamage
-        inheritance:
-        - Obsidian
-        options:
-            rank: '320'
-    Iron:
-        prefix: '&7[Iron]&f'
-        permissions:
-        - preciousstones.whitelist
-        - simpleclans.leader.home-set
-        - mywarp.warp.basic.createprivate
-        - mywarp.warp.basic.delete
-        - mywarp.warp.basic.welcome
-        - ChestShop.shop.create
-        - mywarp.warp.sign.create
-        - mywarp.warp.basic.createpublic
-        - mywarp.warp.soc.invite
-        - mywarp.warp.soc.uninvite
-        - mywarp.warp.soc.public
-        - mywarp.warp.soc.private
-        - tpp.tp.menu
-        - signColours.*
-        - simpleclans.leader.*
-        worlds:
-            SquattersburgHeights:
-                permissions:
-                - -lwc.*
-                - -preciousstones.*
-        inheritance:
-        - Trusted
-        options:
-            rank: '600'
+        - -lwc.*
+        - -preciousstones.*
+    inheritance:
+    - Gold
+    options:
+      rank: '400'
+  Obsidian:
+    prefix: '&5[Obsidian]&f'
+    permissions:
+    - preciousstones.whitelist.*
+    - commandbook.kit.kits.obsidian
+    inheritance:
+    - Diamond
+    options:
+      rank: '350'
+  Bedrock:
+    prefix: '&0*&f*&0*[&fBedrock&0]*&f*&0*&7'
+    permissions:
+    - preciousstones.limit4
+    - tpp.jump.up
+    - fadeout.fade
+    - vanish.preventoutgoingdamage
+    inheritance:
+    - Obsidian
+    options:
+      rank: '300'
+  WorldMod:
+    prefix: '&1[Mods]&f'
+    permissions:
+    - commandbook.kit.list
+    - worldguard.notify
+    - herochat.admin
+    - mcmmo.chat.adminchat
+    inheritance:
+    - Bedrock
+    options:
+      rank: '250'
+  Moderator:
+    prefix: '&4[&1Moderator&4]&f'
+    permissions:
+    - irc.mute
+    - irc.unmute
+    - myhome.admin.home.any
+    - hawkeye.tool
+    - mcbans.unban
+    - permissions.user.promote.*
+    - worldedit.history.redo
+    - worldedit.history.undo
+    - worldedit.clipboard.load
+    - worldedit.clipboard.paste
+    - PvPable.override
+    - mcbans.mod
+    - tpp.mod.notify
+    - tpp.mod.notp
+    - tpp.mod.above
+    - tpp.mod.take
+    - tpp.others.*
+    - tpp.tp.*
+    - mcbans.ban.local
+    - mcbans.ban.temp
+    - mcbans.lookup
+    - mcbans.kick
+    - permissions.user.demote.*
+    - commandbook.clear.other
+    - commandbook.kit.kits.mod
+    inheritance:
+    - WorldMod
+    options:
+      rank: '200'
+  Admin:
+    prefix: '&4[&1Admin&4]&8'
+    permissions:
+    - herochat.speak.(announce|announce2)
+    - worldedit.tool.*
+    - preciousstones.admin.superpickaxe
+    - irc.admin
+    - myhome.admin.*
+    - worldguard.god
+    - mcmmo.tools.mmoedit
+    - preciousstones.bypass.*
+    - worldedit.navigation.*
+    - worldedit.selection.*
+    - worldedit.generation.*
+    - worldedit.clipboard.*
+    - worldedit.brush.*
+    - worldedit.regen
+    - worldedit.region.*
+    - worldedit.remove
+    - worldedit.butcher
+    - worldedit.extinguish
+    - worldedit.superpickaxe
+    - worldguard.halt-activity.*
+    - worldguard.slay.*
+    - worldguard.heal.*
+    - commandbook.kit.kits.*
+    - commandbook.debug.*
+    - commandbook.clear.*
+    - commandbook.rocket.*
+    - commandbook.slap.*
+    - commandbook.heal.*
+    - commandbook.give.*
+    - vanish.*
+    - nocheat.*
+    - permissions.user.demote.*
+    - hawkeye.tool
+    - hawkeye.search
+    inheritance:
+    - Moderator
+    options:
+      rank: '100'
+  Manager:
+    prefix: '&4[Manager]&6'
+    permissions:
+    - XcraftGate.gate
+    - XcraftGate.gate.*
+    - ChestShop.admin
+    - worldguard.region.*
+    - lwc.admin
+    - iConomy.admin.grant
+    inheritance:
+    - Admin
+    options:
+      rank: '50'
+  Operator:
+    prefix: '&6[OPs]&4'
+    permissions:
+    - '*'
+    inheritance:
+    - Manager
+    options:
+      rank: '0'
