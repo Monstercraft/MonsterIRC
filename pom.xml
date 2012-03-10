@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>com.dthielke.herochat</groupId>
 			<artifactId>Herochat</artifactId>
-			<version>5.2.0</version>
+			<version>5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.herocraftonline.dthielke.herochat</groupId>
