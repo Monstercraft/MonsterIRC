@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.EventListener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration;
 
@@ -131,5 +133,14 @@ public abstract class IRCPlugin extends IRC implements EventListener, Runnable {
 			dir.mkdirs();
 		}
 		return dir;
+	}
+
+	public void registerBukkitListener(final Listener listener) {
+		Bukkit.getServer()
+				.getPluginManager()
+				.registerEvents(
+						listener,
+						Bukkit.getServer().getPluginManager()
+								.getPlugin("MonsterIRC"));
 	}
 }
