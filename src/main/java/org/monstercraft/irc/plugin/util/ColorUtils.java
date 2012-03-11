@@ -1,5 +1,7 @@
 package org.monstercraft.irc.plugin.util;
 
+import org.monstercraft.irc.plugin.Configuration.Variables;
+
 /**
  * This enum contains all of the supported colors.
  * 
@@ -54,9 +56,17 @@ public enum ColorUtils {
 	 */
 	public static String formatIRCMessage(final String message) {
 		String msg = message;
-		for (ColorUtils c : values()) {
-			if (msg.contains(c.getIRCColor())) {
-				msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
+		if (Variables.colors) {
+			for (ColorUtils c : values()) {
+				if (msg.contains(c.getIRCColor())) {
+					msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
+				}
+			}
+		} else {
+			for (ColorUtils c : values()) {
+				if (msg.contains(c.getIRCColor())) {
+					msg = msg.replace(c.getIRCColor(), "");
+				}
 			}
 		}
 		return msg;
@@ -71,9 +81,17 @@ public enum ColorUtils {
 	 */
 	public static String formatGameMessage(final String message) {
 		String msg = message;
-		for (ColorUtils c : values()) {
-			if (msg.contains(c.getMinecraftColor())) {
-				msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
+		if (Variables.colors) {
+			for (ColorUtils c : values()) {
+				if (msg.contains(c.getMinecraftColor())) {
+					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
+				}
+			}
+		} else {
+			for (ColorUtils c : values()) {
+				if (msg.contains(c.getMinecraftColor())) {
+					msg = msg.replace(c.getMinecraftColor(), "");
+				}
 			}
 		}
 		return msg;
