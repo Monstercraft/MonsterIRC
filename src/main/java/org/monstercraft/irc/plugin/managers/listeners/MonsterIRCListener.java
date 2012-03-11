@@ -216,8 +216,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 										+ Herochat.getChatterManager()
 												.getChatter(player)
 												.getActiveChannel().getNick()
-										+ "]"
-										+ ColorUtils.NORMAL.getIRCColor() + " ")
+										+ "]" + ColorUtils.NORMAL.getIRCColor()
+										+ "")
 						.replace("{prefix}",
 								StringUtils.getPrefix(player.getName()))
 						.replace("{name}",
@@ -298,7 +298,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 														.getNick()
 												+ "]"
 												+ ColorUtils.NORMAL
-														.getIRCColor() + " ")
+														.getIRCColor() + "")
 								.replace("{prefix}",
 										StringUtils.getPrefix(player.getName()))
 								.replace("{name}",
