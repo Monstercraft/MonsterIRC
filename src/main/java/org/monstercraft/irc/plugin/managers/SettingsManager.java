@@ -344,11 +344,11 @@ public class SettingsManager extends MonsterIRC {
 		FileConfiguration config = new YamlConfiguration();
 		config.options()
 				.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
-		config.addDefault("CHANNEL.SETTINGS.AUTOJOIN", false);
-		config.addDefault("CHANNEL.SETTINGS.DEFAULT", false);
+		config.addDefault("CHANNEL.SETTINGS.AUTOJOIN", true);
+		config.addDefault("CHANNEL.SETTINGS.DEFAULT", true);
 		config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
-		config.addDefault("CHANNEL.SETTINGS.PASS_TO_GAME", false);
-		config.addDefault("CHANNEL.SETTINGS.PASS_TO_IRC", false);
+		config.addDefault("CHANNEL.SETTINGS.PASS_TO_GAME", true);
+		config.addDefault("CHANNEL.SETTINGS.PASS_TO_IRC", true);
 		config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
 		config.addDefault("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES", true);
 		config.addDefault("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
