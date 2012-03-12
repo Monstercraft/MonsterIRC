@@ -20,7 +20,7 @@ IRC:
     PASS_SAY_COMMAND: false
   FORMAT:
     MINECRAFT: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
-    IRC: '{heroChatTag}<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
+    IRC: '{heroChatTag}: <{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
   ON_CONNECT_COMMANDS: []
   MUTED:
   - sampleuser
