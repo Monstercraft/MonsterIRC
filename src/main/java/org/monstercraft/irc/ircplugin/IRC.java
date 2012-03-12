@@ -321,4 +321,21 @@ public class IRC {
 	public static boolean isVoice(final IRCChannel channel, final String sender) {
 		return channel.getVoiceList().contains(sender);
 	}
+
+	public static boolean isVoicePlus(final IRCChannel channel,
+			final String sender) {
+		if (isVoice(channel, sender)) {
+			return true;
+		}
+		if (isHalfOP(channel, sender)) {
+			return true;
+		}
+		if (isAdmin(channel, sender)) {
+			return true;
+		}
+		if (isOp(channel, sender)) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -14,28 +14,25 @@ public class List extends IRCCommand {
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return MonsterIRC.getHandleManager().getIRCHandler()
 				.isConnected(MonsterIRC.getIRCServer())
+				&& IRC.isVoicePlus(channel, sender)
 				&& message.toLowerCase().startsWith(
 						Variables.commandPrefix + "list");
 	}
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (IRC.isOp(channel, sender) || IRC.isVoice(channel, sender)) {
-			Player[] players = Bukkit.getServer().getOnlinePlayers();
-			StringBuilder sb = new StringBuilder();
-			sb.append("Players currently online" + "(" + players.length + "/"
-					+ Bukkit.getServer().getMaxPlayers() + "): ");
-			for (int i = 0; i < players.length; i++) {
-				if (i == players.length - 1) {
-					sb.append(players[i].getName());
-				} else {
-					sb.append(players[i].getName() + ", ");
-				}
+		Player[] players = Bukkit.getServer().getOnlinePlayers();
+		StringBuilder sb = new StringBuilder();
+		sb.append("Players currently online" + "(" + players.length + "/"
+				+ Bukkit.getServer().getMaxPlayers() + "): ");
+		for (int i = 0; i < players.length; i++) {
+			if (i == players.length - 1) {
+				sb.append(players[i].getName());
+			} else {
+				sb.append(players[i].getName() + ", ");
 			}
-			IRC.sendMessage(channel, sb.toString());
-			return true;
 		}
-		IRC.sendNotice(sender, "You are not allowed to exectue that command.");
+		IRC.sendMessage(channel, sb.toString());
 		return true;
 	}
 }
