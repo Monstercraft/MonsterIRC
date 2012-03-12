@@ -3,6 +3,7 @@ package org.monstercraft.irc.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -140,6 +141,12 @@ public class Configuration {
 			end = (int) System.currentTimeMillis();
 		} catch (SocketTimeoutException e) {
 			IRC.log("The socket has timed out when attempting to connect!");
+			IRC.log("Try running /irc reload in a few mins!");
+			start = -1;
+			end = -1;
+			total = -1;
+		} catch (ConnectException e){
+			IRC.log("Your connection was refused by the IRC server!");
 			IRC.log("Try running /irc reload in a few mins!");
 			start = -1;
 			end = -1;
