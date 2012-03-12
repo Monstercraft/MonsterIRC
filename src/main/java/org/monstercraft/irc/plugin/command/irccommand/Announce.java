@@ -14,17 +14,16 @@ public class Announce extends IRCCommand {
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return MonsterIRC.getHandleManager().getIRCHandler()
 				.isConnected(MonsterIRC.getIRCServer())
+				&& IRC.isVoicePlus(channel, sender)
 				&& message.toLowerCase().startsWith(
 						Variables.commandPrefix + "announce");
 	}
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (IRC.isVoice(channel, sender) || IRC.isOp(channel, sender)) {
-			Bukkit.getServer().broadcastMessage(
-					ColorUtils.formatIRCMessage("[IRC]<" + sender + ">: "
-							+ message.substring(10)));
-		}
+		Bukkit.getServer().broadcastMessage(
+				ColorUtils.formatIRCMessage("[IRC]<" + sender + ">: "
+						+ message.substring(10)));
 		return true;
 	}
 
