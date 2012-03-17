@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.ColorUtils;
 
@@ -66,6 +67,7 @@ public class PrivateMessage extends GameCommand {
 					+ "): "
 					+ result.toString()
 							.substring(7 + sender.getName().length()));
+			Variables.reply.put((Player) sender, split[2]);
 			return true;
 		}
 	}
