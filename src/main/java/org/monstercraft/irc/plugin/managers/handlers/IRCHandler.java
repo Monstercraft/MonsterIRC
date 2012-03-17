@@ -180,7 +180,6 @@ public class IRCHandler extends MonsterIRC {
 		} else {
 			IRC.log("The IRC server seems to be down or running slowly!");
 			IRC.log("To try conencting again run the command /irc connect");
-			IRC.log("Your ping with the server is: " + ping);
 			return false;
 		}
 		return isConnected(server);

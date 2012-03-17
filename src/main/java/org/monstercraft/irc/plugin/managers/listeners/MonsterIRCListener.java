@@ -58,7 +58,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerChat(PlayerChatEvent event) {
+	public void onChat(PlayerChatEvent event) {
 		if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 			if (!MonsterIRC.getHookManager().getmcMMOHook()
 					.getPlayerProfile(event.getPlayer()).getAdminChatMode()) {
