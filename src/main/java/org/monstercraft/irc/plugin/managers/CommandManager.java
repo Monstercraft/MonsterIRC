@@ -15,12 +15,14 @@ import org.monstercraft.irc.plugin.command.IRCCommand;
 import org.monstercraft.irc.plugin.command.gamecommands.Ban;
 import org.monstercraft.irc.plugin.command.gamecommands.Connect;
 import org.monstercraft.irc.plugin.command.gamecommands.Disconnect;
+import org.monstercraft.irc.plugin.command.gamecommands.Help;
 import org.monstercraft.irc.plugin.command.gamecommands.Join;
 import org.monstercraft.irc.plugin.command.gamecommands.Leave;
 import org.monstercraft.irc.plugin.command.gamecommands.Mute;
 import org.monstercraft.irc.plugin.command.gamecommands.Nick;
 import org.monstercraft.irc.plugin.command.gamecommands.PrivateMessage;
 import org.monstercraft.irc.plugin.command.gamecommands.ReloadConfig;
+import org.monstercraft.irc.plugin.command.gamecommands.Reply;
 import org.monstercraft.irc.plugin.command.gamecommands.Say;
 import org.monstercraft.irc.plugin.command.gamecommands.Unmute;
 import org.monstercraft.irc.plugin.command.irccommand.Announce;
@@ -48,6 +50,8 @@ public class CommandManager extends MonsterIRC {
 	 *            The parent plugin.
 	 */
 	public CommandManager(final MonsterIRC plugin) {
+		gameCommands.put(13, new Help());
+		gameCommands.put(12, new Reply());
 		gameCommands.put(11, new PrivateMessage());
 		gameCommands.put(10, new Ban());
 		gameCommands.put(9, new Mute());

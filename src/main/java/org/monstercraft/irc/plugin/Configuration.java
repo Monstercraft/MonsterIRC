@@ -12,13 +12,16 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
@@ -145,7 +148,7 @@ public class Configuration {
 			start = -1;
 			end = -1;
 			total = -1;
-		} catch (ConnectException e){
+		} catch (ConnectException e) {
 			IRC.log("Your connection was refused by the IRC server!");
 			IRC.log("Try running /irc reload in a few mins!");
 			start = -1;
@@ -292,5 +295,10 @@ public class Configuration {
 		 * The password for the server.
 		 */
 		public static String serverPass = "";
+
+		/**
+		 * The last person to reply to.
+		 */
+		public static Map<Player, String> reply = new HashMap<Player, String>();
 	}
 }
