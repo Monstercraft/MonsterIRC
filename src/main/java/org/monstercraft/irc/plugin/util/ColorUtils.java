@@ -102,6 +102,9 @@ public enum ColorUtils {
 							.replace(c.getOldMinecraftColor(), c.getIRCColor());
 				}
 			}
+			if (msg.contains(WHITE.getIRCColor())) {
+				msg = msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor());
+			}
 		} else {
 			for (ColorUtils c : values()) {
 				if (msg.contains(c.getMinecraftColor())) {
