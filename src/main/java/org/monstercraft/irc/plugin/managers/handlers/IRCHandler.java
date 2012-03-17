@@ -604,6 +604,7 @@ public class IRCHandler extends MonsterIRC {
 												+ name
 												+ "):"
 												+ _msg);
+										Variables.reply.put(p, name);
 									}
 								}
 							}
