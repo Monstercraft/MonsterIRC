@@ -87,7 +87,7 @@ public class IRCHandler extends MonsterIRC {
 			}
 		}
 		String line = null;
-		int ping = -1;
+		long ping = -1;
 		int tries = 0;
 		for (int i = 0; i < server.getRetrys(); i++) {
 			ping = Configuration.ping(server.getServer(), server.getPort(),
@@ -180,6 +180,7 @@ public class IRCHandler extends MonsterIRC {
 		} else {
 			IRC.log("The IRC server seems to be down or running slowly!");
 			IRC.log("To try conencting again run the command /irc connect");
+			IRC.log("Your ping with the server is: " + ping);
 			return false;
 		}
 		return isConnected(server);

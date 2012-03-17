@@ -123,25 +123,25 @@ public class Configuration {
 	 * Pings the host.
 	 * 
 	 * @param host
-	 *            The host to ping
+	 *            The host to ping.
 	 * @param port
 	 *            The port the host is on.
 	 * @param timeoutMs
 	 *            The time in ms for the maximum ping response.
 	 * @return The time in ms the ping took.
 	 */
-	public static int ping(final String host, final int port,
+	public static long ping(final String host, final int port,
 			final int timeoutMs) {
-		int start = -1;
-		int end = -1;
-		int total = -1;
+		long start = -1;
+		long end = -1;
+		long total = -1;
 		Socket s = new Socket();
 		try {
 			InetAddress addr = InetAddress.getByName(host);
 			SocketAddress sockaddr = new InetSocketAddress(addr, port);
-			start = (int) System.currentTimeMillis();
+			start = System.currentTimeMillis();
 			s.connect(sockaddr, timeoutMs);
-			end = (int) System.currentTimeMillis();
+			end = System.currentTimeMillis();
 		} catch (SocketTimeoutException e) {
 			IRC.log("The socket has timed out when attempting to connect!");
 			IRC.log("Try running /irc reload in a few mins!");
