@@ -28,7 +28,7 @@ public class Help extends GameCommand {
 					sender.sendMessage("[IRC] You don't have permission to preform that command.");
 					return true;
 				} else {
-					sendMenu(sender);
+					sendMenu((Player) sender);
 					return true;
 				}
 			}
@@ -40,65 +40,76 @@ public class Help extends GameCommand {
 		}
 	}
 
-	public void sendMenu(CommandSender sender) {
-		sender.sendMessage(ColorUtils.BLUE.getMinecraftColor() + "----- ["
-				+ ColorUtils.WHITE + "MonsterIRC Help" + ColorUtils.BLUE
-				+ "]-----");
+	public void sendMenu(Player sender) {
+		sender.sendMessage(ColorUtils.DARK_BLUE.getMinecraftColor() + "----- ["
+				+ ColorUtils.WHITE.getMinecraftColor() + "MonsterIRC Help"
+				+ ColorUtils.DARK_BLUE.getMinecraftColor() + "]-----");
 		if (MonsterIRC.getHandleManager().getPermissionsHandler()
 				.hasCommandPerms((Player) sender, new Connect())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc connect ");
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc connect ");
 		}
 		if (MonsterIRC.getHandleManager().getPermissionsHandler()
 				.hasCommandPerms((Player) sender, new Disconnect())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc disconnect");
-		}
-		if (MonsterIRC.getHandleManager().getPermissionsHandler()
-				.hasCommandPerms((Player) sender, new Join())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc join"
-					+ ColorUtils.DARK_GRAY + " (channel)");
-		}
-		if (MonsterIRC.getHandleManager().getPermissionsHandler()
-				.hasCommandPerms((Player) sender, new Leave())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc leave"
-					+ ColorUtils.DARK_GRAY + " (channel)");
-		}
-		if (MonsterIRC.getHandleManager().getPermissionsHandler()
-				.hasCommandPerms((Player) sender, new Ban())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc ban"
-					+ ColorUtils.DARK_GRAY + " (user)");
-		}
-		if (MonsterIRC.getHandleManager().getPermissionsHandler()
-				.hasCommandPerms((Player) sender, new Mute())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc mute"
-					+ ColorUtils.DARK_GRAY + " (user)");
-		}
-		if (MonsterIRC.getHandleManager().getPermissionsHandler()
-				.hasCommandPerms((Player) sender, new Unmute())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc unmute"
-					+ ColorUtils.DARK_GRAY + " (user)");
-		}
-		if (MonsterIRC.getHandleManager().getPermissionsHandler()
-				.hasCommandPerms((Player) sender, new Nick())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc nick"
-					+ ColorUtils.DARK_GRAY + " (nick)");
-		}
-		if (MonsterIRC.getHandleManager().getPermissionsHandler()
-				.hasCommandPerms((Player) sender, new Say())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc say"
-					+ ColorUtils.DARK_GRAY + " (message)");
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc disconnect");
 		}
 		if (MonsterIRC.getHandleManager().getPermissionsHandler()
 				.hasCommandPerms((Player) sender, new ReloadConfig())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc reload");
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc reload");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Join())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc join" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (channel)");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Leave())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc leave" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (channel)");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Ban())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc ban" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (user)");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Mute())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc mute" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (user)");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Unmute())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc unmute" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (user)");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Nick())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc nick" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (nick)");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new Say())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc say" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (message)");
 		}
 		if (MonsterIRC.getHandleManager().getPermissionsHandler()
 				.hasCommandPerms((Player) sender, new PrivateMessage())) {
-			sender.sendMessage(ColorUtils.GREEN + "/irc pm"
-					+ ColorUtils.DARK_GRAY + "(user) (message)");
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor() + "/irc pm"
+					+ ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (user) (message)");
 		}
-		sender.sendMessage(ColorUtils.YELLOW
-				+ "For more info on a certian command type" + ColorUtils.WHITE
-				+ "/irc help (command)");
+		sender.sendMessage(ColorUtils.YELLOW.getMinecraftColor()
+				+ "For more info on a certian command type"
+				+ ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
 	}
 
 	private void sendMenu(ConsoleCommandSender sender) {

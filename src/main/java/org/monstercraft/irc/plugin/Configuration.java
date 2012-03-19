@@ -7,7 +7,6 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -137,8 +136,8 @@ public class Configuration {
 		long total = -1;
 		Socket s = new Socket();
 		try {
-			InetAddress addr = InetAddress.getByName(host);
-			SocketAddress sockaddr = new InetSocketAddress(addr, port);
+			InetAddress addr = InetAddress.getByName(host.trim());
+			InetSocketAddress sockaddr = new InetSocketAddress(addr, port);
 			start = System.currentTimeMillis();
 			s.connect(sockaddr, timeoutMs);
 			end = System.currentTimeMillis();
@@ -167,7 +166,7 @@ public class Configuration {
 					IRC.debug(e);
 				}
 			}
-			if ((start != -1) && (end != -1)) {
+			if (start != -1 && end != -1) {
 				total = end - start;
 			}
 		}
