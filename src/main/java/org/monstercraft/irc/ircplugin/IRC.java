@@ -182,6 +182,7 @@ public class IRC {
 				if (c.getHeroChatChannel() != null) {
 					c.getHeroChatChannel().announce(
 							ColorUtils.formatIRCMessage(Variables.mcformat
+									.replace("&", "§")
 									.replace("{name}",
 											StringUtils.getName(name))
 									.replace(
@@ -211,6 +212,7 @@ public class IRC {
 				c.getHeroChatFourChannel()
 						.sendMessage(
 								ColorUtils.formatIRCMessage(Variables.mcformat
+										.replace("&", "§")
 										.replace("{name}",
 												StringUtils.getName(name))
 										.replace("{message}", "")
@@ -235,6 +237,7 @@ public class IRC {
 				getPlugin().getServer()
 						.broadcastMessage(
 								ColorUtils.formatIRCMessage(Variables.mcformat
+										.replace("&", "§")
 										.replace("{name}",
 												StringUtils.getName(name))
 										.replace(
@@ -261,7 +264,7 @@ public class IRC {
 					TownyMessaging.sendMessage(p, ColorUtils.formatIRCMessage(c
 							.getTownyChannel().getChannelTag()
 							.replace("&", "§")
-							+ Variables.mcformat
+							+ Variables.mcformat.replace("&", "§")
 									.replace("{name}",
 											StringUtils.getName(name))
 									.replace(

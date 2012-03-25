@@ -159,7 +159,7 @@ public class SettingsManager extends MonsterIRC {
 		} catch (Exception e) {
 			IRC.debug(e);
 		}
-		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>{colon} {message}";
+		String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}";
 		if (Variables.mcformat.contains("{name}")
 				&& Variables.mcformat.contains("{message}")) {
 		} else {
