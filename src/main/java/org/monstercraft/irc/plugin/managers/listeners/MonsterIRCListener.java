@@ -19,6 +19,7 @@ import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.dthielke.herochat.Herochat;
+import com.gmail.nossr50.mcMMO;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -47,21 +48,20 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				MonsterIRC.getHandleManager().setPermissionsHandler(
 						MonsterIRC.getHookManager().getPermissionsHook());
 				MonsterIRC.getHookManager().setChatHook();
-			} else if (PluginName.equals("mcMMO")) {
-				MonsterIRC.getHookManager().setmcMMOHook();
 			} else if (PluginName.equals("HeroChat")) {
 				MonsterIRC.getHookManager().setHeroChatHook();
 			} else if (PluginName.equals("TownyChat")) {
 				MonsterIRC.getHookManager().setTownyChatHook();
+			} else if (PluginName.equals("mcMMO")) {
+				Variables.usingmcMMO = true;
 			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChat(PlayerChatEvent event) {
-		if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-			if (!MonsterIRC.getHookManager().getmcMMOHook()
-					.getPlayerProfile(event.getPlayer()).getAdminChatMode()) {
+		if (Variables.usingmcMMO) {
+			if (!mcMMO.getPlayerProfile(event.getPlayer()).getAdminChatMode()) {
 				if (event.isCancelled()) {
 					return;
 				}
@@ -158,9 +158,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		}
 		StringBuffer result = new StringBuffer();
 		if (c.getChatType() == ChatType.ADMINCHAT) {
-			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-				if (MonsterIRC.getHookManager().getmcMMOHook()
-						.getPlayerProfile(player).getAdminChatMode()) {
+			if (Variables.usingmcMMO) {
+				if (mcMMO.getPlayerProfile(player).getAdminChatMode()) {
 					result.append(Variables.ircformat
 							.replace("{heroChatTag}", "")
 							.replace("{prefix}",
@@ -192,9 +191,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				}
 			}
 		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
-			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-				if (MonsterIRC.getHookManager().getmcMMOHook()
-						.getPlayerProfile(player).getAdminChatMode()) {
+			if (Variables.usingmcMMO) {
+				if (mcMMO.getPlayerProfile(player).getAdminChatMode()) {
 					return;
 				}
 			}
@@ -251,9 +249,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				&& MonsterIRC.getHookManager().getHeroChatHook() != null
 				&& Variables.hc4) {
 			if (MonsterIRC.getHookManager().getHeroChatHook().isEnabled()) {
-				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-					if (MonsterIRC.getHookManager().getmcMMOHook()
-							.getPlayerProfile(player).getAdminChatMode()) {
+				if (Variables.usingmcMMO) {
+					if (mcMMO.getPlayerProfile(player).getAdminChatMode()) {
 						return;
 					}
 				}
@@ -341,9 +338,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				}
 			}
 		} else if (c.getChatType() == ChatType.GLOBAL) {
-			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-				if (MonsterIRC.getHookManager().getmcMMOHook()
-						.getPlayerProfile(player).getAdminChatMode()) {
+			if (Variables.usingmcMMO) {
+				if (mcMMO.getPlayerProfile(player).getAdminChatMode()) {
 					return;
 				}
 			}
@@ -373,9 +369,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							ColorUtils.WHITE.getMinecraftColor(),
 							ColorUtils.NORMAL.getIRCColor())));
 		} else if (c.getChatType() == ChatType.TOWNYCHAT) {
-			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-				if (MonsterIRC.getHookManager().getmcMMOHook()
-						.getPlayerProfile(player).getAdminChatMode()) {
+			if (Variables.usingmcMMO) {
+				if (mcMMO.getPlayerProfile(player).getAdminChatMode()) {
 					return;
 				}
 			}

@@ -164,7 +164,7 @@ public class IRC {
 		}
 		try {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
-				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+				if (Variables.usingmcMMO) {
 					String format = ColorUtils.CYAN.getMinecraftColor() + "{"
 							+ ColorUtils.WHITE.getMinecraftColor() + "[IRC] "
 							+ StringUtils.getPrefix(name)
@@ -264,7 +264,8 @@ public class IRC {
 					TownyMessaging.sendMessage(p, ColorUtils.formatIRCMessage(c
 							.getTownyChannel().getChannelTag()
 							.replace("&", "§")
-							+ Variables.mcformat.replace("&", "§")
+							+ Variables.mcformat
+									.replace("&", "§")
 									.replace("{name}",
 											StringUtils.getName(name))
 									.replace(

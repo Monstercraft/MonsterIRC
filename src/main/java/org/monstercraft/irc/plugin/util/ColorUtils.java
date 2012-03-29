@@ -78,7 +78,7 @@ public enum ColorUtils {
 				}
 			}
 		}
-		return msg;
+		return msg.replace("Â", "");
 	}
 
 	/**
@@ -112,7 +112,7 @@ public enum ColorUtils {
 				}
 			}
 		}
-		return msg;
+		return msg.replace("Â", "");
 	}
 
 	private final String IRCColor;
