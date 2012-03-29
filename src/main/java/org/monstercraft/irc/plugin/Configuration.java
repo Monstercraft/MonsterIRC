@@ -299,5 +299,10 @@ public class Configuration {
 		 * The last person to reply to.
 		 */
 		public static Map<Player, String> reply = new HashMap<Player, String>();
+
+		/**
+		 * Does the user use mcMMO.
+		 */
+		public static boolean usingmcMMO = false;
 	}
 }

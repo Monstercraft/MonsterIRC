@@ -55,13 +55,8 @@ public class mcMMOHook extends MonsterIRC {
 				+ ((mcMMO) mcMMOPlugin).getDescription().getFullName());
 	}
 
-	/**
-	 * Fetches the hook into mcMMO.
-	 * 
-	 * @return the hook into mcMMO.
-	 */
-	public mcMMO getHook() {
-		return mcMMOHook;
+	public boolean mcMMOEnabled() {
+		return this.plugin.isEnabled();
 	}
 
 }
