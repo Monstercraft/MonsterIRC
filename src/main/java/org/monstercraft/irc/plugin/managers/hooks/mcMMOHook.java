@@ -56,7 +56,10 @@ public class mcMMOHook extends MonsterIRC {
 	}
 
 	public boolean mcMMOEnabled() {
-		return this.plugin.isEnabled();
+		if (this.mcMMOHook != null) {
+			return this.mcMMOHook.isEnabled();
+		}
+		return false;
 	}
 
 }
