@@ -55,11 +55,13 @@ public class mcMMOHook extends MonsterIRC {
 				+ ((mcMMO) mcMMOPlugin).getDescription().getFullName());
 	}
 
-	public boolean mcMMOEnabled() {
-		if (this.mcMMOHook != null) {
-			return this.mcMMOHook.isEnabled();
-		}
-		return false;
+	/**
+	 * Fetches the hook into mcMMO.
+	 * 
+	 * @return the hook into mcMMO.
+	 */
+	public mcMMO getHook() {
+		return mcMMOHook;
 	}
 
 }

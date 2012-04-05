@@ -164,7 +164,7 @@ public class IRC {
 		}
 		try {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
-				if (Variables.usingmcMMO) {
+				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 					String format = ColorUtils.CYAN.getMinecraftColor() + "{"
 							+ ColorUtils.WHITE.getMinecraftColor() + "[IRC] "
 							+ StringUtils.getPrefix(name)
@@ -182,12 +182,12 @@ public class IRC {
 				if (c.getHeroChatChannel() != null) {
 					c.getHeroChatChannel().announce(
 							ColorUtils.formatIRCMessage(Variables.mcformat
-									.replace("&", "ยง")
+									.replace("&", "ง")
 									.replace("{name}",
 											StringUtils.getName(name))
 									.replace(
 											"{message}",
-											"ยง"
+											"ง"
 													+ c.getHeroChatChannel()
 															.getColor()
 															.getChar()
@@ -212,7 +212,7 @@ public class IRC {
 				c.getHeroChatFourChannel()
 						.sendMessage(
 								ColorUtils.formatIRCMessage(Variables.mcformat
-										.replace("&", "ยง")
+										.replace("&", "ง")
 										.replace("{name}",
 												StringUtils.getName(name))
 										.replace("{message}", "")
@@ -237,7 +237,7 @@ public class IRC {
 				getPlugin().getServer()
 						.broadcastMessage(
 								ColorUtils.formatIRCMessage(Variables.mcformat
-										.replace("&", "ยง")
+										.replace("&", "ง")
 										.replace("{name}",
 												StringUtils.getName(name))
 										.replace(
@@ -263,9 +263,8 @@ public class IRC {
 				for (Player p : TownyUniverse.getOnlinePlayers()) {
 					TownyMessaging.sendMessage(p, ColorUtils.formatIRCMessage(c
 							.getTownyChannel().getChannelTag()
-							.replace("&", "ยง")
-							+ Variables.mcformat
-									.replace("&", "ยง")
+							.replace("&", "ง")
+							+ Variables.mcformat.replace("&", "ง")
 									.replace("{name}",
 											StringUtils.getName(name))
 									.replace(
