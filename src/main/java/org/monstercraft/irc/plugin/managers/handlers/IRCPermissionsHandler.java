@@ -85,7 +85,7 @@ public class IRCPermissionsHandler extends MonsterIRC {
 				String name = player.getName();
 				return perms.getPlayerGroups(world, name);
 			} catch (Exception e) {
-				IRC.log(e.getMessage());
+				IRC.debug(e);
 			}
 		}
 		return new String[0];
