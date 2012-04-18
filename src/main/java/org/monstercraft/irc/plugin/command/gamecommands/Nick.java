@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class Nick extends GameCommand {
 
@@ -39,7 +40,7 @@ public class Nick extends GameCommand {
 					+ Variables.name);
 			return true;
 		} else {
-			sender.sendMessage("Invalid Usage. Please use: nick [NAME]");
+			sender.sendMessage("Invalid Usage. Please use: irc nick [NAME]");
 			return true;
 
 		}
@@ -48,6 +49,24 @@ public class Nick extends GameCommand {
 	@Override
 	public String getPermission() {
 		return "irc.nick";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Nick",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Changes the bots nickname in IRC.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "/irc nick (name)" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Nick";
 	}
 
 }

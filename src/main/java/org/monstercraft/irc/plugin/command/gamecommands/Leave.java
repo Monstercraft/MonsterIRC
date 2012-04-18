@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Leave extends GameCommand {
@@ -42,13 +43,31 @@ public class Leave extends GameCommand {
 				return true;
 			}
 		}
-		sender.sendMessage("[IRC] Could not join that channel!");
-		return false;
+		sender.sendMessage("[IRC] Could not part from that channel!");
+		return true;
 	}
 
 	@Override
 	public String getPermission() {
 		return "irc.leave";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Leave",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Makes the bot part from a IRC channel.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "/irc leave (channel)" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Leave";
 	}
 
 }

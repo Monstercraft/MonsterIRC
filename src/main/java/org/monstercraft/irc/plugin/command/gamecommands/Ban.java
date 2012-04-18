@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Ban extends GameCommand {
@@ -28,23 +29,44 @@ public class Ban extends GameCommand {
 				return true;
 			}
 		}
-		for (IRCChannel c : Variables.channels) {
-			if (c.getChannel().equalsIgnoreCase(split[3])) {
+		if (split.length < 2) {
+			sender.sendMessage("Invalid usage, proper usage:/irc ban [user]");
+			return true;
+		} else {
+			sender.sendMessage("Attempting to kick & ban " + split[2] + "!");
+			for (IRCChannel c : Variables.channels) {
 				MonsterIRC
 						.getHandleManager()
 						.getIRCHandler()
 						.ban(MonsterIRC.getIRCServer(), split[2].toString(),
 								c.getChannel());
-				return true;
 			}
+			return true;
 		}
-		sender.sendMessage("Invalid usage, proper usage:/irc ban [user] [channel]");
-		return false;
 	}
 
 	@Override
 	public String getPermission() {
 		return "irc.ban";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Ban",
+				ColorUtils.RED.getMinecraftColor()
+						+ "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Ban a user from the IRC channels that the bot is OP in.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "/ban (IRC User)" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Ban";
 	}
 
 }

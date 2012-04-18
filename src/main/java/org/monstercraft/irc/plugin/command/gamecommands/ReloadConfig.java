@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class ReloadConfig extends GameCommand {
 
@@ -27,10 +28,12 @@ public class ReloadConfig extends GameCommand {
 				return true;
 			}
 		}
+		sender.sendMessage("Attmpting to reload the configs and connection!");
 		Thread t = new Thread(connect);
 		t.setPriority(Thread.MAX_PRIORITY);
 		t.setDaemon(false);
 		t.start();
+		sender.sendMessage("Successfully reloaded the configs and connection!");
 		return true;
 	}
 
@@ -48,6 +51,24 @@ public class ReloadConfig extends GameCommand {
 	@Override
 	public String getPermission() {
 		return "irc.reload";
+	}
+
+	@Override
+	public String getCommandName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Reload",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Reloads and Reconnects MonsterIRC.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "/irc reload" };
 	}
 
 }

@@ -14,17 +14,9 @@ public class Reply extends GameCommand {
 		return "irc.reply";
 	}
 
-	private boolean a(String[] split) {
-		return split[0].contains("irc") && split[1].equalsIgnoreCase("r");
-	}
-
-	private boolean b(String[] split) {
-		return split[0].contains("irc") && split[1].equalsIgnoreCase("reply");
-	}
-
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
-		return a(split) || b(split);
+		return split[0].contains("irc") && split[1].equalsIgnoreCase("r");
 	}
 
 	@Override
@@ -70,6 +62,24 @@ public class Reply extends GameCommand {
 			sender.sendMessage("Nothing to reply to!");
 			return true;
 		}
+	}
+
+	@Override
+	public String getCommandName() {
+		return "r";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Reply",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Replys to the last IRC PM.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "/irc r (message)" };
 	}
 
 }

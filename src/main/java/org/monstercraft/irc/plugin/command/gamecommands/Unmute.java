@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class Unmute extends GameCommand {
 
@@ -43,6 +44,24 @@ public class Unmute extends GameCommand {
 	@Override
 	public String getPermission() {
 		return "irc.unmute";
+	}
+
+	@Override
+	public String getCommandName() {
+		return "unmute";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Unmute",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Unmutes a previously muted user.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "/irc unmute (user)" };
 	}
 
 }
