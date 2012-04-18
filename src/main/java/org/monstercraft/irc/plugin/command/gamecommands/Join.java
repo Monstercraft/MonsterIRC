@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Join extends GameCommand {
@@ -43,12 +44,29 @@ public class Join extends GameCommand {
 			}
 		}
 		sender.sendMessage("[IRC] Could not join that channel!");
-		return false;
+		return true;
 	}
 
 	@Override
 	public String getPermission() {
 		return "irc.join";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Disconnect",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Disconnects the bot from IRC channel.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "/connect" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Join";
 	}
 
 }

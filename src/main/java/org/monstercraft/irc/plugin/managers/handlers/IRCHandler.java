@@ -83,6 +83,7 @@ public class IRCHandler extends MonsterIRC {
 	public boolean connect(final IRCServer server) {
 		if (connection != null) {
 			if (connection.isConnected()) {
+				IRC.log("Attempting to disconnect before re-connecting!");
 				disconnect(server);
 			}
 		}
@@ -848,7 +849,7 @@ public class IRCHandler extends MonsterIRC {
 		if (isConnected(server)) {
 			try {
 				kick(server, nick, channel, "Derp.");
-				writer.write("MODE " + channel + " +b" + nick + "\r\n");
+				writer.write("MODE " + channel + " +b " + nick + "\r\n");
 				writer.flush();
 			} catch (IOException e) {
 				IRC.debug(e);

@@ -37,7 +37,7 @@ public class HeroChatHook extends MonsterIRC {
 				.getPlugin("HeroChat");
 
 		if (HeroChatPlugin == null) {
-			IRC.log("HeroChat 4 not detected.");
+			IRC.log("HeroChat 4 not detected. (Assuming your using herochat 5 or another chat plugin!)");
 			HeroChatHook = null;
 			return;
 		}

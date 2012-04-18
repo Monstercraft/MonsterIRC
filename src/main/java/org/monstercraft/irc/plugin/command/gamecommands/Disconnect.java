@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class Disconnect extends GameCommand {
 
@@ -27,6 +28,7 @@ public class Disconnect extends GameCommand {
 				return true;
 			}
 		}
+		sender.sendMessage("Successfully disconnected!");
 		return MonsterIRC.getHandleManager().getIRCHandler()
 				.disconnect(MonsterIRC.getIRCServer());
 	}
@@ -34,6 +36,23 @@ public class Disconnect extends GameCommand {
 	@Override
 	public String getPermission() {
 		return "irc.disconnect";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Disconnect",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Disconnects the bot from IRC channel.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "/connect" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Diconnect";
 	}
 
 }

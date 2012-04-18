@@ -6,6 +6,7 @@ import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Say extends GameCommand {
@@ -76,6 +77,23 @@ public class Say extends GameCommand {
 	@Override
 	public String getPermission() {
 		return "irc.say";
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Say";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Say",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Sends a message to all default IRC channels.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "/irc say (message)" };
 	}
 
 }

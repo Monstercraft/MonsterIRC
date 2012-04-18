@@ -19,6 +19,13 @@ public abstract class GameCommand extends MonsterIRC {
 	public abstract String getPermission();
 
 	/**
+	 * The commands name.
+	 * 
+	 * @return The commands name.
+	 */
+	public abstract String getCommandName();
+
+	/**
 	 * Checks if the command can be executed by the certian user.
 	 * 
 	 * @param sender
@@ -41,4 +48,11 @@ public abstract class GameCommand extends MonsterIRC {
 	 */
 	public abstract boolean execute(final CommandSender sender,
 			final String[] split);
+
+	/**
+	 * The help string.
+	 * 
+	 * @return The Help string.
+	 */
+	public abstract String[] getHelp();
 }
