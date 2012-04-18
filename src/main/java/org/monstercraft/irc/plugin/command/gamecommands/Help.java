@@ -1,5 +1,8 @@
 package org.monstercraft.irc.plugin.command.gamecommands;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -40,7 +43,7 @@ public class Help extends GameCommand {
 		}
 	}
 
-	public void sendMenu(Player sender) {
+	public static void sendMenu(Player sender) {
 		sender.sendMessage(ColorUtils.DARK_BLUE.getMinecraftColor() + "----- ["
 				+ ColorUtils.WHITE.getMinecraftColor() + "MonsterIRC Help"
 				+ ColorUtils.DARK_BLUE.getMinecraftColor() + "]-----");
@@ -112,7 +115,7 @@ public class Help extends GameCommand {
 				+ ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
 	}
 
-	private void sendMenu(ConsoleCommandSender sender) {
+	public static void sendMenu(ConsoleCommandSender sender) {
 		sender.sendMessage("----- MonsterIRCs Commands ----");
 		sender.sendMessage("irc connect - Connects the Bot to the IRC server.");
 		sender.sendMessage("irc disconnect - Disconnects the Bot from the IRC server.");
@@ -127,4 +130,36 @@ public class Help extends GameCommand {
 		sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
 	}
 
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "Help",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "All help related commands",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "/help" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Help";
+	}
+
+	public boolean CommandHelp(Hashtable<Integer, GameCommand> gameCommands,
+			CommandSender sender, String[] split) {
+		for (Enumeration<Integer> e = gameCommands.keys(); e.hasMoreElements();) {
+			int key = e.nextElement();
+			GameCommand c = gameCommands.get(key);
+			if (split[2].equalsIgnoreCase(c.getCommandName())) {
+				for (String s : c.getHelp()) {
+					sender.sendMessage(s);
+				}
+				return true;
+			}
+		}
+		sender.sendMessage("Invalid command name!");
+		return true;
+	}
 }

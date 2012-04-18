@@ -66,7 +66,7 @@ public class StringUtils {
 	 *            The user's name to look up.
 	 * @return The users name.
 	 */
-	public static String getName(String name) {
+	public static String getDisplayName(String name) {
 		return name.trim();
 	}
 

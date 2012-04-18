@@ -77,4 +77,22 @@ public class PrivateMessage extends GameCommand {
 		return "irc.pm";
 	}
 
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command: "
+						+ ColorUtils.WHITE.getMinecraftColor() + "PM",
+				ColorUtils.RED.getMinecraftColor() + "Description: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Sends a user in IRC a private message.",
+				ColorUtils.RED.getMinecraftColor() + "Usage: "
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "/irc pm (user) (message)" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "pm";
+	}
+
 }

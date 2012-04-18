@@ -168,7 +168,7 @@ public class IRC {
 					String format = ColorUtils.CYAN.getMinecraftColor() + "{"
 							+ ColorUtils.WHITE.getMinecraftColor() + "[IRC] "
 							+ StringUtils.getPrefix(name)
-							+ StringUtils.getName(name)
+							+ StringUtils.getDisplayName(name)
 							+ StringUtils.getSuffix(name)
 							+ ColorUtils.CYAN.getMinecraftColor() + "} "
 							+ message;
@@ -184,7 +184,7 @@ public class IRC {
 							ColorUtils.formatIRCMessage(Variables.mcformat
 									.replace("&", "§")
 									.replace("{name}",
-											StringUtils.getName(name))
+											StringUtils.getDisplayName(name))
 									.replace(
 											"{message}",
 											"§"
@@ -214,7 +214,7 @@ public class IRC {
 								ColorUtils.formatIRCMessage(Variables.mcformat
 										.replace("&", "§")
 										.replace("{name}",
-												StringUtils.getName(name))
+												StringUtils.getDisplayName(name))
 										.replace("{message}", "")
 										.replace("{prefix}",
 												StringUtils.getPrefix(name))
@@ -239,7 +239,7 @@ public class IRC {
 								ColorUtils.formatIRCMessage(Variables.mcformat
 										.replace("&", "§")
 										.replace("{name}",
-												StringUtils.getName(name))
+												StringUtils.getDisplayName(name))
 										.replace(
 												"{message}",
 												ColorUtils.WHITE
@@ -266,7 +266,7 @@ public class IRC {
 							.replace("&", "§")
 							+ Variables.mcformat.replace("&", "§")
 									.replace("{name}",
-											StringUtils.getName(name))
+											StringUtils.getDisplayName(name))
 									.replace(
 											"{message}",
 											c.getTownyChannel()

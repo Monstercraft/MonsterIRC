@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
+import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class Connect extends GameCommand {
 
@@ -26,10 +27,12 @@ public class Connect extends GameCommand {
 				return true;
 			}
 		}
+		sender.sendMessage("Attempting to connect to IRC server!");
 		Thread t = new Thread(connect);
 		t.setPriority(Thread.MAX_PRIORITY);
 		t.setDaemon(false);
 		t.start();
+		sender.sendMessage("Successfully connected!");
 		return true;
 	}
 
@@ -44,6 +47,23 @@ public class Connect extends GameCommand {
 	@Override
 	public String getPermission() {
 		return "irc.connect";
+	}
+
+	@Override
+	public String[] getHelp() {
+		return new String[] {
+				ColorUtils.RED.getMinecraftColor() + "Command:"
+						+ ColorUtils.WHITE.getMinecraftColor() + "Connect",
+				ColorUtils.RED.getMinecraftColor() + "Description:"
+						+ ColorUtils.WHITE.getMinecraftColor()
+						+ "Connects the bot to the IRC channel.",
+				ColorUtils.RED.getMinecraftColor() + "Usage:"
+						+ ColorUtils.WHITE.getMinecraftColor() + "/connect" };
+	}
+
+	@Override
+	public String getCommandName() {
+		return "Connect";
 	}
 
 }
