@@ -68,6 +68,16 @@ public class IRC {
 	}
 
 	/**
+	 * Sends a raw message to the IRC server.
+	 * 
+	 * @param RawMessage
+	 *            The message to send.
+	 */
+	public static void sendRawMessage(final String RawMessage) {
+		MonsterIRC.getHandleManager().getIRCHandler().sendRaw(RawMessage);
+	}
+
+	/**
 	 * Sends a message to the MonsterIRC channel.
 	 * 
 	 * @param channel
@@ -213,8 +223,10 @@ public class IRC {
 						.sendMessage(
 								ColorUtils.formatIRCMessage(Variables.mcformat
 										.replace("&", "§")
-										.replace("{name}",
-												StringUtils.getDisplayName(name))
+										.replace(
+												"{name}",
+												StringUtils
+														.getDisplayName(name))
 										.replace("{message}", "")
 										.replace("{prefix}",
 												StringUtils.getPrefix(name))
@@ -238,8 +250,10 @@ public class IRC {
 						.broadcastMessage(
 								ColorUtils.formatIRCMessage(Variables.mcformat
 										.replace("&", "§")
-										.replace("{name}",
-												StringUtils.getDisplayName(name))
+										.replace(
+												"{name}",
+												StringUtils
+														.getDisplayName(name))
 										.replace(
 												"{message}",
 												ColorUtils.WHITE
@@ -264,7 +278,8 @@ public class IRC {
 					TownyMessaging.sendMessage(p, ColorUtils.formatIRCMessage(c
 							.getTownyChannel().getChannelTag()
 							.replace("&", "§")
-							+ Variables.mcformat.replace("&", "§")
+							+ Variables.mcformat
+									.replace("&", "§")
 									.replace("{name}",
 											StringUtils.getDisplayName(name))
 									.replace(

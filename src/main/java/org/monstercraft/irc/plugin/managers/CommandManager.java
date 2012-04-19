@@ -24,6 +24,7 @@ import org.monstercraft.irc.plugin.command.gamecommands.PrivateMessage;
 import org.monstercraft.irc.plugin.command.gamecommands.ReloadConfig;
 import org.monstercraft.irc.plugin.command.gamecommands.Reply;
 import org.monstercraft.irc.plugin.command.gamecommands.Say;
+import org.monstercraft.irc.plugin.command.gamecommands.SendRaw;
 import org.monstercraft.irc.plugin.command.gamecommands.Unmute;
 import org.monstercraft.irc.plugin.command.irccommand.Announce;
 import org.monstercraft.irc.plugin.command.irccommand.Commands;
@@ -50,7 +51,8 @@ public class CommandManager extends MonsterIRC {
 	 *            The parent plugin.
 	 */
 	public CommandManager(final MonsterIRC plugin) {
-		gameCommands.put(13, new Help());
+		gameCommands.put(14, new Help());
+		gameCommands.put(13, new SendRaw());
 		gameCommands.put(12, new Reply());
 		gameCommands.put(11, new PrivateMessage());
 		gameCommands.put(10, new Ban());

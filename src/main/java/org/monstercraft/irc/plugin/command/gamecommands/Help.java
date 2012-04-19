@@ -110,6 +110,17 @@ public class Help extends GameCommand {
 					+ ColorUtils.DARK_GRAY.getMinecraftColor()
 					+ " (user) (message)");
 		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new PrivateMessage())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor() + "/irc r"
+					+ ColorUtils.DARK_GRAY.getMinecraftColor() + " (message)");
+		}
+		if (MonsterIRC.getHandleManager().getPermissionsHandler()
+				.hasCommandPerms((Player) sender, new PrivateMessage())) {
+			sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+					+ "/irc raw" + ColorUtils.DARK_GRAY.getMinecraftColor()
+					+ " (message)");
+		}
 		sender.sendMessage(ColorUtils.YELLOW.getMinecraftColor()
 				+ "For more info on a certian command type"
 				+ ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
@@ -128,6 +139,7 @@ public class Help extends GameCommand {
 		sender.sendMessage("irc say (message) - An alternate way to talk to people in IRC.");
 		sender.sendMessage("irc reload - Reloads the configuration file.");
 		sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
+		sender.sendMessage("irc r (message) - Reply to the last pm.");
 	}
 
 	@Override
