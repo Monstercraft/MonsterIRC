@@ -5,8 +5,8 @@ import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.IRCCommand;
-import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.util.ColorUtils;
+import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Announce extends IRCCommand {
 
