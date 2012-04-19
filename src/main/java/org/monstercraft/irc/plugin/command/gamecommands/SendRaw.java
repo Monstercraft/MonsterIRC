@@ -4,17 +4,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
-import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.ColorUtils;
-import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-public class Say extends GameCommand {
+public class SendRaw extends GameCommand {
 
 	@Override
 	public boolean canExecute(CommandSender sender, String[] split) {
 		return split[0].equalsIgnoreCase("irc")
-				&& split[1].equalsIgnoreCase("say");
+				&& split[1].equalsIgnoreCase("raw");
 	}
 
 	@Override
@@ -33,68 +31,43 @@ public class Say extends GameCommand {
 		}
 		if (split.length <= 2) {
 			sender.sendMessage("Invalid usage!");
-			sender.sendMessage("Proper usage: irc say -c:[irc channel] [message]");
-			sender.sendMessage("or");
-			sender.sendMessage("Proper usage: irc say [message]");
+			sender.sendMessage("Type /help raw for more help!");
 			return true;
 		}
-		String channel = null;
-		int j = 2;
-		if (split[2].startsWith("-c:")) {
-			String s = split[2].toString();
-			channel = s.substring(3);
-			j = 3;
-		}
 		StringBuffer result = new StringBuffer();
-		StringBuffer result2 = new StringBuffer();
-		result.append("<" + sender.getName() + "> ");
-		for (int i = j; i < split.length; i++) {
+		for (int i = 2; i < split.length; i++) {
 			result.append(split[i]);
 			result.append(" ");
-			result2.append(split[i]);
-			result2.append(" ");
 		}
 
-		for (IRCChannel c : Variables.channels) {
-			if (channel != null) {
-				if (c.getChannel().equalsIgnoreCase(channel)) {
-					MonsterIRC.getHandleManager().getIRCHandler()
-							.sendMessage(c.getChannel(), result.toString());
-					IRC.sendGameMessage(c, sender.getName(), result2.toString());
-					break;
-				}
-			} else {
-				if (c.isDefaultChannel()) {
-					MonsterIRC.getHandleManager().getIRCHandler()
-							.sendMessage(c.getChannel(), result.toString());
-					IRC.sendGameMessage(c, sender.getName(), result2.toString());
-				}
-			}
-		}
+		IRC.sendRawMessage(result.toString());
+		IRC.log(result.toString());
+		sender.sendMessage(ColorUtils.BLUE.getMinecraftColor()
+				+ "Raw message sent!");
 		return true;
 	}
 
 	@Override
 	public String getPermission() {
-		return "irc.say";
+		return "irc.raw";
 	}
 
 	@Override
 	public String getCommandName() {
-		return "Say";
+		return "Raw";
 	}
 
 	@Override
 	public String[] getHelp() {
 		return new String[] {
 				ColorUtils.RED.getMinecraftColor() + "Command: "
-						+ ColorUtils.WHITE.getMinecraftColor() + "Say",
+						+ ColorUtils.WHITE.getMinecraftColor() + "Send Raw",
 				ColorUtils.RED.getMinecraftColor() + "Description: "
 						+ ColorUtils.WHITE.getMinecraftColor()
-						+ "Sends a message to all default IRC channels.",
+						+ "Sends a raw message to the IRC server",
 				ColorUtils.RED.getMinecraftColor() + "Usage: "
 						+ ColorUtils.WHITE.getMinecraftColor()
-						+ "/irc say (message)" };
+						+ "/irc raw (message)" };
 	}
 
 }

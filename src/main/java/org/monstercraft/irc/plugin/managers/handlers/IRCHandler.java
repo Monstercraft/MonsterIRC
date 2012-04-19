@@ -765,6 +765,24 @@ public class IRCHandler extends MonsterIRC {
 	 * @param channel
 	 *            The channel to send the message to.
 	 */
+	public void sendRaw(final String RawMessage) {
+		final String parts[] = RawMessage.toString().split(
+				"(?<=\\G.{" + 500 + "})");
+		for (int i = 0; i < parts.length; i++) {
+			String msg = parts[i];
+			MessageQueue.put(counter, msg);
+			counter--;
+		}
+	}
+
+	/**
+	 * Sends a message to the specified channel.
+	 * 
+	 * @param Message
+	 *            The message to send.
+	 * @param channel
+	 *            The channel to send the message to.
+	 */
 	public void sendNotice(final String to, final String message) {
 		final String prefix = "NOTICE " + to + " :";
 		final int length = 500 - prefix.length();
