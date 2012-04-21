@@ -128,6 +128,11 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	private void handleMessage(final Player player, final IRCChannel c,
 			final String message) {
+		if (MonsterIRCListener.getHandleManager().getPermissionsHandler()
+				.hasNode(player, "irc.nochat")
+				&& !player.isOp()) {
+			return;
+		}
 		if (!c.passToIRC()) {
 			return;
 		}

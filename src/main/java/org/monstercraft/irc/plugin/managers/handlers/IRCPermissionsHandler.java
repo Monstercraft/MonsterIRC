@@ -90,4 +90,8 @@ public class IRCPermissionsHandler extends MonsterIRC {
 		}
 		return new String[0];
 	}
+
+	public boolean hasNode(Player player, String node) {
+		return perms.has(player, node);
+	}
 }
