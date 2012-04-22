@@ -251,14 +251,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 								StringUtils.getGroupSuffix(player
 										.getDisplayName()))
 						.replace(
-								"{message}",
+								"{HCchannelColor}",
 								"§"
 										+ Herochat.getChatterManager()
 												.getChatter(player)
 												.getActiveChannel().getColor()
-												.getChar()
-										+ message.replace("�", "§").replace(
-												"&", "§"))
+												.getChar())
+						.replace("{message}",
+								message.replace("�", "§").replace("&", "§"))
 						.replace("{world}",
 								StringUtils.getWorld(player.getDisplayName()))
 						.replace("&", "§"));
