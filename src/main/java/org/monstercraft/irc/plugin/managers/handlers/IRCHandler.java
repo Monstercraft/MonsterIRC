@@ -215,6 +215,7 @@ public class IRCHandler extends MonsterIRC {
 					connection.close();
 					connection = null;
 				}
+				MessageQueue.clear();
 				IRC.log("Successfully disconnected from IRC.");
 			} catch (Exception e) {
 				IRC.debug(e);

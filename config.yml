@@ -19,7 +19,7 @@ IRC:
     INGAME_COMMANDS_PREFIX: '.'
     PASS_SAY_COMMAND: false
   FORMAT:
-    MINECRAFT: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
+    MINECRAFT: '<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {HCchannelColor}{message}'
     IRC: '{heroChatTag}: <{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}'
   ON_CONNECT_COMMANDS: []
   MUTED:
