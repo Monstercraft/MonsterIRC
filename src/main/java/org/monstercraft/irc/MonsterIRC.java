@@ -50,7 +50,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 		em = new EventManager();
 		em.start();
 		hooks = new HookManager(this);
-		command = new CommandManager(this);
+		command = new CommandManager();
 		listener = new MonsterIRCListener(this);
 		IRCserver = new IRCServer(Variables.server, Variables.serverPass,
 				Variables.port, Variables.name, Variables.password,

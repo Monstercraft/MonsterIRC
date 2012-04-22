@@ -1,7 +1,6 @@
 package org.monstercraft.irc.plugin.command.gamecommands;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.LinkedList;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -140,6 +139,8 @@ public class Help extends GameCommand {
 		sender.sendMessage("irc reload - Reloads the configuration file.");
 		sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
 		sender.sendMessage("irc r (message) - Reply to the last pm.");
+		sender.sendMessage("For more info on a certian command type"
+				+ ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
 	}
 
 	@Override
@@ -159,11 +160,9 @@ public class Help extends GameCommand {
 		return "Help";
 	}
 
-	public boolean CommandHelp(Hashtable<Integer, GameCommand> gameCommands,
+	public boolean CommandHelp(LinkedList<GameCommand> gameCommands,
 			CommandSender sender, String[] split) {
-		for (Enumeration<Integer> e = gameCommands.keys(); e.hasMoreElements();) {
-			int key = e.nextElement();
-			GameCommand c = gameCommands.get(key);
+		for (GameCommand c : gameCommands) {
 			if (split[2].equalsIgnoreCase(c.getCommandName())) {
 				for (String s : c.getHelp()) {
 					sender.sendMessage(s);
