@@ -196,12 +196,12 @@ public class IRC {
 									.replace("{name}",
 											StringUtils.getDisplayName(name))
 									.replace(
-											"{message}",
+											"{HCchannelColor}",
 											"§"
 													+ c.getHeroChatChannel()
 															.getColor()
-															.getChar()
-													+ message)
+															.getChar())
+									.replace("{message}", message)
 									.replace("{prefix}",
 											StringUtils.getPrefix(name))
 									.replace("{suffix}",
