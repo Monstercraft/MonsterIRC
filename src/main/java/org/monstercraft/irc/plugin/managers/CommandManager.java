@@ -1,7 +1,6 @@
 package org.monstercraft.irc.plugin.managers;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.LinkedList;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,9 +39,9 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
  */
 public class CommandManager extends MonsterIRC {
 
-	private Hashtable<Integer, GameCommand> gameCommands = new Hashtable<Integer, GameCommand>();
+	private LinkedList<GameCommand> gameCommands = new LinkedList<GameCommand>();
 
-	private Hashtable<Integer, IRCCommand> IRCCommands = new Hashtable<Integer, IRCCommand>();
+	private LinkedList<IRCCommand> IRCCommands = new LinkedList<IRCCommand>();
 
 	/**
 	 * Creates an instance
@@ -50,26 +49,26 @@ public class CommandManager extends MonsterIRC {
 	 * @param plugin
 	 *            The parent plugin.
 	 */
-	public CommandManager(final MonsterIRC plugin) {
-		gameCommands.put(14, new Help());
-		gameCommands.put(13, new SendRaw());
-		gameCommands.put(12, new Reply());
-		gameCommands.put(11, new PrivateMessage());
-		gameCommands.put(10, new Ban());
-		gameCommands.put(9, new Mute());
-		gameCommands.put(8, new Unmute());
-		gameCommands.put(7, new Connect());
-		gameCommands.put(6, new Disconnect());
-		gameCommands.put(5, new Join());
-		gameCommands.put(4, new Leave());
-		gameCommands.put(3, new Nick());
-		gameCommands.put(2, new Say());
-		gameCommands.put(1, new ReloadConfig());
-		IRCCommands.put(4, new Announce());
-		IRCCommands.put(3, new Commands());
-		IRCCommands.put(2, new List());
+	public CommandManager() {
+		gameCommands.add(new Help());
+		gameCommands.add(new SendRaw());
+		gameCommands.add(new Reply());
+		gameCommands.add(new PrivateMessage());
+		gameCommands.add(new Ban());
+		gameCommands.add(new Mute());
+		gameCommands.add(new Unmute());
+		gameCommands.add(new Connect());
+		gameCommands.add(new Disconnect());
+		gameCommands.add(new Join());
+		gameCommands.add(new Leave());
+		gameCommands.add(new Nick());
+		gameCommands.add(new Say());
+		gameCommands.add(new ReloadConfig());
+		IRCCommands.add(new List());
+		IRCCommands.add(new Announce());
+		IRCCommands.add(new Commands());
 		if (Variables.ingamecommands) {
-			IRCCommands.put(1, new Other());
+			IRCCommands.add(new Other());
 		}
 	}
 
@@ -94,10 +93,7 @@ public class CommandManager extends MonsterIRC {
 			for (int a = 0; a < args.length; a++) {
 				split[a + 1] = args[a];
 			}
-			for (Enumeration<Integer> e = gameCommands.keys(); e
-					.hasMoreElements();) {
-				int key = e.nextElement();
-				GameCommand c = gameCommands.get(key);
+			for (GameCommand c : gameCommands) {
 				if (c.canExecute(sender, split)) {
 					try {
 						if (split.length > 2) {
@@ -141,9 +137,7 @@ public class CommandManager extends MonsterIRC {
 	 */
 	public boolean onIRCCommand(final String sender, final String arg,
 			final IRCChannel channel) {
-		for (Enumeration<Integer> e = IRCCommands.keys(); e.hasMoreElements();) {
-			int key = e.nextElement();
-			IRCCommand c = IRCCommands.get(key);
+		for (IRCCommand c : IRCCommands) {
 			if (c.canExecute(sender, arg, channel)) {
 				try {
 					c.execute(sender, arg, channel);
