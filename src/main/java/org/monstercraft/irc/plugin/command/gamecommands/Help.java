@@ -1,5 +1,6 @@
 package org.monstercraft.irc.plugin.command.gamecommands;
 
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.command.CommandSender;
@@ -160,7 +161,7 @@ public class Help extends GameCommand {
 		return "Help";
 	}
 
-	public boolean CommandHelp(Set<GameCommand> gameCommands,
+	public boolean CommandHelp(List<GameCommand> gameCommands,
 			CommandSender sender, String[] split) {
 		for (GameCommand c : gameCommands) {
 			if (split[2].equalsIgnoreCase(c.getCommandName())) {

@@ -1,6 +1,7 @@
 package org.monstercraft.irc.plugin.managers;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,9 +40,9 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
  */
 public class CommandManager extends MonsterIRC {
 
-	private LinkedHashSet<GameCommand> gameCommands = new LinkedHashSet<GameCommand>();
+	private LinkedList<GameCommand> gameCommands = new LinkedList<GameCommand>();
 
-	private LinkedHashSet<IRCCommand> IRCCommands = new LinkedHashSet<IRCCommand>();
+	private LinkedList<IRCCommand> IRCCommands = new LinkedList<IRCCommand>();
 
 	/**
 	 * Creates an instance
