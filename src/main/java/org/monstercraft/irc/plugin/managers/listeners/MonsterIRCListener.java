@@ -219,60 +219,74 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
-			if ((Herochat.getChatterManager().getChatter(player)
-					.getActiveChannel() == c.getHeroChatChannel() || c
-					.isHeroChatListenChannel(Herochat.getChatterManager()
-							.getChatter(player).getActiveChannel().getName()))
-					&& !Herochat.getChatterManager()
-							.getChatter(player.getDisplayName()).isMuted()) {
-				result.append(Variables.ircformat
-						.replace(
-								"{heroChatTag}",
-								"§"
-										+ Herochat.getChatterManager()
-												.getChatter(player)
-												.getActiveChannel().getColor()
-												.getChar()
-										+ "["
-										+ Herochat.getChatterManager()
-												.getChatter(player)
-												.getActiveChannel().getNick()
-										+ "]" + ColorUtils.NORMAL.getIRCColor()
-										+ "")
-						.replace("{prefix}",
-								StringUtils.getPrefix(player.getDisplayName()))
-						.replace(
-								"{name}",
-								StringUtils.getDisplayName(player
-										.getDisplayName()))
-						.replace("{suffix}",
-								StringUtils.getSuffix(player.getDisplayName()))
+			if (c.getHeroChatChannel() != null) {
+				if ((Herochat.getChatterManager().getChatter(player)
+						.getActiveChannel() == c.getHeroChatChannel() || c
+						.isHeroChatListenChannel(Herochat.getChatterManager()
+								.getChatter(player).getActiveChannel()
+								.getName()))
+						&& !Herochat.getChatterManager()
+								.getChatter(player.getDisplayName()).isMuted()) {
+					result.append(Variables.ircformat
+							.replace(
+									"{heroChatTag}",
+									"§"
+											+ Herochat.getChatterManager()
+													.getChatter(player)
+													.getActiveChannel()
+													.getColor().getChar()
+											+ "["
+											+ Herochat.getChatterManager()
+													.getChatter(player)
+													.getActiveChannel()
+													.getNick() + "]"
+											+ ColorUtils.NORMAL.getIRCColor()
+											+ "")
+							.replace(
+									"{prefix}",
+									StringUtils.getPrefix(player
+											.getDisplayName()))
+							.replace(
+									"{name}",
+									StringUtils.getDisplayName(player
+											.getDisplayName()))
+							.replace(
+									"{suffix}",
+									StringUtils.getSuffix(player
+											.getDisplayName()))
 
-						.replace(
-								"{groupPrefix}",
-								StringUtils.getGroupPrefix(player
-										.getDisplayName()))
-						.replace(
-								"{groupSuffix}",
-								StringUtils.getGroupSuffix(player
-										.getDisplayName()))
-						.replace(
-								"{HCchannelColor}",
-								"§"
-										+ Herochat.getChatterManager()
-												.getChatter(player)
-												.getActiveChannel().getColor()
-												.getChar())
-						.replace("{message}",
-								message.replace("�", "§").replace("&", "§"))
-						.replace("{world}",
-								StringUtils.getWorld(player.getDisplayName()))
-						.replace("&", "§"));
-				IRC.sendMessage(
-						c.getChannel(),
-						ColorUtils.formatGameMessage(result.toString().replace(
-								ColorUtils.WHITE.getMinecraftColor(),
-								ColorUtils.NORMAL.getIRCColor())));
+							.replace(
+									"{groupPrefix}",
+									StringUtils.getGroupPrefix(player
+											.getDisplayName()))
+							.replace(
+									"{groupSuffix}",
+									StringUtils.getGroupSuffix(player
+											.getDisplayName()))
+							.replace(
+									"{HCchannelColor}",
+									"§"
+											+ Herochat.getChatterManager()
+													.getChatter(player)
+													.getActiveChannel()
+													.getColor().getChar())
+							.replace(
+									"{message}",
+									message.replace("�", "§").replace("&",
+											"§"))
+							.replace(
+									"{world}",
+									StringUtils.getWorld(player
+											.getDisplayName()))
+							.replace("&", "§"));
+					IRC.sendMessage(c.getChannel(), ColorUtils
+							.formatGameMessage(result.toString().replace(
+									ColorUtils.WHITE.getMinecraftColor(),
+									ColorUtils.NORMAL.getIRCColor())));
+				}
+			} else {
+				IRC.log("Invalid herochat channel detected for "
+						+ c.getChannel());
 			}
 		} else if (c.getChatType() == ChatType.GLOBAL) {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
