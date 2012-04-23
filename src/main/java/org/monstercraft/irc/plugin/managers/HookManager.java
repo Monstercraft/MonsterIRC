@@ -4,14 +4,12 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
 import org.monstercraft.irc.MonsterIRC;
-import org.monstercraft.irc.plugin.managers.hooks.HeroChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.TownyChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.VaultChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.VaultPermissionsHook;
 import org.monstercraft.irc.plugin.managers.hooks.mcMMOHook;
 
 import com.gmail.nossr50.mcMMO;
-import com.herocraftonline.dthielke.herochat.HeroChat;
 
 /**
  * This class manages all of the hooks used within the plugin.
@@ -24,7 +22,6 @@ public class HookManager {
 	private mcMMOHook mcmmo = null;
 	private VaultPermissionsHook permissions = null;
 	private VaultChatHook chat = null;
-	private HeroChatHook herochat = null;
 	private TownyChatHook townychat = null;
 	private final MonsterIRC plugin;
 
@@ -39,17 +36,7 @@ public class HookManager {
 		mcmmo = new mcMMOHook(plugin);
 		permissions = new VaultPermissionsHook(plugin);
 		chat = new VaultChatHook(plugin);
-		herochat = new HeroChatHook(plugin);
 		townychat = new TownyChatHook(plugin);
-	}
-
-	/**
-	 * Fetches the HeroChat hook.
-	 * 
-	 * @return The hook into HeroChat.
-	 */
-	public HeroChat getHeroChatHook() {
-		return herochat.getHook();
 	}
 
 	/**
@@ -59,17 +46,6 @@ public class HookManager {
 	 */
 	public mcMMO getmcMMOHook() {
 		return mcmmo.getHook();
-	}
-
-	/**
-	 * Creates a new hook into the plugin.
-	 * 
-	 * @param hook
-	 *            A hook into HeroChat.
-	 * @return The new HeroChatHook.
-	 */
-	public HeroChatHook setHeroChatHook() {
-		return herochat = new HeroChatHook(plugin);
 	}
 
 	/**
