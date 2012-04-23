@@ -1,6 +1,6 @@
-#Monstercraft
+#MonsterIRC
 
-Monstercraft is an immensely popular and successful minecraft server. The plugins source code is completely open and free - whether you're a Java expert or just keen to explore, these can be valuable learning resources. 
+MonsterIRC is an immensely popular and successful IRC plugin for bukkit. The plugin's source code is completely open and free - whether you're a Java expert or just keen to explore, these can be valuable learning resources. 
 
 ###Get the code
 
