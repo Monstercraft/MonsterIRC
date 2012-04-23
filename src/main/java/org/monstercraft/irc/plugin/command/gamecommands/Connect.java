@@ -27,12 +27,16 @@ public class Connect extends GameCommand {
 				return true;
 			}
 		}
-		sender.sendMessage("Attempting to connect to IRC server!");
+		if (sender instanceof Player) {
+			sender.sendMessage("Attempting to connect to IRC server!");
+		}
 		Thread t = new Thread(connect);
 		t.setPriority(Thread.MAX_PRIORITY);
 		t.setDaemon(false);
 		t.start();
-		sender.sendMessage("Successfully connected!");
+		if (sender instanceof Player) {
+			sender.sendMessage("Successfully connected!");
+		}
 		return true;
 	}
 
