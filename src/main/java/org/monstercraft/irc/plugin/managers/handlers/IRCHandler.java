@@ -12,7 +12,7 @@ import java.net.SocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 import org.bukkit.Bukkit;
@@ -59,7 +59,7 @@ public class IRCHandler extends MonsterIRC {
 	private Thread watch = null;
 	private Thread print = null;
 	private final MonsterIRC plugin;
-	private LinkedHashMap<Long, String> messageQueue = new LinkedHashMap<Long, String>();
+	private LinkedList<String> messageQueue = new LinkedList<String>();
 
 	/**
 	 * Creates an instance of the IRCHandler class.
@@ -248,10 +248,10 @@ public class IRCHandler extends MonsterIRC {
 		if (channel.getPassword() != null && channel.getPassword() != "") {
 			String pass = "JOIN " + channel.getChannel() + " "
 					+ channel.getPassword();
-			messageQueue.put(System.nanoTime(), pass);
+			messageQueue.add(pass);
 		} else {
 			String nopass = "JOIN " + channel.getChannel();
-			messageQueue.put(System.nanoTime(), nopass);
+			messageQueue.add(nopass);
 		}
 		IRCJoinEvent jevent = new IRCJoinEvent(channel, MonsterIRC
 				.getIRCServer().getNick());
@@ -706,11 +706,10 @@ public class IRCHandler extends MonsterIRC {
 				try {
 					int i = 0;
 					if (isConnected(MonsterIRC.getIRCServer())) {
-						for (Long time : messageQueue.keySet()) {
-							String message = messageQueue.get(time);
+						while (!messageQueue.isEmpty()) {
+							String message = messageQueue.remove();
 							writer.write(message + "\r\n");
 							writer.flush();
-							messageQueue.remove(time);
 							i++;
 							if (i >= Variables.limit) {
 								break;
@@ -746,7 +745,7 @@ public class IRCHandler extends MonsterIRC {
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {
 			String msg = prefix + parts[i];
-			messageQueue.put(System.nanoTime(), msg);
+			messageQueue.add(msg);
 		}
 	}
 
@@ -763,7 +762,7 @@ public class IRCHandler extends MonsterIRC {
 				"(?<=\\G.{" + 500 + "})");
 		for (int i = 0; i < parts.length; i++) {
 			String msg = parts[i];
-			messageQueue.put(System.nanoTime(), msg);
+			messageQueue.add(msg);
 		}
 	}
 
@@ -782,7 +781,7 @@ public class IRCHandler extends MonsterIRC {
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {
 			String msg = prefix + parts[i];
-			messageQueue.put(System.nanoTime(), msg);
+			messageQueue.add(msg);
 		}
 	}
 
