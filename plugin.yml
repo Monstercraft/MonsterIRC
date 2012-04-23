@@ -4,7 +4,7 @@ version: 1.601
 author: Fletch_to_99
 description: Using your servers IRC channel we allow communication between IRC and Ingame.
 depend: [Vault]
-softdepend: [mcMMO, HeroChat, TownyChat, Towny, Herochat]
+softdepend: [mcMMO, TownyChat, Towny, Herochat]
 commands:
   irc:
     description: IRC Commands, refer to bukkit dev page for help.
