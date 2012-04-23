@@ -206,11 +206,6 @@ public class Configuration {
 		public static boolean debug = true;
 
 		/**
-		 * Hero chat 4 compatiblilty.
-		 */
-		public static boolean hc4 = false;
-
-		/**
 		 * The option to execute ingame commands as and IRC OP.
 		 */
 		public static boolean ingamecommands = false;

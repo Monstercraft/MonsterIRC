@@ -188,7 +188,7 @@ public class IRC {
 							p.sendMessage(ColorUtils.formatIRCMessage(format));
 					}
 				}
-			} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
+			} else if (c.getChatType() == ChatType.HEROCHAT) {
 				if (c.getHeroChatChannel() != null) {
 					c.getHeroChatChannel().announce(
 							ColorUtils.formatIRCMessage(Variables.mcformat
@@ -216,35 +216,6 @@ public class IRC {
 					log("Invalid herochat channel detected for "
 							+ c.getChannel());
 				}
-			} else if (c.getChatType() == ChatType.HEROCHAT
-					&& MonsterIRC.getHookManager().getHeroChatHook() != null
-					&& Variables.hc4) {
-				c.getHeroChatFourChannel()
-						.sendMessage(
-								ColorUtils.formatIRCMessage(Variables.mcformat
-										.replace("&", "§")
-										.replace(
-												"{name}",
-												StringUtils
-														.getDisplayName(name))
-										.replace("{message}", "")
-										.replace("{prefix}",
-												StringUtils.getPrefix(name))
-										.replace("{suffix}",
-												StringUtils.getSuffix(name))
-										.replace(
-												"{groupPrefix}",
-												StringUtils
-														.getGroupPrefix(name))
-										.replace(
-												"{groupSuffix}",
-												StringUtils
-														.getGroupSuffix(name))
-										.replace("{world}",
-												StringUtils.getWorld(name))),
-								ColorUtils.formatIRCMessage(message),
-								c.getHeroChatFourChannel().getMsgFormat(),
-								false);
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				getPlugin().getServer()
 						.broadcastMessage(
