@@ -128,10 +128,15 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	private void handleMessage(final Player player, final IRCChannel c,
 			final String message) {
-		if (MonsterIRCListener.getHandleManager().getPermissionsHandler()
-				.hasNode(player, "irc.nochat")
-				&& !player.isOp()) {
-			return;
+		if (player != null) {
+			if (MonsterIRCListener.getHandleManager().getPermissionsHandler()
+					.hasNode(player, "irc.nochat")
+					&& !player.isOp()
+					&& !MonsterIRCListener.getHandleManager()
+							.getPermissionsHandler().hasNode(player, "*")) {
+				player.sendMessage("You are blocked from sending messages to irc!");
+				return;
+			}
 		}
 		if (!c.passToIRC()) {
 			return;
@@ -139,6 +144,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		if (player == null) {
 			StringBuffer result2 = new StringBuffer();
 			result2.append(Variables.ircformat
+					.replace("{HCchannelColor}", "&f")
+					.replace("{heroChatTag}", "[Console]")
 					.replace("{prefix}", StringUtils.getPrefix("Console"))
 					.replace("{name}", StringUtils.getDisplayName("Console"))
 					.replace("{suffix}", StringUtils.getSuffix("Console"))
@@ -167,6 +174,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
 					result.append(Variables.ircformat
+							.replace("{HCchannelColor}", "&f")
 							.replace("{heroChatTag}", "")
 							.replace(
 									"{prefix}",
@@ -381,6 +389,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				}
 			}
 			result.append(Variables.ircformat
+					.replace("{HCchannelColor}", "&f")
 					.replace("{heroChatTag}", "")
 					.replace("{prefix}",
 							StringUtils.getPrefix(player.getDisplayName()))
@@ -415,6 +424,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				}
 			}
 			result.append(Variables.ircformat
+					.replace("{HCchannelColor}", "&f")
 					.replace("{heroChatTag}", "")
 					.replace("{prefix}",
 							StringUtils.getPrefix(player.getDisplayName()))
