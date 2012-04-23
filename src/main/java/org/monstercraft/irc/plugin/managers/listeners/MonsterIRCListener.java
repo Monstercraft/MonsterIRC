@@ -49,8 +49,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				MonsterIRC.getHookManager().setChatHook();
 			} else if (PluginName.equals("mcMMO")) {
 				MonsterIRC.getHookManager().setmcMMOHook();
-			} else if (PluginName.equals("HeroChat")) {
-				MonsterIRC.getHookManager().setHeroChatHook();
 			} else if (PluginName.equals("TownyChat")) {
 				MonsterIRC.getHookManager().setTownyChatHook();
 			}
@@ -214,7 +212,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									ColorUtils.NORMAL.getIRCColor())));
 				}
 			}
-		} else if (c.getChatType() == ChatType.HEROCHAT && !Variables.hc4) {
+		} else if (c.getChatType() == ChatType.HEROCHAT) {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
 				if (MonsterIRC.getHookManager().getmcMMOHook()
 						.getPlayerProfile(player).getAdminChatMode()) {
@@ -275,111 +273,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 						ColorUtils.formatGameMessage(result.toString().replace(
 								ColorUtils.WHITE.getMinecraftColor(),
 								ColorUtils.NORMAL.getIRCColor())));
-			}
-		} else if (c.getChatType() == ChatType.HEROCHAT
-				&& MonsterIRC.getHookManager().getHeroChatHook() != null
-				&& Variables.hc4) {
-			if (MonsterIRC.getHookManager().getHeroChatHook().isEnabled()) {
-				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
-					if (MonsterIRC.getHookManager().getmcMMOHook()
-							.getPlayerProfile(player).getAdminChatMode()) {
-						return;
-					}
-				}
-				if ((MonsterIRC.getHookManager().getHeroChatHook()
-						.getChannelManager()
-						.getActiveChannel(player.getDisplayName())
-						.equals(c.getHeroChatFourChannel()) || c
-						.isHeroChatListenChannel(MonsterIRC.getHookManager()
-								.getHeroChatHook().getChannelManager()
-								.getActiveChannel(player.getDisplayName())
-								.getName()))
-						&& c.getHeroChatFourChannel().isEnabled()
-						&& !MonsterIRC.getHookManager().getHeroChatHook()
-								.getChannelManager().getMutelist()
-								.contains(player.getDisplayName())
-						&& !c.getHeroChatFourChannel().getMutelist()
-								.contains(player.getDisplayName())) {
-					if (getHandleManager().getPermissionsHandler()
-							.anyGroupsInList(
-									player,
-									MonsterIRC
-											.getHookManager()
-											.getHeroChatHook()
-											.getChannelManager()
-											.getActiveChannel(
-													player.getDisplayName())
-											.getVoicelist())
-							|| MonsterIRC.getHookManager().getHeroChatHook()
-									.getChannelManager()
-									.getActiveChannel(player.getDisplayName())
-									.getVoicelist().isEmpty()) {
-						result.append(Variables.ircformat
-								.replace(
-										"{heroChatTag}",
-										"ย"
-												+ MonsterIRC
-														.getHookManager()
-														.getHeroChatHook()
-														.getChannelManager()
-														.getActiveChannel(
-																player.getDisplayName())
-														.getColor().str
-												+ "["
-												+ MonsterIRC
-														.getHookManager()
-														.getHeroChatHook()
-														.getChannelManager()
-														.getActiveChannel(
-																player.getDisplayName())
-														.getNick()
-												+ "]"
-												+ ColorUtils.NORMAL
-														.getIRCColor() + "")
-								.replace(
-										"{prefix}",
-										StringUtils.getPrefix(player
-												.getDisplayName()))
-								.replace(
-										"{name}",
-										StringUtils.getDisplayName(player
-												.getDisplayName()))
-								.replace(
-										"{suffix}",
-										StringUtils.getSuffix(player
-												.getDisplayName()))
-
-								.replace(
-										"{groupPrefix}",
-										StringUtils.getGroupPrefix(player
-												.getDisplayName()))
-								.replace(
-										"{groupSuffix}",
-										StringUtils.getGroupSuffix(player
-												.getDisplayName()))
-								.replace(
-										"{message}",
-										"ย"
-												+ MonsterIRC
-														.getHookManager()
-														.getHeroChatHook()
-														.getChannelManager()
-														.getActiveChannel(
-																player.getDisplayName())
-														.getColor().str
-												+ message.replace("ง", "ยง")
-														.replace("&", "ยง"))
-								.replace(
-										"{world}",
-										StringUtils.getWorld(player
-												.getDisplayName()))
-								.replace("&", "ยง"));
-						IRC.sendMessage(c, ColorUtils.formatGameMessage(result
-								.toString().replace(
-										ColorUtils.WHITE.getMinecraftColor(),
-										ColorUtils.NORMAL.getIRCColor())));
-					}
-				}
 			}
 		} else if (c.getChatType() == ChatType.GLOBAL) {
 			if (MonsterIRC.getHookManager().getmcMMOHook() != null) {

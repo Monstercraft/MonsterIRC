@@ -212,16 +212,6 @@ public class IRCChannel {
 	}
 
 	/**
-	 * Fetches the HeroChat channel to listen in.
-	 * 
-	 * @return The HeroChat channel to listen in.
-	 */
-	public com.herocraftonline.dthielke.herochat.channels.Channel getHeroChatFourChannel() {
-		return MonsterIRC.getHookManager().getHeroChatHook()
-				.getChannelManager().getChannel(ChatChannel);
-	}
-
-	/**
 	 * Fetches the TownyChat channel to listen in.
 	 * 
 	 * @return The TownyChat channel to listen in.
