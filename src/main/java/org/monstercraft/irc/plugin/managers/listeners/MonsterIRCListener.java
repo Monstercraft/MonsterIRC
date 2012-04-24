@@ -83,8 +83,12 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				IRC.sendMessage(c.getChannel(), event.getPlayer()
-						.getDisplayName() + " has joined.");
+				IRC.sendMessage(
+						c.getChannel(),
+						ColorUtils.formatGameMessage(event.getPlayer()
+								.getDisplayName().replace("�", "§")
+								.replace("&", "§")
+								+ " has joined."));
 			}
 		}
 	}
@@ -93,8 +97,12 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				IRC.sendMessage(c.getChannel(), event.getPlayer()
-						.getDisplayName() + " has quit.");
+				IRC.sendMessage(
+						c.getChannel(),
+						ColorUtils.formatGameMessage(event.getPlayer()
+								.getDisplayName().replace("�", "§")
+								.replace("&", "§")
+								+ " has quit."));
 			}
 		}
 	}
@@ -106,8 +114,12 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				IRC.sendMessage(c.getChannel(), event.getPlayer()
-						.getDisplayName() + " has been kicked.");
+				IRC.sendMessage(
+						c.getChannel(),
+						ColorUtils.formatGameMessage(event.getPlayer()
+								.getDisplayName().replace("�", "§")
+								.replace("&", "§")
+								+ " has been kicked."));
 			}
 		}
 	}
@@ -223,10 +235,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				if ((Herochat.getChatterManager().getChatter(player)
 						.getActiveChannel() == c.getHeroChatChannel() || c
 						.isHeroChatListenChannel(Herochat.getChatterManager()
-								.getChatter(player).getActiveChannel()
-								.getName()))
+								.getChatter(player.getName())
+								.getActiveChannel().getName()))
 						&& !Herochat.getChatterManager()
-								.getChatter(player.getDisplayName()).isMuted()) {
+								.getChatter(player.getName()).isMuted()) {
 					result.append(Variables.ircformat
 							.replace(
 									"{heroChatTag}",
