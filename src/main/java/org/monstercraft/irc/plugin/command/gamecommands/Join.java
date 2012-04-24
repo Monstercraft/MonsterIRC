@@ -40,6 +40,7 @@ public class Join extends GameCommand {
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChannel().equalsIgnoreCase(split[2])) {
 				MonsterIRC.getHandleManager().getIRCHandler().join(c);
+				sender.sendMessage("[IRC] Successfully joined the channel!");
 				return true;
 			}
 		}
