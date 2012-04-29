@@ -81,7 +81,10 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 				}
 			}
 		} else {
-			IRC.log("Please go edit your config!");
+			IRC.log("");
+			IRC.log("A sample channel file was created for you to refrence.");
+			IRC.log("Please go create a .channel file before trying to run MonsterIRC again.");
+			IRC.log("");
 		}
 		settings.saveMuted();
 		getHandleManager().getPluginHandler().stopPlugins();

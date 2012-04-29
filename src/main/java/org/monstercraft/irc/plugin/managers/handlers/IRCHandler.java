@@ -216,7 +216,9 @@ public class IRCHandler extends MonsterIRC {
 				messageQueue.clear();
 				IRC.log("Successfully disconnected from IRC.");
 			} catch (Exception e) {
-				IRC.debug(e);
+				connection = null;
+				messageQueue.clear();
+				IRC.log("Successfully disconnected from IRC.");
 			}
 		}
 		IRCDisconnectEvent devent = new IRCDisconnectEvent(server);
@@ -398,8 +400,8 @@ public class IRCHandler extends MonsterIRC {
 										if (c.showJoinLeave()) {
 											name = line.substring(1,
 													line.indexOf("!"));
-											msg = name + " has left ("
-													+ c.getChannel() + ")";
+											msg = name + " has left "
+													+ c.getChannel();
 										}
 										IRCQuitEvent qevent = new IRCQuitEvent(
 												c, name);
@@ -481,8 +483,7 @@ public class IRCHandler extends MonsterIRC {
 										if (c.showJoinLeave()) {
 											name = line.substring(1,
 													line.indexOf("!"));
-											msg = name + " has left ("
-													+ c.getChannel() + ")";
+											msg = " has left " + c.getChannel();
 										}
 										IRCPartEvent pevent = new IRCPartEvent(
 												c, name);
@@ -529,8 +530,8 @@ public class IRCHandler extends MonsterIRC {
 										if (c.showJoinLeave()) {
 											name = line.substring(1,
 													line.indexOf("!"));
-											msg = name + " has joined ("
-													+ c.getChannel() + ")";
+											msg = " has joined "
+													+ c.getChannel();
 										}
 										IRCJoinEvent jevent = new IRCJoinEvent(
 												c, name);

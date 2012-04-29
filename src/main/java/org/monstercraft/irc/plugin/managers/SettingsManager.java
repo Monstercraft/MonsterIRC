@@ -172,9 +172,6 @@ public class SettingsManager extends MonsterIRC {
 			IRC.debug("Invalid IRC format detected!", Variables.debug);
 			Variables.ircformat = defaultFormat;
 		}
-		if (Variables.name.contains("default")) {
-			firstRun = true;
-		}
 	}
 
 	/**
@@ -200,6 +197,19 @@ public class SettingsManager extends MonsterIRC {
 			}
 		} else {
 			createDefaultChannel();
+		}
+		if (files.isEmpty()) {
+			IRC.log("***************************************");
+			IRC.log("***************************************");
+			IRC.log("***************************************");
+			IRC.log("No channel files have been found!");
+			IRC.log("Refer to the channel page on bukkit dev for help!");
+			IRC.log("http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/");
+			IRC.log("***************************************");
+			IRC.log("***************************************");
+			IRC.log("***************************************");
+			createDefaultChannel();
+			return;
 		}
 		FileConfiguration config = new YamlConfiguration();
 		for (File f : files) {
