@@ -156,19 +156,18 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			result2.append(Variables.ircformat
 					.replace("{HCchannelColor}", "&f")
 					.replace("{heroChatTag}", "[Console]")
-					.replace("{prefix}", StringUtils.getPrefix("Console"))
+					.replace(
+							"{prefix}",
+							StringUtils.getPrefix("Console").replace("�", "§")
+									.replace("&", "§"))
 					.replace("{name}", StringUtils.getDisplayName("Console"))
 					.replace("{suffix}", StringUtils.getSuffix("Console"))
 					.replace("{groupPrefix}",
 							StringUtils.getGroupPrefix("Console"))
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix("Console"))
-					.replace(
-							"{message}",
-							ColorUtils.NORMAL.getIRCColor()
-									+ " "
-									+ message.replace("�", "§").replace("&",
-											"§"))
+					.replace("{message}",
+							message.replace("�", "§").replace("&", "§"))
 					.replace("{world}", StringUtils.getWorld("Console"))
 					.replace("&", "§"));
 			IRC.sendMessage(
@@ -188,8 +187,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace("{heroChatTag}", "")
 							.replace(
 									"{prefix}",
-									StringUtils.getPrefix(player
-											.getDisplayName()))
+									StringUtils
+											.getPrefix(player.getDisplayName())
+											.replace("�", "§")
+											.replace("&", "§"))
 							.replace(
 									"{name}",
 									StringUtils.getDisplayName(player
@@ -209,8 +210,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											.getDisplayName()))
 							.replace(
 									"{message}",
-									ColorUtils.NORMAL.getIRCColor()
-											+ " "
+									" "
 											+ message.replace("�", "§")
 													.replace("&", "§"))
 							.replace(
@@ -256,8 +256,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											+ "")
 							.replace(
 									"{prefix}",
-									StringUtils.getPrefix(player
-											.getDisplayName()))
+									StringUtils
+											.getPrefix(player.getDisplayName())
+											.replace("�", "§")
+											.replace("&", "§"))
 							.replace(
 									"{name}",
 									StringUtils.getDisplayName(player
@@ -284,8 +286,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 													.getColor().getChar())
 							.replace(
 									"{message}",
-									message.replace("�", "§").replace("&",
-											"§"))
+									" "
+											+ message.replace("�", "§")
+													.replace("&", "§"))
 							.replace(
 									"{world}",
 									StringUtils.getWorld(player
@@ -310,8 +313,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			result.append(Variables.ircformat
 					.replace("{HCchannelColor}", "&f")
 					.replace("{heroChatTag}", "")
-					.replace("{prefix}",
-							StringUtils.getPrefix(player.getDisplayName()))
+					.replace(
+							"{prefix}",
+							StringUtils.getPrefix(player.getDisplayName())
+									.replace("�", "§").replace("&", "§"))
 					.replace("{name}",
 							StringUtils.getDisplayName(player.getDisplayName()))
 					.replace("{suffix}",
@@ -321,12 +326,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							StringUtils.getGroupPrefix(player.getDisplayName()))
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player.getDisplayName()))
-					.replace(
-							"{message}",
-							ColorUtils.NORMAL.getIRCColor()
-									+ " "
-									+ message.replace("�", "§").replace("&",
-											"§"))
+					.replace("{message}",
+							" " + message.replace("�", "§").replace("&", "§"))
 					.replace("{world}",
 							StringUtils.getWorld(player.getDisplayName()))
 					.replace("&", "§"));
@@ -345,8 +346,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			result.append(Variables.ircformat
 					.replace("{HCchannelColor}", "&f")
 					.replace("{heroChatTag}", "")
-					.replace("{prefix}",
-							StringUtils.getPrefix(player.getDisplayName()))
+					.replace(
+							"{prefix}",
+							StringUtils.getPrefix(player.getDisplayName())
+									.replace("�", "§").replace("&", "§"))
 					.replace("{name}",
 							StringUtils.getDisplayName(player.getDisplayName()))
 					.replace("{suffix}",
@@ -356,12 +359,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							StringUtils.getGroupPrefix(player.getDisplayName()))
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player.getDisplayName()))
-					.replace(
-							"{message}",
-							ColorUtils.NORMAL.getIRCColor()
-									+ " "
-									+ message.replace("�", "§").replace("&",
-											"§"))
+					.replace("{message}",
+							" " + message.replace("�", "§").replace("&", "§"))
 					.replace("{world}",
 							StringUtils.getWorld(player.getDisplayName()))
 					.replace("&", "§"));

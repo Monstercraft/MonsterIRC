@@ -21,10 +21,13 @@ public class Announce extends IRCCommand {
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
+		if (message.length() < 9) {
+			IRC.sendNotice(sender, "No message! Please add a message.");
+			return true;
+		}
 		Bukkit.getServer().broadcastMessage(
 				ColorUtils.formatIRCMessage("[IRC]<" + sender + ">: "
 						+ message.substring(10)));
 		return true;
 	}
-
 }
