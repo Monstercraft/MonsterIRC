@@ -16,6 +16,7 @@ import org.monstercraft.irc.plugin.managers.HandleManager;
 import org.monstercraft.irc.plugin.managers.HookManager;
 import org.monstercraft.irc.plugin.managers.SettingsManager;
 import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
+import org.monstercraft.irc.plugin.util.Metrics;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
@@ -176,6 +177,8 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	public void run() {
 		synchronized (lock) {
 			try {
+				Metrics metrics = new Metrics(this);
+				metrics.start();
 				String newVersion = Configuration.checkForUpdates(this,
 						Configuration.URLS.UPDATE_URL);
 				if (!newVersion.contains(Configuration.getCurrentVerison(this))) {
