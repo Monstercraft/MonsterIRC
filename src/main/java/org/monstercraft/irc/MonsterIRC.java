@@ -177,6 +177,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	public void run() {
 		synchronized (lock) {
 			try {
+				IRC.log("Setting up metrics!");
 				Metrics metrics = new Metrics(this);
 				metrics.start();
 				String newVersion = Configuration.checkForUpdates(this,
