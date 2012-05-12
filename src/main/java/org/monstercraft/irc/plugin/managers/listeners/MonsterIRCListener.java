@@ -188,7 +188,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace(
 									"{prefix}",
 									StringUtils
-											.getPrefix(player.getDisplayName())
+											.getPrefix(player)
 											.replace("�", "§")
 											.replace("&", "§"))
 							.replace(
@@ -197,17 +197,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											.getDisplayName()))
 							.replace(
 									"{suffix}",
-									StringUtils.getSuffix(player
-											.getDisplayName()))
+									StringUtils.getSuffix(player))
 
 							.replace(
 									"{groupPrefix}",
-									StringUtils.getGroupPrefix(player
-											.getDisplayName()))
+									StringUtils.getGroupPrefix(player))
 							.replace(
 									"{groupSuffix}",
-									StringUtils.getGroupSuffix(player
-											.getDisplayName()))
+									StringUtils.getGroupSuffix(player))
 							.replace(
 									"{message}",
 									" "
@@ -216,7 +213,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace(
 									"{world}",
 									StringUtils.getWorld(player
-											.getDisplayName()))
+											.getName()))
 							.replace("&", "§"));
 					IRC.sendMessage(c, ColorUtils.formatGameMessage(result
 							.toString().replace(
@@ -257,7 +254,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace(
 									"{prefix}",
 									StringUtils
-											.getPrefix(player.getDisplayName())
+											.getPrefix(player)
 											.replace("�", "§")
 											.replace("&", "§"))
 							.replace(
@@ -266,17 +263,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											.getDisplayName()))
 							.replace(
 									"{suffix}",
-									StringUtils.getSuffix(player
-											.getDisplayName()))
+									StringUtils.getSuffix(player))
 
 							.replace(
 									"{groupPrefix}",
-									StringUtils.getGroupPrefix(player
-											.getDisplayName()))
+									StringUtils.getGroupPrefix(player))
 							.replace(
 									"{groupSuffix}",
-									StringUtils.getGroupSuffix(player
-											.getDisplayName()))
+									StringUtils.getGroupSuffix(player))
 							.replace(
 									"{HCchannelColor}",
 									"§"
@@ -292,7 +286,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace(
 									"{world}",
 									StringUtils.getWorld(player
-											.getDisplayName()))
+											.getName()))
 							.replace("&", "§"));
 					IRC.sendMessage(c.getChannel(), ColorUtils
 							.formatGameMessage(result.toString().replace(
@@ -315,21 +309,21 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{heroChatTag}", "")
 					.replace(
 							"{prefix}",
-							StringUtils.getPrefix(player.getDisplayName())
+							StringUtils.getPrefix(player)
 									.replace("�", "§").replace("&", "§"))
 					.replace("{name}",
 							StringUtils.getDisplayName(player.getDisplayName()))
 					.replace("{suffix}",
-							StringUtils.getSuffix(player.getDisplayName()))
+							StringUtils.getSuffix(player))
 
 					.replace("{groupPrefix}",
-							StringUtils.getGroupPrefix(player.getDisplayName()))
+							StringUtils.getGroupPrefix(player))
 					.replace("{groupSuffix}",
-							StringUtils.getGroupSuffix(player.getDisplayName()))
+							StringUtils.getGroupSuffix(player))
 					.replace("{message}",
 							" " + message.replace("�", "§").replace("&", "§"))
 					.replace("{world}",
-							StringUtils.getWorld(player.getDisplayName()))
+							StringUtils.getWorld(player.getName()))
 					.replace("&", "§"));
 			IRC.sendMessage(
 					c,
@@ -348,21 +342,21 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{heroChatTag}", "")
 					.replace(
 							"{prefix}",
-							StringUtils.getPrefix(player.getDisplayName())
+							StringUtils.getPrefix(player)
 									.replace("�", "§").replace("&", "§"))
 					.replace("{name}",
 							StringUtils.getDisplayName(player.getDisplayName()))
 					.replace("{suffix}",
-							StringUtils.getSuffix(player.getDisplayName()))
+							StringUtils.getSuffix(player))
 
 					.replace("{groupPrefix}",
-							StringUtils.getGroupPrefix(player.getDisplayName()))
+							StringUtils.getGroupPrefix(player))
 					.replace("{groupSuffix}",
-							StringUtils.getGroupSuffix(player.getDisplayName()))
+							StringUtils.getGroupSuffix(player))
 					.replace("{message}",
 							" " + message.replace("�", "§").replace("&", "§"))
 					.replace("{world}",
-							StringUtils.getWorld(player.getDisplayName()))
+							StringUtils.getWorld(player.getName()))
 					.replace("&", "§"));
 			IRC.sendMessage(
 					c,
