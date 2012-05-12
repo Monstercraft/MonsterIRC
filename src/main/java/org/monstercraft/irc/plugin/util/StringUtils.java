@@ -1,6 +1,7 @@
 package org.monstercraft.irc.plugin.util;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
 
 public class StringUtils {
@@ -34,6 +35,33 @@ public class StringUtils {
 	}
 
 	/**
+	 * Fetches the users prefix.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users prefix.
+	 */
+	public static String getPrefix(Player player) {
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC.getHookManager().getChatHook().isEnabled()) {
+						if (MonsterIRC.getHookManager().getChatHook()
+								.getPlayerPrefix(player) != null) {
+							s = MonsterIRC.getHookManager().getChatHook()
+									.getPlayerPrefix(player).replace("&", "§");
+						}
+					}
+				}
+			}
+			return s;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	/**
 	 * Fetches the users suffix.
 	 * 
 	 * @param name
@@ -49,6 +77,32 @@ public class StringUtils {
 							.getPlayerSuffix("", name) != null) {
 						s = MonsterIRC.getHookManager().getChatHook()
 								.getPlayerSuffix("", name).replace("&", "§");
+
+					}
+				}
+			}
+			return s;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	/**
+	 * Fetches the users suffix.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The users suffix.
+	 */
+	public static String getSuffix(Player p) {
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC.getHookManager().getChatHook()
+							.getPlayerSuffix(p) != null) {
+						s = MonsterIRC.getHookManager().getChatHook()
+								.getPlayerSuffix(p).replace("&", "§");
 
 					}
 				}
@@ -109,6 +163,44 @@ public class StringUtils {
 	}
 
 	/**
+	 * Fetches the group suffix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups suffix.
+	 */
+	public static String getGroupSuffix(Player p) {
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC
+							.getHookManager()
+							.getChatHook()
+							.getGroupSuffix(
+									"",
+									MonsterIRC.getHookManager().getChatHook()
+											.getPrimaryGroup(p)) != null) {
+						s = MonsterIRC
+								.getHookManager()
+								.getChatHook()
+								.getGroupSuffix(
+										"",
+										MonsterIRC.getHookManager()
+												.getChatHook()
+												.getPrimaryGroup(p))
+								.replace("&", "§");
+
+					}
+				}
+			}
+			return s;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	/**
 	 * Fetches the group prefix for the user.
 	 * 
 	 * @param name
@@ -135,6 +227,44 @@ public class StringUtils {
 										MonsterIRC.getHookManager()
 												.getChatHook()
 												.getPrimaryGroup("", name))
+								.replace("&", "§");
+
+					}
+				}
+			}
+			return s;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * Fetches the group prefix for the user.
+	 * 
+	 * @param name
+	 *            The user's name to look up.
+	 * @return The groups prefix.
+	 */
+	public static String getGroupPrefix(Player p) {
+		try {
+			String s = "";
+			if (MonsterIRC.getHookManager() != null) {
+				if (MonsterIRC.getHookManager().getChatHook() != null) {
+					if (MonsterIRC
+							.getHookManager()
+							.getChatHook()
+							.getGroupPrefix(
+									"",
+									MonsterIRC.getHookManager().getChatHook()
+											.getPrimaryGroup(p)) != null) {
+						s = MonsterIRC
+								.getHookManager()
+								.getChatHook()
+								.getGroupPrefix(
+										"",
+										MonsterIRC.getHookManager()
+												.getChatHook()
+												.getPrimaryGroup(p))
 								.replace("&", "§");
 
 					}

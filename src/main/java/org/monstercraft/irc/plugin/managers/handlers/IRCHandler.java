@@ -170,7 +170,7 @@ public class IRCHandler extends MonsterIRC {
 				watch.start();
 				print = new Thread(DISPATCH);
 				print.setDaemon(true);
-				print.setPriority(Thread.NORM_PRIORITY);
+				print.setPriority(Thread.MAX_PRIORITY);
 				print.start();
 			} catch (Exception e) {
 				IRC.log("Failed to connect to IRC! Try again in about 1 minute!");
