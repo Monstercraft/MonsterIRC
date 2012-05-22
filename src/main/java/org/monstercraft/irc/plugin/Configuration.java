@@ -137,9 +137,8 @@ public class Configuration {
 		Socket s = new Socket();
 		try {
 			InetAddress addr = InetAddress.getByName(host);
-			InetSocketAddress sockaddr = new InetSocketAddress(addr, port);
 			start = System.currentTimeMillis();
-			s.connect(sockaddr, timeoutMs);
+			addr.isReachable(timeoutMs);
 			end = System.currentTimeMillis();
 		} catch (SocketTimeoutException e) {
 			IRC.log("The socket has timed out when attempting to connect!");
