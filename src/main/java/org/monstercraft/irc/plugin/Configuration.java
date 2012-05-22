@@ -136,7 +136,7 @@ public class Configuration {
 		long total = -1;
 		Socket s = new Socket();
 		try {
-			InetAddress addr = InetAddress.getByName(host.trim());
+			InetAddress addr = InetAddress.getByName(host);
 			InetSocketAddress sockaddr = new InetSocketAddress(addr, port);
 			start = System.currentTimeMillis();
 			s.connect(sockaddr, timeoutMs);
