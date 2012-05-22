@@ -86,16 +86,16 @@ public class IRCHandler extends MonsterIRC {
 			}
 		}
 		String line = null;
-		long ping = -1;
-		int tries = 0;
-		for (int i = 0; i < server.getRetrys(); i++) {
-			ping = Configuration.ping(server.getServer(), server.getPort(),
-					server.getTimeout());
-			if (ping < server.getTimeout() + 1 && ping != -1) {
-				tries = i;
-				break;
-			}
-		}
+		long ping = 1;
+		int tries = 1;
+//		for (int i = 0; i < server.getRetrys(); i++) {
+//			ping = Configuration.ping(server.getServer(), server.getPort(),
+//					server.getTimeout());
+//			if (ping < server.getTimeout() + 1 && ping != -1) {
+//				tries = i;
+//				break;
+//			}
+//		}
 		if (ping < server.getTimeout() + 1 && ping != -1) {
 			IRC.log("The IRC server took " + ping + " MS to respond with "
 					+ tries + " retrys.");
