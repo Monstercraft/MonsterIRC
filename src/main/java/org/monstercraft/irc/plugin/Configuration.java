@@ -185,6 +185,10 @@ public class Configuration {
 
 	public static class Variables {
 
+		public static int linesToIrc = 0;
+
+		public static int linesToGame = 0;
+
 		/**
 		 * The amount of times to attempt to connect to the server.
 		 */

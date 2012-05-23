@@ -171,6 +171,7 @@ public class IRC {
 		if (!c.passToGame()) {
 			return;
 		}
+		Variables.linesToGame++;
 		try {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
 				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
@@ -244,8 +245,10 @@ public class IRC {
 										.replace("{world}",
 												StringUtils.getWorld(name))));
 			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
-				TownyMessaging
-						.sendGlobalMessage(ColorUtils.formatIRCMessage(c
+				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+					if (MonsterIRC.getHandleManager().getPermissionsHandler()
+							.hasNode(p, c.getTownyNode())) {
+						TownyMessaging.sendMsg(p, ColorUtils.formatIRCMessage(c
 								.getTownyChannel().getChannelTag()
 								.replace("&", "§")
 								+ Variables.mcformat
@@ -258,7 +261,9 @@ public class IRC {
 												"{message}",
 												c.getTownyChannel()
 														.getMessageColour()
-														+ message)
+														.replace("&", "§")
+														+ message.replace("&",
+																"§"))
 										.replace("{prefix}",
 												StringUtils.getPrefix(name))
 										.replace("{suffix}",
@@ -273,6 +278,8 @@ public class IRC {
 														.getGroupSuffix(name))
 										.replace("{world}",
 												StringUtils.getWorld(name))));
+					}
+				}
 			}
 		} catch (Exception e) {
 			IRC.debug(e);
