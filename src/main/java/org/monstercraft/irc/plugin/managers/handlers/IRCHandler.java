@@ -96,7 +96,7 @@ public class IRCHandler extends MonsterIRC {
 				break;
 			}
 		}
-		if (ping < server.getTimeout() + 1 && ping != -1) {
+		//if (ping < server.getTimeout() + 1 && ping != -1) {
 			IRC.log("The IRC server took " + ping + " MS to respond with "
 					+ tries + " retrys.");
 			try {
@@ -176,12 +176,12 @@ public class IRCHandler extends MonsterIRC {
 				IRC.log("Failed to connect to IRC! Try again in about 1 minute!");
 				disconnect(server);
 			}
-		} else {
-			IRC.log("The IRC server seems to be down or running slowly!");
-			IRC.log("To try conencting again run the command /irc connect");
-			IRC.log("Your ping is:" + ping);
-			return false;
-		}
+//		} else {
+//			IRC.log("The IRC server seems to be down or running slowly!");
+//			IRC.log("To try conencting again run the command /irc connect");
+//			IRC.log("Your ping is:" + ping);
+//			return false;
+//		}
 		return isConnected(server);
 	}
 
