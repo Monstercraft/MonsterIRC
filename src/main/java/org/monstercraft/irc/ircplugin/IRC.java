@@ -15,7 +15,6 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.gmail.nossr50.mcPermissions;
 import com.palmergames.bukkit.towny.TownyMessaging;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 public class IRC {
 
@@ -245,30 +244,35 @@ public class IRC {
 										.replace("{world}",
 												StringUtils.getWorld(name))));
 			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
-				for (Player p : TownyUniverse.getOnlinePlayers()) {
-					TownyMessaging.sendMessage(p, ColorUtils.formatIRCMessage(c
-							.getTownyChannel().getChannelTag()
-							.replace("&", "§")
-							+ Variables.mcformat
-									.replace("&", "§")
-									.replace("{name}",
-											StringUtils.getDisplayName(name))
-									.replace(
-											"{message}",
-											c.getTownyChannel()
-													.getMessageColour()
-													+ message)
-									.replace("{prefix}",
-											StringUtils.getPrefix(name))
-									.replace("{suffix}",
-											StringUtils.getSuffix(name))
-									.replace("{groupPrefix}",
-											StringUtils.getGroupPrefix(name))
-									.replace("{groupSuffix}",
-											StringUtils.getGroupSuffix(name))
-									.replace("{world}",
-											StringUtils.getWorld(name))));
-				}
+				TownyMessaging
+						.sendGlobalMessage(ColorUtils.formatIRCMessage(c
+								.getTownyChannel().getChannelTag()
+								.replace("&", "§")
+								+ Variables.mcformat
+										.replace("&", "§")
+										.replace(
+												"{name}",
+												StringUtils
+														.getDisplayName(name))
+										.replace(
+												"{message}",
+												c.getTownyChannel()
+														.getMessageColour()
+														+ message)
+										.replace("{prefix}",
+												StringUtils.getPrefix(name))
+										.replace("{suffix}",
+												StringUtils.getSuffix(name))
+										.replace(
+												"{groupPrefix}",
+												StringUtils
+														.getGroupPrefix(name))
+										.replace(
+												"{groupSuffix}",
+												StringUtils
+														.getGroupSuffix(name))
+										.replace("{world}",
+												StringUtils.getWorld(name))));
 			}
 		} catch (Exception e) {
 			IRC.debug(e);

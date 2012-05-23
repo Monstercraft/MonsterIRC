@@ -124,10 +124,6 @@ public class IRCHandler extends MonsterIRC {
 				while ((line = reader.readLine()) != null) {
 					IRC.debug(line, Variables.debug);
 					if (line.contains("004") || line.contains("376")) {
-						for (String s : server.getConnectCommands()) {
-							writer.write(s + "\r\n");
-							writer.flush();
-						}
 						break;
 					} else if (line.contains("433")) {
 						if (!server.isIdentifing()) {
@@ -153,6 +149,10 @@ public class IRCHandler extends MonsterIRC {
 					IRC.log("Identifying with Nickserv....");
 					writer.write("NICKSERV IDENTIFY "
 							+ server.getNickservPassword() + "\r\n");
+					writer.flush();
+				}
+				for (String s : server.getConnectCommands()) {
+					writer.write(s + "\r\n");
 					writer.flush();
 				}
 				IRCConnectEvent cevent = new IRCConnectEvent(server);
