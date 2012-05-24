@@ -17,6 +17,7 @@ import org.monstercraft.irc.plugin.managers.HookManager;
 import org.monstercraft.irc.plugin.managers.SettingsManager;
 import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
 import org.monstercraft.irc.plugin.util.Metrics;
+import org.monstercraft.irc.plugin.util.Metrics.Graph;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
@@ -55,7 +56,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 		listener = new MonsterIRCListener(this);
 		IRCserver = new IRCServer(Variables.server, Variables.serverPass,
 				Variables.port, Variables.name, Variables.password,
-				Variables.ident, Variables.timeout, Variables.limit,
+				Variables.ident, Variables.timeout, Variables.tries,
 				Variables.connectCommands);
 		handles = new HandleManager(this);
 		getServer().getPluginManager().registerEvents(listener, this);
@@ -78,7 +79,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 						getHandleManager().getIRCHandler().part(c);
 					}
 					getHandleManager().getIRCHandler().disconnect(
-							getIRCServer());
+							getIRCServer(), false);
 				}
 			}
 		} else {
@@ -179,6 +180,19 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 			try {
 				IRC.log("Setting up metrics!");
 				Metrics metrics = new Metrics(this);
+				Graph graph = metrics.createGraph("Lines Relayed");
+				graph.addPlotter(new Metrics.Plotter("From IRC") {
+					@Override
+					public int getValue() {
+						return Variables.linesToGame;
+					}
+				});
+				graph.addPlotter(new Metrics.Plotter("From Game") {
+					@Override
+					public int getValue() {
+						return Variables.linesToIrc;
+					}
+				});
 				metrics.start();
 				String newVersion = Configuration.checkForUpdates(this,
 						Configuration.URLS.UPDATE_URL);

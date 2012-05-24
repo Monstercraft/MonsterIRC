@@ -8,8 +8,6 @@ IRC:
     PORT: 6667
   OPTIONS:
     MESSAGE_LIMIT_PER_SEC: 2
-    TIMEOUT: 2000
-    RETRYS: 5
     DEBUG: false
     PASS_ON_NAME: false
     HIDE_MODE: false
