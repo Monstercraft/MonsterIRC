@@ -329,7 +329,8 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS"),
 									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC"),
+									config.getString("CHANNEL.CHATTYPE.TOWNY.PERMS")));
 				}
 			} catch (Exception e) {
 				IRC.debug(e);
@@ -368,6 +369,7 @@ public class SettingsManager extends MonsterIRC {
 		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
 		config.addDefault("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
 		config.addDefault("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
+		config.addDefault("CHANNEL.CHATTYPE.TOWNY.PERMS", "towny.chat.irc");
 		config.addDefault("CHANNEL.COMMANDS.OP", op);
 		config.addDefault("CHANNEL.COMMANDS.HOP", hop);
 		config.addDefault("CHANNEL.COMMANDS.ADMIN", admin);

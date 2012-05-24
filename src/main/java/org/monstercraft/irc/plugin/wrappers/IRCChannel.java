@@ -36,6 +36,7 @@ public class IRCChannel {
 	private boolean showJoinLeave;
 	private boolean passToIRC;
 	private boolean passToGame;
+	private String node;
 
 	/**
 	 * Creates an IRCChannel to join. .
@@ -145,7 +146,7 @@ public class IRCChannel {
 			final ChatType type, final List<String> opCommands,
 			final List<String> hopCommands, final List<String> adminCommands,
 			final List<String> voiceCommands, final List<String> userCommands,
-			final boolean passToGame, final boolean passToIRC) {
+			final boolean passToGame, final boolean passToIRC, final String node) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -164,6 +165,7 @@ public class IRCChannel {
 		this.admins = new ArrayList<String>();
 		this.passToGame = passToGame;
 		this.passToIRC = passToIRC;
+		this.node = node;
 	}
 
 	/**
@@ -338,6 +340,10 @@ public class IRCChannel {
 
 	public boolean passToIRC() {
 		return passToIRC;
+	}
+
+	public String getTownyNode() {
+		return node;
 	}
 
 }

@@ -82,7 +82,7 @@ public class IRCHandler extends MonsterIRC {
 		if (connection != null) {
 			if (connection.isConnected()) {
 				IRC.log("Attempting to disconnect before re-connecting!");
-				disconnect(server);
+				disconnect(server, false);
 			}
 		}
 		String line = null;
@@ -96,7 +96,7 @@ public class IRCHandler extends MonsterIRC {
 				break;
 			}
 		}
-		//if (ping < server.getTimeout() + 1 && ping != -1) {
+		if (ping < server.getTimeout() + 1 && ping != -1) {
 			IRC.log("The IRC server took " + ping + " MS to respond with "
 					+ tries + " retrys.");
 			try {
@@ -129,7 +129,7 @@ public class IRCHandler extends MonsterIRC {
 						if (!server.isIdentifing()) {
 							IRC.log("Your nickname is already in use, please switch it");
 							IRC.log("using \"nick [NAME]\" and try to connect again.");
-							disconnect(server);
+							disconnect(server, false);
 							return false;
 						} else {
 							IRC.log("Sending ghost command....");
@@ -174,14 +174,14 @@ public class IRCHandler extends MonsterIRC {
 				print.start();
 			} catch (Exception e) {
 				IRC.log("Failed to connect to IRC! Try again in about 1 minute!");
-				disconnect(server);
+				disconnect(server, false);
 			}
-//		} else {
-//			IRC.log("The IRC server seems to be down or running slowly!");
-//			IRC.log("To try conencting again run the command /irc connect");
-//			IRC.log("Your ping is:" + ping);
-//			return false;
-//		}
+		} else {
+			IRC.log("The IRC server seems to be down or running slowly!");
+			IRC.log("To try conencting again run the command /irc connect");
+			IRC.log("Your ping is:" + ping);
+			return false;
+		}
 		return isConnected(server);
 	}
 
@@ -190,7 +190,7 @@ public class IRCHandler extends MonsterIRC {
 	 * 
 	 * @return True if we disconnect successfully; otherwise false.
 	 */
-	public boolean disconnect(final IRCServer server) {
+	public boolean disconnect(final IRCServer server, boolean reconnect) {
 		if (isConnected(server)) {
 			try {
 				if (watch != null) {
@@ -225,8 +225,28 @@ public class IRCHandler extends MonsterIRC {
 		plugin.getServer().getPluginManager().callEvent(devent);
 		PluginDisconnectEvent pde = new PluginDisconnectEvent(server);
 		MonsterIRC.getEventManager().dispatchEvent(pde);
+
+		if (reconnect) {
+			Thread t = new Thread(connect);
+			t.setPriority(Thread.MAX_PRIORITY);
+			t.setDaemon(false);
+			t.start();
+		}
+
 		return !isConnected(server);
 	}
+
+	private Runnable connect = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(5500);
+			} catch (InterruptedException e) {
+			}
+			MonsterIRC.getHandleManager().getIRCHandler()
+					.connect(MonsterIRC.getIRCServer());
+		}
+	};
 
 	/**
 	 * Checks if the user is connected to an IRC server.
@@ -666,11 +686,13 @@ public class IRCHandler extends MonsterIRC {
 				}
 			} catch (final Exception e) {
 				Thread.currentThread().interrupt();
+				disconnect(MonsterIRC.getIRCServer(), true);
 			} finally {
 				try {
 					reader.close();
 				} catch (IOException e) {
 					Thread.currentThread().interrupt();
+					disconnect(MonsterIRC.getIRCServer(), false);
 				}
 			}
 		}
@@ -725,6 +747,7 @@ public class IRCHandler extends MonsterIRC {
 					}
 				} catch (Exception ex) {
 					Thread.currentThread().interrupt();
+					disconnect(MonsterIRC.getIRCServer(), false);
 					break;
 				}
 			}

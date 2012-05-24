@@ -30,7 +30,7 @@ public class Disconnect extends GameCommand {
 		}
 		sender.sendMessage("Successfully disconnected!");
 		return MonsterIRC.getHandleManager().getIRCHandler()
-				.disconnect(MonsterIRC.getIRCServer());
+				.disconnect(MonsterIRC.getIRCServer(), false);
 	}
 
 	@Override

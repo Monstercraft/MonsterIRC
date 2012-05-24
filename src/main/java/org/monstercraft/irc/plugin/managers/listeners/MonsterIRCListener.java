@@ -1,10 +1,13 @@
 package org.monstercraft.irc.plugin.managers.listeners;
 
+import java.util.WeakHashMap;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -19,6 +22,7 @@ import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.dthielke.herochat.Herochat;
+import com.palmergames.bukkit.TownyChat.channels.Channel;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -170,6 +174,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							message.replace("�", "§").replace("&", "§"))
 					.replace("{world}", StringUtils.getWorld("Console"))
 					.replace("&", "§"));
+			Variables.linesToIrc++;
 			IRC.sendMessage(
 					c,
 					ColorUtils.formatGameMessage(result2.toString().replace(
@@ -187,34 +192,28 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace("{heroChatTag}", "")
 							.replace(
 									"{prefix}",
-									StringUtils
-											.getPrefix(player)
+									StringUtils.getPrefix(player)
 											.replace("�", "§")
 											.replace("&", "§"))
 							.replace(
 									"{name}",
 									StringUtils.getDisplayName(player
 											.getDisplayName()))
-							.replace(
-									"{suffix}",
-									StringUtils.getSuffix(player))
+							.replace("{suffix}", StringUtils.getSuffix(player))
 
-							.replace(
-									"{groupPrefix}",
+							.replace("{groupPrefix}",
 									StringUtils.getGroupPrefix(player))
-							.replace(
-									"{groupSuffix}",
+							.replace("{groupSuffix}",
 									StringUtils.getGroupSuffix(player))
 							.replace(
 									"{message}",
 									" "
 											+ message.replace("�", "§")
 													.replace("&", "§"))
-							.replace(
-									"{world}",
-									StringUtils.getWorld(player
-											.getName()))
+							.replace("{world}",
+									StringUtils.getWorld(player.getName()))
 							.replace("&", "§"));
+					Variables.linesToIrc++;
 					IRC.sendMessage(c, ColorUtils.formatGameMessage(result
 							.toString().replace(
 									ColorUtils.WHITE.getMinecraftColor(),
@@ -253,23 +252,18 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											+ "")
 							.replace(
 									"{prefix}",
-									StringUtils
-											.getPrefix(player)
+									StringUtils.getPrefix(player)
 											.replace("�", "§")
 											.replace("&", "§"))
 							.replace(
 									"{name}",
 									StringUtils.getDisplayName(player
 											.getDisplayName()))
-							.replace(
-									"{suffix}",
-									StringUtils.getSuffix(player))
+							.replace("{suffix}", StringUtils.getSuffix(player))
 
-							.replace(
-									"{groupPrefix}",
+							.replace("{groupPrefix}",
 									StringUtils.getGroupPrefix(player))
-							.replace(
-									"{groupSuffix}",
+							.replace("{groupSuffix}",
 									StringUtils.getGroupSuffix(player))
 							.replace(
 									"{HCchannelColor}",
@@ -283,11 +277,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									" "
 											+ message.replace("�", "§")
 													.replace("&", "§"))
-							.replace(
-									"{world}",
-									StringUtils.getWorld(player
-											.getName()))
+							.replace("{world}",
+									StringUtils.getWorld(player.getName()))
 							.replace("&", "§"));
+					Variables.linesToIrc++;
 					IRC.sendMessage(c.getChannel(), ColorUtils
 							.formatGameMessage(result.toString().replace(
 									ColorUtils.WHITE.getMinecraftColor(),
@@ -309,12 +302,11 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{heroChatTag}", "")
 					.replace(
 							"{prefix}",
-							StringUtils.getPrefix(player)
-									.replace("�", "§").replace("&", "§"))
+							StringUtils.getPrefix(player).replace("�", "§")
+									.replace("&", "§"))
 					.replace("{name}",
 							StringUtils.getDisplayName(player.getDisplayName()))
-					.replace("{suffix}",
-							StringUtils.getSuffix(player))
+					.replace("{suffix}", StringUtils.getSuffix(player))
 
 					.replace("{groupPrefix}",
 							StringUtils.getGroupPrefix(player))
@@ -322,9 +314,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							StringUtils.getGroupSuffix(player))
 					.replace("{message}",
 							" " + message.replace("�", "§").replace("&", "§"))
-					.replace("{world}",
-							StringUtils.getWorld(player.getName()))
+					.replace("{world}", StringUtils.getWorld(player.getName()))
 					.replace("&", "§"));
+			Variables.linesToIrc++;
 			IRC.sendMessage(
 					c,
 					ColorUtils.formatGameMessage(result.toString().replace(
@@ -337,32 +329,70 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					return;
 				}
 			}
-			result.append(Variables.ircformat
-					.replace("{HCchannelColor}", "&f")
-					.replace("{heroChatTag}", "")
-					.replace(
-							"{prefix}",
-							StringUtils.getPrefix(player)
-									.replace("�", "§").replace("&", "§"))
-					.replace("{name}",
-							StringUtils.getDisplayName(player.getDisplayName()))
-					.replace("{suffix}",
-							StringUtils.getSuffix(player))
+			if (directedChat.containsKey(player)) {
+				if (directedChat.get(player).equals(c.getTownyChannel())
+						&& MonsterIRC.getHandleManager()
+								.getPermissionsHandler()
+								.hasNode(player, c.getTownyNode())) {
+					result.append(Variables.ircformat
+							.replace("{HCchannelColor}", "&f")
+							.replace("{heroChatTag}", "")
+							.replace(
+									"{prefix}",
+									StringUtils.getPrefix(player)
+											.replace("�", "§")
+											.replace("&", "§"))
+							.replace(
+									"{name}",
+									StringUtils.getDisplayName(player
+											.getDisplayName()))
+							.replace("{suffix}", StringUtils.getSuffix(player))
 
-					.replace("{groupPrefix}",
-							StringUtils.getGroupPrefix(player))
-					.replace("{groupSuffix}",
-							StringUtils.getGroupSuffix(player))
-					.replace("{message}",
-							" " + message.replace("�", "§").replace("&", "§"))
-					.replace("{world}",
-							StringUtils.getWorld(player.getName()))
-					.replace("&", "§"));
-			IRC.sendMessage(
-					c,
-					ColorUtils.formatGameMessage(result.toString().replace(
-							ColorUtils.WHITE.getMinecraftColor(),
-							ColorUtils.NORMAL.getIRCColor())));
+							.replace("{groupPrefix}",
+									StringUtils.getGroupPrefix(player))
+							.replace("{groupSuffix}",
+									StringUtils.getGroupSuffix(player))
+							.replace(
+									"{message}",
+									" "
+											+ message.replace("�", "§")
+													.replace("&", "§"))
+							.replace("{world}",
+									StringUtils.getWorld(player.getName()))
+							.replace("&", "§"));
+					Variables.linesToIrc++;
+					IRC.sendMessage(c, ColorUtils.formatGameMessage(result
+							.toString().replace(
+									ColorUtils.WHITE.getMinecraftColor(),
+									ColorUtils.NORMAL.getIRCColor())));
+				}
+			}
+		}
+	}
+
+	private WeakHashMap<Player, Channel> directedChat = new WeakHashMap<Player, Channel>();
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		if (MonsterIRC.getHookManager().getTownyChatHook() != null) {
+			Player player = event.getPlayer();
+			String split[] = event.getMessage().split("\\ ");
+			String command = split[0].trim().toLowerCase().replace("/", "");
+			Channel channel = MonsterIRC.getHookManager().getTownyChatHook()
+					.getChannelsHandler().getChannel(player, command);
+			if (channel != null) {
+				if (directedChat.containsKey(player)) {
+					boolean doReturn = false;
+					if (directedChat.get(player).equals(channel)) {
+						doReturn = true;
+					}
+					directedChat.remove(player);
+					if (doReturn) {
+						return;
+					}
+				}
+				directedChat.put(player, channel);
+			}
 		}
 	}
 }
