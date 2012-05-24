@@ -690,10 +690,9 @@ public class IRCHandler extends MonsterIRC {
 			} finally {
 				try {
 					reader.close();
-					disconnect(MonsterIRC.getIRCServer(), true);
 				} catch (IOException e) {
 					Thread.currentThread().interrupt();
-					disconnect(MonsterIRC.getIRCServer(), true);
+					disconnect(MonsterIRC.getIRCServer(), false);
 				}
 			}
 		}
@@ -748,7 +747,7 @@ public class IRCHandler extends MonsterIRC {
 					}
 				} catch (Exception ex) {
 					Thread.currentThread().interrupt();
-					disconnect(MonsterIRC.getIRCServer(), true);
+					disconnect(MonsterIRC.getIRCServer(), false);
 					break;
 				}
 			}

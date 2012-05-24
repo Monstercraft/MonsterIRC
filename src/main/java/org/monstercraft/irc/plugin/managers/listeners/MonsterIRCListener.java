@@ -23,7 +23,6 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.dthielke.herochat.Herochat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
-import com.palmergames.util.StringMgmt;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -379,21 +378,20 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			Player player = event.getPlayer();
 			String split[] = event.getMessage().split("\\ ");
 			String command = split[0].trim().toLowerCase().replace("/", "");
-			String message = "";
-
-			if (split.length > 1) {
-				message = StringMgmt.join(StringMgmt.remFirstArg(split), " ");
-			}
 			Channel channel = MonsterIRC.getHookManager().getTownyChatHook()
 					.getChannelsHandler().getChannel(player, command);
 			if (channel != null) {
-				if (!message.isEmpty()) {
-					directedChat.put(player, channel);
-				}
-			} else {
 				if (directedChat.containsKey(player)) {
+					boolean doReturn = false;
+					if (directedChat.get(player).equals(channel)) {
+						doReturn = true;
+					}
 					directedChat.remove(player);
+					if (doReturn) {
+						return;
+					}
 				}
+				directedChat.put(player, channel);
 			}
 		}
 	}
