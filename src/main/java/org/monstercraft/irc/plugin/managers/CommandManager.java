@@ -95,6 +95,7 @@ public class CommandManager extends MonsterIRC {
 			}
 			for (GameCommand c : gameCommands) {
 				if (c.canExecute(sender, split)) {
+					Variables.commandsGame++;
 					try {
 						if (split.length > 2) {
 							if (c instanceof Help) {
@@ -140,6 +141,7 @@ public class CommandManager extends MonsterIRC {
 		for (IRCCommand c : IRCCommands) {
 			if (c.canExecute(sender, arg, channel)) {
 				try {
+					Variables.commandsIRC++;
 					c.execute(sender, arg, channel);
 				} catch (Exception ex) {
 					IRC.debug(ex);
