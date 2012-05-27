@@ -60,14 +60,16 @@ public class Say extends GameCommand {
 				if (c.getChannel().equalsIgnoreCase(channel)) {
 					MonsterIRC.getHandleManager().getIRCHandler()
 							.sendMessage(c.getChannel(), result.toString());
-					IRC.sendGameMessage(c, sender.getName(), result2.toString());
+					IRC.sendMessageToGame(c, sender.getName(),
+							result2.toString());
 					break;
 				}
 			} else {
 				if (c.isDefaultChannel()) {
 					MonsterIRC.getHandleManager().getIRCHandler()
 							.sendMessage(c.getChannel(), result.toString());
-					IRC.sendGameMessage(c, sender.getName(), result2.toString());
+					IRC.sendMessageToGame(c, sender.getName(),
+							result2.toString());
 				}
 			}
 		}
