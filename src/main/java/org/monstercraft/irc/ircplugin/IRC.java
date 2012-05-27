@@ -13,8 +13,6 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-import com.palmergames.bukkit.towny.TownyMessaging;
-
 public class IRC {
 
 	private final static Logger logger = Logger.getLogger(IRC.class
@@ -267,7 +265,7 @@ public class IRC {
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (MonsterIRC.getHandleManager().getPermissionsHandler()
 							.hasNode(p, c.getTownyNode())) {
-						TownyMessaging.sendMsg(p, ColorUtils.formatIRCMessage(c
+						p.sendMessage(ColorUtils.formatIRCMessage(c
 								.getTownyChannel().getChannelTag()
 								.replace("&", "§")
 								+ Variables.mcformat
