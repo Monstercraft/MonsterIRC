@@ -13,13 +13,16 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-import com.gmail.nossr50.mcPermissions;
 import com.palmergames.bukkit.towny.TownyMessaging;
 
 public class IRC {
 
 	private final static Logger logger = Logger.getLogger(IRC.class
 			.getSimpleName());
+
+	public static Plugin getIRCPlugin() {
+		return Bukkit.getServer().getPluginManager().getPlugin("MonsterIRC");
+	}
 
 	/**
 	 * Fetches the logger.
@@ -53,6 +56,17 @@ public class IRC {
 	}
 
 	/**
+	 * Logs debugging messages to the console.
+	 * 
+	 * @param error
+	 *            The message to print.
+	 */
+	public static void debug(final Exception error) {
+		logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
+		error.printStackTrace();
+	}
+
+	/**
 	 * Sends a message to the MonsterIRC channel.
 	 * 
 	 * @param channel
@@ -60,10 +74,28 @@ public class IRC {
 	 * @param message
 	 *            The message to send.
 	 */
-	public static void sendMessage(final IRCChannel channel,
+	public static void sendMessageToChannel(final IRCChannel channel,
 			final String message) {
 		MonsterIRC.getHandleManager().getIRCHandler()
 				.sendMessage(channel.getChannel(), message);
+	}
+
+	/**
+	 * Sends a message to the MonsterIRC channel.
+	 * 
+	 * @param channel
+	 *            The channel to send it to.
+	 * @param message
+	 *            The message to send.
+	 */
+	public static void sendMessageToChannel(final String channel,
+			final String message) {
+		for (IRCChannel c : MonsterIRC.getChannels()) {
+			if (c.getChannel().equalsIgnoreCase(channel)) {
+				sendMessageToChannel(c, message);
+				return;
+			}
+		}
 	}
 
 	/**
@@ -72,8 +104,8 @@ public class IRC {
 	 * @param RawMessage
 	 *            The message to send.
 	 */
-	public static void sendRawMessage(final String RawMessage) {
-		MonsterIRC.getHandleManager().getIRCHandler().sendRaw(RawMessage);
+	public static void sendRawLine(final String Line) {
+		MonsterIRC.getHandleManager().getIRCHandler().sendRaw(Line);
 	}
 
 	/**
@@ -125,7 +157,7 @@ public class IRC {
 	 * @param message
 	 *            The message to send.
 	 */
-	public static void sendMessage(final String to, final String message) {
+	public static void sendMessageToUser(final String to, final String message) {
 		MonsterIRC.getHandleManager().getIRCHandler().sendMessage(to, message);
 	}
 
@@ -142,21 +174,6 @@ public class IRC {
 	}
 
 	/**
-	 * Logs debugging messages to the console.
-	 * 
-	 * @param error
-	 *            The message to print.
-	 */
-	public static void debug(final Exception error) {
-		logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
-		error.printStackTrace();
-	}
-
-	public static Plugin getPlugin() {
-		return Bukkit.getServer().getPluginManager().getPlugin("MonsterIRC");
-	}
-
-	/**
 	 * Handles a message accoradingly.
 	 * 
 	 * @param c
@@ -166,7 +183,7 @@ public class IRC {
 	 * @param message
 	 *            The message to handle.
 	 */
-	public static void sendGameMessage(final IRCChannel c, final String name,
+	public static void sendMessageToGame(final IRCChannel c, final String name,
 			final String message) {
 		if (!c.passToGame()) {
 			return;
@@ -182,9 +199,11 @@ public class IRC {
 							+ StringUtils.getSuffix(name)
 							+ ColorUtils.CYAN.getMinecraftColor() + "} "
 							+ message;
-					for (Player p : getPlugin().getServer().getOnlinePlayers()) {
+					for (Player p : getIRCPlugin().getServer()
+							.getOnlinePlayers()) {
 						if (p.isOp()
-								|| mcPermissions.getInstance().adminChat(p))
+								|| MonsterIRC.getHookManager().getmcMMOHook()
+										.getPlayerProfile(p).getAdminChatMode())
 							p.sendMessage(ColorUtils.formatIRCMessage(format));
 					}
 				}
@@ -217,7 +236,7 @@ public class IRC {
 							+ c.getChannel());
 				}
 			} else if (c.getChatType() == ChatType.GLOBAL) {
-				getPlugin().getServer()
+				getIRCPlugin().getServer()
 						.broadcastMessage(
 								ColorUtils.formatIRCMessage(Variables.mcformat
 										.replace("&", "§")
@@ -287,6 +306,25 @@ public class IRC {
 	}
 
 	/**
+	 * Handles a message accoradingly.
+	 * 
+	 * @param c
+	 *            The IRCChannel to handle the message for.
+	 * @param name
+	 *            The sender's name.
+	 * @param message
+	 *            The message to handle.
+	 */
+	public static void sendMessageToGame(final String IRCChannel,
+			final String sender, final String message) {
+		for (IRCChannel c : MonsterIRC.getChannels()) {
+			if (c.getChannel().equalsIgnoreCase(IRCChannel)) {
+				sendMessageToGame(c, sender, message);
+			}
+		}
+	}
+
+	/**
 	 * Fetches the list of Operaters in the current IRC channel.
 	 * 
 	 * @return The list of Operators.
@@ -337,5 +375,82 @@ public class IRC {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Fetches the list of Operaters in the current IRC channel.
+	 * 
+	 * @return The list of Operators.
+	 */
+	public static boolean isOp(final String channel, final String sender) {
+		IRCChannel c = getChannel(channel);
+		if (c != null) {
+			return c.getOpList().contains(sender);
+		}
+		return false;
+	}
+
+	/**
+	 * Fetches the list of Operaters in the current IRC channel.
+	 * 
+	 * @return The list of Operators.
+	 */
+	public static boolean isHalfOP(final String channel, final String sender) {
+		IRCChannel c = getChannel(channel);
+		if (c != null) {
+			return c.getHOpList().contains(sender);
+		}
+		return false;
+	}
+
+	/**
+	 * Fetches the list of Admins in the current IRC channel.
+	 * 
+	 * @return True if the user is admin; otherwise false.
+	 */
+	public static boolean isAdmin(final String channel, final String sender) {
+		IRCChannel c = getChannel(channel);
+		if (c != null) {
+			return c.getAdminList().contains(sender);
+		}
+		return false;
+	}
+
+	/**
+	 * Fetches the list of Voices in the current IRC channel.
+	 * 
+	 * @return The list of Voices.
+	 */
+	public static boolean isVoice(final String channel, final String sender) {
+		IRCChannel c = getChannel(channel);
+		if (c != null) {
+			return c.getVoiceList().contains(sender);
+		}
+		return false;
+	}
+
+	public static boolean isVoicePlus(final String channel, final String sender) {
+		if (isVoice(channel, sender)) {
+			return true;
+		}
+		if (isHalfOP(channel, sender)) {
+			return true;
+		}
+		if (isAdmin(channel, sender)) {
+			return true;
+		}
+		if (isOp(channel, sender)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static IRCChannel getChannel(final String channel) {
+		for (IRCChannel c : MonsterIRC.getChannels()) {
+			if (c.getChannel().equalsIgnoreCase(channel)) {
+				return c;
+			}
+		}
+		return null;
 	}
 }

@@ -575,13 +575,13 @@ public class IRCHandler extends MonsterIRC {
 									} else if (!Variables.passOnName
 											&& !Variables.muted.contains(name
 													.toLowerCase())) {
-										IRC.sendGameMessage(c, name, msg);
+										IRC.sendMessageToGame(c, name, msg);
 										break;
 									} else if (Variables.passOnName
 											&& msg.startsWith(Variables.name)
 											&& !Variables.muted.contains(name
 													.toLowerCase())) {
-										IRC.sendGameMessage(c, name, msg
+										IRC.sendMessageToGame(c, name, msg
 												.substring(Variables.name
 														.length()));
 										break;

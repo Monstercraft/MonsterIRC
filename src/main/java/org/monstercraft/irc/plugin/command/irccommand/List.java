@@ -32,7 +32,7 @@ public class List extends IRCCommand {
 				sb.append(players[i].getName() + ", ");
 			}
 		}
-		IRC.sendMessage(channel, sb.toString());
+		IRC.sendMessageToChannel(channel, sb.toString());
 		return true;
 	}
 }
