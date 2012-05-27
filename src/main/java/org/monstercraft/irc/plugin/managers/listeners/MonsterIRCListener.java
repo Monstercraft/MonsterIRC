@@ -87,7 +87,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				IRC.sendMessage(
+				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGameMessage(event.getPlayer()
 								.getDisplayName().replace("�", "§")
@@ -101,7 +101,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				IRC.sendMessage(
+				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGameMessage(event.getPlayer()
 								.getDisplayName().replace("�", "§")
@@ -118,7 +118,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
-				IRC.sendMessage(
+				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGameMessage(event.getPlayer()
 								.getDisplayName().replace("�", "§")
@@ -175,7 +175,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{world}", StringUtils.getWorld("Console"))
 					.replace("&", "§"));
 			Variables.linesToIrc++;
-			IRC.sendMessage(
+			IRC.sendMessageToChannel(
 					c,
 					ColorUtils.formatGameMessage(result2.toString().replace(
 							ColorUtils.WHITE.getMinecraftColor(),
@@ -214,8 +214,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									StringUtils.getWorld(player.getName()))
 							.replace("&", "§"));
 					Variables.linesToIrc++;
-					IRC.sendMessage(c, ColorUtils.formatGameMessage(result
-							.toString().replace(
+					IRC.sendMessageToChannel(c, ColorUtils
+							.formatGameMessage(result.toString().replace(
 									ColorUtils.WHITE.getMinecraftColor(),
 									ColorUtils.NORMAL.getIRCColor())));
 				}
@@ -281,7 +281,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									StringUtils.getWorld(player.getName()))
 							.replace("&", "§"));
 					Variables.linesToIrc++;
-					IRC.sendMessage(c.getChannel(), ColorUtils
+					IRC.sendMessageToChannel(c.getChannel(), ColorUtils
 							.formatGameMessage(result.toString().replace(
 									ColorUtils.WHITE.getMinecraftColor(),
 									ColorUtils.NORMAL.getIRCColor())));
@@ -317,7 +317,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{world}", StringUtils.getWorld(player.getName()))
 					.replace("&", "§"));
 			Variables.linesToIrc++;
-			IRC.sendMessage(
+			IRC.sendMessageToChannel(
 					c,
 					ColorUtils.formatGameMessage(result.toString().replace(
 							ColorUtils.WHITE.getMinecraftColor(),
@@ -361,8 +361,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									StringUtils.getWorld(player.getName()))
 							.replace("&", "§"));
 					Variables.linesToIrc++;
-					IRC.sendMessage(c, ColorUtils.formatGameMessage(result
-							.toString().replace(
+					IRC.sendMessageToChannel(c, ColorUtils
+							.formatGameMessage(result.toString().replace(
 									ColorUtils.WHITE.getMinecraftColor(),
 									ColorUtils.NORMAL.getIRCColor())));
 				}

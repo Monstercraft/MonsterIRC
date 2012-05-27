@@ -82,7 +82,7 @@ public class EventMulticaster implements EventListener {
 			}
 			if (el instanceof Listener) {
 				Bukkit.getServer().getPluginManager()
-						.registerEvents((Listener) el, IRC.getPlugin());
+						.registerEvents((Listener) el, IRC.getIRCPlugin());
 			}
 			if (el instanceof IRCListener) {
 				listeners.add((IRCListener) el);

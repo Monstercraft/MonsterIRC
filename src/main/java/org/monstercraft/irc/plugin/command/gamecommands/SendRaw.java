@@ -40,7 +40,7 @@ public class SendRaw extends GameCommand {
 			result.append(" ");
 		}
 
-		IRC.sendRawMessage(result.toString());
+		IRC.sendRawLine(result.toString());
 		IRC.log(result.toString());
 		sender.sendMessage(ColorUtils.BLUE.getMinecraftColor()
 				+ "Raw message sent!");
