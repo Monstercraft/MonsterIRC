@@ -193,6 +193,19 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 						return Variables.linesToIrc;
 					}
 				});
+				Graph graph2 = metrics.createGraph("Commands Executed");
+				graph2.addPlotter(new Metrics.Plotter("Ingame") {
+					@Override
+					public int getValue() {
+						return Variables.commandsGame;
+					}
+				});
+				graph2.addPlotter(new Metrics.Plotter("In IRC") {
+					@Override
+					public int getValue() {
+						return Variables.commandsIRC;
+					}
+				});
 				metrics.start();
 				String newVersion = Configuration.checkForUpdates(this,
 						Configuration.URLS.UPDATE_URL);
