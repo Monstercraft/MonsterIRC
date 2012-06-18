@@ -37,6 +37,7 @@ public class IRCChannel {
 	private boolean passToIRC;
 	private boolean passToGame;
 	private String node;
+	private boolean death;
 
 	/**
 	 * Creates an IRCChannel to join. .
@@ -66,7 +67,7 @@ public class IRCChannel {
 			final List<String> opCommands, final List<String> hopCommands,
 			final List<String> adminCommands, final List<String> voiceCommands,
 			final List<String> userCommands, final boolean passToGame,
-			final boolean passToIRC) {
+			final boolean passToIRC,final boolean death) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -118,7 +119,7 @@ public class IRCChannel {
 			final List<String> opCommands, final List<String> hopCommands,
 			final List<String> adminCommands, final List<String> voiceCommands,
 			final List<String> userCommands, final boolean passToGame,
-			final boolean passToIRC) {
+			final boolean passToIRC, final boolean death) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -138,6 +139,7 @@ public class IRCChannel {
 		this.admins = new ArrayList<String>();
 		this.passToGame = passToGame;
 		this.passToIRC = passToIRC;
+		this.death = death;
 	}
 
 	public IRCChannel(final String password, final boolean showJoinLeave,
@@ -146,7 +148,8 @@ public class IRCChannel {
 			final ChatType type, final List<String> opCommands,
 			final List<String> hopCommands, final List<String> adminCommands,
 			final List<String> voiceCommands, final List<String> userCommands,
-			final boolean passToGame, final boolean passToIRC, final String node) {
+			final boolean passToGame, final boolean passToIRC,
+			final String node, final boolean death) {
 		this.showJoinLeave = showJoinLeave;
 		this.password = password;
 		this.channel = channel;
@@ -166,6 +169,7 @@ public class IRCChannel {
 		this.passToGame = passToGame;
 		this.passToIRC = passToIRC;
 		this.node = node;
+		this.death = death;
 	}
 
 	/**
@@ -344,6 +348,10 @@ public class IRCChannel {
 
 	public String getTownyNode() {
 		return node;
+	}
+
+	public boolean showDeath() {
+		return death;
 	}
 
 }

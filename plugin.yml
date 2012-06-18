@@ -1,10 +1,10 @@
 name: MonsterIRC
 main: org.monstercraft.irc.MonsterIRC
-version: 1.63
+version: 1.64
 author: Fletch_to_99
 description: Using your servers IRC channel we allow communication between IRC and Ingame.
 depend: [Vault]
-softdepend: [mcMMO, TownyChat, Towny, Herochat]
+softdepend: [mcMMO, TownyChat, Towny, Herochat, Multiverse-Core]
 commands:
   irc:
     description: IRC Commands, refer to bukkit dev page for help.

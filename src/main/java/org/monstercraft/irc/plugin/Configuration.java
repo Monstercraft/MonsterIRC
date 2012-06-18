@@ -20,6 +20,7 @@ import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.ircplugin.IRC;
@@ -48,6 +49,17 @@ public class Configuration {
 				dir.mkdirs();
 			}
 		}
+	}
+
+	public static boolean usingMultiverse() {
+		Plugin p = Bukkit.getServer().getPluginManager()
+				.getPlugin("Multiverse-Core");
+		if (p != null) {
+			if (Bukkit.getServer().getPluginManager().isPluginEnabled(p)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static class Paths {

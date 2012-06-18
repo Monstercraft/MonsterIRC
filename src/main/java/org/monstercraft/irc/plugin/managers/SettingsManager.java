@@ -275,7 +275,8 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS"),
 									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_DEATH_MESSAGES")));
 				} else if (admin) {
 					Variables.channels
 							.add(new IRCChannel(
@@ -292,7 +293,8 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS"),
 									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_DEATH_MESSAGES")));
 				} else if (hero) {
 					Variables.channels
 							.add(new IRCChannel(
@@ -311,7 +313,8 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
 									config.getStringList("CHANNEL.COMMANDS.USERS"),
 									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
+									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_DEATH_MESSAGES")));
 				} else if (towny) {
 					Variables.channels
 							.add(new IRCChannel(
@@ -330,7 +333,8 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.USERS"),
 									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
 									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC"),
-									config.getString("CHANNEL.CHATTYPE.TOWNY.PERMS")));
+									config.getString("CHANNEL.CHATTYPE.TOWNY.PERMS"),
+									config.getBoolean("CHANNEL.SETTINGS.SHOW_DEATH_MESSAGES")));
 				}
 			} catch (Exception e) {
 				IRC.debug(e);
@@ -362,6 +366,7 @@ public class SettingsManager extends MonsterIRC {
 		config.addDefault("CHANNEL.SETTINGS.PASS_TO_IRC", true);
 		config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
 		config.addDefault("CHANNEL.SETTINGS.SHOW_JOIN_AND_LEAVE_MESSAGES", true);
+		config.addDefault("CHANNEL.SETTINGS.SHOW_DEATH_MESSAGES", true);
 		config.addDefault("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
 		config.addDefault("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
 		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
