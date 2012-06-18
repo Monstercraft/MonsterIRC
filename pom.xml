@@ -37,6 +37,11 @@
 
 
 	<dependencies>
+			<dependency>
+			<groupId>com.onarandombox.MultiverseCore</groupId>
+			<artifactId>MultiverseCore</artifactId>
+			<version>2.4-b527</version>
+		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
