@@ -3,6 +3,7 @@ package org.monstercraft.irc.plugin.util;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.plugin.Configuration;
 
 public class StringUtils {
 
@@ -237,7 +238,7 @@ public class StringUtils {
 			return "";
 		}
 	}
-	
+
 	/**
 	 * Fetches the group prefix for the user.
 	 * 
@@ -288,6 +289,10 @@ public class StringUtils {
 			String s = "";
 			if (Bukkit.getServer().getPlayer(name) != null) {
 				s = Bukkit.getServer().getPlayer(name).getWorld().getName();
+			}
+			if (Configuration.usingMultiverse()) {
+				s = MonsterIRC.getHookManager().getMultiverseHook()
+						.getMVWorldManager().getMVWorld(name).getAlias();
 			}
 			return s;
 		} catch (Exception e) {

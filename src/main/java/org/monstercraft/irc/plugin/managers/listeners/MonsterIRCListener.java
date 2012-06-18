@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -85,6 +86,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (event.getJoinMessage() == null) {
+			return;
+		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
 				IRC.sendMessageToChannel(
@@ -99,6 +103,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (event.getQuitMessage() == null) {
+			return;
+		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.showJoinLeave()) {
 				IRC.sendMessageToChannel(
@@ -112,8 +119,25 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (event.getDeathMessage() == null) {
+			return;
+		}
+		for (IRCChannel c : Variables.channels) {
+			if (c.showDeath()) {
+				IRC.sendMessageToChannel(
+						c.getChannel(),
+						ColorUtils.formatGameMessage(event.getEntity()
+								.getDisplayName().replace("�", "§")
+								.replace("&", "§")
+								+ " has died."));
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerKick(PlayerKickEvent event) {
-		if (event.isCancelled()) {
+		if (event.isCancelled() || event.getLeaveMessage() == null) {
 			return;
 		}
 		for (IRCChannel c : Variables.channels) {

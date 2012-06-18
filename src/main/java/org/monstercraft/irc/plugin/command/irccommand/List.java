@@ -14,7 +14,6 @@ public class List extends IRCCommand {
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return MonsterIRC.getHandleManager().getIRCHandler()
 				.isConnected(MonsterIRC.getIRCServer())
-				&& IRC.isVoicePlus(channel, sender)
 				&& message.toLowerCase().startsWith(
 						Variables.commandPrefix + "list");
 	}
@@ -32,7 +31,11 @@ public class List extends IRCCommand {
 				sb.append(players[i].getName() + ", ");
 			}
 		}
-		IRC.sendMessageToChannel(channel, sb.toString());
+		if (IRC.isVoicePlus(channel, sender)) {
+			IRC.sendMessageToChannel(channel, sb.toString());
+		} else {
+			IRC.sendNotice(sender, sb.toString());
+		}
 		return true;
 	}
 }
