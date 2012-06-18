@@ -4,12 +4,14 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.plugin.managers.hooks.MultiverseHook;
 import org.monstercraft.irc.plugin.managers.hooks.TownyChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.VaultChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.VaultPermissionsHook;
 import org.monstercraft.irc.plugin.managers.hooks.mcMMOHook;
 
 import com.gmail.nossr50.mcMMO;
+import com.onarandombox.MultiverseCore.MultiverseCore;
 
 /**
  * This class manages all of the hooks used within the plugin.
@@ -23,6 +25,7 @@ public class HookManager {
 	private VaultPermissionsHook permissions = null;
 	private VaultChatHook chat = null;
 	private TownyChatHook townychat = null;
+	private MultiverseHook mv = null;
 	private final MonsterIRC plugin;
 
 	/**
@@ -37,6 +40,7 @@ public class HookManager {
 		permissions = new VaultPermissionsHook(plugin);
 		chat = new VaultChatHook(plugin);
 		townychat = new TownyChatHook(plugin);
+		mv = new MultiverseHook(plugin);
 	}
 
 	/**
@@ -46,6 +50,15 @@ public class HookManager {
 	 */
 	public mcMMO getmcMMOHook() {
 		return mcmmo.getHook();
+	}
+
+	/**
+	 * Fetches the mcMMO hook.
+	 * 
+	 * @return The hook into mcMMO.
+	 */
+	public MultiverseCore getMultiverseHook() {
+		return mv.getHook();
 	}
 
 	/**
