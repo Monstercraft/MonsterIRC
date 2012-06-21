@@ -38,6 +38,7 @@ public class ReloadConfig extends GameCommand {
 	}
 
 	private Runnable connect = new Runnable() {
+		@Override
 		public void run() {
 			MonsterIRC.getSettingsManager().reload();
 			MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();

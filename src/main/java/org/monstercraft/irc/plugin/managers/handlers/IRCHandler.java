@@ -237,6 +237,7 @@ public class IRCHandler extends MonsterIRC {
 	}
 
 	private Runnable connect = new Runnable() {
+		@Override
 		public void run() {
 			try {
 				Thread.sleep(5500);

@@ -41,6 +41,7 @@ public class Connect extends GameCommand {
 	}
 
 	private Runnable connect = new Runnable() {
+		@Override
 		public void run() {
 			MonsterIRC.getHandleManager().getIRCHandler()
 					.connect(MonsterIRC.getIRCServer());
