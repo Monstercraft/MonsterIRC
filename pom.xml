@@ -83,7 +83,6 @@
 				<includes>
 					<include>config.yml</include>
 					<include>plugin.yml</include>
-					<include>README.md</include>
 				</includes>
 			</resource>
 		</resources>
