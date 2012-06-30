@@ -445,6 +445,11 @@ public class IRC {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param channel
+	 * @return
+	 */
 	public static IRCChannel getChannel(final String channel) {
 		for (IRCChannel c : MonsterIRC.getChannels()) {
 			if (c.getChannel().equalsIgnoreCase(channel)) {
