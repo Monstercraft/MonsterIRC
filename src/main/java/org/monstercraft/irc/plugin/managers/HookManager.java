@@ -8,9 +8,7 @@ import org.monstercraft.irc.plugin.managers.hooks.MultiverseHook;
 import org.monstercraft.irc.plugin.managers.hooks.TownyChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.VaultChatHook;
 import org.monstercraft.irc.plugin.managers.hooks.VaultPermissionsHook;
-import org.monstercraft.irc.plugin.managers.hooks.mcMMOHook;
 
-import com.gmail.nossr50.mcMMO;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 
 /**
@@ -21,7 +19,6 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
  */
 public class HookManager {
 
-	private mcMMOHook mcmmo = null;
 	private VaultPermissionsHook permissions = null;
 	private VaultChatHook chat = null;
 	private TownyChatHook townychat = null;
@@ -36,20 +33,10 @@ public class HookManager {
 	 */
 	public HookManager(final MonsterIRC plugin) {
 		this.plugin = plugin;
-		mcmmo = new mcMMOHook(plugin);
 		permissions = new VaultPermissionsHook(plugin);
 		chat = new VaultChatHook(plugin);
 		townychat = new TownyChatHook(plugin);
 		mv = new MultiverseHook(plugin);
-	}
-
-	/**
-	 * Fetches the mcMMO hook.
-	 * 
-	 * @return The hook into mcMMO.
-	 */
-	public mcMMO getmcMMOHook() {
-		return mcmmo.getHook();
 	}
 
 	/**
@@ -86,15 +73,6 @@ public class HookManager {
 	 */
 	public com.palmergames.bukkit.TownyChat.Chat getTownyChatHook() {
 		return townychat.getHook();
-	}
-
-	/**
-	 * Creates a new hook into the plugin.
-	 * 
-	 * @return The new mcMMOHook.
-	 */
-	public void setmcMMOHook() {
-		mcmmo = new mcMMOHook(plugin);
 	}
 
 	/**

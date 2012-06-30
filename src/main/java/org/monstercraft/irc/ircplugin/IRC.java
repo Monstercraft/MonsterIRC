@@ -13,6 +13,8 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
+import com.gmail.nossr50.util.Users;
+
 public class IRC {
 
 	private final static Logger logger = Logger.getLogger(IRC.class
@@ -189,7 +191,7 @@ public class IRC {
 		Variables.linesToGame++;
 		try {
 			if (c.getChatType() == ChatType.ADMINCHAT) {
-				if (MonsterIRC.getHookManager().getmcMMOHook() != null) {
+				if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 					String format = ColorUtils.CYAN.getMinecraftColor() + "{"
 							+ ColorUtils.WHITE.getMinecraftColor() + "[IRC] "
 							+ StringUtils.getPrefix(name)
@@ -200,8 +202,8 @@ public class IRC {
 					for (Player p : getIRCPlugin().getServer()
 							.getOnlinePlayers()) {
 						if (p.isOp()
-								|| MonsterIRC.getHookManager().getmcMMOHook()
-										.getPlayerProfile(p).getAdminChatMode())
+								|| Users.getProfile(p.getName())
+										.getAdminChatMode())
 							p.sendMessage(ColorUtils.formatIRCMessage(format));
 					}
 				}
