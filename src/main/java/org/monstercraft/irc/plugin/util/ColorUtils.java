@@ -20,9 +20,12 @@ public enum ColorUtils {
 			ChatColor.AQUA.toString()), BLUE("\u000312", ChatColor.BLUE
 			.toString()), MAGENTA("\u000313", ChatColor.LIGHT_PURPLE.toString()), DARK_GRAY(
 			"\u000314", ChatColor.RED.toString()), LIGHT_GRAY("\u000315",
-			ChatColor.GRAY.toString()), NORMAL("\u000f", ""), WHITE("\u000300",
-			ChatColor.WHITE.toString()), WHITE2("\u00030", ChatColor.WHITE
-			.toString()), BLACK("\u00031", ChatColor.BLACK.toString());
+			ChatColor.GRAY.toString()), NORMAL("\u000f", ChatColor.RESET
+			.toString()), WHITE("\u000300", ChatColor.WHITE.toString()), WHITE2(
+			"\u00030", ChatColor.WHITE.toString()), BLACK("\u00031",
+			ChatColor.BLACK.toString()), BOLD("\u0002", ChatColor.BOLD
+			.toString()), UNDERLINE("\u001f", ChatColor.UNDERLINE.toString()), ITALIC(
+			"\u0016", ChatColor.ITALIC.toString());
 
 	/**
 	 * Colors in minecraft and IRC.
@@ -92,7 +95,7 @@ public enum ColorUtils {
 		} else {
 			msg = ChatColor.stripColor(msg);
 		}
-		return msg;
+		return msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor());
 	}
 
 	private static String replace(String input) {
