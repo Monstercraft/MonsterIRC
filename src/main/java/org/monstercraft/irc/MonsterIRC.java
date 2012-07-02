@@ -79,7 +79,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 						getHandleManager().getIRCHandler().part(c);
 					}
 					getHandleManager().getIRCHandler().disconnect(
-							getIRCServer(), false);
+							getIRCServer());
 				}
 			}
 		} else {
