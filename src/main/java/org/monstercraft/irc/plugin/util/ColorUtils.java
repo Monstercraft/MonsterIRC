@@ -1,5 +1,6 @@
 package org.monstercraft.irc.plugin.util;
 
+import org.bukkit.ChatColor;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 
 /**
@@ -9,12 +10,19 @@ import org.monstercraft.irc.plugin.Configuration.Variables;
  * 
  */
 public enum ColorUtils {
-	WHITE("\u000300", "f"), BLACK("\u00031", "0"), DARK_BLUE("\u00032", "1"), DARK_GREEN(
-			"\u00033", "2"), RED("\u00034", "4"), BROWN("\u00035", "8"), PURPLE(
-			"\u00036", "5"), OLIVE("\u00037", "6"), YELLOW("\u00038", "e"), GREEN(
-			"\u00039", "a"), TEAL("\u000310", "3"), CYAN("\u000311", "b"), BLUE(
-			"\u000312", "9"), MAGENTA("\u000313", "d"), DARK_GRAY("\u000314",
-			"c"), LIGHT_GRAY("\u000315", "7"), NORMAL("\u000f", "");
+	DARK_BLUE("\u00032", ChatColor.DARK_BLUE.toString()), DARK_GREEN("\u00033",
+			ChatColor.DARK_GREEN.toString()), RED("\u00034", ChatColor.DARK_RED
+			.toString()), BROWN("\u00035", ChatColor.DARK_GRAY.toString()), PURPLE(
+			"\u00036", ChatColor.DARK_PURPLE.toString()), OLIVE("\u00037",
+			ChatColor.GOLD.toString()), YELLOW("\u00038", ChatColor.YELLOW
+			.toString()), GREEN("\u00039", ChatColor.GREEN.toString()), TEAL(
+			"\u000310", ChatColor.DARK_AQUA.toString()), CYAN("\u000311",
+			ChatColor.AQUA.toString()), BLUE("\u000312", ChatColor.BLUE
+			.toString()), MAGENTA("\u000313", ChatColor.LIGHT_PURPLE.toString()), DARK_GRAY(
+			"\u000314", ChatColor.RED.toString()), LIGHT_GRAY("\u000315",
+			ChatColor.GRAY.toString()), NORMAL("\u000f", ""), WHITE("\u000300",
+			ChatColor.WHITE.toString()), WHITE2("\u00030", ChatColor.WHITE
+			.toString()), BLACK("\u00031", ChatColor.BLACK.toString());
 
 	/**
 	 * Colors in minecraft and IRC.
@@ -35,16 +43,7 @@ public enum ColorUtils {
 	 * @return The minecraft color code.
 	 */
 	public String getMinecraftColor() {
-		return "ยง" + MinecraftColor;
-	}
-
-	/**
-	 * Fetches the color in minecraft.
-	 * 
-	 * @return The minecraft color code.
-	 */
-	public String getOldMinecraftColor() {
-		return "ง" + MinecraftColor;
+		return MinecraftColor;
 	}
 
 	/**
@@ -63,22 +62,18 @@ public enum ColorUtils {
 	 *            The inital message to format.
 	 * @return The formatted message.
 	 */
-	public static String formatIRCMessage(final String message) {
-		String msg = message;
+	public static String formatIRCtoGame(final String message) {
+		String msg = replace(message);
 		if (Variables.colors) {
 			for (ColorUtils c : values()) {
-				if (msg.contains(c.getIRCColor())) {
-					msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
-				}
+				msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
 			}
 		} else {
 			for (ColorUtils c : values()) {
-				if (msg.contains(c.getIRCColor())) {
-					msg = msg.replace(c.getIRCColor(), "");
-				}
+				msg = msg.replace(c.getIRCColor(), "");
 			}
 		}
-		return msg.replace("ย", "");
+		return msg;
 	}
 
 	/**
@@ -88,31 +83,26 @@ public enum ColorUtils {
 	 *            The inital message to format.
 	 * @return The formatted message.
 	 */
-	public static String formatGameMessage(final String message) {
-		String msg = message;
+	public static String formatGametoIRC(final String message) {
+		String msg = replaceWhite(replace(message));
 		if (Variables.colors) {
 			for (ColorUtils c : values()) {
 				if (msg.contains(c.getMinecraftColor())) {
 					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
 				}
 			}
-			for (ColorUtils c : values()) {
-				if (msg.contains(c.getOldMinecraftColor())) {
-					msg = msg
-							.replace(c.getOldMinecraftColor(), c.getIRCColor());
-				}
-			}
-			if (msg.contains(WHITE.getIRCColor())) {
-				msg = msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor());
-			}
 		} else {
-			for (ColorUtils c : values()) {
-				if (msg.contains(c.getMinecraftColor())) {
-					msg = msg.replace(c.getMinecraftColor(), "");
-				}
-			}
+			msg = ChatColor.stripColor(msg);
 		}
-		return msg.replace("ย", "");
+		return msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor());
+	}
+
+	private static String replace(String input) {
+		return input.replace("&", "ง");
+	}
+
+	private static String replaceWhite(String input) {
+		return input.replace("งf", WHITE.getMinecraftColor());
 	}
 
 	private final String IRCColor;
