@@ -84,25 +84,19 @@ public enum ColorUtils {
 	 * @return The formatted message.
 	 */
 	public static String formatGametoIRC(final String message) {
-		String msg = replaceWhite(replace(message));
+		String msg = replace(message);
 		if (Variables.colors) {
 			for (ColorUtils c : values()) {
-				if (msg.contains(c.getMinecraftColor())) {
-					msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
-				}
+				msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
 			}
 		} else {
 			msg = ChatColor.stripColor(msg);
 		}
-		return msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor());
+		return msg;
 	}
 
 	private static String replace(String input) {
 		return input.replace("&", "§");
-	}
-
-	private static String replaceWhite(String input) {
-		return input.replace("§f", WHITE.getMinecraftColor());
 	}
 
 	private final String IRCColor;
