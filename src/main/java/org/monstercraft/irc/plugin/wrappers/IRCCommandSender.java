@@ -41,7 +41,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	 */
 
 	public void sendMessage(String message) {
-		IRC.sendNotice(sender, ColorUtils.formatGameMessage(message));
+		IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 	}
 
 	public void sendRawMessage(String message) {
-		IRC.sendNotice(sender, ColorUtils.formatGameMessage(message));
+		IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
 	}
 
 	public void abandonConversation(Conversation arg0,

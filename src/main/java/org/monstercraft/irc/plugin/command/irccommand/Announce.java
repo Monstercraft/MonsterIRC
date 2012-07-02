@@ -26,7 +26,7 @@ public class Announce extends IRCCommand {
 			return true;
 		}
 		Bukkit.getServer().broadcastMessage(
-				ColorUtils.formatIRCMessage("[IRC]<" + sender + ">: "
+				ColorUtils.formatIRCtoGame("[IRC]<" + sender + ">: "
 						+ message.substring(10)));
 		return true;
 	}

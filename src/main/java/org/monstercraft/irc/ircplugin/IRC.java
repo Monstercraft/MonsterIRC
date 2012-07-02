@@ -204,22 +204,19 @@ public class IRC {
 						if (p.isOp()
 								|| Users.getProfile(p.getName())
 										.getAdminChatMode())
-							p.sendMessage(ColorUtils.formatIRCMessage(format));
+							p.sendMessage(ColorUtils.formatIRCtoGame(format));
 					}
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT) {
 				if (c.getHeroChatChannel() != null) {
 					c.getHeroChatChannel().announce(
-							ColorUtils.formatIRCMessage(Variables.mcformat
-									.replace("&", "§")
+							ColorUtils.formatIRCtoGame(Variables.mcformat
 									.replace("{name}",
 											StringUtils.getDisplayName(name))
 									.replace(
 											"{HCchannelColor}",
-											"§"
-													+ c.getHeroChatChannel()
-															.getColor()
-															.getChar())
+											c.getHeroChatChannel().getColor()
+													.toString())
 									.replace("{message}", message)
 									.replace("{prefix}",
 											StringUtils.getPrefix(name))
@@ -238,8 +235,7 @@ public class IRC {
 			} else if (c.getChatType() == ChatType.GLOBAL) {
 				getIRCPlugin().getServer()
 						.broadcastMessage(
-								ColorUtils.formatIRCMessage(Variables.mcformat
-										.replace("&", "§")
+								ColorUtils.formatIRCtoGame(Variables.mcformat
 										.replace(
 												"{name}",
 												StringUtils
@@ -267,11 +263,9 @@ public class IRC {
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (MonsterIRC.getHandleManager().getPermissionsHandler()
 							.hasNode(p, c.getTownyNode())) {
-						p.sendMessage(ColorUtils.formatIRCMessage(c
+						p.sendMessage(ColorUtils.formatIRCtoGame(c
 								.getTownyChannel().getChannelTag()
-								.replace("&", "§")
 								+ Variables.mcformat
-										.replace("&", "§")
 										.replace(
 												"{name}",
 												StringUtils
@@ -280,9 +274,7 @@ public class IRC {
 												"{message}",
 												c.getTownyChannel()
 														.getMessageColour()
-														.replace("&", "§")
-														+ message.replace("&",
-																"§"))
+														+ message)
 										.replace("{prefix}",
 												StringUtils.getPrefix(name))
 										.replace("{suffix}",

@@ -23,8 +23,7 @@ public class StringUtils {
 						if (MonsterIRC.getHookManager().getChatHook()
 								.getPlayerPrefix("", name) != null) {
 							s = MonsterIRC.getHookManager().getChatHook()
-									.getPlayerPrefix("", name)
-									.replace("&", "§");
+									.getPlayerPrefix("", name);
 						}
 					}
 				}
@@ -51,7 +50,7 @@ public class StringUtils {
 						if (MonsterIRC.getHookManager().getChatHook()
 								.getPlayerPrefix(player) != null) {
 							s = MonsterIRC.getHookManager().getChatHook()
-									.getPlayerPrefix(player).replace("&", "§");
+									.getPlayerPrefix(player);
 						}
 					}
 				}
@@ -77,7 +76,7 @@ public class StringUtils {
 					if (MonsterIRC.getHookManager().getChatHook()
 							.getPlayerSuffix("", name) != null) {
 						s = MonsterIRC.getHookManager().getChatHook()
-								.getPlayerSuffix("", name).replace("&", "§");
+								.getPlayerSuffix("", name);
 
 					}
 				}
@@ -103,7 +102,7 @@ public class StringUtils {
 					if (MonsterIRC.getHookManager().getChatHook()
 							.getPlayerSuffix(p) != null) {
 						s = MonsterIRC.getHookManager().getChatHook()
-								.getPlayerSuffix(p).replace("&", "§");
+								.getPlayerSuffix(p);
 
 					}
 				}
@@ -151,8 +150,7 @@ public class StringUtils {
 										"",
 										MonsterIRC.getHookManager()
 												.getChatHook()
-												.getPrimaryGroup("", name))
-								.replace("&", "§");
+												.getPrimaryGroup("", name));
 
 					}
 				}
@@ -189,8 +187,7 @@ public class StringUtils {
 										"",
 										MonsterIRC.getHookManager()
 												.getChatHook()
-												.getPrimaryGroup(p))
-								.replace("&", "§");
+												.getPrimaryGroup(p));
 
 					}
 				}
@@ -227,8 +224,7 @@ public class StringUtils {
 										"",
 										MonsterIRC.getHookManager()
 												.getChatHook()
-												.getPrimaryGroup("", name))
-								.replace("&", "§");
+												.getPrimaryGroup("", name));
 
 					}
 				}
@@ -265,8 +261,7 @@ public class StringUtils {
 										"",
 										MonsterIRC.getHookManager()
 												.getChatHook()
-												.getPrimaryGroup(p))
-								.replace("&", "§");
+												.getPrimaryGroup(p));
 
 					}
 				}
