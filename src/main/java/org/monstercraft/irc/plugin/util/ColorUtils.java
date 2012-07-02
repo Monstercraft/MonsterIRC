@@ -25,7 +25,7 @@ public enum ColorUtils {
 			"\u00030", ChatColor.WHITE.toString()), BLACK("\u00031",
 			ChatColor.BLACK.toString()), BOLD("\u0002", ChatColor.BOLD
 			.toString()), UNDERLINE("\u001f", ChatColor.UNDERLINE.toString()), ITALIC(
-			"\u0016", ChatColor.ITALIC.toString());
+			"\u001D", ChatColor.ITALIC.toString());
 
 	/**
 	 * Colors in minecraft and IRC.
