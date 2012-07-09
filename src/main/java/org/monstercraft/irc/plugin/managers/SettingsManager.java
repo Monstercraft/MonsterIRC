@@ -133,8 +133,8 @@ public class SettingsManager extends MonsterIRC {
 					Variables.timeout);
 			Variables.tries = config.getInt("IRC.OPTIONS.RETRYS",
 					Variables.tries);
-			Variables.debug = config.getBoolean("IRC.OPTIONS.DEBUG",
-					Variables.debug);
+			Variables.partOnDC = config.getBoolean("IRC.OPTIONS.PART_ON_DISCONNECT",
+					Variables.partOnDC);
 			Variables.passOnName = config.getBoolean(
 					"IRC.OPTIONS.PASS_ON_NAME", Variables.passOnName);
 			Variables.hideMode = config.getBoolean("IRC.OPTIONS.HIDE_MODE",

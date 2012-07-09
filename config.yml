@@ -12,6 +12,7 @@ IRC:
     PASS_ON_NAME: false
     HIDE_MODE: false
     ALLOW_COLORS: true
+    PART_ON_DISCONNECT: true
   ADMIN:
     INGAME_COMMANDS: false
     INGAME_COMMANDS_PREFIX: '.'
