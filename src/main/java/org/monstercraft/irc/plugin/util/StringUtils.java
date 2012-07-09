@@ -287,7 +287,10 @@ public class StringUtils {
 						.getMVWorldManager().getMVWorld(name.trim()) != null) {
 					s = MonsterIRC.getHookManager().getMultiverseHook()
 							.getMVWorldManager().getMVWorld(name.trim())
-							.getAlias();
+							.getColor().toString()
+							+ MonsterIRC.getHookManager().getMultiverseHook()
+									.getMVWorldManager()
+									.getMVWorld(name.trim()).getAlias();
 					if (!s.equalsIgnoreCase("")) {
 						return s;
 					}
