@@ -295,8 +295,11 @@ public class StringUtils {
 			}
 			if (Bukkit.getServer().getPlayer(name) != null) {
 				s = Bukkit.getServer().getPlayer(name).getWorld().getName();
+				if (!s.equalsIgnoreCase("")) {
+					return s;
+				}
 			}
-			return s;
+			return name;
 		} catch (Exception e) {
 			return "";
 		}
