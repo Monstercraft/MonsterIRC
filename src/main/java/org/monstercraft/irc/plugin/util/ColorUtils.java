@@ -1,8 +1,7 @@
 package org.monstercraft.irc.plugin.util;
 
-import java.util.ArrayList;
-
 import org.bukkit.ChatColor;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 
 /**
@@ -79,6 +78,7 @@ public enum ColorUtils {
 				msg = msg.replace(c.getIRCColor(), "");
 			}
 		}
+		IRC.log(msg);
 		return msg;
 	}
 
@@ -98,7 +98,9 @@ public enum ColorUtils {
 		} else {
 			msg = ChatColor.stripColor(msg);
 		}
-		return resolve(msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor()));
+		msg = resolve(msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor()));
+		IRC.log(msg);
+		return msg;
 	}
 
 	private static int find(String message, String main) {
@@ -124,13 +126,5 @@ public enum ColorUtils {
 	private final String IRCColor;
 
 	private final String MinecraftColor;
-
-	public static ArrayList<String> formats = new ArrayList<String>();
-
-	static {
-		for (ColorUtils c : ColorUtils.values()) {
-			formats.add(c.getMinecraftColor());
-		}
-	}
 
 }
