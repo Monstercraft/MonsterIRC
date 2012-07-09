@@ -282,12 +282,19 @@ public class StringUtils {
 	public static String getWorld(String name) {
 		try {
 			String s = "";
+			if (Configuration.usingMultiverse()) {
+				if (MonsterIRC.getHookManager().getMultiverseHook()
+						.getMVWorldManager().getMVWorld(name.trim()) != null) {
+					s = MonsterIRC.getHookManager().getMultiverseHook()
+							.getMVWorldManager().getMVWorld(name.trim())
+							.getAlias();
+					if (!s.equalsIgnoreCase("")) {
+						return s;
+					}
+				}
+			}
 			if (Bukkit.getServer().getPlayer(name) != null) {
 				s = Bukkit.getServer().getPlayer(name).getWorld().getName();
-			}
-			if (Configuration.usingMultiverse()) {
-				s = MonsterIRC.getHookManager().getMultiverseHook()
-						.getMVWorldManager().getMVWorld(name).getAlias();
 			}
 			return s;
 		} catch (Exception e) {

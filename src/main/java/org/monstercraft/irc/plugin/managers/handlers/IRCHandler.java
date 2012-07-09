@@ -192,6 +192,11 @@ public class IRCHandler extends MonsterIRC {
 	 */
 	public boolean disconnect(final IRCServer server) {
 		if (isConnected(server)) {
+			if (Variables.partOnDC) {
+				for (IRCChannel c : Variables.channels) {
+					getHandleManager().getIRCHandler().part(c);
+				}
+			}
 			try {
 				if (watch != null) {
 					watch.interrupt();

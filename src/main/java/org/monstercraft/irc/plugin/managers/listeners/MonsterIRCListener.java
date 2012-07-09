@@ -39,7 +39,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	/**
 	 * 
 	 * @param plugin
-	 *            The parent plugin.
+	 *            The parent plugin for the listener.
 	 */
 	public MonsterIRCListener(final MonsterIRC plugin) {
 		this.plugin = plugin;
@@ -109,7 +109,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGametoIRC(event.getPlayer()
-								+ " has quit."));
+								.getDisplayName() + " has quit."));
 			}
 		}
 	}
@@ -214,7 +214,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									StringUtils.getGroupSuffix(player))
 							.replace("{message}", " " + message)
 							.replace("{world}",
-									StringUtils.getWorld(player.getName())));
+									StringUtils.getWorld(player.getWorld().getName())));
 					Variables.linesToIrc++;
 					IRC.sendMessageToChannel(c,
 							ColorUtils.formatGametoIRC(result.toString()));
@@ -266,7 +266,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											.toString())
 							.replace("{message}", " " + message)
 							.replace("{world}",
-									StringUtils.getWorld(player.getName())));
+									StringUtils.getWorld(player.getWorld().getName())));
 					Variables.linesToIrc++;
 					IRC.sendMessageToChannel(c.getChannel(),
 							ColorUtils.formatGametoIRC(result.toString()));
@@ -294,7 +294,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player))
 					.replace("{message}", " " + message)
-					.replace("{world}", StringUtils.getWorld(player.getName())));
+					.replace("{world}", StringUtils.getWorld(player.getWorld().getName())));
 			Variables.linesToIrc++;
 			IRC.sendMessageToChannel(c,
 					ColorUtils.formatGametoIRC(result.toString()));
@@ -327,7 +327,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 									StringUtils.getGroupSuffix(player))
 							.replace("{message}", " " + message)
 							.replace("{world}",
-									StringUtils.getWorld(player.getName())));
+									StringUtils.getWorld(player.getWorld().getName())));
 					Variables.linesToIrc++;
 					IRC.sendMessageToChannel(c,
 							ColorUtils.formatGametoIRC(result.toString()));

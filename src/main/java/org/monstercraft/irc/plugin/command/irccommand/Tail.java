@@ -1,34 +1,51 @@
 package org.monstercraft.irc.plugin.command.irccommand;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.IRCCommand;
-import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-public class Announce extends IRCCommand {
+public class Tail extends IRCCommand {
 
 	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return MonsterIRC.getHandleManager().getIRCHandler()
 				.isConnected(MonsterIRC.getIRCServer())
-				&& IRC.isVoicePlus(channel, sender)
+				&& IRC.isOp(channel, sender)
 				&& message.toLowerCase().startsWith(
-						Variables.commandPrefix + "announce");
+						Variables.commandPrefix + "tail");
 	}
 
 	@Override
 	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (message.length() < 9) {
-			IRC.sendNotice(sender, "No message! Please add a message.");
+		int size = 25;
+		if (message.length() > 6) {
+			if (validNumber(message.substring(6))) {
+				size = Integer.parseInt(message.substring(6));
+			}
+		}
+		ArrayList<String> records = MonsterIRC.getLogHandler().getLastRecords(
+				size);
+		if (records.isEmpty()) {
+			IRC.sendNotice(sender, "No records found!");
 			return true;
 		}
-		Bukkit.getServer().broadcastMessage(
-				ColorUtils.formatIRCtoGame(
-						"[IRC]<" + sender + ">: " + message.substring(10),
-						message.substring(10)));
+		for (String s : records) {
+			IRC.sendNotice(sender, s);
+		}
+		return true;
+	}
+
+	public boolean validNumber(String in) {
+		try {
+
+			Integer.parseInt(in);
+		} catch (NumberFormatException ex) {
+			return false;
+		}
 		return true;
 	}
 }

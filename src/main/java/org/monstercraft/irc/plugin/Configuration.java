@@ -210,6 +210,11 @@ public class Configuration {
 		 * The option to enable colors.
 		 */
 		public static boolean colors = true;
+		
+		/**
+		 * The option to part on disconnect.
+		 */
+		public static boolean partOnDC = true;
 
 		/**
 		 * Pass chat only when the bots name is said.
