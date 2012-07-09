@@ -29,6 +29,7 @@ import org.monstercraft.irc.plugin.command.irccommand.Announce;
 import org.monstercraft.irc.plugin.command.irccommand.Commands;
 import org.monstercraft.irc.plugin.command.irccommand.List;
 import org.monstercraft.irc.plugin.command.irccommand.Other;
+import org.monstercraft.irc.plugin.command.irccommand.Tail;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**
@@ -67,6 +68,7 @@ public class CommandManager extends MonsterIRC {
 		IRCCommands.add(new List());
 		IRCCommands.add(new Announce());
 		IRCCommands.add(new Commands());
+		IRCCommands.add(new Tail());
 		if (Variables.ingamecommands) {
 			IRCCommands.add(new Other());
 		}

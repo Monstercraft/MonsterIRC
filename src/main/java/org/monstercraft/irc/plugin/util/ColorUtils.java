@@ -1,6 +1,7 @@
 package org.monstercraft.irc.plugin.util;
 
 import org.bukkit.ChatColor;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 
 /**
@@ -65,8 +66,9 @@ public enum ColorUtils {
 	 *            The inital message to format.
 	 * @return The formatted message.
 	 */
-	public static String formatIRCtoGame(final String message) {
-		String msg = replace(message);
+	public static String formatIRCtoGame(final String message, final String main) {
+		int index = find(message, main);
+		String msg = resolve(replace(message), main, index);
 		if (Variables.colors) {
 			for (ColorUtils c : values()) {
 				msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
@@ -76,6 +78,7 @@ public enum ColorUtils {
 				msg = msg.replace(c.getIRCColor(), "");
 			}
 		}
+		IRC.log(ChatColor.stripColor(msg));
 		return msg;
 	}
 
@@ -95,11 +98,29 @@ public enum ColorUtils {
 		} else {
 			msg = ChatColor.stripColor(msg);
 		}
-		return msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor());
+		msg = resolve(msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor()));
+		IRC.log(ChatColor.stripColor(msg));
+		return msg;
+	}
+
+	private static int find(String message, String main) {
+		return message.indexOf(main);
+	}
+
+	private static String resolve(String main, String replacement, int index) {
+		char[] chars = main.toCharArray();
+		for (int i = index; i < index + replacement.length(); i++) {
+			chars[i] = replacement.charAt(i - index);
+		}
+		return String.valueOf(chars);
 	}
 
 	private static String replace(String input) {
 		return input.replace("&", "§");
+	}
+
+	private static String resolve(String input) {
+		return input.replace("§", "&");
 	}
 
 	private final String IRCColor;

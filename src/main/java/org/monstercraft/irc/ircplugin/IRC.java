@@ -204,7 +204,7 @@ public class IRC {
 						if (p.isOp()
 								|| Users.getProfile(p.getName())
 										.getAdminChatMode())
-							p.sendMessage(ColorUtils.formatIRCtoGame(format));
+							p.sendMessage(ColorUtils.formatIRCtoGame(format, message));
 					}
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT) {
@@ -227,7 +227,7 @@ public class IRC {
 									.replace("{groupSuffix}",
 											StringUtils.getGroupSuffix(name))
 									.replace("{world}",
-											StringUtils.getWorld(name))));
+											StringUtils.getWorld(name)), message));
 				} else {
 					log("Invalid herochat channel detected for "
 							+ c.getChannel());
@@ -245,6 +245,7 @@ public class IRC {
 												ColorUtils.WHITE
 														.getMinecraftColor()
 														+ message)
+										.replace("{HCchannelColor}", "")
 										.replace("{prefix}",
 												StringUtils.getPrefix(name))
 										.replace("{suffix}",
@@ -258,7 +259,7 @@ public class IRC {
 												StringUtils
 														.getGroupSuffix(name))
 										.replace("{world}",
-												StringUtils.getWorld(name))));
+												StringUtils.getWorld(name)), message));
 			} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 				for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 					if (MonsterIRC.getHandleManager().getPermissionsHandler()
@@ -270,6 +271,7 @@ public class IRC {
 												"{name}",
 												StringUtils
 														.getDisplayName(name))
+										.replace("{HCchannelColor}", "")
 										.replace(
 												"{message}",
 												c.getTownyChannel()
@@ -288,7 +290,7 @@ public class IRC {
 												StringUtils
 														.getGroupSuffix(name))
 										.replace("{world}",
-												StringUtils.getWorld(name))));
+												StringUtils.getWorld(name)), message));
 					}
 				}
 			}

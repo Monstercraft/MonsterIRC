@@ -18,6 +18,7 @@ import org.monstercraft.irc.plugin.managers.SettingsManager;
 import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
 import org.monstercraft.irc.plugin.util.Metrics;
 import org.monstercraft.irc.plugin.util.Metrics.Graph;
+import org.monstercraft.irc.plugin.util.log.TailLogHandler;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
@@ -40,12 +41,15 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	private static SettingsManager settings = null;
 	private Object lock = new Object();
 	private static EventManager em = null;
+	private static TailLogHandler tail = null;
 
 	/**
 	 * Enables the plugin.
 	 */
 
 	public void onEnable() {
+		tail = new TailLogHandler();
+		Bukkit.getLogger().addHandler(tail);
 		IRC.log("Starting plugin.");
 		new Configuration();
 		settings = new SettingsManager(this);
@@ -75,9 +79,6 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 			if (getHandleManager().getIRCHandler() != null) {
 				if (getHandleManager().getIRCHandler().isConnected(
 						getIRCServer())) {
-					for (IRCChannel c : Variables.channels) {
-						getHandleManager().getIRCHandler().part(c);
-					}
 					getHandleManager().getIRCHandler().disconnect(
 							getIRCServer());
 				}
@@ -163,6 +164,15 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	 */
 	public static EventManager getEventManager() {
 		return em;
+	}
+
+	/**
+	 * Fetches the handler handling messages.
+	 * 
+	 * @return The tailloghandler.
+	 */
+	public static TailLogHandler getLogHandler() {
+		return tail;
 	}
 
 	/**
