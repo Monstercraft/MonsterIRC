@@ -99,7 +99,6 @@ public enum ColorUtils {
 			msg = ChatColor.stripColor(msg);
 		}
 		msg = resolve(msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor()));
-		IRC.log(ChatColor.stripColor(msg));
 		return msg;
 	}
 
@@ -116,11 +115,11 @@ public enum ColorUtils {
 	}
 
 	private static String replace(String input) {
-		return input.replace("&", "§");
+		return input.replace("&", "ï¿½");
 	}
 
 	private static String resolve(String input) {
-		return input.replace("§", "&");
+		return input.replace("ï¿½", "&");
 	}
 
 	private final String IRCColor;
