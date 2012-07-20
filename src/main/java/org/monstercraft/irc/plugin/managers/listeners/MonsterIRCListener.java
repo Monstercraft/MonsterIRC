@@ -213,8 +213,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace("{groupSuffix}",
 									StringUtils.getGroupSuffix(player))
 							.replace("{message}", " " + message)
-							.replace("{world}",
-									StringUtils.getWorld(player.getWorld().getName())));
+							.replace(
+									"{world}",
+									StringUtils.getWorld(player.getWorld()
+											.getName())));
 					Variables.linesToIrc++;
 					IRC.sendMessageToChannel(c,
 							ColorUtils.formatGametoIRC(result.toString()));
@@ -223,6 +225,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		} else if (c.getChatType() == ChatType.HEROCHAT) {
 			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 				if (Users.getProfile(player.getName()).getAdminChatMode()) {
+					return;
+				}
+				if (Users.getProfile(player.getName()).getPartyChatMode()) {
 					return;
 				}
 			}
@@ -265,8 +270,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											.getActiveChannel().getColor()
 											.toString())
 							.replace("{message}", " " + message)
-							.replace("{world}",
-									StringUtils.getWorld(player.getWorld().getName())));
+							.replace(
+									"{world}",
+									StringUtils.getWorld(player.getWorld()
+											.getName())));
 					Variables.linesToIrc++;
 					IRC.sendMessageToChannel(c.getChannel(),
 							ColorUtils.formatGametoIRC(result.toString()));
@@ -278,6 +285,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		} else if (c.getChatType() == ChatType.GLOBAL) {
 			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 				if (Users.getProfile(player.getName()).getAdminChatMode()) {
+					return;
+				}
+				if (Users.getProfile(player.getName()).getPartyChatMode()) {
 					return;
 				}
 			}
@@ -294,13 +304,17 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player))
 					.replace("{message}", " " + message)
-					.replace("{world}", StringUtils.getWorld(player.getWorld().getName())));
+					.replace("{world}",
+							StringUtils.getWorld(player.getWorld().getName())));
 			Variables.linesToIrc++;
 			IRC.sendMessageToChannel(c,
 					ColorUtils.formatGametoIRC(result.toString()));
 		} else if (c.getChatType() == ChatType.TOWNYCHAT) {
 			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 				if (Users.getProfile(player.getName()).getAdminChatMode()) {
+					return;
+				}
+				if (Users.getProfile(player.getName()).getPartyChatMode()) {
 					return;
 				}
 			}
@@ -326,8 +340,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace("{groupSuffix}",
 									StringUtils.getGroupSuffix(player))
 							.replace("{message}", " " + message)
-							.replace("{world}",
-									StringUtils.getWorld(player.getWorld().getName())));
+							.replace(
+									"{world}",
+									StringUtils.getWorld(player.getWorld()
+											.getName())));
 					Variables.linesToIrc++;
 					IRC.sendMessageToChannel(c,
 							ColorUtils.formatGametoIRC(result.toString()));
