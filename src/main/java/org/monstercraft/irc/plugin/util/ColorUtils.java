@@ -99,7 +99,6 @@ public enum ColorUtils {
 			msg = ChatColor.stripColor(msg);
 		}
 		msg = resolve(msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor()));
-		IRC.log(ChatColor.stripColor(msg));
 		return msg;
 	}
 

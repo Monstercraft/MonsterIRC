@@ -29,15 +29,16 @@
 			<id>central</id>
 			<url>file:///var/lib/jenkins/workspace/MonsterIRC/.repository/</url>
 		</repository>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public</url>
-		</repository>
 	</repositories>
 
 
 	<dependencies>
-			<dependency>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>craftbukkit</artifactId>
+			<version>1.2.5-R4.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>com.onarandombox.MultiverseCore</groupId>
 			<artifactId>MultiverseCore</artifactId>
 			<version>2.4-b527</version>
@@ -46,11 +47,6 @@
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
 			<version>1.2.9-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit</artifactId>
-			<version>1.2.3-R0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.palmergames.bukkit</groupId>
