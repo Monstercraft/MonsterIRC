@@ -25,6 +25,10 @@
 	</ciManagement>
 
 	<repositories>
+	    <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
 		<repository>
 			<id>central</id>
 			<url>file:///var/lib/jenkins/workspace/MonsterIRC/.repository/</url>
@@ -33,11 +37,12 @@
 
 
 	<dependencies>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit</artifactId>
-			<version>1.2.5-R4.1-SNAPSHOT</version>
-		</dependency>
+	    <dependency>
+	      <groupId>org.bukkit</groupId>
+	      <artifactId>craftbukkit</artifactId>
+	      <version>[1.2.5-R4.0,)</version>
+	      <type>jar</type>
+	    </dependency>
 		<dependency>
 			<groupId>com.onarandombox.MultiverseCore</groupId>
 			<artifactId>MultiverseCore</artifactId>
