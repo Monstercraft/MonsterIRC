@@ -198,6 +198,8 @@ public class IRCHandler extends MonsterIRC {
 				}
 			}
 			try {
+				writer.write("QUIT Leaving." + "\r\n");
+				writer.flush();
 				if (watch != null) {
 					watch.interrupt();
 					watch = null;
