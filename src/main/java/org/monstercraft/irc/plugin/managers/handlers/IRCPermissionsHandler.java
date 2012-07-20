@@ -92,6 +92,10 @@ public class IRCPermissionsHandler extends MonsterIRC {
 	}
 
 	public boolean hasNode(Player player, String node) {
+		if ((perms.has(player, "irc.*") || perms.has(player, "irc.admin"))
+				&& node.equalsIgnoreCase("irc.nochat")) {
+			return false;
+		}
 		return perms.has(player, node);
 	}
 }
