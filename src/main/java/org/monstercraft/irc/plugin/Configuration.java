@@ -67,14 +67,12 @@ public class Configuration {
 		/**
 		 * The location in which to save the files.
 		 */
-		public static final String ROOT = "plugins" + File.separator
-				+ "MonsterIRC" + File.separator;
+		public static final File ROOT = IRC.getIRCPlugin().getDataFolder();
 
 		/**
 		 * The configuration file.
 		 */
-		public static final String SETTINGS_FILE = ROOT + File.separatorChar
-				+ "Settings.yml";
+		public static final File SETTINGS_FILE = new File(ROOT, "Settings.yml");
 
 		/**
 		 * The locaton where the plugins for MonsterIRC are stored.
@@ -210,7 +208,7 @@ public class Configuration {
 		 * The option to enable colors.
 		 */
 		public static boolean colors = true;
-		
+
 		/**
 		 * The option to part on disconnect.
 		 */

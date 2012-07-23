@@ -68,8 +68,7 @@ public class SettingsManager extends MonsterIRC {
 	 */
 	public void saveMuted() {
 		final FileConfiguration config = plugin.getConfig();
-		final File CONFIGURATION_FILE = new File(
-				Configuration.Paths.SETTINGS_FILE);
+		final File CONFIGURATION_FILE = Configuration.Paths.SETTINGS_FILE;
 		boolean exists = CONFIGURATION_FILE.exists();
 		if (exists) {
 			try {
@@ -95,8 +94,7 @@ public class SettingsManager extends MonsterIRC {
 	 */
 	public void load() {
 		final FileConfiguration config = this.plugin.getConfig();
-		final File CONFIGURATION_FILE = new File(
-				Configuration.Paths.SETTINGS_FILE);
+		final File CONFIGURATION_FILE = Configuration.Paths.SETTINGS_FILE;
 		boolean exists = CONFIGURATION_FILE.exists();
 		IRC.log("Loading settings.yml file");
 		if (exists) {

@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerCommandEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
@@ -45,6 +46,11 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		this.plugin = plugin;
 	}
 
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPing(ServerListPingEvent event) {
+		event.setMotd("jolo");
+	}
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPluginEnable(PluginEnableEvent event) {
 		String PluginName = event.getPlugin().getDescription().getName();
