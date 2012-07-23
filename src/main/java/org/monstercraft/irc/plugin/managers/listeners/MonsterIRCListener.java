@@ -48,7 +48,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPing(ServerListPingEvent event) {
-		event.setMotd("jolo");
+		//event.setMotd("");
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
