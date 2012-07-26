@@ -228,7 +228,7 @@ public class IRCHandler extends MonsterIRC {
 				messageQueue.clear();
 				IRC.log("Successfully disconnected from IRC.");
 			} finally {
-				
+
 			}
 		}
 		IRCDisconnectEvent devent = new IRCDisconnectEvent(server);
@@ -556,9 +556,7 @@ public class IRCHandler extends MonsterIRC {
 
 								if (msg != null && name != null
 										&& c.getChannel() != null) {
-									if (msg.startsWith(Variables.commandPrefix)
-											&& !Variables.muted.contains(name
-													.toLowerCase())) {
+									if (msg.startsWith(Variables.commandPrefix)) {
 										MonsterIRC.getCommandManager()
 												.onIRCCommand(name, msg, c);
 										break;
