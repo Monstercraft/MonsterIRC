@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -191,6 +192,13 @@ public class Configuration {
 		} catch (UnsupportedEncodingException ignored) {
 		}
 		return path;
+	}
+
+	public static void fixCase(List<String> strings) {
+		ListIterator<String> iterator = strings.listIterator();
+		while (iterator.hasNext()) {
+			iterator.set(iterator.next().toLowerCase());
+		}
 	}
 
 	public static class Variables {

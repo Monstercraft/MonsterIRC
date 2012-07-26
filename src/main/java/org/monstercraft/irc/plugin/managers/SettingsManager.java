@@ -155,6 +155,7 @@ public class SettingsManager extends MonsterIRC {
 			Variables.connectCommands = config
 					.getStringList("IRC.ON_CONNECT_COMMANDS");
 			Variables.muted = config.getStringList("IRC.MUTED");
+			Configuration.fixCase(Variables.muted);
 			save(config, CONFIGURATION_FILE);
 		} catch (Exception e) {
 			IRC.debug(e);
