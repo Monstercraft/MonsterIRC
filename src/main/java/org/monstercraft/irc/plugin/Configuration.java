@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -67,14 +68,12 @@ public class Configuration {
 		/**
 		 * The location in which to save the files.
 		 */
-		public static final String ROOT = "plugins" + File.separator
-				+ "MonsterIRC" + File.separator;
+		public static final File ROOT = IRC.getIRCPlugin().getDataFolder();
 
 		/**
 		 * The configuration file.
 		 */
-		public static final String SETTINGS_FILE = ROOT + File.separatorChar
-				+ "Settings.yml";
+		public static final File SETTINGS_FILE = new File(ROOT, "Settings.yml");
 
 		/**
 		 * The locaton where the plugins for MonsterIRC are stored.
@@ -195,6 +194,13 @@ public class Configuration {
 		return path;
 	}
 
+	public static void fixCase(List<String> strings) {
+		ListIterator<String> iterator = strings.listIterator();
+		while (iterator.hasNext()) {
+			iterator.set(iterator.next().toLowerCase());
+		}
+	}
+
 	public static class Variables {
 
 		public static int linesToIrc = 0;
@@ -210,7 +216,7 @@ public class Configuration {
 		 * The option to enable colors.
 		 */
 		public static boolean colors = true;
-		
+
 		/**
 		 * The option to part on disconnect.
 		 */

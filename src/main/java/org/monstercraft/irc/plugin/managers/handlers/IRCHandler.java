@@ -217,6 +217,7 @@ public class IRCHandler extends MonsterIRC {
 						writer.close();
 						writer = null;
 					}
+					reader.close();
 					connection.close();
 					connection = null;
 				}
@@ -226,6 +227,8 @@ public class IRCHandler extends MonsterIRC {
 				connection = null;
 				messageQueue.clear();
 				IRC.log("Successfully disconnected from IRC.");
+			} finally {
+				
 			}
 		}
 		IRCDisconnectEvent devent = new IRCDisconnectEvent(server);
@@ -674,13 +677,6 @@ public class IRCHandler extends MonsterIRC {
 			} catch (final Exception e) {
 				Thread.currentThread().interrupt();
 				disconnect(MonsterIRC.getIRCServer());
-			} finally {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					Thread.currentThread().interrupt();
-					disconnect(MonsterIRC.getIRCServer());
-				}
 			}
 		}
 
