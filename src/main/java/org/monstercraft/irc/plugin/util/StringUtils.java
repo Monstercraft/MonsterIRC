@@ -282,20 +282,6 @@ public class StringUtils {
 	public static String getWorld(String name) {
 		try {
 			String s = "";
-			if (Configuration.usingMultiverse()) {
-				if (MonsterIRC.getHookManager().getMultiverseHook()
-						.getMVWorldManager().getMVWorld(name.trim()) != null) {
-					s = MonsterIRC.getHookManager().getMultiverseHook()
-							.getMVWorldManager().getMVWorld(name.trim())
-							.getColor().toString()
-							+ MonsterIRC.getHookManager().getMultiverseHook()
-									.getMVWorldManager()
-									.getMVWorld(name.trim()).getAlias();
-					if (!s.equalsIgnoreCase("")) {
-						return s;
-					}
-				}
-			}
 			if (Bukkit.getServer().getPlayer(name) != null) {
 				s = Bukkit.getServer().getPlayer(name).getWorld().getName();
 				if (!s.equalsIgnoreCase("")) {
@@ -306,6 +292,37 @@ public class StringUtils {
 		} catch (Exception e) {
 			return "";
 		}
+	}
+
+	public static String getMvWorldAlias(String name) {
+		String s = "";
+		if (Configuration.usingMultiverse()) {
+			if (MonsterIRC.getHookManager().getMultiverseHook()
+					.getMVWorldManager().getMVWorld(name.trim()) != null) {
+				s = MonsterIRC.getHookManager().getMultiverseHook()
+						.getMVWorldManager().getMVWorld(name.trim()).getAlias();
+				if (!s.equalsIgnoreCase("")) {
+					return s;
+				}
+			}
+		}
+		return s;
+	}
+
+	public static String getMvWorldColor(String name) {
+		String s = "";
+		if (Configuration.usingMultiverse()) {
+			if (MonsterIRC.getHookManager().getMultiverseHook()
+					.getMVWorldManager().getMVWorld(name.trim()) != null) {
+				s = MonsterIRC.getHookManager().getMultiverseHook()
+						.getMVWorldManager().getMVWorld(name.trim()).getColor()
+						.toString();
+				if (!s.equalsIgnoreCase("")) {
+					return s;
+				}
+			}
+		}
+		return s;
 	}
 
 }

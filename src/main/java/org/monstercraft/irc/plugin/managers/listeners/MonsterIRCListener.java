@@ -44,7 +44,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	public MonsterIRCListener(final MonsterIRC plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPluginEnable(PluginEnableEvent event) {
 		String PluginName = event.getPlugin().getDescription().getName();
@@ -90,7 +90,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			return;
 		}
 		for (IRCChannel c : Variables.channels) {
-			if (c.showJoinLeave()) {
+			if (c.showIngameEvents()) {
 				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGametoIRC(event.getPlayer()
@@ -105,7 +105,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			return;
 		}
 		for (IRCChannel c : Variables.channels) {
-			if (c.showJoinLeave()) {
+			if (c.showIngameEvents()) {
 				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGametoIRC(event.getPlayer()
@@ -120,7 +120,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			return;
 		}
 		for (IRCChannel c : Variables.channels) {
-			if (c.showDeath()) {
+			if (c.showIngameEvents()) {
 				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGametoIRC(event.getEntity()
@@ -135,7 +135,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 			return;
 		}
 		for (IRCChannel c : Variables.channels) {
-			if (c.showJoinLeave()) {
+			if (c.showIngameEvents()) {
 				IRC.sendMessageToChannel(
 						c.getChannel(),
 						ColorUtils.formatGametoIRC(event.getPlayer()
@@ -186,6 +186,10 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix("Console"))
 					.replace("{message}", message)
+					.replace("{mvWorld}",
+							StringUtils.getMvWorldAlias("console"))
+					.replace("{mvColor}",
+							StringUtils.getMvWorldColor("console"))
 					.replace("{world}", StringUtils.getWorld("Console")));
 			Variables.linesToIrc++;
 			IRC.sendMessageToChannel(c,
@@ -213,6 +217,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace("{groupSuffix}",
 									StringUtils.getGroupSuffix(player))
 							.replace("{message}", " " + message)
+							.replace(
+									"{mvWorld}",
+									StringUtils.getMvWorldAlias(player
+											.getWorld().getName()))
+							.replace(
+									"{mvColor}",
+									StringUtils.getMvWorldColor(player
+											.getWorld().getName()))
 							.replace(
 									"{world}",
 									StringUtils.getWorld(player.getWorld()
@@ -271,6 +283,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 											.toString())
 							.replace("{message}", " " + message)
 							.replace(
+									"{mvWorld}",
+									StringUtils.getMvWorldAlias(player
+											.getWorld().getName()))
+							.replace(
+									"{mvColor}",
+									StringUtils.getMvWorldColor(player
+											.getWorld().getName()))
+							.replace(
 									"{world}",
 									StringUtils.getWorld(player.getWorld()
 											.getName())));
@@ -304,6 +324,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 					.replace("{groupSuffix}",
 							StringUtils.getGroupSuffix(player))
 					.replace("{message}", " " + message)
+					.replace(
+							"{mvWorld}",
+							StringUtils.getMvWorldAlias(player.getWorld()
+									.getName()))
+					.replace(
+							"{mvColor}",
+							StringUtils.getMvWorldColor(player.getWorld()
+									.getName()))
 					.replace("{world}",
 							StringUtils.getWorld(player.getWorld().getName())));
 			Variables.linesToIrc++;
@@ -340,6 +368,14 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							.replace("{groupSuffix}",
 									StringUtils.getGroupSuffix(player))
 							.replace("{message}", " " + message)
+							.replace(
+									"{mvWorld}",
+									StringUtils.getMvWorldAlias(player
+											.getWorld().getName()))
+							.replace(
+									"{mvColor}",
+									StringUtils.getMvWorldColor(player
+											.getWorld().getName()))
 							.replace(
 									"{world}",
 									StringUtils.getWorld(player.getWorld()

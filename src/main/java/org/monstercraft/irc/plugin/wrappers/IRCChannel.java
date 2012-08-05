@@ -33,18 +33,18 @@ public class IRCChannel {
 	private List<String> voices;
 	private List<String> listenChatChannels;
 	private String password;
-	private boolean showJoinLeave;
+	private boolean showingameEvents;
+	private boolean showIRCEvents;
 	private boolean passToIRC;
 	private boolean passToGame;
 	private String node;
-	private boolean death;
 
 	/**
 	 * Creates an IRCChannel to join. .
 	 * 
 	 * @param password
 	 *            The password to the channel, if any;
-	 * @param showJoinLeave
+	 * @param showingameEvents
 	 *            The option to show leave/join messages.
 	 * @param autoJoin
 	 *            The option to automatically connect to the server.
@@ -61,14 +61,15 @@ public class IRCChannel {
 	 * @param userCommands
 	 *            The list of commands IRC users can use.
 	 */
-	public IRCChannel(final String password, final boolean showJoinLeave,
-			final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final ChatType type,
-			final List<String> opCommands, final List<String> hopCommands,
-			final List<String> adminCommands, final List<String> voiceCommands,
-			final List<String> userCommands, final boolean passToGame,
-			final boolean passToIRC,final boolean death) {
-		this.showJoinLeave = showJoinLeave;
+	public IRCChannel(final String password, final boolean showingameEvents,
+			final boolean showIRCEvents, final boolean autoJoin,
+			final boolean defaultChannel, final String channel,
+			final ChatType type, final List<String> opCommands,
+			final List<String> hopCommands, final List<String> adminCommands,
+			final List<String> voiceCommands, final List<String> userCommands,
+			final boolean passToGame, final boolean passToIRC) {
+		this.showingameEvents = showingameEvents;
+		this.showIRCEvents = showIRCEvents;
 		this.password = password;
 		this.channel = channel;
 		this.type = type;
@@ -93,7 +94,7 @@ public class IRCChannel {
 	 * 
 	 * @param password
 	 *            The password to the channel, if any;
-	 * @param showJoinLeave
+	 * @param showingameEvents
 	 *            The option to show leave/join messages.
 	 * @param autoJoin
 	 *            The option to automatically connect to the server.
@@ -112,15 +113,16 @@ public class IRCChannel {
 	 * @param userCommands
 	 *            The list of commands IRC users can use.
 	 */
-	public IRCChannel(final String password, final boolean showJoinLeave,
-			final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final String ChatChannel,
-			final List<String> listenChatChannels, final ChatType type,
-			final List<String> opCommands, final List<String> hopCommands,
-			final List<String> adminCommands, final List<String> voiceCommands,
-			final List<String> userCommands, final boolean passToGame,
-			final boolean passToIRC, final boolean death) {
-		this.showJoinLeave = showJoinLeave;
+	public IRCChannel(final String password, final boolean showingameEvents,
+			final boolean showIRCEvents, final boolean autoJoin,
+			final boolean defaultChannel, final String channel,
+			final String ChatChannel, final List<String> listenChatChannels,
+			final ChatType type, final List<String> opCommands,
+			final List<String> hopCommands, final List<String> adminCommands,
+			final List<String> voiceCommands, final List<String> userCommands,
+			final boolean passToGame, final boolean passToIRC) {
+		this.showingameEvents = showingameEvents;
+		this.showIRCEvents = showIRCEvents;
 		this.password = password;
 		this.channel = channel;
 		this.ChatChannel = ChatChannel;
@@ -139,18 +141,18 @@ public class IRCChannel {
 		this.admins = new ArrayList<String>();
 		this.passToGame = passToGame;
 		this.passToIRC = passToIRC;
-		this.death = death;
 	}
 
-	public IRCChannel(final String password, final boolean showJoinLeave,
-			final boolean autoJoin, final boolean defaultChannel,
-			final String channel, final String ChatChannel,
-			final ChatType type, final List<String> opCommands,
-			final List<String> hopCommands, final List<String> adminCommands,
-			final List<String> voiceCommands, final List<String> userCommands,
-			final boolean passToGame, final boolean passToIRC,
-			final String node, final boolean death) {
-		this.showJoinLeave = showJoinLeave;
+	public IRCChannel(final String password, final boolean showingameEvents,
+			final boolean showIRCEvents, final boolean autoJoin,
+			final boolean defaultChannel, final String channel,
+			final String ChatChannel, final ChatType type,
+			final List<String> opCommands, final List<String> hopCommands,
+			final List<String> adminCommands, final List<String> voiceCommands,
+			final List<String> userCommands, final boolean passToGame,
+			final boolean passToIRC, final String node) {
+		this.showingameEvents = showingameEvents;
+		this.showIRCEvents = showIRCEvents;
 		this.password = password;
 		this.channel = channel;
 		this.ChatChannel = ChatChannel;
@@ -169,7 +171,6 @@ public class IRCChannel {
 		this.passToGame = passToGame;
 		this.passToIRC = passToIRC;
 		this.node = node;
-		this.death = death;
 	}
 
 	/**
@@ -320,11 +321,21 @@ public class IRCChannel {
 	/**
 	 * The option to show join and leave messages.
 	 * 
-	 * @return True if the option to show join and leave messages is enabled;
-	 *         otherwise false.
+	 * @return True if the option to show ingame events is enabled; otherwise
+	 *         false.
 	 */
-	public boolean showJoinLeave() {
-		return showJoinLeave;
+	public boolean showIngameEvents() {
+		return showingameEvents;
+	}
+
+	/**
+	 * The option to show join and leave messages.
+	 * 
+	 * @return True if the option to show irc events is enabled; otherwise
+	 *         false.
+	 */
+	public boolean showIRCEvents() {
+		return showIRCEvents;
 	}
 
 	public boolean isHeroChatListenChannel(String activeChannelName) {
@@ -348,10 +359,6 @@ public class IRCChannel {
 
 	public String getTownyNode() {
 		return node;
-	}
-
-	public boolean showDeath() {
-		return death;
 	}
 
 }
