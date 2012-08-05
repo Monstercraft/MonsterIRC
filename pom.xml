@@ -5,7 +5,7 @@
 
 	<groupId>org.monstercraft.irc</groupId>
 	<artifactId>MonsterIRC</artifactId>
-	<version>1.67</version>
+	<version>1.68</version>
 
 
 	<properties>
@@ -76,26 +76,28 @@
 	</dependencies>
 
 	<build>
-		<resources>
 			<resource>
 				<targetPath>.</targetPath>
-				<directory>${basedir}/</directory>
+				<directory>${basedir}/src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>config.yml</include>
 					<include>plugin.yml</include>
+					<include>config.yml</include>
 				</includes>
 			</resource>
+			<resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
 		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
-				<configuration>
-					<showDeprecation>true</showDeprecation>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
