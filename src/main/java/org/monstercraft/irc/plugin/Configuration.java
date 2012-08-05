@@ -303,11 +303,6 @@ public class Configuration {
 		public static List<String> connectCommands = new ArrayList<String>();
 
 		/**
-		 * Option to hide MODE messages in irc.
-		 */
-		public static boolean hideMode = false;
-
-		/**
 		 * The option to pass the console commands "say".
 		 */
 		public static boolean passSay = false;

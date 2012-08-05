@@ -16,7 +16,8 @@ public interface IRCListener extends EventListener {
 
 	public abstract void onDisconnect(IRCServer server);
 
-	public abstract void onKick(IRCChannel channel, String user, String reason);
+	public abstract void onKick(IRCChannel channel, String kicker, String user,
+			String reason);
 
 	public abstract void onAction(IRCChannel channel, String sender,
 			String message);

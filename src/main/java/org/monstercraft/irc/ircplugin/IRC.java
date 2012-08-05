@@ -61,6 +61,18 @@ public class IRC {
 	 * @param error
 	 *            The message to print.
 	 */
+	public static void debug(final String error) {
+		if (Variables.debug) {
+			logger.log(Level.WARNING, "[MonsterIRC - Debug] " + error);
+		}
+	}
+
+	/**
+	 * Logs debugging messages to the console.
+	 * 
+	 * @param error
+	 *            The message to print.
+	 */
 	public static void debug(final Exception error) {
 		logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
 		error.printStackTrace();
@@ -247,6 +259,14 @@ public class IRC {
 																	StringUtils
 																			.getGroupSuffix(name))
 															.replace(
+																	"{mvWorld}",
+																	StringUtils
+																			.getMvWorldAlias(name))
+															.replace(
+																	"{mvColor}",
+																	StringUtils
+																			.getMvWorldColor(name))
+															.replace(
 																	"{world}",
 																	StringUtils
 																			.getWorld(name)),
@@ -282,6 +302,14 @@ public class IRC {
 												"{groupSuffix}",
 												StringUtils
 														.getGroupSuffix(name))
+										.replace(
+												"{mvWorld}",
+												StringUtils
+														.getMvWorldAlias(name))
+										.replace(
+												"{mvColor}",
+												StringUtils
+														.getMvWorldColor(name))
 										.replace("{world}",
 												StringUtils.getWorld(name)),
 								message));
@@ -319,6 +347,14 @@ public class IRC {
 														"{groupSuffix}",
 														StringUtils
 																.getGroupSuffix(name))
+												.replace(
+														"{mvWorld}",
+														StringUtils
+																.getMvWorldAlias(name))
+												.replace(
+														"{mvColor}",
+														StringUtils
+																.getMvWorldColor(name))
 												.replace(
 														"{world}",
 														StringUtils
