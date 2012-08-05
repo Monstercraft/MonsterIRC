@@ -41,7 +41,6 @@ import org.monstercraft.irc.plugin.event.events.IRCModeEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPartEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPrivateMessageEvent;
 import org.monstercraft.irc.plugin.event.events.IRCQuitEvent;
-import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
@@ -298,13 +297,19 @@ public class IRCHandler extends MonsterIRC {
 	}
 
 	private final Runnable KEEP_ALIVE = new Runnable() {
-
 		public void run() {
 			try {
 				if (isConnected(MonsterIRC.getIRCServer()) && reader != null) {
-					String line;
+					String line = null;
 					while ((line = reader.readLine()) != null) {
+						String subline = null;
+
+						if (line.indexOf(" :") != -1) {
+							subline = line.substring(0, line.indexOf(" :"));
+						}
+
 						IRC.debug(line, Variables.debug);
+
 						if (line.toLowerCase().startsWith("ping")) {
 							writer.write("PONG " + line.substring(5) + "\r\n");
 							writer.flush();
@@ -355,85 +360,117 @@ public class IRCHandler extends MonsterIRC {
 							}
 							continue;
 						}
-						String name = null;
-						String msg = null;
-						String subline = null;
-						if (line.indexOf(" :") != -1) {
-							subline = line.substring(0, line.indexOf(" :"));
-						}
 						for (IRCChannel c : Variables.channels) {
 							try {
 								if (subline != null) {
 									if (subline.toLowerCase().contains(
-											"PRIVMSG ".toLowerCase()
-													+ c.getChannel()
-															.toLowerCase())) {
-										name = line.substring(1,
+											("PRIVMSG " + c.getChannel())
+													.toLowerCase())
+											&& line.toLowerCase().contains(
+													"action")) {
+										String sender = line.substring(1,
 												line.indexOf("!"));
-										msg = line
-												.substring(line.indexOf(" :") + 2);
-										if (line.contains("ACTION")) {
-											msg = "[Action] * "
-													+ line.substring(
-															line.indexOf(" :") + 2)
-															.replaceFirst(
-																	"ACTION",
-																	name);
-											IRCActionEvent actionEvent = new IRCActionEvent(
-													c, name, msg);
-											plugin.getServer()
-													.getPluginManager()
-													.callEvent(actionEvent);
-											PluginActionEvent pae = new PluginActionEvent(
-													c,
-													name,
-													line.substring(
-															line.indexOf(" :") + 2)
-															.replaceFirst(
-																	"ACTION",
-																	name));
-											MonsterIRC.getEventManager()
-													.dispatchEvent(pae);
-										} else {
-											IRCMessageEvent msgEvent = new IRCMessageEvent(
-													c, msg, name);
-											plugin.getServer()
-													.getPluginManager()
-													.callEvent(msgEvent);
-											PluginMessageEvent pme = new PluginMessageEvent(
-													c, name, msg);
-											MonsterIRC.getEventManager()
-													.dispatchEvent(pme);
-										}
+										String action = line.substring(line
+												.indexOf(" :") + 2);
+										plugin.getServer()
+												.getPluginManager()
+												.callEvent(
+														new IRCActionEvent(c,
+																sender, action));
+										MonsterIRC.getEventManager()
+												.dispatchEvent(
+														new PluginActionEvent(
+																c, sender,
+																action));
+										break;
+									} else if (subline.toLowerCase().contains(
+											("PRIVMSG " + c.getChannel()))) {
+										String sender = line.substring(1,
+												line.indexOf("!"));
+										String message = line.substring(line
+												.indexOf(" :") + 2);
+										plugin.getServer()
+												.getPluginManager()
+												.callEvent(
+														new IRCMessageEvent(c,
+																sender, message));
+										MonsterIRC.getEventManager()
+												.dispatchEvent(
+														new PluginMessageEvent(
+																c, sender,
+																message));
+										break;
 									} else if (subline.toLowerCase().contains(
 											"QUIT".toLowerCase())) {
-										if (c.showJoinLeave()) {
-											name = line.substring(1,
-													line.indexOf("!"));
-											msg = name + " has left "
-													+ c.getChannel();
-										}
-										IRCQuitEvent qevent = new IRCQuitEvent(
-												c, name);
-										plugin.getServer().getPluginManager()
-												.callEvent(qevent);
-										PluginQuitEvent pqe = new PluginQuitEvent(
-												c, name);
+										String sender = line.substring(1,
+												line.indexOf("!"));
+										plugin.getServer()
+												.getPluginManager()
+												.callEvent(
+														new IRCQuitEvent(c,
+																sender));
 										MonsterIRC.getEventManager()
-												.dispatchEvent(pqe);
+												.dispatchEvent(
+														new PluginQuitEvent(c,
+																sender));
+										break;
+									} else if (subline.toLowerCase().contains(
+											"353")
+											&& subline.toLowerCase().contains(
+													c.getChannel()
+															.toLowerCase())) {
+										String split = line.substring(line
+												.indexOf(" :") + 2);
+										StringTokenizer st = new StringTokenizer(
+												split);
+										ArrayList<String> list = new ArrayList<String>();
+										while (st.hasMoreTokens()) {
+											list.add(st.nextToken());
+										}
+										for (String s : list) {
+											if (s.contains("@")) {
+												c.getOpList()
+														.add(s.substring(s
+																.indexOf("@") + 1));
+												IRC.debug(s.substring(s
+														.indexOf("@") + 1)
+														+ " is an OP in "
+														+ c.getChannel());
+											} else if (s.contains("+")) {
+												c.getVoiceList()
+														.add(s.substring(s
+																.indexOf("+") + 1));
+												IRC.debug(s.substring(s
+														.indexOf("+") + 1)
+														+ " is voice in "
+														+ c.getChannel());
+											} else if (s.contains("~")) {
+												c.getOpList()
+														.add(s.substring(s
+																.indexOf("~") + 1));
+												IRC.debug(s.substring(s
+														.indexOf("~") + 1)
+														+ " is an OP in "
+														+ c.getChannel());
+											} else if (s.contains("%")) {
+												c.getHOpList()
+														.add(s.substring(s
+																.indexOf("%") + 1));
+												IRC.debug(s.substring(s
+														.indexOf("%") + 1)
+														+ " is half op in "
+														+ c.getChannel());
+											}
+										}
+										break;
 									}
 								} else {
 									if (line.toLowerCase().contains(
 											"MODE ".toLowerCase()
 													+ c.getChannel()
 															.toLowerCase())) {
-										if (line.indexOf("!") != -1) {
-											if (line.substring(1,
-													line.indexOf("!")) != null) {
-												name = line.substring(1,
-														line.indexOf("!"));
-											}
-										}
+										String sender = line.substring(1,
+												line.indexOf("!"));
 										String mode = line.substring(
 												line.toLowerCase().indexOf(
 														c.getChannel()
@@ -447,54 +484,29 @@ public class IRCHandler extends MonsterIRC {
 														+ 3
 														+ c.getChannel()
 																.length());
-										String _name = line.substring(line
+										String user = line.substring(line
 												.toLowerCase().indexOf(
 														c.getChannel()
 																.toLowerCase())
 												+ c.getChannel().length() + 4);
-										if (!Variables.hideMode) {
-											msg = "[Mode] " + name
-													+ " gave mode " + mode
-													+ " to " + _name + ".";
-										}
-										if (mode.contains("+v")) {
-											c.getVoiceList().add(_name);
-										} else if (mode.contains("-v")) {
-											c.getVoiceList().remove(_name);
-										} else if (mode.contains("+o")) {
-											c.getOpList().add(_name);
-										} else if (mode.contains("-o")) {
-											c.getOpList().remove(_name);
-										} else if (mode.contains("+h")) {
-											c.getHOpList().add(_name);
-										} else if (mode.contains("-h")) {
-											c.getHOpList().remove(_name);
-										} else if (mode.contains("+a")) {
-											c.getAdminList().add(_name);
-										} else if (mode.contains("-a")) {
-											c.getAdminList().remove(_name);
-										} else if (mode.contains("+q")) {
-											c.getOpList().add(_name);
-										} else if (mode.contains("-q")) {
-											c.getOpList().remove(_name);
-										}
-										IRCModeEvent mevent = new IRCModeEvent(
-												c, name, mode, msg);
-										plugin.getServer().getPluginManager()
-												.callEvent(mevent);
-										PluginModeEvent pme = new PluginModeEvent(
-												c, _name, _name, mode);
+										plugin.getServer()
+												.getPluginManager()
+												.callEvent(
+														new IRCModeEvent(c,
+																sender, user,
+																mode));
 										MonsterIRC.getEventManager()
-												.dispatchEvent(pme);
+												.dispatchEvent(
+														new PluginModeEvent(c,
+																sender, user,
+																mode));
+										break;
 									} else if (line.toLowerCase().contains(
 											"PART ".toLowerCase()
 													+ c.getChannel()
 															.toLowerCase())) {
-										if (c.showJoinLeave()) {
-											name = line.substring(1,
-													line.indexOf("!"));
-											msg = " has left " + c.getChannel();
-										}
+										String name = line.substring(1,
+												line.indexOf("!"));
 										IRCPartEvent pevent = new IRCPartEvent(
 												c, name);
 										plugin.getServer().getPluginManager()
@@ -503,75 +515,50 @@ public class IRCHandler extends MonsterIRC {
 												c, name);
 										MonsterIRC.getEventManager()
 												.dispatchEvent(ppe);
+										break;
 									} else if (line.toLowerCase().contains(
 											"KICK ".toLowerCase()
 													+ c.getChannel()
 															.toLowerCase())) {
-										name = line.substring(1,
+										String kicker = line.substring(1,
 												line.indexOf("!"));
-										String _name = line.substring(
+										String user = line.substring(
 												line.toLowerCase().indexOf(
 														c.getChannel()
 																.toLowerCase())
 														+ c.getChannel()
 																.length() + 1,
 												line.indexOf(" :") - 1);
-										msg = _name
-												+ " has been kicked from "
-												+ c.getChannel()
-												+ ". ("
-												+ line.substring(line
-														.indexOf(" :") + 1)
-												+ ")";
-										IRCKickEvent kevent = new IRCKickEvent(
-												c, name);
-										plugin.getServer().getPluginManager()
-												.callEvent(kevent);
-										PluginKickEvent pke = new PluginKickEvent(
-												c, _name, line.substring(line
-														.indexOf(" :") + 1));
+										String reason = line.substring(line
+												.indexOf(" :") + 1);
+										plugin.getServer()
+												.getPluginManager()
+												.callEvent(
+														new IRCKickEvent(c,
+																kicker, user,
+																reason));
 										MonsterIRC.getEventManager()
-												.dispatchEvent(pke);
+												.dispatchEvent(
+														new PluginKickEvent(c,
+																kicker, user,
+																reason));
+										break;
 									} else if (line.toLowerCase().contains(
 											"JOIN ".toLowerCase()
 													+ c.getChannel()
 															.toLowerCase()
 															.toLowerCase())) {
-										if (c.showJoinLeave()) {
-											name = line.substring(1,
-													line.indexOf("!"));
-											msg = " has joined "
-													+ c.getChannel();
-										}
-										IRCJoinEvent jevent = new IRCJoinEvent(
-												c, name);
-										plugin.getServer().getPluginManager()
-												.callEvent(jevent);
-										PluginJoinEvent pje = new PluginJoinEvent(
-												c, name);
+										String name = line.substring(1,
+												line.indexOf("!"));
+										plugin.getServer()
+												.getPluginManager()
+												.callEvent(
+														new IRCJoinEvent(c,
+																name));
 										MonsterIRC.getEventManager()
-												.dispatchEvent(pje);
-									}
-								}
-
-								if (msg != null && name != null
-										&& c.getChannel() != null) {
-									if (msg.startsWith(Variables.commandPrefix)) {
-										MonsterIRC.getCommandManager()
-												.onIRCCommand(name, msg, c);
-										break;
-									} else if (!Variables.passOnName
-											&& !Variables.muted.contains(name
-													.toLowerCase())) {
-										IRC.sendMessageToGame(c, name, msg);
-										break;
-									} else if (Variables.passOnName
-											&& msg.startsWith(Variables.name)
-											&& !Variables.muted.contains(name
-													.toLowerCase())) {
-										IRC.sendMessageToGame(c, name, msg
-												.substring(Variables.name
-														.length()));
+												.dispatchEvent(
+														new PluginJoinEvent(c,
+																name));
 										break;
 									}
 								}
@@ -584,87 +571,33 @@ public class IRCHandler extends MonsterIRC {
 								"PRIVMSG ".toLowerCase()
 										+ MonsterIRC.getIRCServer().getNick()
 												.toLowerCase())) {
-							for (Player p : Bukkit.getServer()
-									.getOnlinePlayers()) {
-								name = line.substring(1, line.indexOf("!"));
-								msg = line.substring(line.indexOf(" :") + 2);
-								if (msg.contains(":") && msg.indexOf(":") > 2) {
-									String to = msg.substring(0,
-											msg.indexOf(":"));
-									String _msg = msg.substring(msg
-											.indexOf(":") + 1);
-									if (to == null || _msg == null
-											|| msg == null || name == null) {
-										break;
-									}
-									if (p.getName().equalsIgnoreCase(to)) {
-										IRCPrivateMessageEvent pmevent = new IRCPrivateMessageEvent(
-												to, name, _msg);
-										plugin.getServer().getPluginManager()
-												.callEvent(pmevent);
-										PluginPrivateMessageEvent ppme = new PluginPrivateMessageEvent(
-												to, name, _msg);
-										MonsterIRC.getEventManager()
-												.dispatchEvent(ppme);
-										p.sendMessage(ColorUtils.LIGHT_GRAY
-												.getMinecraftColor()
-												+ "([IRC] from "
-												+ name
-												+ "):"
-												+ _msg);
-										Variables.reply.put(p, name);
-									}
-								}
-							}
-						} else if (line.toLowerCase().contains("353")) {
-							if (msg == null) {
-								IRCChannel chan = null;
-								String split = line.substring(line
-										.indexOf(" :") + 2);
-								String channel = line.substring(
-										line.indexOf("#"), line.indexOf(" :"));
-								StringTokenizer st = new StringTokenizer(split);
-								ArrayList<String> list = new ArrayList<String>();
-								while (st.hasMoreTokens()) {
-									list.add(st.nextToken());
-								}
-								for (IRCChannel c : Variables.channels) {
-									if (c.getChannel().toLowerCase()
-											.contains(channel.toLowerCase())) {
-										chan = c;
-										break;
-									}
-								}
-								if (chan != null) {
-									for (String s : list) {
-										if (s.contains("@")) {
-											chan.getOpList()
-													.add(s.substring(s
-															.indexOf("@") + 1));
-											IRC.log(s.substring(s.indexOf("@") + 1)
-													+ " is an OP in "
-													+ chan.getChannel());
-										} else if (s.contains("+")) {
-											chan.getVoiceList()
-													.add(s.substring(s
-															.indexOf("+") + 1));
-											IRC.log(s.substring(s.indexOf("+") + 1)
-													+ " is voice in "
-													+ chan.getChannel());
-										} else if (s.contains("~")) {
-											chan.getOpList()
-													.add(s.substring(s
-															.indexOf("~") + 1));
-											IRC.log(s.substring(s.indexOf("~") + 1)
-													+ " is an OP in "
-													+ chan.getChannel());
-										} else if (s.contains("%")) {
-											chan.getHOpList()
-													.add(s.substring(s
-															.indexOf("%") + 1));
-											IRC.log(s.substring(s.indexOf("%") + 1)
-													+ " is half op in "
-													+ chan.getChannel());
+							String sender = line
+									.substring(1, line.indexOf("!"));
+							String message = line
+									.substring(line.indexOf(" :") + 2);
+							if (message.contains(":")
+									&& message.indexOf(":") > 2) {
+								String to = message.substring(0,
+										message.indexOf(":"));
+								String msg = message.substring(message
+										.indexOf(":") + 1);
+								if (to != null && message != null
+										&& msg != null && sender != null) {
+									for (Player p : Bukkit.getServer()
+											.getOnlinePlayers()) {
+										if (p.getName().equalsIgnoreCase(to)) {
+											plugin.getServer()
+													.getPluginManager()
+													.callEvent(
+															new IRCPrivateMessageEvent(
+																	to, sender,
+																	msg));
+											MonsterIRC
+													.getEventManager()
+													.dispatchEvent(
+															new PluginPrivateMessageEvent(
+																	to, sender,
+																	msg));
 										}
 									}
 								}
@@ -673,33 +606,8 @@ public class IRCHandler extends MonsterIRC {
 					}
 				}
 			} catch (final Exception e) {
-				Thread.currentThread().interrupt();
 				disconnect(MonsterIRC.getIRCServer());
 			}
-		}
-
-		private final byte ctcpControl = 1;
-
-		private boolean isCTCP(final String input) {
-			if (input.length() != 0) {
-				String message = input.substring(input.indexOf(":", 1) + 1);
-				if (message.length() != 0) {
-					char[] messageArray = message.toCharArray();
-					return ((byte) messageArray[0]) == 1
-							&& ((byte) messageArray[messageArray.length - 1]) == 1;
-				}
-			}
-			return false;
-		}
-
-		private String getCTCPMessage(final String input) {
-			if (input.length() != 0) {
-				String message = input.substring(input.indexOf(":", 1) + 1);
-				return message.substring(
-						message.indexOf((char) ctcpControl) + 1,
-						message.indexOf((char) ctcpControl, 1));
-			}
-			return null;
 		}
 	};
 
@@ -727,13 +635,35 @@ public class IRCHandler extends MonsterIRC {
 						}
 					}
 				} catch (Exception ex) {
-					Thread.currentThread().interrupt();
 					disconnect(MonsterIRC.getIRCServer());
 					break;
 				}
 			}
 		}
 	};
+
+	private final byte ctcpControl = 1;
+
+	private boolean isCTCP(final String input) {
+		if (input.length() != 0) {
+			String message = input.substring(input.indexOf(":", 1) + 1);
+			if (message.length() != 0) {
+				char[] messageArray = message.toCharArray();
+				return ((byte) messageArray[0]) == 1
+						&& ((byte) messageArray[messageArray.length - 1]) == 1;
+			}
+		}
+		return false;
+	}
+
+	private String getCTCPMessage(final String input) {
+		if (input.length() != 0) {
+			String message = input.substring(input.indexOf(":", 1) + 1);
+			return message.substring(message.indexOf((char) ctcpControl) + 1,
+					message.indexOf((char) ctcpControl, 1));
+		}
+		return null;
+	}
 
 	/**
 	 * Sends a message to the specified channel.
@@ -750,7 +680,7 @@ public class IRCHandler extends MonsterIRC {
 				"(?<=\\G.{" + length + "})");
 		for (int i = 0; i < parts.length; i++) {
 			String msg = prefix + parts[i];
-			messageQueue.add(msg);
+			messageQueue.add(msg.trim());
 		}
 	}
 

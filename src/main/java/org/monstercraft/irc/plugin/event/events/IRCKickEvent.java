@@ -14,7 +14,12 @@ public class IRCKickEvent extends IRCEvent {
 
 	private String name;
 
-	public IRCKickEvent(IRCChannel channel, String name) {
+	private String kicker;
+
+	private String reason;
+
+	public IRCKickEvent(IRCChannel channel, String kicker, String name,
+			String reason) {
 		this.name = name;
 		this.channel = channel;
 	}
@@ -25,6 +30,14 @@ public class IRCKickEvent extends IRCEvent {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getKicker() {
+		return kicker;
+	}
+
+	public String getReason() {
+		return reason;
 	}
 
 	@Override

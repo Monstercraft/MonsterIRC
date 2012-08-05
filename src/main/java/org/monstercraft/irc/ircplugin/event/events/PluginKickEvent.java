@@ -16,15 +16,19 @@ public class PluginKickEvent extends IRCEvent {
 
 	private String reason;
 
-	public PluginKickEvent(IRCChannel channel, String user, String reason) {
+	private String kicker;
+
+	public PluginKickEvent(IRCChannel channel, String kicker, String user,
+			String reason) {
 		this.channel = channel;
 		this.user = user;
 		this.reason = reason;
+		this.kicker = kicker;
 	}
 
 	@Override
 	public void dispatch(EventListener el) {
-		((IRCListener) el).onKick(channel, user, reason);
+		((IRCListener) el).onKick(channel, kicker, user, reason);
 	}
 
 	@Override

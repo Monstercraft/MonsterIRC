@@ -15,6 +15,7 @@ import org.monstercraft.irc.plugin.managers.CommandManager;
 import org.monstercraft.irc.plugin.managers.HandleManager;
 import org.monstercraft.irc.plugin.managers.HookManager;
 import org.monstercraft.irc.plugin.managers.SettingsManager;
+import org.monstercraft.irc.plugin.managers.listeners.IRCEventListener;
 import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
 import org.monstercraft.irc.plugin.util.Metrics;
 import org.monstercraft.irc.plugin.util.Metrics.Graph;
@@ -33,7 +34,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 
 	private static HandleManager handles = null;
 	private static HookManager hooks = null;
-	private static CommandManager command = null;
+	private CommandManager command = null;
 	private static MonsterIRCListener listener = null;
 
 	private static IRCServer IRCserver = null;
@@ -64,6 +65,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 				Variables.connectCommands);
 		handles = new HandleManager(this);
 		getServer().getPluginManager().registerEvents(listener, this);
+		getEventManager().addListener(new IRCEventListener(this));
 		Thread t = new Thread(this);
 		t.setDaemon(true);
 		t.setPriority(Thread.MAX_PRIORITY);
@@ -135,7 +137,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	 * 
 	 * @return The plugins command manager.
 	 */
-	protected static CommandManager getCommandManager() {
+	public CommandManager getCommandManager() {
 		return command;
 	}
 
