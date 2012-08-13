@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -61,7 +61,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onChat(PlayerChatEvent event) {
+	public void onChat(AsyncPlayerChatEvent event) {
 		if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 			if (!Users.getProfile(event.getPlayer().getName())
 					.getAdminChatMode()) {
