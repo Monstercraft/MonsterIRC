@@ -75,6 +75,9 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		try {
 			Player player = event.getPlayer();
 			for (IRCChannel c : MonsterIRC.getChannels()) {
+				if (c.getChatType() == ChatType.MTADMINCHAT) {
+					continue;
+				}
 				handleMessage(player, c, event.getMessage());
 			}
 		} catch (Exception e) {
@@ -232,35 +235,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 							ColorUtils.formatGametoIRC(result.toString()));
 				}
 			}
-		} else if (c.getChatType() == ChatType.MTADMINCHAT) {
-			result.append(Variables.ircformat
-					.replace("{HCchannelColor}", "")
-					.replace("{heroChatTag}", "")
-					.replace("{prefix}", StringUtils.getPrefix(player)
-
-					)
-					.replace("{name}",
-							StringUtils.getDisplayName(player.getDisplayName()))
-					.replace("{suffix}", StringUtils.getSuffix(player))
-
-					.replace("{groupPrefix}",
-							StringUtils.getGroupPrefix(player))
-					.replace("{groupSuffix}",
-							StringUtils.getGroupSuffix(player))
-					.replace("{message}", " " + message)
-					.replace(
-							"{mvWorld}",
-							StringUtils.getMvWorldAlias(player.getWorld()
-									.getName()))
-					.replace(
-							"{mvColor}",
-							StringUtils.getMvWorldColor(player.getWorld()
-									.getName()))
-					.replace("{world}",
-							StringUtils.getWorld(player.getWorld().getName())));
-			Variables.linesToIrc++;
-			IRC.sendMessageToChannel(c,
-					ColorUtils.formatGametoIRC(result.toString()));
 		} else if (c.getChatType() == ChatType.HEROCHAT) {
 			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 				if (Users.getProfile(player.getName()).getAdminChatMode()) {
