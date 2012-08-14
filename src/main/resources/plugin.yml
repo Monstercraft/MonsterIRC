@@ -4,7 +4,7 @@ version: '${project.version}'
 author: Fletch_to_99
 description: Using your servers IRC channel we allow communication between IRC and Ingame.
 depend: [Vault]
-softdepend: [mcMMO, TownyChat, Towny, Herochat, Multiverse-Core]
+softdepend: [mcMMO, TownyChat, Towny, Herochat, Multiverse-Core, MonsterTickets]
 commands:
   irc:
     description: IRC Commands, refer to bukkit dev page for help.

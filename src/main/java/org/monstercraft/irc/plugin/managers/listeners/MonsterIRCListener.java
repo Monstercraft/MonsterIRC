@@ -100,7 +100,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	public void onAdminChat(AdminChatEvent event) {
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChatType() == ChatType.MTADMINCHAT) {
