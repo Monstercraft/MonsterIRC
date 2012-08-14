@@ -1,6 +1,5 @@
 package org.monstercraft.irc.plugin.managers.listeners;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.monstercraft.irc.ircplugin.IRC;
@@ -18,7 +17,7 @@ public class AdminChatListener implements Listener {
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChatType() == ChatType.MTADMINCHAT) {
 				StringBuffer result = new StringBuffer();
-				Player player = event.getSender();
+				String player = event.getSender();
 				String message = event.getMessage();
 				result.append(Variables.ircformat
 						.replace("{HCchannelColor}", "")
@@ -26,10 +25,7 @@ public class AdminChatListener implements Listener {
 						.replace("{prefix}", StringUtils.getPrefix(player)
 
 						)
-						.replace(
-								"{name}",
-								StringUtils.getDisplayName(player
-										.getDisplayName()))
+						.replace("{name}", StringUtils.getDisplayName(player))
 						.replace("{suffix}", StringUtils.getSuffix(player))
 
 						.replace("{groupPrefix}",
@@ -37,18 +33,8 @@ public class AdminChatListener implements Listener {
 						.replace("{groupSuffix}",
 								StringUtils.getGroupSuffix(player))
 						.replace("{message}", " " + message)
-						.replace(
-								"{mvWorld}",
-								StringUtils.getMvWorldAlias(player.getWorld()
-										.getName()))
-						.replace(
-								"{mvColor}",
-								StringUtils.getMvWorldColor(player.getWorld()
-										.getName()))
-						.replace(
-								"{world}",
-								StringUtils.getWorld(player.getWorld()
-										.getName())));
+						.replace("{mvWorld}", "").replace("{mvColor}", "")
+						.replace("{world}", ""));
 				Variables.linesToIrc++;
 				IRC.sendMessageToChannel(c,
 						ColorUtils.formatGametoIRC(result.toString()));
