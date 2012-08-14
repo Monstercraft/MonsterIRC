@@ -62,22 +62,19 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChat(AsyncPlayerChatEvent event) {
+		if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
+			if (!Users.getProfile(event.getPlayer().getName())
+					.getAdminChatMode()) {
+				if (event.isCancelled()) {
+					return;
+				}
+			}
+		} else if (event.isCancelled()) {
+			return;
+		}
 		try {
 			Player player = event.getPlayer();
 			for (IRCChannel c : MonsterIRC.getChannels()) {
-				if (c.getChatType() == ChatType.MCMMOADMINCHAT) {
-					if (Bukkit.getServer().getPluginManager()
-							.getPlugin("mcMMO") != null) {
-						if (!Users.getProfile(event.getPlayer().getName())
-								.getAdminChatMode()) {
-							if (event.isCancelled()) {
-								continue;
-							}
-						}
-					}
-				} else if (event.isCancelled()) {
-					continue;
-				}
 				handleMessage(player, c, event.getMessage());
 			}
 		} catch (Exception e) {
@@ -236,40 +233,34 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				}
 			}
 		} else if (c.getChatType() == ChatType.MTADMINCHAT) {
-			if (Users.getProfile(player.getName()).getAdminChatMode()) {
-				result.append(Variables.ircformat
-						.replace("{HCchannelColor}", "")
-						.replace("{heroChatTag}", "")
-						.replace("{prefix}", StringUtils.getPrefix(player)
+			result.append(Variables.ircformat
+					.replace("{HCchannelColor}", "")
+					.replace("{heroChatTag}", "")
+					.replace("{prefix}", StringUtils.getPrefix(player)
 
-						)
-						.replace(
-								"{name}",
-								StringUtils.getDisplayName(player
-										.getDisplayName()))
-						.replace("{suffix}", StringUtils.getSuffix(player))
+					)
+					.replace("{name}",
+							StringUtils.getDisplayName(player.getDisplayName()))
+					.replace("{suffix}", StringUtils.getSuffix(player))
 
-						.replace("{groupPrefix}",
-								StringUtils.getGroupPrefix(player))
-						.replace("{groupSuffix}",
-								StringUtils.getGroupSuffix(player))
-						.replace("{message}", " " + message)
-						.replace(
-								"{mvWorld}",
-								StringUtils.getMvWorldAlias(player.getWorld()
-										.getName()))
-						.replace(
-								"{mvColor}",
-								StringUtils.getMvWorldColor(player.getWorld()
-										.getName()))
-						.replace(
-								"{world}",
-								StringUtils.getWorld(player.getWorld()
-										.getName())));
-				Variables.linesToIrc++;
-				IRC.sendMessageToChannel(c,
-						ColorUtils.formatGametoIRC(result.toString()));
-			}
+					.replace("{groupPrefix}",
+							StringUtils.getGroupPrefix(player))
+					.replace("{groupSuffix}",
+							StringUtils.getGroupSuffix(player))
+					.replace("{message}", " " + message)
+					.replace(
+							"{mvWorld}",
+							StringUtils.getMvWorldAlias(player.getWorld()
+									.getName()))
+					.replace(
+							"{mvColor}",
+							StringUtils.getMvWorldColor(player.getWorld()
+									.getName()))
+					.replace("{world}",
+							StringUtils.getWorld(player.getWorld().getName())));
+			Variables.linesToIrc++;
+			IRC.sendMessageToChannel(c,
+					ColorUtils.formatGametoIRC(result.toString()));
 		} else if (c.getChatType() == ChatType.HEROCHAT) {
 			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 				if (Users.getProfile(player.getName()).getAdminChatMode()) {
