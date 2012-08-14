@@ -12,6 +12,7 @@ import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
+import org.monstercraft.support.MonsterTickets;
 
 import com.gmail.nossr50.util.Users;
 
@@ -197,12 +198,12 @@ public class IRC {
 	 */
 	public static void sendMessageToGame(final IRCChannel c, final String name,
 			final String message) {
-		if (!c.passToGame()) {
+		if (c.getBlockedEvents().contains("irc_message")) {
 			return;
 		}
 		Variables.linesToGame++;
 		try {
-			if (c.getChatType() == ChatType.ADMINCHAT) {
+			if (c.getChatType() == ChatType.MCMMOADMINCHAT) {
 				if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
 					String format = ColorUtils.CYAN.getMinecraftColor() + "{"
 							+ ColorUtils.WHITE.getMinecraftColor() + "[IRC] "
@@ -219,6 +220,11 @@ public class IRC {
 							p.sendMessage(ColorUtils.formatIRCtoGame(format,
 									message));
 					}
+				}
+			} else if (c.getChatType() == ChatType.MTADMINCHAT) {
+				if (Bukkit.getServer().getPluginManager()
+						.getPlugin("MonsterTickets") != null) {
+					MonsterTickets.sendAdminChatMessage(name, message);
 				}
 			} else if (c.getChatType() == ChatType.HEROCHAT) {
 				if (c.getHeroChatChannel() != null) {

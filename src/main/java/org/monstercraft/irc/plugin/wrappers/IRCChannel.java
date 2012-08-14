@@ -32,11 +32,8 @@ public class IRCChannel {
 	private List<String> hops;
 	private List<String> voices;
 	private List<String> listenChatChannels;
+	private List<String> blockedEvents;
 	private String password;
-	private boolean showingameEvents;
-	private boolean showIRCEvents;
-	private boolean passToIRC;
-	private boolean passToGame;
 	private String node;
 
 	/**
@@ -61,15 +58,13 @@ public class IRCChannel {
 	 * @param userCommands
 	 *            The list of commands IRC users can use.
 	 */
-	public IRCChannel(final String password, final boolean showingameEvents,
-			final boolean showIRCEvents, final boolean autoJoin,
-			final boolean defaultChannel, final String channel,
-			final ChatType type, final List<String> opCommands,
-			final List<String> hopCommands, final List<String> adminCommands,
-			final List<String> voiceCommands, final List<String> userCommands,
-			final boolean passToGame, final boolean passToIRC) {
-		this.showingameEvents = showingameEvents;
-		this.showIRCEvents = showIRCEvents;
+	public IRCChannel(final String password, final List<String> blockedEvents,
+			final boolean autoJoin, final boolean defaultChannel,
+			final String channel, final ChatType type,
+			final List<String> opCommands, final List<String> hopCommands,
+			final List<String> adminCommands, final List<String> voiceCommands,
+			final List<String> userCommands) {
+		this.blockedEvents = blockedEvents;
 		this.password = password;
 		this.channel = channel;
 		this.type = type;
@@ -85,8 +80,6 @@ public class IRCChannel {
 		this.admins = new ArrayList<String>();
 		this.voices = new ArrayList<String>();
 		this.ChatChannel = null;
-		this.passToGame = passToGame;
-		this.passToIRC = passToIRC;
 	}
 
 	/**
@@ -113,16 +106,14 @@ public class IRCChannel {
 	 * @param userCommands
 	 *            The list of commands IRC users can use.
 	 */
-	public IRCChannel(final String password, final boolean showingameEvents,
-			final boolean showIRCEvents, final boolean autoJoin,
-			final boolean defaultChannel, final String channel,
-			final String ChatChannel, final List<String> listenChatChannels,
-			final ChatType type, final List<String> opCommands,
-			final List<String> hopCommands, final List<String> adminCommands,
-			final List<String> voiceCommands, final List<String> userCommands,
-			final boolean passToGame, final boolean passToIRC) {
-		this.showingameEvents = showingameEvents;
-		this.showIRCEvents = showIRCEvents;
+	public IRCChannel(final String password, final List<String> blockedEvents,
+			final boolean autoJoin, final boolean defaultChannel,
+			final String channel, final String ChatChannel,
+			final List<String> listenChatChannels, final ChatType type,
+			final List<String> opCommands, final List<String> hopCommands,
+			final List<String> adminCommands, final List<String> voiceCommands,
+			final List<String> userCommands) {
+		this.blockedEvents = blockedEvents;
 		this.password = password;
 		this.channel = channel;
 		this.ChatChannel = ChatChannel;
@@ -139,20 +130,16 @@ public class IRCChannel {
 		this.voices = new ArrayList<String>();
 		this.hops = new ArrayList<String>();
 		this.admins = new ArrayList<String>();
-		this.passToGame = passToGame;
-		this.passToIRC = passToIRC;
 	}
 
-	public IRCChannel(final String password, final boolean showingameEvents,
-			final boolean showIRCEvents, final boolean autoJoin,
-			final boolean defaultChannel, final String channel,
-			final String ChatChannel, final ChatType type,
-			final List<String> opCommands, final List<String> hopCommands,
-			final List<String> adminCommands, final List<String> voiceCommands,
-			final List<String> userCommands, final boolean passToGame,
-			final boolean passToIRC, final String node) {
-		this.showingameEvents = showingameEvents;
-		this.showIRCEvents = showIRCEvents;
+	public IRCChannel(final String password, final List<String> blockedEvents,
+			final boolean autoJoin, final boolean defaultChannel,
+			final String channel, final String ChatChannel,
+			final ChatType type, final List<String> opCommands,
+			final List<String> hopCommands, final List<String> adminCommands,
+			final List<String> voiceCommands, final List<String> userCommands,
+			final String node) {
+		this.blockedEvents = blockedEvents;
 		this.password = password;
 		this.channel = channel;
 		this.ChatChannel = ChatChannel;
@@ -168,8 +155,6 @@ public class IRCChannel {
 		this.voices = new ArrayList<String>();
 		this.hops = new ArrayList<String>();
 		this.admins = new ArrayList<String>();
-		this.passToGame = passToGame;
-		this.passToIRC = passToIRC;
 		this.node = node;
 	}
 
@@ -324,18 +309,8 @@ public class IRCChannel {
 	 * @return True if the option to show ingame events is enabled; otherwise
 	 *         false.
 	 */
-	public boolean showIngameEvents() {
-		return showingameEvents;
-	}
-
-	/**
-	 * The option to show join and leave messages.
-	 * 
-	 * @return True if the option to show irc events is enabled; otherwise
-	 *         false.
-	 */
-	public boolean showIRCEvents() {
-		return showIRCEvents;
+	public List<String> getBlockedEvents() {
+		return blockedEvents;
 	}
 
 	public boolean isHeroChatListenChannel(String activeChannelName) {
@@ -347,14 +322,6 @@ public class IRCChannel {
 			}
 		}
 		return false;
-	}
-
-	public boolean passToGame() {
-		return passToGame;
-	}
-
-	public boolean passToIRC() {
-		return passToIRC;
 	}
 
 	public String getTownyNode() {

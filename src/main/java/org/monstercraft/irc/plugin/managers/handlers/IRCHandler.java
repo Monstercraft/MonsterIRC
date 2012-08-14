@@ -263,7 +263,6 @@ public class IRCHandler extends MonsterIRC {
 				writer.flush();
 			}
 		} catch (IOException e) {
-			IRC.debug(e);
 		}
 		IRCPartEvent levent = new IRCPartEvent(channel, MonsterIRC
 				.getIRCServer().getNick());
@@ -561,14 +560,18 @@ public class IRCHandler extends MonsterIRC {
 				try {
 					int i = 0;
 					while (!messageQueue.isEmpty()) {
-						String message = messageQueue.remove();
-						writer.write(message + "\r\n");
-						writer.flush();
-						i++;
-						if (i >= Variables.limit) {
-							break;
-						}
-						if (messageQueue.isEmpty()) {
+						try {
+							String message = messageQueue.remove();
+							writer.write(message + "\r\n");
+							writer.flush();
+							i++;
+							if (i >= Variables.limit) {
+								break;
+							}
+							if (messageQueue.isEmpty()) {
+								break;
+							}
+						} catch (Exception e) {
 							break;
 						}
 					}
@@ -576,7 +579,6 @@ public class IRCHandler extends MonsterIRC {
 						Thread.sleep(1000 / Variables.limit);
 					}
 				} catch (Exception e) {
-					IRC.debug(e);
 				}
 			}
 		}

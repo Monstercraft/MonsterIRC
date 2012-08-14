@@ -45,7 +45,7 @@ public class IRCEventListener implements IRCListener {
 	@Override
 	public void onKick(IRCChannel channel, String kicker, String user,
 			String reason) {
-		if (channel.showIRCEvents()) {
+		if (!channel.getBlockedEvents().contains("irc_kick")) {
 			onMessage(channel, channel.getChannel(), user
 					+ " has been kicked from " + channel.getChannel() + " by "
 					+ kicker + "(" + reason + ")");
@@ -54,7 +54,7 @@ public class IRCEventListener implements IRCListener {
 
 	@Override
 	public void onAction(IRCChannel channel, String sender, String message) {
-		if (channel.showIRCEvents()) {
+		if (!channel.getBlockedEvents().contains("irc_action")) {
 			onMessage(channel, channel.getChannel(), "* " + sender + " "
 					+ message);
 		}
@@ -63,7 +63,7 @@ public class IRCEventListener implements IRCListener {
 	@Override
 	public void onMode(IRCChannel channel, String sender, String user,
 			String mode) {
-		if (channel.showIRCEvents()) {
+		if (!channel.getBlockedEvents().contains("irc_mode")) {
 			onMessage(channel, channel.getChannel(), sender + " gave mode "
 					+ mode + " to " + user + ".");
 		}
@@ -93,7 +93,7 @@ public class IRCEventListener implements IRCListener {
 
 	@Override
 	public void onPart(IRCChannel channel, String user) {
-		if (channel.showIRCEvents()) {
+		if (!channel.getBlockedEvents().contains("irc_part")) {
 			onMessage(channel, channel.getChannel(), user + " has left "
 					+ channel.getChannel());
 		}
@@ -101,7 +101,7 @@ public class IRCEventListener implements IRCListener {
 
 	@Override
 	public void onQuit(IRCChannel channel, String user) {
-		if (channel.showIRCEvents()) {
+		if (!channel.getBlockedEvents().contains("irc_quit")) {
 			onMessage(channel, channel.getChannel(), user + " has quit "
 					+ channel.getChannel());
 		}
@@ -109,7 +109,7 @@ public class IRCEventListener implements IRCListener {
 
 	@Override
 	public void onJoin(IRCChannel channel, String user) {
-		if (channel.showIRCEvents()) {
+		if (!channel.getBlockedEvents().contains("irc_join")) {
 			onMessage(channel, channel.getChannel(), user + " has joined "
 					+ channel.getChannel());
 		}

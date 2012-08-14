@@ -225,15 +225,19 @@ public class SettingsManager extends MonsterIRC {
 				Map<String, Boolean> bools = new HashMap<String, Boolean>();
 				boolean hero = config.getBoolean(
 						"CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
-				boolean admin = config.getBoolean(
+				boolean mmoadmin = config.getBoolean(
 						"CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
+				boolean mtadmin = config.getBoolean(
+						"CHANNEL.CHATTYPE.MONSTER_TICKETS.ADMINCHAT.ENABLED",
+						false);
 				boolean global = config.getBoolean(
 						"CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
 				boolean towny = config.getBoolean(
 						"CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
 				bools.put("Global", global);
 				bools.put("Hero", hero);
-				bools.put("Admin", admin);
+				bools.put("Admin", mmoadmin);
+				bools.put("mtAdmin", mtadmin);
 				bools.put("Towny", towny);
 				int count = 0;
 				for (String b : bools.keySet()) {
@@ -259,47 +263,52 @@ public class SettingsManager extends MonsterIRC {
 					}
 				}
 				if (global) {
-					Variables.channels
-							.add(new IRCChannel(
-									config.getString("CHANNEL.SETTINGS.PASSWORD"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_GAME_EVENTS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_IRC_EVENTS"),
-									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
-									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
-									f.getName().substring(0,
+					Variables.channels.add(new IRCChannel(config
+							.getString("CHANNEL.SETTINGS.PASSWORD"), config
+							.getStringList("CHANNEL.SETTINGS.BLOCKED_EVENTS"),
+							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), f
+									.getName().substring(0,
 											f.getName().lastIndexOf(".")),
-									ChatType.GLOBAL,
-									config.getStringList("CHANNEL.COMMANDS.OP"),
-									config.getStringList("CHANNEL.COMMANDS.HOP"),
-									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
-									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
-				} else if (admin) {
-					Variables.channels
-							.add(new IRCChannel(
-									config.getString("CHANNEL.SETTINGS.PASSWORD"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_GAME_EVENTS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_IRC_EVENTS"),
-									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
-									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
-									f.getName().substring(0,
+							ChatType.GLOBAL, config
+									.getStringList("CHANNEL.COMMANDS.OP"),
+							config.getStringList("CHANNEL.COMMANDS.HOP"),
+							config.getStringList("CHANNEL.COMMANDS.ADMINS"),
+							config.getStringList("CHANNEL.COMMANDS.VOICE"),
+							config.getStringList("CHANNEL.COMMANDS.USERS")));
+				} else if (mmoadmin) {
+					Variables.channels.add(new IRCChannel(config
+							.getString("CHANNEL.SETTINGS.PASSWORD"), config
+							.getStringList("CHANNEL.SETTINGS.BLOCKED_EVENTS"),
+							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), f
+									.getName().substring(0,
 											f.getName().lastIndexOf(".")),
-									ChatType.ADMINCHAT,
-									config.getStringList("CHANNEL.COMMANDS.OP"),
-									config.getStringList("CHANNEL.COMMANDS.HOP"),
-									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
-									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
+							ChatType.MCMMOADMINCHAT, config
+									.getStringList("CHANNEL.COMMANDS.OP"),
+							config.getStringList("CHANNEL.COMMANDS.HOP"),
+							config.getStringList("CHANNEL.COMMANDS.ADMINS"),
+							config.getStringList("CHANNEL.COMMANDS.VOICE"),
+							config.getStringList("CHANNEL.COMMANDS.USERS")));
+				} else if (mtadmin) {
+					Variables.channels.add(new IRCChannel(config
+							.getString("CHANNEL.SETTINGS.PASSWORD"), config
+							.getStringList("CHANNEL.SETTINGS.BLOCKED_EVENTS"),
+							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), f
+									.getName().substring(0,
+											f.getName().lastIndexOf(".")),
+							ChatType.MTADMINCHAT, config
+									.getStringList("CHANNEL.COMMANDS.OP"),
+							config.getStringList("CHANNEL.COMMANDS.HOP"),
+							config.getStringList("CHANNEL.COMMANDS.ADMINS"),
+							config.getStringList("CHANNEL.COMMANDS.VOICE"),
+							config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (hero) {
 					Variables.channels
 							.add(new IRCChannel(
 									config.getString("CHANNEL.SETTINGS.PASSWORD"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_GAME_EVENTS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_IRC_EVENTS"),
+									config.getStringList("CHANNEL.SETTINGS.BLOCKED_EVENTS"),
 									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
 									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
 									f.getName().substring(0,
@@ -311,29 +320,23 @@ public class SettingsManager extends MonsterIRC {
 									config.getStringList("CHANNEL.COMMANDS.HOP"),
 									config.getStringList("CHANNEL.COMMANDS.ADMIN"),
 									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC")));
+									config.getStringList("CHANNEL.COMMANDS.USERS")));
 				} else if (towny) {
-					Variables.channels
-							.add(new IRCChannel(
-									config.getString("CHANNEL.SETTINGS.PASSWORD"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_GAME_EVENTS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_IRC_EVENTS"),
-									config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
-									config.getBoolean("CHANNEL.SETTINGS.DEFAULT"),
-									f.getName().substring(0,
+					Variables.channels.add(new IRCChannel(config
+							.getString("CHANNEL.SETTINGS.PASSWORD"), config
+							.getStringList("CHANNEL.SETTINGS.BLOCKED_EVENTS"),
+							config.getBoolean("CHANNEL.SETTINGS.AUTOJOIN"),
+							config.getBoolean("CHANNEL.SETTINGS.DEFAULT"), f
+									.getName().substring(0,
 											f.getName().lastIndexOf(".")),
-									config.getString("CHANNEL.CHATTYPE.TOWNY.CHANNEL"),
-									ChatType.TOWNYCHAT,
-									config.getStringList("CHANNEL.COMMANDS.OP"),
-									config.getStringList("CHANNEL.COMMANDS.HOP"),
-									config.getStringList("CHANNEL.COMMANDS.ADMINS"),
-									config.getStringList("CHANNEL.COMMANDS.VOICE"),
-									config.getStringList("CHANNEL.COMMANDS.USERS"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_GAME"),
-									config.getBoolean("CHANNEL.SETTINGS.PASS_TO_IRC"),
-									config.getString("CHANNEL.CHATTYPE.TOWNY.PERMS")));
+							config.getString("CHANNEL.CHATTYPE.TOWNY.CHANNEL"),
+							ChatType.TOWNYCHAT, config
+									.getStringList("CHANNEL.COMMANDS.OP"),
+							config.getStringList("CHANNEL.COMMANDS.HOP"),
+							config.getStringList("CHANNEL.COMMANDS.ADMINS"),
+							config.getStringList("CHANNEL.COMMANDS.VOICE"),
+							config.getStringList("CHANNEL.COMMANDS.USERS"),
+							config.getString("CHANNEL.CHATTYPE.TOWNY.PERMS")));
 				}
 			} catch (Exception e) {
 				IRC.debug(e);
@@ -348,6 +351,7 @@ public class SettingsManager extends MonsterIRC {
 		ArrayList<String> voice = new ArrayList<String>();
 		ArrayList<String> user = new ArrayList<String>();
 		ArrayList<String> channels = new ArrayList<String>();
+		ArrayList<String> blockedEvents = new ArrayList<String>();
 		channels.add("Global");
 		channels.add("Overworld");
 		op.add("*");
@@ -355,19 +359,23 @@ public class SettingsManager extends MonsterIRC {
 		admin.add("list");
 		voice.add("give");
 		user.add("help");
+		blockedEvents.add("game_leave");
+		blockedEvents.add("game_join");
+		blockedEvents.add("game_death");
+		blockedEvents.add("irc_leave");
+		blockedEvents.add("irc_join");
+		blockedEvents.add("irc_kick");
 		FileConfiguration config = new YamlConfiguration();
 		config.options()
 				.header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
 		config.addDefault("CHANNEL.SETTINGS.AUTOJOIN", true);
 		config.addDefault("CHANNEL.SETTINGS.DEFAULT", true);
 		config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
-		config.addDefault("CHANNEL.SETTINGS.PASS_TO_GAME", true);
-		config.addDefault("CHANNEL.SETTINGS.PASS_TO_IRC", true);
-		config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
-		config.addDefault("CHANNEL.SETTINGS.PASS_GAME_EVENTS", true);
-		config.addDefault("CHANNEL.SETTINGS.PASS_IRC_EVENTS", true);
+		config.addDefault("CHANNEL.SETTINGS.BLOCKED_EVENTS", blockedEvents);
 		config.addDefault("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
 		config.addDefault("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
+		config.addDefault("CHANNEL.CHATTYPE.MONSTER_TICKETS.ADMINCHAT.ENABLED",
+				false);
 		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
 		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
 		config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
