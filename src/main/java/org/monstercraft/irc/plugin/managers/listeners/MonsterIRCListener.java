@@ -22,7 +22,6 @@ import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
-import org.monstercraft.support.plugin.events.AdminChatEvent;
 
 import com.dthielke.herochat.Herochat;
 import com.gmail.nossr50.util.Users;
@@ -100,15 +99,6 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onAdminChat(AdminChatEvent event) {
-		for (IRCChannel c : Variables.channels) {
-			if (c.getChatType() == ChatType.MTADMINCHAT) {
-				handleMessage(event.getSender(), c, event.getMessage());
-			}
-		}
-	}
-
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (event.getQuitMessage() == null) {
@@ -168,8 +158,8 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		}
 	}
 
-	private void handleMessage(final Player player, final IRCChannel c,
-			final String message) {
+	protected static void handleMessage(final Player player,
+			final IRCChannel c, final String message) {
 		if (player != null) {
 			if (MonsterIRCListener.getHandleManager().getPermissionsHandler()
 					.hasNode(player, "irc.nochat")
@@ -180,7 +170,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 				return;
 			}
 		}
-		if (!c.getBlockedEvents().contains("game_chat")) {
+		if (c.getBlockedEvents().contains("game_chat")) {
 			return;
 		}
 		if (player == null) {
@@ -433,7 +423,7 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 		}
 	}
 
-	private WeakHashMap<Player, Channel> directedChat = new WeakHashMap<Player, Channel>();
+	private static WeakHashMap<Player, Channel> directedChat = new WeakHashMap<Player, Channel>();
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {

@@ -25,4 +25,8 @@ public class IRCConnectEvent extends IRCEvent {
 		return handlers;
 	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }

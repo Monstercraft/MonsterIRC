@@ -47,4 +47,8 @@ public class IRCModeEvent extends IRCEvent {
 		return handlers;
 	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }

@@ -45,4 +45,8 @@ public class IRCKickEvent extends IRCEvent {
 		return handlers;
 	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }

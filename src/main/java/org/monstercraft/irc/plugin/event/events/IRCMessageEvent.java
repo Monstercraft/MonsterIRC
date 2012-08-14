@@ -39,4 +39,8 @@ public class IRCMessageEvent extends IRCEvent {
 		return handlers;
 	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }

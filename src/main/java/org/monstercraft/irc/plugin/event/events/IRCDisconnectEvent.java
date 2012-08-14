@@ -25,4 +25,8 @@ public class IRCDisconnectEvent extends IRCEvent {
 		return handlers;
 	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }
