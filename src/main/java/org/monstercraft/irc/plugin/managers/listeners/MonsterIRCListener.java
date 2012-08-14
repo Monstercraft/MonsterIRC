@@ -62,22 +62,23 @@ public class MonsterIRCListener extends MonsterIRC implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChat(AsyncPlayerChatEvent event) {
-		if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-			if (!Users.getProfile(event.getPlayer().getName())
-					.getAdminChatMode()) {
-				if (event.isCancelled()) {
-					return;
-				}
-			}
-		} else if (event.isCancelled()) {
-			return;
-		}
 		try {
-			if (plugin.isEnabled()) {
-				Player player = event.getPlayer();
-				for (IRCChannel c : MonsterIRC.getChannels()) {
-					handleMessage(player, c, event.getMessage());
+			Player player = event.getPlayer();
+			for (IRCChannel c : MonsterIRC.getChannels()) {
+				if (c.getChatType() == ChatType.MCMMOADMINCHAT) {
+					if (Bukkit.getServer().getPluginManager()
+							.getPlugin("mcMMO") != null) {
+						if (!Users.getProfile(event.getPlayer().getName())
+								.getAdminChatMode()) {
+							if (event.isCancelled()) {
+								continue;
+							}
+						}
+					}
+				} else if (event.isCancelled()) {
+					continue;
 				}
+				handleMessage(player, c, event.getMessage());
 			}
 		} catch (Exception e) {
 			IRC.debug(e);
