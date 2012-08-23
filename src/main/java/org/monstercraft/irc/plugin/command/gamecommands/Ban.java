@@ -29,15 +29,19 @@ public class Ban extends GameCommand {
 				return true;
 			}
 		}
-		if (split.length < 2) {
-			sender.sendMessage("Invalid usage, proper usage:/irc ban [user]");
+		if (split.length < 4) {
+			sender.sendMessage("Invalid usage, proper usage: /irc ban [channel] [user]");
 			return true;
 		} else {
-			sender.sendMessage("Attempting to kick & ban " + split[2] + "!");
+			sender.sendMessage("Attempting to kick & ban " + split[3] + "!");
 			for (IRCChannel c : Variables.channels) {
-				MonsterIRC.getHandleManager().getIRCHandler()
-						.ban(split[2].toString(), c.getChannel());
+				if (c.getChannel().equalsIgnoreCase(split[2])) {
+					MonsterIRC.getHandleManager().getIRCHandler()
+							.ban(split[3].toString(), c.getChannel());
+					return true;
+				}
 			}
+			sender.sendMessage("Channel not found!");
 			return true;
 		}
 	}
