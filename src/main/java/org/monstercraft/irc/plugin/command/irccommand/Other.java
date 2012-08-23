@@ -14,7 +14,7 @@ public class Other extends IRCCommand {
 	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return MonsterIRC.getHandleManager().getIRCHandler()
-				.isConnected(MonsterIRC.getIRCServer());
+				.isConnected();
 	}
 
 	@Override

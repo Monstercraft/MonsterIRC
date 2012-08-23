@@ -13,7 +13,7 @@ public class List extends IRCCommand {
 	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return MonsterIRC.getHandleManager().getIRCHandler()
-				.isConnected(MonsterIRC.getIRCServer())
+				.isConnected()
 				&& message.toLowerCase().startsWith(
 						Variables.commandPrefix + "list");
 	}

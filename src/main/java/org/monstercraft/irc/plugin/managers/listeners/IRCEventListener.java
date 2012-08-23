@@ -68,27 +68,53 @@ public class IRCEventListener implements IRCListener {
 					+ mode + " to " + user + ".");
 		}
 		mode = mode.toLowerCase();
-		if (mode.contains("+v")) {
-			channel.getVoiceList().add(user);
-		} else if (mode.contains("-v")) {
-			channel.getVoiceList().remove(user);
-		} else if (mode.contains("+o")) {
-			channel.getOpList().add(user);
-		} else if (mode.contains("-o")) {
-			channel.getOpList().remove(user);
-		} else if (mode.contains("+h")) {
-			channel.getHOpList().add(user);
-		} else if (mode.contains("-h")) {
-			channel.getHOpList().remove(user);
-		} else if (mode.contains("+a")) {
-			channel.getAdminList().add(user);
-		} else if (mode.contains("-a")) {
-			channel.getAdminList().remove(user);
-		} else if (mode.contains("+q")) {
-			channel.getOpList().add(user);
-		} else if (mode.contains("-q")) {
-			channel.getOpList().remove(user);
+		String add = mode.toLowerCase();
+		String remove = mode.toLowerCase();
+		if (mode.contains("+") && mode.contains("-")) {
+			int posIndex = mode.indexOf('+');
+			int negIndex = mode.indexOf('-');
+			if (posIndex < negIndex) {
+				remove = mode.substring(negIndex, mode.length());
+				add = mode.substring(0, negIndex);
+			} else {
+				add = mode.substring(posIndex, mode.length());
+				remove = mode.substring(0, posIndex);
+			}
 		}
+		if (add.contains("+")) {
+			if (add.contains("q")) {
+				channel.getOpList().add(user);
+			}
+			if (add.contains("o")) {
+				channel.getOpList().add(user);
+			}
+			if (add.contains("h")) {
+				channel.getHOpList().add(user);
+			}
+			if (add.contains("a")) {
+				channel.getAdminList().add(user);
+			}
+			if (add.contains("v")) {
+				channel.getVoiceList().add(user);
+			}
+		} else if (remove.contains("-")) {
+			if (remove.contains("q")) {
+				channel.getOpList().remove(user);
+			}
+			if (remove.contains("o")) {
+				channel.getOpList().remove(user);
+			}
+			if (remove.contains("h")) {
+				channel.getHOpList().remove(user);
+			}
+			if (remove.contains("a")) {
+				channel.getAdminList().remove(user);
+			}
+			if (remove.contains("v")) {
+				channel.getVoiceList().remove(user);
+			}
+		}
+
 	}
 
 	@Override

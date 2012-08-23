@@ -3,9 +3,9 @@ package org.monstercraft.irc.plugin.managers;
 import net.milkbowl.vault.permission.Permission;
 
 import org.monstercraft.irc.MonsterIRC;
-import org.monstercraft.irc.plugin.managers.handlers.IRCHandler;
-import org.monstercraft.irc.plugin.managers.handlers.IRCPermissionsHandler;
-import org.monstercraft.irc.plugin.managers.handlers.IRCPluginHandler;
+import org.monstercraft.irc.plugin.handles.IRCHandler;
+import org.monstercraft.irc.plugin.handles.IRCPermissionsHandler;
+import org.monstercraft.irc.plugin.handles.IRCPluginHandler;
 
 /**
  * This class contains all of the plugins handles.
@@ -13,7 +13,7 @@ import org.monstercraft.irc.plugin.managers.handlers.IRCPluginHandler;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class HandleManager extends MonsterIRC {
+public class HandleManager {
 
 	private IRCHandler irc = null;
 	private IRCPermissionsHandler perms = null;
@@ -29,7 +29,7 @@ public class HandleManager extends MonsterIRC {
 	public HandleManager(final MonsterIRC plugin) {
 		this.plugin = plugin;
 		irc = new IRCHandler(plugin);
-		perms = new IRCPermissionsHandler(getHookManager().getPermissionsHook());
+		perms = new IRCPermissionsHandler(MonsterIRC.getHookManager().getPermissionsHook());
 		ph = new IRCPluginHandler(plugin);
 	}
 

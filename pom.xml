@@ -5,7 +5,7 @@
 
 	<groupId>org.monstercraft.irc</groupId>
 	<artifactId>MonsterIRC</artifactId>
-	<version>1.69</version>
+	<version>1.70</version>
 
 
 	<properties>

@@ -23,7 +23,7 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class SettingsManager extends MonsterIRC {
+public class SettingsManager {
 	private boolean firstRun = false;
 	private MonsterIRC plugin = null;
 

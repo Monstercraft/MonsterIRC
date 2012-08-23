@@ -25,7 +25,7 @@ public class Ban extends GameCommand {
 					return true;
 				}
 			} else {
-				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
+				sender.sendMessage("[IRC] Permissions not detected, unable to run any IRC commands.");
 				return true;
 			}
 		}
@@ -35,11 +35,8 @@ public class Ban extends GameCommand {
 		} else {
 			sender.sendMessage("Attempting to kick & ban " + split[2] + "!");
 			for (IRCChannel c : Variables.channels) {
-				MonsterIRC
-						.getHandleManager()
-						.getIRCHandler()
-						.ban(MonsterIRC.getIRCServer(), split[2].toString(),
-								c.getChannel());
+				MonsterIRC.getHandleManager().getIRCHandler()
+						.ban(split[2].toString(), c.getChannel());
 			}
 			return true;
 		}

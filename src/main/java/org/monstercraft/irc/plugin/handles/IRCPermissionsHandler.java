@@ -1,12 +1,9 @@
-package org.monstercraft.irc.plugin.managers.handlers;
-
-import java.util.List;
+package org.monstercraft.irc.plugin.handles;
 
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
-import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
 
 /**
@@ -51,44 +48,6 @@ public class IRCPermissionsHandler extends MonsterIRC {
 		} else {
 			return player.isOp();
 		}
-	}
-
-	/**
-	 * Checks if a player is in a list.
-	 * 
-	 * @param player
-	 *            The player to check.
-	 * @param list
-	 *            The list to check.
-	 * @return True if the list contains their name; otherwise false.
-	 */
-	public boolean anyGroupsInList(final Player player, final List<String> list) {
-		String[] groups = getGroups(player);
-		for (int i = 0; i < groups.length; i++) {
-			if (list.contains(groups[i]))
-				return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Sets the players groups.
-	 * 
-	 * @param player
-	 *            The player to set groups for.
-	 * @return The groups the player is in.
-	 */
-	public String[] getGroups(final Player player) {
-		if (perms != null) {
-			try {
-				String world = player.getWorld().getName();
-				String name = player.getName();
-				return perms.getPlayerGroups(world, name);
-			} catch (Exception e) {
-				IRC.debug(e);
-			}
-		}
-		return new String[0];
 	}
 
 	public boolean hasNode(Player player, String node) {

@@ -12,6 +12,7 @@ import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.wrappers.IRCServer;
 import org.monstercraft.support.MonsterTickets;
 
 import com.gmail.nossr50.util.Users;
@@ -132,7 +133,7 @@ public class IRC {
 	public static void kick(final String channel, final String nick,
 			final String reason) {
 		MonsterIRC.getHandleManager().getIRCHandler()
-				.kick(MonsterIRC.getIRCServer(), nick, channel, reason);
+				.kick(nick, channel, reason);
 	}
 
 	/**
@@ -144,8 +145,7 @@ public class IRC {
 	 *            The message to send.
 	 */
 	public static void ban(final String channel, final String nick) {
-		MonsterIRC.getHandleManager().getIRCHandler()
-				.ban(MonsterIRC.getIRCServer(), nick, channel);
+		MonsterIRC.getHandleManager().getIRCHandler().ban(nick, channel);
 	}
 
 	/**
@@ -158,8 +158,7 @@ public class IRC {
 	 */
 	public static void mode(final String channel, final String nick,
 			final String mode) {
-		MonsterIRC.getHandleManager().getIRCHandler()
-				.mode(MonsterIRC.getIRCServer(), nick, channel, mode);
+		MonsterIRC.getHandleManager().getIRCHandler().mode(nick, channel, mode);
 	}
 
 	/**
@@ -526,5 +525,15 @@ public class IRC {
 			}
 		}
 		return null;
+	}
+
+	private static IRCServer server;
+
+	public static void setServer(IRCServer server) {
+		IRC.server = server;
+	}
+
+	public static IRCServer getServer() {
+		return server;
 	}
 }

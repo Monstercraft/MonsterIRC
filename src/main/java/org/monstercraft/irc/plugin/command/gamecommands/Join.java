@@ -1,5 +1,7 @@
 package org.monstercraft.irc.plugin.command.gamecommands;
 
+import java.io.IOException;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
@@ -39,7 +41,12 @@ public class Join extends GameCommand {
 		}
 		for (IRCChannel c : Variables.channels) {
 			if (c.getChannel().equalsIgnoreCase(split[2])) {
-				MonsterIRC.getHandleManager().getIRCHandler().join(c);
+				try {
+					MonsterIRC.getHandleManager().getIRCHandler().join(c);
+				} catch (IOException e) {
+					sender.sendMessage("Error joining the channel!");
+					return true;
+				}
 				sender.sendMessage("[IRC] Successfully joined the channel!");
 				return true;
 			}

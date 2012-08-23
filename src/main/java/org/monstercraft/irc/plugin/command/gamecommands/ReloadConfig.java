@@ -3,6 +3,7 @@ package org.monstercraft.irc.plugin.command.gamecommands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
+import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.command.GameCommand;
 import org.monstercraft.irc.plugin.util.ColorUtils;
 
@@ -43,7 +44,7 @@ public class ReloadConfig extends GameCommand {
 			MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();
 			MonsterIRC.getHandleManager().setIRCPluginHandler();
 			MonsterIRC.getHandleManager().getIRCHandler()
-					.connect(MonsterIRC.getIRCServer());
+					.connect(IRC.getServer());
 		}
 	};
 
@@ -54,8 +55,7 @@ public class ReloadConfig extends GameCommand {
 
 	@Override
 	public String getCommandName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "reload";
 	}
 
 	@Override

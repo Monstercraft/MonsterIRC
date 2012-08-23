@@ -64,6 +64,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 				Variables.port, Variables.name, Variables.password,
 				Variables.ident, Variables.timeout, Variables.tries,
 				Variables.connectCommands);
+		IRC.setServer(IRCserver);
 		handles = new HandleManager(this);
 		getServer().getPluginManager().registerEvents(listener, this);
 		if (this.getServer().getPluginManager().getPlugin("MonsterTickets") != null) {
@@ -84,10 +85,8 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	public void onDisable() {
 		if (!settings.firstRun()) {
 			if (getHandleManager().getIRCHandler() != null) {
-				if (getHandleManager().getIRCHandler().isConnected(
-						getIRCServer())) {
-					getHandleManager().getIRCHandler().disconnect(
-							getIRCServer());
+				if (getHandleManager().getIRCHandler().isConnected()) {
+					getHandleManager().getIRCHandler().disconnect();
 				}
 			}
 		} else {
@@ -144,15 +143,6 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 	 */
 	public CommandManager getCommandManager() {
 		return command;
-	}
-
-	/**
-	 * The CommandManager that Assigns all the commands.
-	 * 
-	 * @return The plugins command manager.
-	 */
-	public static IRCServer getIRCServer() {
-		return IRCserver;
 	}
 
 	/**
@@ -234,7 +224,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 					IRC.log("You are using the latest version of MonsterIRC");
 				}
 				if (!settings.firstRun()) {
-					getHandleManager().getIRCHandler().connect(getIRCServer());
+					getHandleManager().getIRCHandler().connect(IRCserver);
 					IRC.log("Successfully started up.");
 				} else {
 					stop(this);

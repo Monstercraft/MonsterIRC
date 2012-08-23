@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.command.GameCommand;
@@ -38,7 +37,7 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
  * @author fletch_to_99 <fletchto99@hotmail.com>
  * 
  */
-public class CommandManager extends MonsterIRC {
+public class CommandManager {
 
 	private LinkedList<GameCommand> gameCommands = new LinkedList<GameCommand>();
 

@@ -13,7 +13,7 @@ public class Tail extends IRCCommand {
 	@Override
 	public boolean canExecute(String sender, String message, IRCChannel channel) {
 		return MonsterIRC.getHandleManager().getIRCHandler()
-				.isConnected(MonsterIRC.getIRCServer())
+				.isConnected()
 				&& IRC.isOp(channel, sender)
 				&& message.toLowerCase().startsWith(
 						Variables.commandPrefix + "tail");
