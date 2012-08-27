@@ -31,7 +31,7 @@ public class Join extends GameCommand {
 				return true;
 			}
 		}
-		if (split.length < 2) {
+		if (split.length < 3) {
 			sender.sendMessage("[IRC] Please specify a channel to join!");
 			return false;
 		}

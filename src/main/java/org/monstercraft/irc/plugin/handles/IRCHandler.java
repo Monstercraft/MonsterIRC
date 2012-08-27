@@ -94,11 +94,11 @@ public class IRCHandler {
 						connection.getInputStream()));
 				IRC.log("Attempting to connect to chat.");
 				if (!server.getPassword().equalsIgnoreCase("")) {
-					write("PASS " + server.getPassword() + "\r\n");
+					write("PASS " + server.getPassword());
 				}
-				write("NICK " + server.getNick() + "\r\n");
+				write("NICK " + server.getNick());
 				write("USER " + server.getNick() + " 8 * :"
-						+ plugin.getDescription().getVersion() + "\r\n");
+						+ plugin.getDescription().getVersion());
 				IRC.log("Processing connection....");
 				while ((line = getReader().readLine()) != null) {
 					IRC.debug(line, Variables.debug);
@@ -113,24 +113,23 @@ public class IRCHandler {
 						} else {
 							IRC.log("Sending ghost command....");
 							write("NICKSERV GHOST " + server.getNick() + " "
-									+ server.getNickservPassword() + "\r\n");
+									+ server.getNickservPassword());
 
 							continue;
 						}
 					} else if (line.toLowerCase().startsWith("ping ")) {
-						write("PONG " + line.substring(5) + "\r\n");
+						write("PONG " + line.substring(5));
 
 						continue;
 					}
 				}
 				if (server.isIdentifing()) {
 					IRC.log("Identifying with Nickserv....");
-					write("NICKSERV IDENTIFY " + server.getNickservPassword()
-							+ "\r\n");
+					write("NICKSERV IDENTIFY " + server.getNickservPassword());
 
 				}
 				for (String s : server.getConnectCommands()) {
-					write(s + "\r\n");
+					write(s);
 
 				}
 				IRCConnectEvent cevent = new IRCConnectEvent(server);
@@ -176,7 +175,7 @@ public class IRCHandler {
 				}
 			}
 			try {
-				write("QUIT Leaving." + "\r\n");
+				write("QUIT Leaving.");
 				input.close();
 				outputQueue.clear();
 				output.close();
@@ -238,7 +237,7 @@ public class IRCHandler {
 	public void part(final IRCChannel channel) {
 		try {
 			if (isConnected()) {
-				write("PART " + channel.getChannel() + "\r\n");
+				write("PART " + channel.getChannel());
 
 			}
 		} catch (IOException e) {
@@ -307,7 +306,7 @@ public class IRCHandler {
 	public void changeNick(final String Nick) {
 		if (isConnected()) {
 			try {
-				write("NICK " + Nick + "\r\n");
+				write("NICK " + Nick);
 			} catch (IOException e) {
 				IRC.debug(e);
 			}
@@ -326,7 +325,7 @@ public class IRCHandler {
 			final String reason) {
 		if (isConnected()) {
 			try {
-				write("KICK " + channel + " " + Nick + " " + reason + "\r\n");
+				write("KICK " + channel + " " + Nick + " " + reason);
 			} catch (IOException e) {
 				IRC.debug(e);
 			}
@@ -344,7 +343,7 @@ public class IRCHandler {
 	public void mode(final String nick, final String channel, final String mode) {
 		if (isConnected()) {
 			try {
-				write("MODE " + channel + " " + mode + " " + nick + "\r\n");
+				write("MODE " + channel + " " + mode + " " + nick);
 			} catch (IOException e) {
 				IRC.debug(e);
 			}
@@ -363,7 +362,7 @@ public class IRCHandler {
 		if (isConnected()) {
 			try {
 				kick(nick, channel, "Derp.");
-				write("MODE " + channel + " +b " + nick + "\r\n");
+				write("MODE " + channel + " +b " + nick);
 			} catch (IOException e) {
 				IRC.debug(e);
 			}
@@ -371,7 +370,7 @@ public class IRCHandler {
 	}
 
 	public void write(String string) throws IOException {
-		output.write(string);
+		output.write(string + "\r\n");
 		output.flush();
 	}
 
