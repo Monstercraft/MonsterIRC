@@ -12,34 +12,34 @@ import org.monstercraft.support.plugin.events.AdminChatEvent;
 
 public class AdminChatListener implements Listener {
 
-	@EventHandler
-	public void onAdminChat(AdminChatEvent event) {
-		for (IRCChannel c : Variables.channels) {
-			if (c.getChatType() == ChatType.MTADMINCHAT) {
-				StringBuffer result = new StringBuffer();
-				String player = event.getSender();
-				String message = event.getMessage();
-				result.append(Variables.ircformat
-						.replace("{HCchannelColor}", "")
-						.replace("{heroChatTag}", "")
-						.replace("{prefix}", StringUtils.getPrefix(player)
+    @EventHandler
+    public void onAdminChat(final AdminChatEvent event) {
+        for (final IRCChannel c : Variables.channels) {
+            if (c.getChatType() == ChatType.MTADMINCHAT) {
+                final StringBuffer result = new StringBuffer();
+                final String player = event.getSender();
+                final String message = event.getMessage();
+                result.append(Variables.ircformat
+                        .replace("{HCchannelColor}", "")
+                        .replace("{heroChatTag}", "")
+                        .replace("{prefix}", StringUtils.getPrefix(player)
 
-						)
-						.replace("{name}", StringUtils.getDisplayName(player))
-						.replace("{suffix}", StringUtils.getSuffix(player))
+                        )
+                        .replace("{name}", StringUtils.getDisplayName(player))
+                        .replace("{suffix}", StringUtils.getSuffix(player))
 
-						.replace("{groupPrefix}",
-								StringUtils.getGroupPrefix(player))
-						.replace("{groupSuffix}",
-								StringUtils.getGroupSuffix(player))
-						.replace("{message}", " " + message)
-						.replace("{mvWorld}", "").replace("{mvColor}", "")
-						.replace("{world}", ""));
-				Variables.linesToIrc++;
-				IRC.sendMessageToChannel(c,
-						ColorUtils.formatGametoIRC(result.toString()));
-			}
-		}
-	}
+                        .replace("{groupPrefix}",
+                                StringUtils.getGroupPrefix(player))
+                        .replace("{groupSuffix}",
+                                StringUtils.getGroupSuffix(player))
+                        .replace("{message}", " " + message)
+                        .replace("{mvWorld}", "").replace("{mvColor}", "")
+                        .replace("{world}", ""));
+                Variables.linesToIrc++;
+                IRC.sendMessageToChannel(c,
+                        ColorUtils.formatGametoIRC(result.toString()));
+            }
+        }
+    }
 
 }

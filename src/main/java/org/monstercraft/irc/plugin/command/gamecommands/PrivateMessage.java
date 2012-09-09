@@ -11,88 +11,88 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class PrivateMessage extends GameCommand {
 
-	ArrayList<String> first = new ArrayList<String>();
+    ArrayList<String> first = new ArrayList<String>();
 
-	@Override
-	public boolean canExecute(CommandSender sender, String[] split) {
-		return split[0].equalsIgnoreCase("irc")
-				&& split[1].equalsIgnoreCase("pm");
-	}
+    @Override
+    public boolean canExecute(final CommandSender sender, final String[] split) {
+        return split[0].equalsIgnoreCase("irc")
+                && split[1].equalsIgnoreCase("pm");
+    }
 
-	@Override
-	public boolean execute(CommandSender sender, String[] split) {
-		if (sender instanceof Player) {
-			if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
-				if (!MonsterIRC.getHandleManager().getPermissionsHandler()
-						.hasCommandPerms((Player) sender, this)) {
-					sender.sendMessage("[IRC] You don't have permission to preform that command.");
-					return true;
-				}
-			} else {
-				sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
-				return true;
-			}
-		}
-		if (split.length < 4) {
-			sender.sendMessage("Invalid usage!");
-			sender.sendMessage("Proper usage: irc pm [user] [message]");
-			return true;
-		} else {
-			if (!first.contains(split[2])) {
-				MonsterIRC
-						.getHandleManager()
-						.getIRCHandler()
-						.sendMessage(split[2],
-								"You have revieved a private message from MonsterIRC!");
-				MonsterIRC
-						.getHandleManager()
-						.getIRCHandler()
-						.sendMessage(
-								split[2],
-								"To reply type \"" + sender.getName()
-										+ ":\" (message)");
-				first.add(split[2]);
-			}
-			StringBuffer result = new StringBuffer();
-			result.append("[MC] " + sender.getName() + ": ");
-			for (int i = 3; i < split.length; i++) {
-				result.append(split[i]);
-				result.append(" ");
-			}
-			MonsterIRC.getHandleManager().getIRCHandler()
-					.sendMessage(split[2], result.toString());
-			sender.sendMessage(ColorUtils.LIGHT_GRAY.getMinecraftColor()
-					+ "([IRC] to "
-					+ split[2]
-					+ "): "
-					+ result.toString()
-							.substring(7 + sender.getName().length()));
-			Variables.reply.put((Player) sender, split[2]);
-			return true;
-		}
-	}
+    @Override
+    public boolean execute(final CommandSender sender, final String[] split) {
+        if (sender instanceof Player) {
+            if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
+                if (!MonsterIRC.getHandleManager().getPermissionsHandler()
+                        .hasCommandPerms((Player) sender, this)) {
+                    sender.sendMessage("[IRC] You don't have permission to preform that command.");
+                    return true;
+                }
+            } else {
+                sender.sendMessage("[IRC] PEX not detected, unable to run any IRC commands.");
+                return true;
+            }
+        }
+        if (split.length < 4) {
+            sender.sendMessage("Invalid usage!");
+            sender.sendMessage("Proper usage: irc pm [user] [message]");
+            return true;
+        } else {
+            if (!first.contains(split[2])) {
+                MonsterIRC
+                        .getHandleManager()
+                        .getIRCHandler()
+                        .sendMessage(split[2],
+                                "You have revieved a private message from MonsterIRC!");
+                MonsterIRC
+                        .getHandleManager()
+                        .getIRCHandler()
+                        .sendMessage(
+                                split[2],
+                                "To reply type \"" + sender.getName()
+                                        + ":\" (message)");
+                first.add(split[2]);
+            }
+            final StringBuffer result = new StringBuffer();
+            result.append("[MC] " + sender.getName() + ": ");
+            for (int i = 3; i < split.length; i++) {
+                result.append(split[i]);
+                result.append(" ");
+            }
+            MonsterIRC.getHandleManager().getIRCHandler()
+                    .sendMessage(split[2], result.toString());
+            sender.sendMessage(ColorUtils.LIGHT_GRAY.getMinecraftColor()
+                    + "([IRC] to "
+                    + split[2]
+                    + "): "
+                    + result.toString()
+                            .substring(7 + sender.getName().length()));
+            Variables.reply.put((Player) sender, split[2]);
+            return true;
+        }
+    }
 
-	@Override
-	public String getPermission() {
-		return "irc.pm";
-	}
+    @Override
+    public String getPermission() {
+        return "irc.pm";
+    }
 
-	@Override
-	public String[] getHelp() {
-		return new String[] {
-				ColorUtils.RED.getMinecraftColor() + "Command: "
-						+ ColorUtils.WHITE.getMinecraftColor() + "PM",
-				ColorUtils.RED.getMinecraftColor() + "Description: "
-						+ ColorUtils.WHITE.getMinecraftColor()
-						+ "Sends a user in IRC a private message.",
-				ColorUtils.RED.getMinecraftColor() + "Usage: "
-						+ ColorUtils.WHITE.getMinecraftColor()
-						+ "/irc pm (user) (message)" };
-	}
+    @Override
+    public String[] getHelp() {
+        return new String[] {
+                ColorUtils.RED.getMinecraftColor() + "Command: "
+                        + ColorUtils.WHITE.getMinecraftColor() + "PM",
+                ColorUtils.RED.getMinecraftColor() + "Description: "
+                        + ColorUtils.WHITE.getMinecraftColor()
+                        + "Sends a user in IRC a private message.",
+                ColorUtils.RED.getMinecraftColor() + "Usage: "
+                        + ColorUtils.WHITE.getMinecraftColor()
+                        + "/irc pm (user) (message)" };
+    }
 
-	@Override
-	public String getCommandName() {
-		return "pm";
-	}
+    @Override
+    public String getCommandName() {
+        return "pm";
+    }
 
 }

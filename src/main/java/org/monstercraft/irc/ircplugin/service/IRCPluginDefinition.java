@@ -2,12 +2,12 @@ package org.monstercraft.irc.ircplugin.service;
 
 public class IRCPluginDefinition {
 
-	public Class<?> clazz;
+    public Class<?> clazz;
 
-	public int id;
+    public int id;
 
-	public String name;
+    public String name;
 
-	public IRCPluginSource source;
+    public IRCPluginSource source;
 
 }

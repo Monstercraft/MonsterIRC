@@ -6,34 +6,34 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class IRCQuitEvent extends IRCEvent {
 
-	public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCQuitEvent";
+    public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCQuitEvent";
 
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private IRCChannel channel;
+    private final IRCChannel channel;
 
-	private String name;
+    private final String name;
 
-	public IRCQuitEvent(IRCChannel channel, String name) {
-		this.channel = channel;
-		this.name = name;
-	}
+    public IRCQuitEvent(final IRCChannel channel, final String name) {
+        this.channel = channel;
+        this.name = name;
+    }
 
-	public IRCChannel getIRCChannel() {
-		return channel;
-	}
+    public IRCChannel getIRCChannel() {
+        return channel;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
 }

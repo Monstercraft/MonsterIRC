@@ -8,32 +8,32 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class PluginKickEvent extends IRCEvent {
 
-	private static final long serialVersionUID = 8708860642802706979L;
+    private static final long serialVersionUID = 8708860642802706979L;
 
-	private IRCChannel channel;
+    private final IRCChannel channel;
 
-	private String user;
+    private final String user;
 
-	private String reason;
+    private final String reason;
 
-	private String kicker;
+    private final String kicker;
 
-	public PluginKickEvent(IRCChannel channel, String kicker, String user,
-			String reason) {
-		this.channel = channel;
-		this.user = user;
-		this.reason = reason;
-		this.kicker = kicker;
-	}
+    public PluginKickEvent(final IRCChannel channel, final String kicker,
+            final String user, final String reason) {
+        this.channel = channel;
+        this.user = user;
+        this.reason = reason;
+        this.kicker = kicker;
+    }
 
-	@Override
-	public void dispatch(EventListener el) {
-		((IRCListener) el).onKick(channel, kicker, user, reason);
-	}
+    @Override
+    public void dispatch(final EventListener el) {
+        ((IRCListener) el).onKick(channel, kicker, user, reason);
+    }
 
-	@Override
-	public long getMask() {
-		return EventMulticaster.IRC_KICK_EVENT;
-	}
+    @Override
+    public long getMask() {
+        return EventMulticaster.IRC_KICK_EVENT;
+    }
 
 }

@@ -8,48 +8,49 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class Commands extends IRCCommand {
 
-	@Override
-	public boolean canExecute(String sender, String message, IRCChannel channel) {
-		return MonsterIRC.getHandleManager().getIRCHandler()
-				.isConnected()
-				&& message.startsWith(Variables.commandPrefix + "commands");
-	}
+    @Override
+    public boolean canExecute(final String sender, final String message,
+            final IRCChannel channel) {
+        return MonsterIRC.getHandleManager().getIRCHandler().isConnected()
+                && message.startsWith(Variables.commandPrefix + "commands");
+    }
 
-	@Override
-	public boolean execute(String sender, String message, IRCChannel channel) {
-		if (IRC.isOp(channel, sender)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("As an OP you can use ");
-			for (String string : channel.getOpCommands()) {
-				sb.append("\"" + string + "\" ");
-			}
-			for (String string : channel.getVoiceCommands()) {
-				sb.append("\"" + string + "\" ");
-			}
-			for (String string : channel.getUserCommands()) {
-				sb.append("\"" + string + "\" ");
-			}
-			IRC.sendNotice(sender, sb.toString());
-			return true;
-		} else if (IRC.isVoice(channel, sender)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("As an Voice you can use ");
-			for (String string : channel.getVoiceCommands()) {
-				sb.append("\"" + string + "\" ");
-			}
-			for (String string : channel.getUserCommands()) {
-				sb.append("\"" + string + "\" ");
-			}
-			IRC.sendNotice(sender, sb.toString());
-			return true;
-		} else {
-			StringBuilder sb = new StringBuilder();
-			sb.append("As an User you can use ");
-			for (String string : channel.getUserCommands()) {
-				sb.append("\"" + string + "\" ");
-			}
-			IRC.sendNotice(sender, sb.toString());
-			return true;
-		}
-	}
+    @Override
+    public boolean execute(final String sender, final String message,
+            final IRCChannel channel) {
+        if (IRC.isOp(channel, sender)) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("As an OP you can use ");
+            for (final String string : channel.getOpCommands()) {
+                sb.append("\"" + string + "\" ");
+            }
+            for (final String string : channel.getVoiceCommands()) {
+                sb.append("\"" + string + "\" ");
+            }
+            for (final String string : channel.getUserCommands()) {
+                sb.append("\"" + string + "\" ");
+            }
+            IRC.sendNotice(sender, sb.toString());
+            return true;
+        } else if (IRC.isVoice(channel, sender)) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("As an Voice you can use ");
+            for (final String string : channel.getVoiceCommands()) {
+                sb.append("\"" + string + "\" ");
+            }
+            for (final String string : channel.getUserCommands()) {
+                sb.append("\"" + string + "\" ");
+            }
+            IRC.sendNotice(sender, sb.toString());
+            return true;
+        } else {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("As an User you can use ");
+            for (final String string : channel.getUserCommands()) {
+                sb.append("\"" + string + "\" ");
+            }
+            IRC.sendNotice(sender, sb.toString());
+            return true;
+        }
+    }
 }

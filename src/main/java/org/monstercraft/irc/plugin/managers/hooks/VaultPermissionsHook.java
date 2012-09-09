@@ -15,52 +15,52 @@ import org.monstercraft.irc.ircplugin.IRC;
  */
 public class VaultPermissionsHook extends MonsterIRC {
 
-	private Permission PermissionsHook;
-	private MonsterIRC plugin;
+    private Permission PermissionsHook;
+    private final MonsterIRC plugin;
 
-	/**
-	 * Creates an instance of the PermissionsHook class.
-	 * 
-	 * @param plugin
-	 *            The parent plugin.
-	 */
-	public VaultPermissionsHook(final MonsterIRC plugin) {
-		this.plugin = plugin;
-		boolean b = setupPermissions();
-		if (b) {
-			Plugin permsPlugin = plugin.getServer().getPluginManager()
-					.getPlugin(PermissionsHook.getName());
-			if (PermissionsHook != null) {
-				if (permsPlugin != null) {
-					IRC.log("Vault permissions detected; hooking: "
-							+ permsPlugin.getDescription().getFullName());
-				} else {
-					IRC.log("Permissions found!");
-				}
-			}
-		} else {
-			IRC.log("Could not hook into permissions using vault! (Permissions not found?)");
-		}
-	}
+    /**
+     * Creates an instance of the PermissionsHook class.
+     * 
+     * @param plugin
+     *            The parent plugin.
+     */
+    public VaultPermissionsHook(final MonsterIRC plugin) {
+        this.plugin = plugin;
+        final boolean b = setupPermissions();
+        if (b) {
+            final Plugin permsPlugin = plugin.getServer().getPluginManager()
+                    .getPlugin(PermissionsHook.getName());
+            if (PermissionsHook != null) {
+                if (permsPlugin != null) {
+                    IRC.log("Vault permissions detected; hooking: "
+                            + permsPlugin.getDescription().getFullName());
+                } else {
+                    IRC.log("Permissions found!");
+                }
+            }
+        } else {
+            IRC.log("Could not hook into permissions using vault! (Permissions not found?)");
+        }
+    }
 
-	private Boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> permissionProvider = plugin
-				.getServer()
-				.getServicesManager()
-				.getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null) {
-			PermissionsHook = permissionProvider.getProvider();
-		}
-		return (PermissionsHook != null);
-	}
+    private Boolean setupPermissions() {
+        final RegisteredServiceProvider<Permission> permissionProvider = plugin
+                .getServer()
+                .getServicesManager()
+                .getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            PermissionsHook = permissionProvider.getProvider();
+        }
+        return (PermissionsHook != null);
+    }
 
-	/**
-	 * Fetches the hook into Permissions.
-	 * 
-	 * @return The hook into Permissions.
-	 */
-	public Permission getHook() {
-		return PermissionsHook;
-	}
+    /**
+     * Fetches the hook into Permissions.
+     * 
+     * @return The hook into Permissions.
+     */
+    public Permission getHook() {
+        return PermissionsHook;
+    }
 
 }

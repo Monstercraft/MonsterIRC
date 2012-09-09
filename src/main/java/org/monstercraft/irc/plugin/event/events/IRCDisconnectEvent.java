@@ -6,27 +6,27 @@ import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
 public class IRCDisconnectEvent extends IRCEvent {
 
-	public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCDisconnectEvent";
+    public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCDisconnectEvent";
 
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private IRCServer server;
+    private final IRCServer server;
 
-	public IRCDisconnectEvent(IRCServer server) {
-		this.server = server;
-	}
+    public IRCDisconnectEvent(final IRCServer server) {
+        this.server = server;
+    }
 
-	public IRCServer getIRCServer() {
-		return server;
-	}
+    public IRCServer getIRCServer() {
+        return server;
+    }
 
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
 }

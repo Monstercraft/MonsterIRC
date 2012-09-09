@@ -14,51 +14,51 @@ import com.palmergames.bukkit.TownyChat.Chat;
  */
 public class TownyChatHook extends MonsterIRC {
 
-	private Chat TownyChatHook;
-	private MonsterIRC plugin;
+    private Chat TownyChatHook;
+    private final MonsterIRC plugin;
 
-	/**
-	 * Creates an instance of the TownyChatHook class.
-	 * 
-	 * @param plugin
-	 *            The parent plugin.
-	 */
-	public TownyChatHook(final MonsterIRC plugin) {
-		this.plugin = plugin;
-		initTownyChatHook();
-	}
+    /**
+     * Creates an instance of the TownyChatHook class.
+     * 
+     * @param plugin
+     *            The parent plugin.
+     */
+    public TownyChatHook(final MonsterIRC plugin) {
+        this.plugin = plugin;
+        initTownyChatHook();
+    }
 
-	private void initTownyChatHook() {
-		if (TownyChatHook != null) {
-			return;
-		}
-		Plugin TownyChatPlugin = plugin.getServer().getPluginManager()
-				.getPlugin("TownyChat");
+    private void initTownyChatHook() {
+        if (TownyChatHook != null) {
+            return;
+        }
+        final Plugin TownyChatPlugin = plugin.getServer().getPluginManager()
+                .getPlugin("TownyChat");
 
-		if (TownyChatPlugin == null) {
-			IRC.log("TownyChat not detected.");
-			TownyChatHook = null;
-			return;
-		}
+        if (TownyChatPlugin == null) {
+            IRC.log("TownyChat not detected.");
+            TownyChatHook = null;
+            return;
+        }
 
-		if (!TownyChatPlugin.isEnabled()) {
-			IRC.log("HeroChat 4 not enabled.");
-			TownyChatHook = null;
-			return;
-		}
+        if (!TownyChatPlugin.isEnabled()) {
+            IRC.log("HeroChat 4 not enabled.");
+            TownyChatHook = null;
+            return;
+        }
 
-		TownyChatHook = ((Chat) TownyChatPlugin);
-		IRC.log("TownyChat detected; hooking: "
-				+ ((Chat) TownyChatPlugin).getDescription().getFullName());
-	}
+        TownyChatHook = ((Chat) TownyChatPlugin);
+        IRC.log("TownyChat detected; hooking: "
+                + ((Chat) TownyChatPlugin).getDescription().getFullName());
+    }
 
-	/**
-	 * Fetches the hook into TownyChat.
-	 * 
-	 * @return The hook into TownyChat.
-	 */
-	public Chat getHook() {
-		return TownyChatHook;
-	}
+    /**
+     * Fetches the hook into TownyChat.
+     * 
+     * @return The hook into TownyChat.
+     */
+    public Chat getHook() {
+        return TownyChatHook;
+    }
 
 }

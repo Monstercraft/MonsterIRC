@@ -8,28 +8,29 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class PluginActionEvent extends IRCEvent {
 
-	private static final long serialVersionUID = 8708860642802706979L;
+    private static final long serialVersionUID = 8708860642802706979L;
 
-	private IRCChannel channel;
+    private final IRCChannel channel;
 
-	private String sender;
+    private final String sender;
 
-	private String action;
+    private final String action;
 
-	public PluginActionEvent(IRCChannel channel, String sender, String action) {
-		this.channel = channel;
-		this.sender = sender;
-		this.action = action;
-	}
+    public PluginActionEvent(final IRCChannel channel, final String sender,
+            final String action) {
+        this.channel = channel;
+        this.sender = sender;
+        this.action = action;
+    }
 
-	@Override
-	public void dispatch(EventListener el) {
-		((IRCListener) el).onAction(channel, sender, action);
-	}
+    @Override
+    public void dispatch(final EventListener el) {
+        ((IRCListener) el).onAction(channel, sender, action);
+    }
 
-	@Override
-	public long getMask() {
-		return EventMulticaster.IRC_ACTION_EVENT;
-	}
+    @Override
+    public long getMask() {
+        return EventMulticaster.IRC_ACTION_EVENT;
+    }
 
 }

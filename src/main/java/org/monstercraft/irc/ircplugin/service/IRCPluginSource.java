@@ -6,9 +6,9 @@ import org.monstercraft.irc.ircplugin.IRCPlugin;
 
 public interface IRCPluginSource {
 
-	List<IRCPluginDefinition> list();
+    List<IRCPluginDefinition> list();
 
-	IRCPlugin load(IRCPluginDefinition def) throws InstantiationException,
-			IllegalAccessException;
+    IRCPlugin load(IRCPluginDefinition def) throws InstantiationException,
+            IllegalAccessException;
 
 }

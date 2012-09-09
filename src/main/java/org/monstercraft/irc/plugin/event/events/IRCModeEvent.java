@@ -6,49 +6,49 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class IRCModeEvent extends IRCEvent {
 
-	public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCModeEvent";
+    public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCModeEvent";
 
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private IRCChannel channel;
+    private final IRCChannel channel;
 
-	private String name;
+    private final String name;
 
-	private String message;
+    private final String message;
 
-	private String mode;
+    private final String mode;
 
-	public IRCModeEvent(IRCChannel channel, String name, String mode,
-			String message) {
-		this.name = name;
-		this.channel = channel;
-		this.message = message;
-		this.mode = mode;
-	}
+    public IRCModeEvent(final IRCChannel channel, final String name,
+            final String mode, final String message) {
+        this.name = name;
+        this.channel = channel;
+        this.message = message;
+        this.mode = mode;
+    }
 
-	public IRCChannel getIRCChannel() {
-		return channel;
-	}
+    public IRCChannel getIRCChannel() {
+        return channel;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public String getMode() {
-		return mode;
-	}
+    public String getMode() {
+        return mode;
+    }
 
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
 }

@@ -22,175 +22,175 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
  */
 public class IRCCommandSender implements ConsoleCommandSender {
 
-	private String sender;
+    private final String sender;
 
-	/**
-	 * Creates an instance of the IRCCommand sender.
-	 * 
-	 * @param plugin
-	 *            The plugin.
-	 * @param sender
-	 *            The command sender's name.
-	 */
-	public IRCCommandSender(final String sender) {
-		this.sender = sender;
-	}
+    /**
+     * Creates an instance of the IRCCommand sender.
+     * 
+     * @param plugin
+     *            The plugin.
+     * @param sender
+     *            The command sender's name.
+     */
+    public IRCCommandSender(final String sender) {
+        this.sender = sender;
+    }
 
-	/**
-	 * Sends a message.
-	 */
+    /**
+     * Sends a message.
+     */
 
-	public void sendMessage(String message) {
-		IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
-	}
+    public void sendMessage(final String message) {
+        IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
+    }
 
-	/**
-	 * Fetches the name.
-	 * 
-	 * @return The name.
-	 */
+    /**
+     * Fetches the name.
+     * 
+     * @return The name.
+     */
 
-	public String getName() {
-		return sender;
-	}
+    public String getName() {
+        return sender;
+    }
 
-	/**
-	 * Fetches the server.
-	 * 
-	 * @return The server.
-	 */
+    /**
+     * Fetches the server.
+     * 
+     * @return The server.
+     */
 
-	public Server getServer() {
-		return Bukkit.getServer();
-	}
+    public Server getServer() {
+        return Bukkit.getServer();
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-		return null;
-	}
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        return null;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public boolean hasPermission(String arg0) {
-		return true;
-	}
+    public boolean hasPermission(final String arg0) {
+        return true;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public boolean hasPermission(Permission arg0) {
-		return true;
-	}
+    public boolean hasPermission(final Permission arg0) {
+        return true;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public boolean isPermissionSet(String arg0) {
-		return true;
-	}
+    public boolean isPermissionSet(final String arg0) {
+        return true;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public boolean isPermissionSet(Permission arg0) {
-		return true;
-	}
+    public boolean isPermissionSet(final Permission arg0) {
+        return true;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public void recalculatePermissions() {
-	}
+    public void recalculatePermissions() {
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public void removeAttachment(PermissionAttachment arg0) {
-	}
+    public void removeAttachment(final PermissionAttachment arg0) {
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public boolean isOp() {
-		return true;
-	}
+    public boolean isOp() {
+        return true;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public void setOp(boolean op) {
-	}
+    public void setOp(final boolean op) {
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public PermissionAttachment addAttachment(Plugin arg0) {
-		return null;
-	}
+    public PermissionAttachment addAttachment(final Plugin arg0) {
+        return null;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public PermissionAttachment addAttachment(Plugin arg0, int arg1) {
-		return null;
-	}
+    public PermissionAttachment addAttachment(final Plugin arg0, final int arg1) {
+        return null;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public PermissionAttachment addAttachment(Plugin arg0, String arg1,
-			boolean arg2) {
-		return null;
-	}
+    public PermissionAttachment addAttachment(final Plugin arg0,
+            final String arg1, final boolean arg2) {
+        return null;
+    }
 
-	/**
-	 * Ignored.
-	 */
+    /**
+     * Ignored.
+     */
 
-	public PermissionAttachment addAttachment(Plugin arg0, String arg1,
-			boolean arg2, int arg3) {
-		return null;
-	}
+    public PermissionAttachment addAttachment(final Plugin arg0,
+            final String arg1, final boolean arg2, final int arg3) {
+        return null;
+    }
 
-	public void sendMessage(String[] message) {
-	}
+    public void sendMessage(final String[] message) {
+    }
 
-	public void abandonConversation(Conversation arg0) {
-	}
+    public void abandonConversation(final Conversation arg0) {
+    }
 
-	public void acceptConversationInput(String arg0) {
+    public void acceptConversationInput(final String arg0) {
 
-	}
+    }
 
-	public boolean beginConversation(Conversation arg0) {
-		return false;
-	}
+    public boolean beginConversation(final Conversation arg0) {
+        return false;
+    }
 
-	public boolean isConversing() {
-		return false;
-	}
+    public boolean isConversing() {
+        return false;
+    }
 
-	public void sendRawMessage(String message) {
-		IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
-	}
+    public void sendRawMessage(final String message) {
+        IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
+    }
 
-	public void abandonConversation(Conversation arg0,
-			ConversationAbandonedEvent arg1) {
-	}
+    public void abandonConversation(final Conversation arg0,
+            final ConversationAbandonedEvent arg1) {
+    }
 
 }

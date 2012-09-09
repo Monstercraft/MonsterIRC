@@ -6,34 +6,34 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class IRCJoinEvent extends IRCEvent {
 
-	public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCJoinEvent";
+    public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCJoinEvent";
 
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private IRCChannel channel;
+    private final IRCChannel channel;
 
-	private String user;
+    private final String user;
 
-	public IRCJoinEvent(IRCChannel channel, String user) {
-		this.channel = channel;
-		this.user = user;
-	}
+    public IRCJoinEvent(final IRCChannel channel, final String user) {
+        this.channel = channel;
+        this.user = user;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public IRCChannel getIRCChannel() {
-		return channel;
-	}
+    public IRCChannel getIRCChannel() {
+        return channel;
+    }
 
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
 }

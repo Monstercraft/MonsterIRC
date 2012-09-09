@@ -34,398 +34,401 @@ import com.palmergames.bukkit.TownyChat.channels.Channel;
  * 
  */
 public class MonsterIRCListener implements Listener {
-	private MonsterIRC plugin;
+    private final MonsterIRC plugin;
 
-	/**
-	 * 
-	 * @param plugin
-	 *            The parent plugin for the listener.
-	 */
-	public MonsterIRCListener(final MonsterIRC plugin) {
-		this.plugin = plugin;
-	}
+    /**
+     * 
+     * @param plugin
+     *            The parent plugin for the listener.
+     */
+    public MonsterIRCListener(final MonsterIRC plugin) {
+        this.plugin = plugin;
+    }
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPluginEnable(PluginEnableEvent event) {
-		String PluginName = event.getPlugin().getDescription().getName();
-		if (plugin != null) {
-			if (PluginName.equals("Vault")) {
-				MonsterIRC.getHookManager().setPermissionsHook();
-				MonsterIRC.getHandleManager().setPermissionsHandler(
-						MonsterIRC.getHookManager().getPermissionsHook());
-				MonsterIRC.getHookManager().setChatHook();
-			} else if (PluginName.equals("TownyChat")) {
-				MonsterIRC.getHookManager().setTownyChatHook();
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPluginEnable(final PluginEnableEvent event) {
+        final String PluginName = event.getPlugin().getDescription().getName();
+        if (plugin != null) {
+            if (PluginName.equals("Vault")) {
+                MonsterIRC.getHookManager().setPermissionsHook();
+                MonsterIRC.getHandleManager().setPermissionsHandler(
+                        MonsterIRC.getHookManager().getPermissionsHook());
+                MonsterIRC.getHookManager().setChatHook();
+            } else if (PluginName.equals("TownyChat")) {
+                MonsterIRC.getHookManager().setTownyChatHook();
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onChat(AsyncPlayerChatEvent event) {
-		if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-			if (!Users.getProfile(event.getPlayer().getName())
-					.getAdminChatMode()) {
-				if (event.isCancelled()) {
-					return;
-				}
-			}
-		} else if (event.isCancelled()) {
-			return;
-		}
-		try {
-			Player player = event.getPlayer();
-			for (IRCChannel c : MonsterIRC.getChannels()) {
-				if (c.getChatType() == ChatType.MTADMINCHAT) {
-					continue;
-				}
-				handleMessage(player, c, event.getMessage());
-			}
-		} catch (Exception e) {
-			IRC.debug(e);
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onChat(final AsyncPlayerChatEvent event) {
+        if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
+            if (!Users.getProfile(event.getPlayer().getName())
+                    .getAdminChatMode()) {
+                if (event.isCancelled()) {
+                    return;
+                }
+            }
+        } else if (event.isCancelled()) {
+            return;
+        }
+        try {
+            final Player player = event.getPlayer();
+            for (final IRCChannel c : MonsterIRC.getChannels()) {
+                if (c.getChatType() == ChatType.MTADMINCHAT) {
+                    continue;
+                }
+                handleMessage(player, c, event.getMessage());
+            }
+        } catch (final Exception e) {
+            IRC.debug(e);
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (event.getJoinMessage() == null) {
-			return;
-		}
-		for (IRCChannel c : Variables.channels) {
-			if (!c.getBlockedEvents().contains("game_join")) {
-				IRC.sendMessageToChannel(
-						c.getChannel(),
-						ColorUtils.formatGametoIRC(event.getPlayer()
-								.getDisplayName() + " has joined."));
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerJoin(final PlayerJoinEvent event) {
+        if (event.getJoinMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_join")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getPlayer()
+                                .getDisplayName() + " has joined."));
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (event.getQuitMessage() == null) {
-			return;
-		}
-		for (IRCChannel c : Variables.channels) {
-			if (!c.getBlockedEvents().contains("game_quit")) {
-				IRC.sendMessageToChannel(
-						c.getChannel(),
-						ColorUtils.formatGametoIRC(event.getPlayer()
-								.getDisplayName() + " has quit."));
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerQuit(final PlayerQuitEvent event) {
+        if (event.getQuitMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_quit")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getPlayer()
+                                .getDisplayName() + " has quit."));
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerDeath(PlayerDeathEvent event) {
-		if (event.getDeathMessage() == null) {
-			return;
-		}
-		for (IRCChannel c : Variables.channels) {
-			if (!c.getBlockedEvents().contains("game_death")) {
-				IRC.sendMessageToChannel(
-						c.getChannel(),
-						ColorUtils.formatGametoIRC(event.getEntity()
-								.getDisplayName() + " has died."));
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerDeath(final PlayerDeathEvent event) {
+        if (event.getDeathMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_death")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getEntity()
+                                .getDisplayName() + " has died."));
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerKick(PlayerKickEvent event) {
-		if (event.isCancelled() || event.getLeaveMessage() == null) {
-			return;
-		}
-		for (IRCChannel c : Variables.channels) {
-			if (!c.getBlockedEvents().contains("game_kick")) {
-				IRC.sendMessageToChannel(
-						c.getChannel(),
-						ColorUtils.formatGametoIRC(event.getPlayer()
-								.getDisplayName()
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerKick(final PlayerKickEvent event) {
+        if (event.isCancelled() || event.getLeaveMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_kick")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getPlayer()
+                                .getDisplayName()
 
-						+ " has been kicked."));
-			}
-		}
-	}
+                        + " has been kicked."));
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onServerCommand(ServerCommandEvent event) {
-		if (Variables.passSay) {
-			if (event.getCommand().startsWith("say")) {
-				for (IRCChannel c : MonsterIRC.getChannels()) {
-					handleMessage(null, c, event.getCommand().toString()
-							.substring(4));
-				}
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onServerCommand(final ServerCommandEvent event) {
+        if (Variables.passSay) {
+            if (event.getCommand().startsWith("say")) {
+                for (final IRCChannel c : MonsterIRC.getChannels()) {
+                    handleMessage(null, c, event.getCommand().toString()
+                            .substring(4));
+                }
+            }
+        }
+    }
 
-	protected static void handleMessage(final Player player,
-			final IRCChannel c, final String message) {
-		if (player != null) {
-			if (MonsterIRC.getHandleManager().getPermissionsHandler()
-					.hasNode(player, "irc.nochat")
-					&& !player.isOp()
-					&& !MonsterIRC.getHandleManager().getPermissionsHandler()
-							.hasNode(player, "*")) {
-				player.sendMessage("You are blocked from sending messages to irc!");
-				return;
-			}
-		}
-		if (c.getBlockedEvents().contains("game_chat")) {
-			return;
-		}
-		if (player == null) {
-			StringBuffer result2 = new StringBuffer();
-			result2.append(Variables.ircformat
-					.replace("{HCchannelColor}", "&f")
-					.replace("{heroChatTag}", "[Console]")
-					.replace("{prefix}", StringUtils.getPrefix("Console"))
-					.replace("{name}", StringUtils.getDisplayName("Console"))
-					.replace("{suffix}", StringUtils.getSuffix("Console"))
-					.replace("{groupPrefix}",
-							StringUtils.getGroupPrefix("Console"))
-					.replace("{groupSuffix}",
-							StringUtils.getGroupSuffix("Console"))
-					.replace("{message}", message)
-					.replace("{mvWorld}",
-							StringUtils.getMvWorldAlias("console"))
-					.replace("{mvColor}",
-							StringUtils.getMvWorldColor("console"))
-					.replace("{world}", StringUtils.getWorld("Console")));
-			Variables.linesToIrc++;
-			IRC.sendMessageToChannel(c,
-					ColorUtils.formatGametoIRC(result2.toString()));
-			return;
-		}
-		StringBuffer result = new StringBuffer();
-		if (c.getChatType() == ChatType.MCMMOADMINCHAT) {
-			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-				if (Users.getProfile(player.getName()).getAdminChatMode()) {
-					result.append(Variables.ircformat
-							.replace("{HCchannelColor}", "")
-							.replace("{heroChatTag}", "")
-							.replace("{prefix}",
-									StringUtils.getPrefix(player.getName())
+    protected static void handleMessage(final Player player,
+            final IRCChannel c, final String message) {
+        if (player != null) {
+            if (MonsterIRC.getHandleManager().getPermissionsHandler()
+                    .hasNode(player, "irc.nochat")
+                    && !player.isOp()
+                    && !MonsterIRC.getHandleManager().getPermissionsHandler()
+                            .hasNode(player, "*")) {
+                player.sendMessage("You are blocked from sending messages to irc!");
+                return;
+            }
+        }
+        if (c.getBlockedEvents().contains("game_chat")) {
+            return;
+        }
+        if (player == null) {
+            final StringBuffer result2 = new StringBuffer();
+            result2.append(Variables.ircformat
+                    .replace("{HCchannelColor}", "&f")
+                    .replace("{heroChatTag}", "[Console]")
+                    .replace("{prefix}", StringUtils.getPrefix("Console"))
+                    .replace("{name}", StringUtils.getDisplayName("Console"))
+                    .replace("{suffix}", StringUtils.getSuffix("Console"))
+                    .replace("{groupPrefix}",
+                            StringUtils.getGroupPrefix("Console"))
+                    .replace("{groupSuffix}",
+                            StringUtils.getGroupSuffix("Console"))
+                    .replace("{message}", message)
+                    .replace("{mvWorld}",
+                            StringUtils.getMvWorldAlias("console"))
+                    .replace("{mvColor}",
+                            StringUtils.getMvWorldColor("console"))
+                    .replace("{world}", StringUtils.getWorld("Console")));
+            Variables.linesToIrc++;
+            IRC.sendMessageToChannel(c,
+                    ColorUtils.formatGametoIRC(result2.toString()));
+            return;
+        }
+        final StringBuffer result = new StringBuffer();
+        if (c.getChatType() == ChatType.MCMMOADMINCHAT) {
+            if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
+                if (Users.getProfile(player.getName()).getAdminChatMode()) {
+                    result.append(Variables.ircformat
+                            .replace("{HCchannelColor}", "")
+                            .replace("{heroChatTag}", "")
+                            .replace("{prefix}",
+                                    StringUtils.getPrefix(player.getName())
 
-							)
-							.replace(
-									"{name}",
-									StringUtils.getDisplayName(player
-											.getDisplayName()))
-							.replace("{suffix}",
-									StringUtils.getSuffix(player.getName()))
+                            )
+                            .replace(
+                                    "{name}",
+                                    StringUtils.getDisplayName(player
+                                            .getDisplayName()))
+                            .replace("{suffix}",
+                                    StringUtils.getSuffix(player.getName()))
 
-							.replace(
-									"{groupPrefix}",
-									StringUtils.getGroupPrefix(player.getName()))
-							.replace(
-									"{groupSuffix}",
-									StringUtils.getGroupSuffix(player.getName()))
-							.replace("{message}", " " + message)
-							.replace(
-									"{mvWorld}",
-									StringUtils.getMvWorldAlias(player
-											.getWorld().getName()))
-							.replace(
-									"{mvColor}",
-									StringUtils.getMvWorldColor(player
-											.getWorld().getName()))
-							.replace(
-									"{world}",
-									StringUtils.getWorld(player.getWorld()
-											.getName())));
-					Variables.linesToIrc++;
-					IRC.sendMessageToChannel(c,
-							ColorUtils.formatGametoIRC(result.toString()));
-				}
-			}
-		} else if (c.getChatType() == ChatType.HEROCHAT) {
-			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-				if (Users.getProfile(player.getName()).getAdminChatMode()) {
-					return;
-				}
-				if (Users.getProfile(player.getName()).getPartyChatMode()) {
-					return;
-				}
-			}
-			if (c.getHeroChatChannel() != null) {
-				if ((Herochat.getChatterManager().getChatter(player)
-						.getActiveChannel() == c.getHeroChatChannel() || c
-						.isHeroChatListenChannel(Herochat.getChatterManager()
-								.getChatter(player.getName())
-								.getActiveChannel().getName()))
-						&& !Herochat.getChatterManager()
-								.getChatter(player.getName()).isMuted()) {
-					result.append(Variables.ircformat
-							.replace(
-									"{heroChatTag}",
-									Herochat.getChatterManager()
-											.getChatter(player)
-											.getActiveChannel().getColor()
-											+ "["
-											+ Herochat.getChatterManager()
-													.getChatter(player)
-													.getActiveChannel()
-													.getNick()
-											+ "]"
-											+ ColorUtils.NORMAL.getIRCColor()
-											+ "")
-							.replace("{prefix}",
-									StringUtils.getPrefix(player.getName()))
-							.replace(
-									"{name}",
-									StringUtils.getDisplayName(player
-											.getDisplayName()))
-							.replace("{suffix}",
-									StringUtils.getSuffix(player.getName()))
-							.replace(
-									"{groupPrefix}",
-									StringUtils.getGroupPrefix(player.getName()))
-							.replace(
-									"{groupSuffix}",
-									StringUtils.getGroupSuffix(player.getName()))
-							.replace(
-									"{HCchannelColor}",
-									Herochat.getChatterManager()
-											.getChatter(player)
-											.getActiveChannel().getColor()
-											.toString())
-							.replace("{message}", " " + message)
-							.replace(
-									"{mvWorld}",
-									StringUtils.getMvWorldAlias(player
-											.getWorld().getName()))
-							.replace(
-									"{mvColor}",
-									StringUtils.getMvWorldColor(player
-											.getWorld().getName()))
-							.replace(
-									"{world}",
-									StringUtils.getWorld(player.getWorld()
-											.getName())));
-					Variables.linesToIrc++;
-					IRC.sendMessageToChannel(c.getChannel(),
-							ColorUtils.formatGametoIRC(result.toString()));
-				}
-			} else {
-				IRC.log("Invalid herochat channel detected for "
-						+ c.getChannel());
-			}
-		} else if (c.getChatType() == ChatType.GLOBAL) {
-			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-				if (Users.getProfile(player.getName()).getAdminChatMode()) {
-					return;
-				}
-				if (Users.getProfile(player.getName()).getPartyChatMode()) {
-					return;
-				}
-			}
-			result.append(Variables.ircformat
-					.replace("{HCchannelColor}", "&f")
-					.replace("{heroChatTag}", "")
-					.replace("{prefix}",
-							StringUtils.getPrefix(player.getName()))
-					.replace("{name}",
-							StringUtils.getDisplayName(player.getDisplayName()))
-					.replace("{suffix}",
-							StringUtils.getSuffix(player.getName()))
+                            .replace(
+                                    "{groupPrefix}",
+                                    StringUtils.getGroupPrefix(player.getName()))
+                            .replace(
+                                    "{groupSuffix}",
+                                    StringUtils.getGroupSuffix(player.getName()))
+                            .replace("{message}", " " + message)
+                            .replace(
+                                    "{mvWorld}",
+                                    StringUtils.getMvWorldAlias(player
+                                            .getWorld().getName()))
+                            .replace(
+                                    "{mvColor}",
+                                    StringUtils.getMvWorldColor(player
+                                            .getWorld().getName()))
+                            .replace(
+                                    "{world}",
+                                    StringUtils.getWorld(player.getWorld()
+                                            .getName())));
+                    Variables.linesToIrc++;
+                    IRC.sendMessageToChannel(c,
+                            ColorUtils.formatGametoIRC(result.toString()));
+                }
+            }
+        } else if (c.getChatType() == ChatType.HEROCHAT) {
+            if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
+                if (Users.getProfile(player.getName()).getAdminChatMode()) {
+                    return;
+                }
+                if (Users.getProfile(player.getName()).getPartyChatMode()) {
+                    return;
+                }
+            }
+            if (c.getHeroChatChannel() != null) {
+                if ((Herochat.getChatterManager().getChatter(player)
+                        .getActiveChannel() == c.getHeroChatChannel() || c
+                        .isHeroChatListenChannel(Herochat.getChatterManager()
+                                .getChatter(player.getName())
+                                .getActiveChannel().getName()))
+                        && !Herochat.getChatterManager()
+                                .getChatter(player.getName()).isMuted()) {
+                    result.append(Variables.ircformat
+                            .replace(
+                                    "{heroChatTag}",
+                                    Herochat.getChatterManager()
+                                            .getChatter(player)
+                                            .getActiveChannel().getColor()
+                                            + "["
+                                            + Herochat.getChatterManager()
+                                                    .getChatter(player)
+                                                    .getActiveChannel()
+                                                    .getNick()
+                                            + "]"
+                                            + ColorUtils.NORMAL.getIRCColor()
+                                            + "")
+                            .replace("{prefix}",
+                                    StringUtils.getPrefix(player.getName()))
+                            .replace(
+                                    "{name}",
+                                    StringUtils.getDisplayName(player
+                                            .getDisplayName()))
+                            .replace("{suffix}",
+                                    StringUtils.getSuffix(player.getName()))
+                            .replace(
+                                    "{groupPrefix}",
+                                    StringUtils.getGroupPrefix(player.getName()))
+                            .replace(
+                                    "{groupSuffix}",
+                                    StringUtils.getGroupSuffix(player.getName()))
+                            .replace(
+                                    "{HCchannelColor}",
+                                    Herochat.getChatterManager()
+                                            .getChatter(player)
+                                            .getActiveChannel().getColor()
+                                            .toString())
+                            .replace("{message}", " " + message)
+                            .replace(
+                                    "{mvWorld}",
+                                    StringUtils.getMvWorldAlias(player
+                                            .getWorld().getName()))
+                            .replace(
+                                    "{mvColor}",
+                                    StringUtils.getMvWorldColor(player
+                                            .getWorld().getName()))
+                            .replace(
+                                    "{world}",
+                                    StringUtils.getWorld(player.getWorld()
+                                            .getName())));
+                    Variables.linesToIrc++;
+                    IRC.sendMessageToChannel(c.getChannel(),
+                            ColorUtils.formatGametoIRC(result.toString()));
+                }
+            } else {
+                IRC.log("Invalid herochat channel detected for "
+                        + c.getChannel());
+            }
+        } else if (c.getChatType() == ChatType.GLOBAL) {
+            if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
+                if (Users.getProfile(player.getName()).getAdminChatMode()) {
+                    return;
+                }
+                if (Users.getProfile(player.getName()).getPartyChatMode()) {
+                    return;
+                }
+            }
+            result.append(Variables.ircformat
+                    .replace("{HCchannelColor}", "&f")
+                    .replace("{heroChatTag}", "")
+                    .replace("{prefix}",
+                            StringUtils.getPrefix(player.getName()))
+                    .replace("{name}",
+                            StringUtils.getDisplayName(player.getDisplayName()))
+                    .replace("{suffix}",
+                            StringUtils.getSuffix(player.getName()))
 
-					.replace("{groupPrefix}",
-							StringUtils.getGroupPrefix(player.getName()))
-					.replace("{groupSuffix}",
-							StringUtils.getGroupSuffix(player.getName()))
-					.replace("{message}", " " + message)
-					.replace(
-							"{mvWorld}",
-							StringUtils.getMvWorldAlias(player.getWorld()
-									.getName()))
-					.replace(
-							"{mvColor}",
-							StringUtils.getMvWorldColor(player.getWorld()
-									.getName()))
-					.replace("{world}",
-							StringUtils.getWorld(player.getWorld().getName())));
-			Variables.linesToIrc++;
-			IRC.sendMessageToChannel(c,
-					ColorUtils.formatGametoIRC(result.toString()));
-		} else if (c.getChatType() == ChatType.TOWNYCHAT) {
-			if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-				if (Users.getProfile(player.getName()).getAdminChatMode()) {
-					return;
-				}
-				if (Users.getProfile(player.getName()).getPartyChatMode()) {
-					return;
-				}
-			}
-			if (directedChat.containsKey(player)) {
-				if (directedChat.get(player).equals(c.getTownyChannel())
-						&& MonsterIRC.getHandleManager()
-								.getPermissionsHandler()
-								.hasNode(player, c.getTownyNode())) {
-					result.append(Variables.ircformat
-							.replace("{HCchannelColor}", "&f")
-							.replace("{heroChatTag}", "")
-							.replace("{prefix}",
-									StringUtils.getPrefix(player.getName())
+                    .replace("{groupPrefix}",
+                            StringUtils.getGroupPrefix(player.getName()))
+                    .replace("{groupSuffix}",
+                            StringUtils.getGroupSuffix(player.getName()))
+                    .replace("{message}", " " + message)
+                    .replace(
+                            "{mvWorld}",
+                            StringUtils.getMvWorldAlias(player.getWorld()
+                                    .getName()))
+                    .replace(
+                            "{mvColor}",
+                            StringUtils.getMvWorldColor(player.getWorld()
+                                    .getName()))
+                    .replace("{world}",
+                            StringUtils.getWorld(player.getWorld().getName())));
+            Variables.linesToIrc++;
+            IRC.sendMessageToChannel(c,
+                    ColorUtils.formatGametoIRC(result.toString()));
+        } else if (c.getChatType() == ChatType.TOWNYCHAT) {
+            if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
+                if (Users.getProfile(player.getName()).getAdminChatMode()) {
+                    return;
+                }
+                if (Users.getProfile(player.getName()).getPartyChatMode()) {
+                    return;
+                }
+            }
+            if (directedChat.containsKey(player)) {
+                if (directedChat.get(player).equals(c.getTownyChannel())
+                        && MonsterIRC.getHandleManager()
+                                .getPermissionsHandler()
+                                .hasNode(player, c.getTownyNode())) {
+                    result.append(Variables.ircformat
+                            .replace("{HCchannelColor}", "&f")
+                            .replace("{heroChatTag}", "")
+                            .replace("{prefix}",
+                                    StringUtils.getPrefix(player.getName())
 
-							)
-							.replace(
-									"{name}",
-									StringUtils.getDisplayName(player
-											.getDisplayName()))
-							.replace("{suffix}",
-									StringUtils.getSuffix(player.getName()))
+                            )
+                            .replace(
+                                    "{name}",
+                                    StringUtils.getDisplayName(player
+                                            .getDisplayName()))
+                            .replace("{suffix}",
+                                    StringUtils.getSuffix(player.getName()))
 
-							.replace(
-									"{groupPrefix}",
-									StringUtils.getGroupPrefix(player.getName()))
-							.replace(
-									"{groupSuffix}",
-									StringUtils.getGroupSuffix(player.getName()))
-							.replace("{message}", " " + message)
-							.replace(
-									"{mvWorld}",
-									StringUtils.getMvWorldAlias(player
-											.getWorld().getName()))
-							.replace(
-									"{mvColor}",
-									StringUtils.getMvWorldColor(player
-											.getWorld().getName()))
-							.replace(
-									"{world}",
-									StringUtils.getWorld(player.getWorld()
-											.getName())));
-					Variables.linesToIrc++;
-					IRC.sendMessageToChannel(c,
-							ColorUtils.formatGametoIRC(result.toString()));
-				}
-			}
-		}
-	}
+                            .replace(
+                                    "{groupPrefix}",
+                                    StringUtils.getGroupPrefix(player.getName()))
+                            .replace(
+                                    "{groupSuffix}",
+                                    StringUtils.getGroupSuffix(player.getName()))
+                            .replace("{message}", " " + message)
+                            .replace(
+                                    "{mvWorld}",
+                                    StringUtils.getMvWorldAlias(player
+                                            .getWorld().getName()))
+                            .replace(
+                                    "{mvColor}",
+                                    StringUtils.getMvWorldColor(player
+                                            .getWorld().getName()))
+                            .replace(
+                                    "{world}",
+                                    StringUtils.getWorld(player.getWorld()
+                                            .getName())));
+                    Variables.linesToIrc++;
+                    IRC.sendMessageToChannel(c,
+                            ColorUtils.formatGametoIRC(result.toString()));
+                }
+            }
+        }
+    }
 
-	private static WeakHashMap<Player, Channel> directedChat = new WeakHashMap<Player, Channel>();
+    private static WeakHashMap<Player, Channel> directedChat = new WeakHashMap<Player, Channel>();
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (MonsterIRC.getHookManager().getTownyChatHook() != null) {
-			Player player = event.getPlayer();
-			String split[] = event.getMessage().split("\\ ");
-			String command = split[0].trim().toLowerCase().replace("/", "");
-			Channel channel = MonsterIRC.getHookManager().getTownyChatHook()
-					.getChannelsHandler().getChannel(player, command);
-			if (channel != null) {
-				if (directedChat.containsKey(player)) {
-					boolean doReturn = false;
-					if (directedChat.get(player).equals(channel)) {
-						doReturn = true;
-					}
-					directedChat.remove(player);
-					if (doReturn) {
-						return;
-					}
-				}
-				directedChat.put(player, channel);
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerCommandPreprocess(
+            final PlayerCommandPreprocessEvent event) {
+        if (MonsterIRC.getHookManager().getTownyChatHook() != null) {
+            final Player player = event.getPlayer();
+            final String split[] = event.getMessage().split("\\ ");
+            final String command = split[0].trim().toLowerCase()
+                    .replace("/", "");
+            final Channel channel = MonsterIRC.getHookManager()
+                    .getTownyChatHook().getChannelsHandler()
+                    .getChannel(player, command);
+            if (channel != null) {
+                if (directedChat.containsKey(player)) {
+                    boolean doReturn = false;
+                    if (directedChat.get(player).equals(channel)) {
+                        doReturn = true;
+                    }
+                    directedChat.remove(player);
+                    if (doReturn) {
+                        return;
+                    }
+                }
+                directedChat.put(player, channel);
+            }
+        }
+    }
 }
