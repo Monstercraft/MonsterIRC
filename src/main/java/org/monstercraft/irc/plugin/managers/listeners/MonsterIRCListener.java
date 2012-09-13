@@ -78,7 +78,7 @@ public class MonsterIRCListener implements Listener {
                 if (c.getChatType() == ChatType.MTADMINCHAT) {
                     continue;
                 }
-                handleMessage(player, c, event.getMessage());
+                MonsterIRCListener.handleMessage(player, c, event.getMessage());
             }
         } catch (final Exception e) {
             IRC.debug(e);
@@ -152,8 +152,8 @@ public class MonsterIRCListener implements Listener {
         if (Variables.passSay) {
             if (event.getCommand().startsWith("say")) {
                 for (final IRCChannel c : MonsterIRC.getChannels()) {
-                    handleMessage(null, c, event.getCommand().toString()
-                            .substring(4));
+                    MonsterIRCListener.handleMessage(null, c, event
+                            .getCommand().toString().substring(4));
                 }
             }
         }
@@ -357,8 +357,9 @@ public class MonsterIRCListener implements Listener {
                     return;
                 }
             }
-            if (directedChat.containsKey(player)) {
-                if (directedChat.get(player).equals(c.getTownyChannel())
+            if (MonsterIRCListener.directedChat.containsKey(player)) {
+                if (MonsterIRCListener.directedChat.get(player).equals(
+                        c.getTownyChannel())
                         && MonsterIRC.getHandleManager()
                                 .getPermissionsHandler()
                                 .hasNode(player, c.getTownyNode())) {
@@ -417,17 +418,18 @@ public class MonsterIRCListener implements Listener {
                     .getTownyChatHook().getChannelsHandler()
                     .getChannel(player, command);
             if (channel != null) {
-                if (directedChat.containsKey(player)) {
+                if (MonsterIRCListener.directedChat.containsKey(player)) {
                     boolean doReturn = false;
-                    if (directedChat.get(player).equals(channel)) {
+                    if (MonsterIRCListener.directedChat.get(player).equals(
+                            channel)) {
                         doReturn = true;
                     }
-                    directedChat.remove(player);
+                    MonsterIRCListener.directedChat.remove(player);
                     if (doReturn) {
                         return;
                     }
                 }
-                directedChat.put(player, channel);
+                MonsterIRCListener.directedChat.put(player, channel);
             }
         }
     }

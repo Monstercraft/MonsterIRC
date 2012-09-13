@@ -47,7 +47,7 @@ public class TownyChatHook extends MonsterIRC {
             return;
         }
 
-        TownyChatHook = ((Chat) TownyChatPlugin);
+        TownyChatHook = (Chat) TownyChatPlugin;
         IRC.log("TownyChat detected; hooking: "
                 + ((Chat) TownyChatPlugin).getDescription().getFullName());
     }

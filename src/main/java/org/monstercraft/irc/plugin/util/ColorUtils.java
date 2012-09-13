@@ -11,22 +11,27 @@ import org.monstercraft.irc.plugin.Configuration.Variables;
  * 
  */
 public enum ColorUtils {
-    DARK_BLUE("\u00032", ChatColor.DARK_BLUE.toString()), DARK_GREEN("\u00033",
-            ChatColor.DARK_GREEN.toString()), RED("\u00034", ChatColor.DARK_RED
-            .toString()), BROWN("\u00035", ChatColor.DARK_GRAY.toString()), PURPLE(
-            "\u00036", ChatColor.DARK_PURPLE.toString()), OLIVE("\u00037",
-            ChatColor.GOLD.toString()), YELLOW("\u00038", ChatColor.YELLOW
-            .toString()), GREEN("\u00039", ChatColor.GREEN.toString()), TEAL(
-            "\u000310", ChatColor.DARK_AQUA.toString()), CYAN("\u000311",
-            ChatColor.AQUA.toString()), BLUE("\u000312", ChatColor.BLUE
-            .toString()), MAGENTA("\u000313", ChatColor.LIGHT_PURPLE.toString()), DARK_GRAY(
-            "\u000314", ChatColor.RED.toString()), LIGHT_GRAY("\u000315",
-            ChatColor.GRAY.toString()), NORMAL("\u000f", ChatColor.RESET
-            .toString()), WHITE("\u000300", ChatColor.WHITE.toString()), WHITE2(
-            "\u00030", ChatColor.WHITE.toString()), BLACK("\u00031",
-            ChatColor.BLACK.toString()), BOLD("\u0002", ChatColor.BOLD
-            .toString()), UNDERLINE("\u001f", ChatColor.UNDERLINE.toString()), ITALIC(
-            "\u001D", ChatColor.ITALIC.toString());
+    DARK_BLUE("\u00032", ChatColor.DARK_BLUE.toString()),
+    DARK_GREEN("\u00033", ChatColor.DARK_GREEN.toString()),
+    RED("\u00034", ChatColor.DARK_RED.toString()),
+    BROWN("\u00035", ChatColor.DARK_GRAY.toString()),
+    PURPLE("\u00036", ChatColor.DARK_PURPLE.toString()),
+    OLIVE("\u00037", ChatColor.GOLD.toString()),
+    YELLOW("\u00038", ChatColor.YELLOW.toString()),
+    GREEN("\u00039", ChatColor.GREEN.toString()),
+    TEAL("\u000310", ChatColor.DARK_AQUA.toString()),
+    CYAN("\u000311", ChatColor.AQUA.toString()),
+    BLUE("\u000312", ChatColor.BLUE.toString()),
+    MAGENTA("\u000313", ChatColor.LIGHT_PURPLE.toString()),
+    DARK_GRAY("\u000314", ChatColor.RED.toString()),
+    LIGHT_GRAY("\u000315", ChatColor.GRAY.toString()),
+    NORMAL("\u000f", ChatColor.RESET.toString()),
+    WHITE("\u000300", ChatColor.WHITE.toString()),
+    WHITE2("\u00030", ChatColor.WHITE.toString()),
+    BLACK("\u00031", ChatColor.BLACK.toString()),
+    BOLD("\u0002", ChatColor.BOLD.toString()),
+    UNDERLINE("\u001f", ChatColor.UNDERLINE.toString()),
+    ITALIC("\u001D", ChatColor.ITALIC.toString());
 
     /**
      * Colors in minecraft and IRC.
@@ -67,14 +72,15 @@ public enum ColorUtils {
      * @return The formatted message.
      */
     public static String formatIRCtoGame(final String message, final String main) {
-        final int index = find(message, main);
-        String msg = resolve(replace(message), main, index);
+        final int index = ColorUtils.find(message, main);
+        String msg = ColorUtils.resolve(ColorUtils.replace(message), main,
+                index);
         if (Variables.colors) {
-            for (final ColorUtils c : values()) {
+            for (final ColorUtils c : ColorUtils.values()) {
                 msg = msg.replace(c.getIRCColor(), c.getMinecraftColor());
             }
         } else {
-            for (final ColorUtils c : values()) {
+            for (final ColorUtils c : ColorUtils.values()) {
                 msg = msg.replace(c.getIRCColor(), "");
             }
         }
@@ -90,15 +96,16 @@ public enum ColorUtils {
      * @return The formatted message.
      */
     public static String formatGametoIRC(final String message) {
-        String msg = replace(message);
+        String msg = ColorUtils.replace(message);
         if (Variables.colors) {
-            for (final ColorUtils c : values()) {
+            for (final ColorUtils c : ColorUtils.values()) {
                 msg = msg.replace(c.getMinecraftColor(), c.getIRCColor());
             }
         } else {
             msg = ChatColor.stripColor(msg);
         }
-        msg = resolve(msg.replace(WHITE.getIRCColor(), NORMAL.getIRCColor()));
+        msg = ColorUtils.resolve(msg.replace(WHITE.getIRCColor(),
+                NORMAL.getIRCColor()));
         return msg;
     }
 

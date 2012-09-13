@@ -29,11 +29,11 @@ public class IRCQuitEvent extends IRCEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return IRCQuitEvent.handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return IRCQuitEvent.handlers;
     }
 
 }

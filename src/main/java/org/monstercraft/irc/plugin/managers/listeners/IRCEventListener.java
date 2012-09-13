@@ -145,9 +145,11 @@ public class IRCEventListener implements IRCListener {
     }
 
     // unused events
+    @Override
     public void onConnect(final IRCServer server) {
     }
 
+    @Override
     public void onDisconnect(final IRCServer server) {
     }
 

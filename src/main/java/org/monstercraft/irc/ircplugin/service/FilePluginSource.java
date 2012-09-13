@@ -16,9 +16,10 @@ public class FilePluginSource implements IRCPluginSource {
     private final File[] files;
 
     public FilePluginSource(final File... file) {
-        this.files = file;
+        files = file;
     }
 
+    @Override
     public LinkedList<IRCPluginDefinition> list() {
         final LinkedList<IRCPluginDefinition> defs = new LinkedList<IRCPluginDefinition>();
         for (final File file : files) {
@@ -35,15 +36,15 @@ public class FilePluginSource implements IRCPluginSource {
                     final ClassLoader loader = new IRCPluginClassLoader(file
                             .toURI().toURL());
                     for (final File item : file.listFiles()) {
-                        load(item, defs, loader);
+                        FilePluginSource.load(item, defs, loader);
                     }
                 } catch (final IOException ignored) {
                 }
-            } else if (isJar(file)) {
+            } else if (FilePluginSource.isJar(file)) {
                 try {
                     final ClassLoader ldr = new IRCPluginClassLoader(
-                            getJarUrl(file));
-                    load(ldr, defs, new JarFile(file));
+                            FilePluginSource.getJarUrl(file));
+                    FilePluginSource.load(ldr, defs, new JarFile(file));
                 } catch (final IOException ignored) {
                 }
             }
@@ -53,6 +54,7 @@ public class FilePluginSource implements IRCPluginSource {
         }
     }
 
+    @Override
     public IRCPlugin load(final IRCPluginDefinition def)
             throws InstantiationException, IllegalAccessException {
         return def.clazz.asSubclass(IRCPlugin.class).newInstance();
@@ -61,15 +63,16 @@ public class FilePluginSource implements IRCPluginSource {
     public static void load(final File file,
             final LinkedList<IRCPluginDefinition> defs, ClassLoader loader)
             throws IOException {
-        if (isJar(file)) {
-            load(new IRCPluginClassLoader(getJarUrl(file)), defs, new JarFile(
-                    file));
+        if (FilePluginSource.isJar(file)) {
+            FilePluginSource.load(
+                    new IRCPluginClassLoader(FilePluginSource.getJarUrl(file)),
+                    defs, new JarFile(file));
         } else {
             if (loader == null) {
                 loader = new IRCPluginClassLoader(file.getParentFile().toURI()
                         .toURL());
             }
-            load(loader, defs, file, "");
+            FilePluginSource.load(loader, defs, file, "");
         }
     }
 
@@ -81,7 +84,7 @@ public class FilePluginSource implements IRCPluginSource {
             final String name = e.getName().replace('/', '.');
             final String ext = ".class";
             if (name.endsWith(ext) && !name.contains("$")) {
-                load(loader, plugins,
+                FilePluginSource.load(loader, plugins,
                         name.substring(0, name.length() - ext.length()),
                         jar.getName());
             }
@@ -94,7 +97,8 @@ public class FilePluginSource implements IRCPluginSource {
         if (file.isDirectory()) {
             if (!file.getName().startsWith(".")) {
                 for (final File f : file.listFiles()) {
-                    load(loader, plugins, f, prefix + file.getName() + ".");
+                    FilePluginSource.load(loader, plugins, f,
+                            prefix + file.getName() + ".");
                 }
             }
         } else {
@@ -103,7 +107,8 @@ public class FilePluginSource implements IRCPluginSource {
             if (name.endsWith(ext) && !name.startsWith(".")
                     && !name.contains("!") && !name.contains("$")) {
                 name = name.substring(0, name.length() - ext.length());
-                load(loader, plugins, name, file.getAbsolutePath());
+                FilePluginSource.load(loader, plugins, name,
+                        file.getAbsolutePath());
             }
         }
     }

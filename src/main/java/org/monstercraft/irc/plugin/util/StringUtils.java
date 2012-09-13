@@ -199,7 +199,7 @@ public class StringUtils {
         return s;
     }
 
-    public static String[] split(final int limit, String text) {
+    public static ArrayList<String> split(final int limit, String text) {
         final ArrayList<String> splits = new ArrayList<String>();
         if (text.length() > limit) {
             while (text.length() > limit) {
@@ -208,8 +208,9 @@ public class StringUtils {
                 text = text.substring(lastSpace + 1);
                 splits.add(sub);
             }
-            return (String[]) splits.toArray();
+            return splits;
         }
-        return new String[] { text };
+        splits.add(text);
+        return splits;
     }
 }

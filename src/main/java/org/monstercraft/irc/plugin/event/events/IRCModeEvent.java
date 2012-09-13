@@ -44,11 +44,11 @@ public class IRCModeEvent extends IRCEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return IRCModeEvent.handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return IRCModeEvent.handlers;
     }
 
 }

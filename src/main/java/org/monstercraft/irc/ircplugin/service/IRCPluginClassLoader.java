@@ -11,7 +11,7 @@ public class IRCPluginClassLoader extends ClassLoader {
     private final URL base;
 
     public IRCPluginClassLoader(final URL url) {
-        this.base = url;
+        base = url;
     }
 
     @Override

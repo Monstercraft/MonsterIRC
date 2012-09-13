@@ -51,7 +51,7 @@ public class VaultPermissionsHook extends MonsterIRC {
         if (permissionProvider != null) {
             PermissionsHook = permissionProvider.getProvider();
         }
-        return (PermissionsHook != null);
+        return PermissionsHook != null;
     }
 
     /**

@@ -32,7 +32,7 @@ public class IRC {
      * @return The logger.
      */
     public static Logger getLogger() {
-        return logger;
+        return IRC.logger;
     }
 
     /**
@@ -42,7 +42,7 @@ public class IRC {
      *            The message to print.
      */
     public static void log(final String msg) {
-        logger.log(Level.INFO, "[MonsterIRC] " + msg);
+        IRC.logger.log(Level.INFO, "[MonsterIRC] " + msg);
     }
 
     /**
@@ -53,7 +53,7 @@ public class IRC {
      */
     public static void debug(final String error, final boolean console) {
         if (console) {
-            logger.log(Level.WARNING, "[MonsterIRC - Debug] " + error);
+            IRC.logger.log(Level.WARNING, "[MonsterIRC - Debug] " + error);
         }
     }
 
@@ -65,7 +65,7 @@ public class IRC {
      */
     public static void debug(final String error) {
         if (Variables.debug) {
-            logger.log(Level.WARNING, "[MonsterIRC - Debug] " + error);
+            IRC.logger.log(Level.WARNING, "[MonsterIRC - Debug] " + error);
         }
     }
 
@@ -76,7 +76,7 @@ public class IRC {
      *            The message to print.
      */
     public static void debug(final Exception error) {
-        logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
+        IRC.logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
         error.printStackTrace();
     }
 
@@ -106,7 +106,7 @@ public class IRC {
             final String message) {
         for (final IRCChannel c : MonsterIRC.getChannels()) {
             if (c.getChannel().equalsIgnoreCase(channel)) {
-                sendMessageToChannel(c, message);
+                IRC.sendMessageToChannel(c, message);
                 return;
             }
         }
@@ -211,7 +211,7 @@ public class IRC {
                             + StringUtils.getSuffix(name)
                             + ColorUtils.CYAN.getMinecraftColor() + "} "
                             + message;
-                    for (final Player p : getIRCPlugin().getServer()
+                    for (final Player p : IRC.getIRCPlugin().getServer()
                             .getOnlinePlayers()) {
                         if (p.isOp()
                                 || Users.getProfile(p.getName())
@@ -278,47 +278,55 @@ public class IRC {
                                                                             .getWorld(name)),
                                                     message));
                 } else {
-                    log("Invalid herochat channel detected for "
+                    IRC.log("Invalid herochat channel detected for "
                             + c.getChannel());
                 }
             } else if (c.getChatType() == ChatType.GLOBAL) {
-                getIRCPlugin().getServer().broadcastMessage(
-                        ColorUtils.formatIRCtoGame(
-                                Variables.mcformat
-                                        .replace(
-                                                "{name}",
-                                                StringUtils
-                                                        .getDisplayName(name))
-                                        .replace(
-                                                "{message}",
-                                                ColorUtils.WHITE
-                                                        .getMinecraftColor()
-                                                        + message)
-                                        .replace("{HCchannelColor}", "")
-                                        .replace("{herochatTag}", "")
-                                        .replace("{prefix}",
-                                                StringUtils.getPrefix(name))
-                                        .replace("{suffix}",
-                                                StringUtils.getSuffix(name))
-                                        .replace(
-                                                "{groupPrefix}",
-                                                StringUtils
-                                                        .getGroupPrefix(name))
-                                        .replace(
-                                                "{groupSuffix}",
-                                                StringUtils
-                                                        .getGroupSuffix(name))
-                                        .replace(
-                                                "{mvWorld}",
-                                                StringUtils
-                                                        .getMvWorldAlias(name))
-                                        .replace(
-                                                "{mvColor}",
-                                                StringUtils
-                                                        .getMvWorldColor(name))
-                                        .replace("{world}",
-                                                StringUtils.getWorld(name)),
-                                message));
+                IRC.getIRCPlugin()
+                        .getServer()
+                        .broadcastMessage(
+                                ColorUtils.formatIRCtoGame(
+                                        Variables.mcformat
+                                                .replace(
+                                                        "{name}",
+                                                        StringUtils
+                                                                .getDisplayName(name))
+                                                .replace(
+                                                        "{message}",
+                                                        ColorUtils.WHITE
+                                                                .getMinecraftColor()
+                                                                + message)
+                                                .replace("{HCchannelColor}", "")
+                                                .replace("{herochatTag}", "")
+                                                .replace(
+                                                        "{prefix}",
+                                                        StringUtils
+                                                                .getPrefix(name))
+                                                .replace(
+                                                        "{suffix}",
+                                                        StringUtils
+                                                                .getSuffix(name))
+                                                .replace(
+                                                        "{groupPrefix}",
+                                                        StringUtils
+                                                                .getGroupPrefix(name))
+                                                .replace(
+                                                        "{groupSuffix}",
+                                                        StringUtils
+                                                                .getGroupSuffix(name))
+                                                .replace(
+                                                        "{mvWorld}",
+                                                        StringUtils
+                                                                .getMvWorldAlias(name))
+                                                .replace(
+                                                        "{mvColor}",
+                                                        StringUtils
+                                                                .getMvWorldColor(name))
+                                                .replace(
+                                                        "{world}",
+                                                        StringUtils
+                                                                .getWorld(name)),
+                                        message));
             } else if (c.getChatType() == ChatType.TOWNYCHAT) {
                 for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
                     if (MonsterIRC.getHandleManager().getPermissionsHandler()
@@ -388,7 +396,7 @@ public class IRC {
             final String sender, final String message) {
         for (final IRCChannel c : MonsterIRC.getChannels()) {
             if (c.getChannel().equalsIgnoreCase(IRCChannel)) {
-                sendMessageToGame(c, sender, message);
+                IRC.sendMessageToGame(c, sender, message);
             }
         }
     }
@@ -431,16 +439,16 @@ public class IRC {
 
     public static boolean isVoicePlus(final IRCChannel channel,
             final String sender) {
-        if (isVoice(channel, sender)) {
+        if (IRC.isVoice(channel, sender)) {
             return true;
         }
-        if (isHalfOP(channel, sender)) {
+        if (IRC.isHalfOP(channel, sender)) {
             return true;
         }
-        if (isAdmin(channel, sender)) {
+        if (IRC.isAdmin(channel, sender)) {
             return true;
         }
-        if (isOp(channel, sender)) {
+        if (IRC.isOp(channel, sender)) {
             return true;
         }
         return false;
@@ -452,7 +460,7 @@ public class IRC {
      * @return The list of Operators.
      */
     public static boolean isOp(final String channel, final String sender) {
-        final IRCChannel c = getChannel(channel);
+        final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
             return c.getOpList().contains(sender);
         }
@@ -465,7 +473,7 @@ public class IRC {
      * @return The list of Operators.
      */
     public static boolean isHalfOP(final String channel, final String sender) {
-        final IRCChannel c = getChannel(channel);
+        final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
             return c.getHOpList().contains(sender);
         }
@@ -478,7 +486,7 @@ public class IRC {
      * @return True if the user is admin; otherwise false.
      */
     public static boolean isAdmin(final String channel, final String sender) {
-        final IRCChannel c = getChannel(channel);
+        final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
             return c.getAdminList().contains(sender);
         }
@@ -491,7 +499,7 @@ public class IRC {
      * @return The list of Voices.
      */
     public static boolean isVoice(final String channel, final String sender) {
-        final IRCChannel c = getChannel(channel);
+        final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
             return c.getVoiceList().contains(sender);
         }
@@ -499,16 +507,16 @@ public class IRC {
     }
 
     public static boolean isVoicePlus(final String channel, final String sender) {
-        if (isVoice(channel, sender)) {
+        if (IRC.isVoice(channel, sender)) {
             return true;
         }
-        if (isHalfOP(channel, sender)) {
+        if (IRC.isHalfOP(channel, sender)) {
             return true;
         }
-        if (isAdmin(channel, sender)) {
+        if (IRC.isAdmin(channel, sender)) {
             return true;
         }
-        if (isOp(channel, sender)) {
+        if (IRC.isOp(channel, sender)) {
             return true;
         }
         return false;
@@ -535,6 +543,6 @@ public class IRC {
     }
 
     public static IRCServer getServer() {
-        return server;
+        return IRC.server;
     }
 }

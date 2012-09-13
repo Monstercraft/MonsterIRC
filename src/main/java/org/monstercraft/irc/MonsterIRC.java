@@ -50,28 +50,29 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 
     @Override
     public void onEnable() {
-        tail = new TailLogHandler();
-        Bukkit.getLogger().addHandler(tail);
+        MonsterIRC.tail = new TailLogHandler();
+        Bukkit.getLogger().addHandler(MonsterIRC.tail);
         IRC.log("Starting plugin.");
         new Configuration();
-        settings = new SettingsManager(this);
-        em = new EventManager();
-        em.start();
-        hooks = new HookManager(this);
+        MonsterIRC.settings = new SettingsManager(this);
+        MonsterIRC.em = new EventManager();
+        MonsterIRC.em.start();
+        MonsterIRC.hooks = new HookManager(this);
         command = new CommandManager();
-        listener = new MonsterIRCListener(this);
-        IRCserver = new IRCServer(Variables.server, Variables.serverPass,
-                Variables.port, Variables.name, Variables.password,
-                Variables.ident, Variables.timeout, Variables.tries,
-                Variables.connectCommands);
-        IRC.setServer(IRCserver);
-        handles = new HandleManager(this);
-        getServer().getPluginManager().registerEvents(listener, this);
-        if (this.getServer().getPluginManager().getPlugin("MonsterTickets") != null) {
+        MonsterIRC.listener = new MonsterIRCListener(this);
+        MonsterIRC.IRCserver = new IRCServer(Variables.server,
+                Variables.serverPass, Variables.port, Variables.name,
+                Variables.password, Variables.ident, Variables.timeout,
+                Variables.tries, Variables.connectCommands);
+        IRC.setServer(MonsterIRC.IRCserver);
+        MonsterIRC.handles = new HandleManager(this);
+        getServer().getPluginManager()
+                .registerEvents(MonsterIRC.listener, this);
+        if (getServer().getPluginManager().getPlugin("MonsterTickets") != null) {
             getServer().getPluginManager().registerEvents(
                     new AdminChatListener(), this);
         }
-        getEventManager().addListener(new IRCEventListener(this));
+        MonsterIRC.getEventManager().addListener(new IRCEventListener(this));
         final Thread t = new Thread(this);
         t.setDaemon(true);
         t.setPriority(Thread.MAX_PRIORITY);
@@ -84,10 +85,10 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
 
     @Override
     public void onDisable() {
-        if (!settings.firstRun()) {
-            if (getHandleManager().getIRCHandler() != null) {
-                if (getHandleManager().getIRCHandler().isConnected()) {
-                    getHandleManager().getIRCHandler().disconnect();
+        if (!MonsterIRC.settings.firstRun()) {
+            if (MonsterIRC.getHandleManager().getIRCHandler() != null) {
+                if (MonsterIRC.getHandleManager().getIRCHandler().isConnected()) {
+                    MonsterIRC.getHandleManager().getIRCHandler().disconnect();
                 }
             }
         } else {
@@ -96,8 +97,8 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
             IRC.log("Please go create a .channel file before trying to run MonsterIRC again.");
             IRC.log("");
         }
-        settings.saveMuted();
-        getHandleManager().getPluginHandler().stopPlugins();
+        MonsterIRC.settings.saveMuted();
+        MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();
         IRC.log("Successfully disabled plugin!");
     }
 
@@ -117,7 +118,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
      * @return The settings.
      */
     protected static SettingsManager getSettingsManager() {
-        return settings;
+        return MonsterIRC.settings;
     }
 
     /**
@@ -126,7 +127,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
      * @return The handlers.
      */
     public static HandleManager getHandleManager() {
-        return handles;
+        return MonsterIRC.handles;
     }
 
     /**
@@ -135,7 +136,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
      * @return The hooks.
      */
     public static HookManager getHookManager() {
-        return hooks;
+        return MonsterIRC.hooks;
     }
 
     /**
@@ -162,7 +163,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
      * @return The event manager for IRC plugins.
      */
     public static EventManager getEventManager() {
-        return em;
+        return MonsterIRC.em;
     }
 
     /**
@@ -171,7 +172,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
      * @return The tailloghandler.
      */
     public static TailLogHandler getLogHandler() {
-        return tail;
+        return MonsterIRC.tail;
     }
 
     /**
@@ -184,6 +185,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
         Bukkit.getServer().getPluginManager().disablePlugin(plugin);
     }
 
+    @Override
     public void run() {
         synchronized (lock) {
             try {
@@ -225,11 +227,12 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
                 } else {
                     IRC.log("You are using the latest version of MonsterIRC");
                 }
-                if (!settings.firstRun()) {
-                    getHandleManager().getIRCHandler().connect(IRCserver);
+                if (!MonsterIRC.settings.firstRun()) {
+                    MonsterIRC.getHandleManager().getIRCHandler()
+                            .connect(MonsterIRC.IRCserver);
                     IRC.log("Successfully started up.");
                 } else {
-                    stop(this);
+                    MonsterIRC.stop(this);
                 }
             } catch (final Exception e) {
                 IRC.debug(e);

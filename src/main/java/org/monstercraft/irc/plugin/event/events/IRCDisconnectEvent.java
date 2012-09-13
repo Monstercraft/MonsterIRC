@@ -22,11 +22,11 @@ public class IRCDisconnectEvent extends IRCEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return IRCDisconnectEvent.handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return IRCDisconnectEvent.handlers;
     }
 
 }

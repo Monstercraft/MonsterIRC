@@ -39,7 +39,7 @@ public abstract class IRCPlugin extends IRC implements EventListener, Runnable {
         if (id != this.id) {
             throw new IllegalStateException("Invalid id!");
         }
-        this.running = false;
+        running = false;
     }
 
     /**
@@ -68,9 +68,10 @@ public abstract class IRCPlugin extends IRC implements EventListener, Runnable {
      * Stops the current plugin;
      */
     public void stop() {
-        this.running = false;
+        running = false;
     }
 
+    @Override
     public final void run() {
         boolean start = false;
         try {
@@ -115,7 +116,7 @@ public abstract class IRCPlugin extends IRC implements EventListener, Runnable {
         try {
             config.save(file);
         } catch (final IOException e) {
-            debug(e);
+            IRC.debug(e);
         }
     }
 

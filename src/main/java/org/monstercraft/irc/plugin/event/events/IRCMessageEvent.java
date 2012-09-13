@@ -37,11 +37,11 @@ public class IRCMessageEvent extends IRCEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return IRCMessageEvent.handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return IRCMessageEvent.handlers;
     }
 
 }

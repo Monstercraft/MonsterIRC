@@ -73,17 +73,18 @@ public class Configuration {
         /**
          * The configuration file.
          */
-        public static final File SETTINGS_FILE = new File(ROOT, "Settings.yml");
+        public static final File SETTINGS_FILE = new File(Paths.ROOT,
+                "Settings.yml");
 
         /**
          * The locaton where the plugins for MonsterIRC are stored.
          */
-        public static String PLUGINS = ROOT + File.separator + "Plugins";
+        public static String PLUGINS = Paths.ROOT + File.separator + "Plugins";
 
         /**
          * The Channel Directory.
          */
-        public static final String CHANNELS = ROOT + File.separator
+        public static final String CHANNELS = Paths.ROOT + File.separator
                 + "Channels" + File.separator;
 
     }
@@ -104,7 +105,7 @@ public class Configuration {
      * @return The latest version
      */
     public static String checkForUpdates(final Plugin plugin, final String site) {
-        final String currentVersion = getCurrentVerison(plugin);
+        final String currentVersion = Configuration.getCurrentVerison(plugin);
         try {
             final URL url = new URL(site);
             final Document doc = DocumentBuilderFactory.newInstance()

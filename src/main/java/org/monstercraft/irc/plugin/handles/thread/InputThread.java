@@ -47,8 +47,8 @@ public class InputThread extends Thread implements Runnable {
             final String message = input.substring(input.indexOf(":", 1) + 1);
             if (message.length() != 0) {
                 final char[] messageArray = message.toCharArray();
-                return ((byte) messageArray[0]) == 1
-                        && ((byte) messageArray[messageArray.length - 1]) == 1;
+                return (byte) messageArray[0] == 1
+                        && (byte) messageArray[messageArray.length - 1] == 1;
             }
         }
         return false;

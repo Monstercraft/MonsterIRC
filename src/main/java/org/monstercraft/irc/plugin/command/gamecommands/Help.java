@@ -26,18 +26,18 @@ public class Help extends GameCommand {
         if (sender instanceof Player) {
             if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
                 if (!MonsterIRC.getHandleManager().getPermissionsHandler()
-                        .hasCommandPerms(((Player) sender), this)) {
+                        .hasCommandPerms((Player) sender, this)) {
                     sender.sendMessage("[IRC] You don't have permission to preform that command.");
                     return true;
                 } else {
-                    sendMenu((Player) sender);
+                    Help.sendMenu((Player) sender);
                     return true;
                 }
             }
             sender.sendMessage("[IRC]  No permissions loaded!");
             return true;
         } else {
-            sendMenu((ConsoleCommandSender) sender);
+            Help.sendMenu((ConsoleCommandSender) sender);
             return true;
         }
     }

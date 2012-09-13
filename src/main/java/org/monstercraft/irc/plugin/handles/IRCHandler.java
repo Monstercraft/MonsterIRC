@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -262,7 +263,7 @@ public class IRCHandler {
     public void sendMessage(final String channel, final String message) {
         final String prefix = "PRIVMSG " + channel + " :";
         final int length = 500 - prefix.length();
-        final String parts[] = StringUtils.split(length, message);
+        final ArrayList<String> parts = StringUtils.split(length, message);
         for (final String part : parts) {
             final String msg = prefix + part;
             outputQueue.add(msg.trim());
@@ -292,7 +293,7 @@ public class IRCHandler {
     public void sendNotice(final String to, final String message) {
         final String prefix = "NOTICE " + to + " :";
         final int length = 500 - prefix.length();
-        final String parts[] = StringUtils.split(length, message);
+        final ArrayList<String> parts = StringUtils.split(length, message);
         for (final String part : parts) {
             final String msg = prefix + part;
             outputQueue.add(msg);

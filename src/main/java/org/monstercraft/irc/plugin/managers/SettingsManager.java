@@ -93,7 +93,7 @@ public class SettingsManager {
      * This method loads the plugins configuration file.
      */
     public void load() {
-        final FileConfiguration config = this.plugin.getConfig();
+        final FileConfiguration config = plugin.getConfig();
         final File CONFIGURATION_FILE = Configuration.Paths.SETTINGS_FILE;
         final boolean exists = CONFIGURATION_FILE.exists();
         IRC.log("Loading settings.yml file");

@@ -20,8 +20,9 @@ public class IRCPluginHandler extends MonsterIRC {
     private final List<IRCPluginDefinition> plugins;
 
     public IRCPluginHandler(final MonsterIRC plugin) {
-        this.plugins = new ArrayList<IRCPluginDefinition>();
-        plugins.addAll(new FilePluginSource(getPluginsFolder()).list());
+        plugins = new ArrayList<IRCPluginDefinition>();
+        plugins.addAll(new FilePluginSource(IRCPluginHandler.getPluginsFolder())
+                .list());
         for (final IRCPluginDefinition def : plugins) {
             try {
                 IRC.log("Loading IRC plugin " + def.name + ".");

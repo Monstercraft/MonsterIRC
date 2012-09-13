@@ -36,11 +36,11 @@ public class IRCPrivateMessageEvent extends IRCEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return IRCPrivateMessageEvent.handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return IRCPrivateMessageEvent.handlers;
     }
 
 }

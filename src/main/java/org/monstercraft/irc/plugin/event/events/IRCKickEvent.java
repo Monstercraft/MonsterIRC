@@ -42,11 +42,11 @@ public class IRCKickEvent extends IRCEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return IRCKickEvent.handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return IRCKickEvent.handlers;
     }
 
 }

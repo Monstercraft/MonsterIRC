@@ -37,11 +37,11 @@ public class IRCActionEvent extends IRCEvent {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return IRCActionEvent.handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return IRCActionEvent.handlers;
     }
 
 }

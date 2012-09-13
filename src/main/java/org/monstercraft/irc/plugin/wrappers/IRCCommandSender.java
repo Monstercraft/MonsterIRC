@@ -40,6 +40,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Sends a message.
      */
 
+    @Override
     public void sendMessage(final String message) {
         IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
     }
@@ -50,6 +51,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * @return The name.
      */
 
+    @Override
     public String getName() {
         return sender;
     }
@@ -60,6 +62,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * @return The server.
      */
 
+    @Override
     public Server getServer() {
         return Bukkit.getServer();
     }
@@ -68,6 +71,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
         return null;
     }
@@ -76,6 +80,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public boolean hasPermission(final String arg0) {
         return true;
     }
@@ -84,6 +89,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public boolean hasPermission(final Permission arg0) {
         return true;
     }
@@ -92,6 +98,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public boolean isPermissionSet(final String arg0) {
         return true;
     }
@@ -100,6 +107,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public boolean isPermissionSet(final Permission arg0) {
         return true;
     }
@@ -108,6 +116,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public void recalculatePermissions() {
     }
 
@@ -115,6 +124,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public void removeAttachment(final PermissionAttachment arg0) {
     }
 
@@ -122,6 +132,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public boolean isOp() {
         return true;
     }
@@ -130,6 +141,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public void setOp(final boolean op) {
     }
 
@@ -137,6 +149,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public PermissionAttachment addAttachment(final Plugin arg0) {
         return null;
     }
@@ -145,6 +158,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public PermissionAttachment addAttachment(final Plugin arg0, final int arg1) {
         return null;
     }
@@ -153,6 +167,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public PermissionAttachment addAttachment(final Plugin arg0,
             final String arg1, final boolean arg2) {
         return null;
@@ -162,33 +177,41 @@ public class IRCCommandSender implements ConsoleCommandSender {
      * Ignored.
      */
 
+    @Override
     public PermissionAttachment addAttachment(final Plugin arg0,
             final String arg1, final boolean arg2, final int arg3) {
         return null;
     }
 
+    @Override
     public void sendMessage(final String[] message) {
     }
 
+    @Override
     public void abandonConversation(final Conversation arg0) {
     }
 
+    @Override
     public void acceptConversationInput(final String arg0) {
 
     }
 
+    @Override
     public boolean beginConversation(final Conversation arg0) {
         return false;
     }
 
+    @Override
     public boolean isConversing() {
         return false;
     }
 
+    @Override
     public void sendRawMessage(final String message) {
         IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
     }
 
+    @Override
     public void abandonConversation(final Conversation arg0,
             final ConversationAbandonedEvent arg1) {
     }

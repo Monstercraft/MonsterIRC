@@ -7,17 +7,16 @@ package org.monstercraft.irc.plugin.util;
  * 
  * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
  * 
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the
+ * distribution.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
- * The views and conclusions contained in the software and documentation are those of the authors and contributors and should not be interpreted as representing official policies,
- * either expressed or implied, of anybody else.
+ * The views and conclusions contained in the software and documentation are those of the authors and contributors and should not be interpreted as representing official policies, either expressed or
+ * implied, of anybody else.
  */
 
 import java.io.BufferedReader;
@@ -138,7 +137,7 @@ public class Metrics {
         this.plugin = plugin;
 
         // load the config
-        configurationFile = new File(CONFIG_FILE);
+        configurationFile = new File(Metrics.CONFIG_FILE);
         configuration = YamlConfiguration.loadConfiguration(configurationFile);
 
         // add some defaults
@@ -195,8 +194,8 @@ public class Metrics {
     }
 
     /**
-     * Start measuring statistics. This will immediately create an async repeating task as the plugin and send the initial data to the metrics backend, and then after that it will
-     * post in increments of PING_INTERVAL * 1200 ticks.
+     * Start measuring statistics. This will immediately create an async repeating task as the plugin and send the initial data to the metrics backend, and then after that it will post in increments
+     * of PING_INTERVAL * 1200 ticks.
      * 
      * @return True if statistics measuring is running, otherwise false.
      */
@@ -218,6 +217,7 @@ public class Metrics {
 
                         private boolean firstPost = true;
 
+                        @Override
                         public void run() {
                             try {
                                 // This has to be synchronized or it can collide
@@ -249,7 +249,7 @@ public class Metrics {
                                         "[Metrics] " + e.getMessage());
                             }
                         }
-                    }, 0, PING_INTERVAL * 1200);
+                    }, 0, Metrics.PING_INTERVAL * 1200);
 
             return true;
         }
@@ -264,7 +264,7 @@ public class Metrics {
         synchronized (optOutLock) {
             try {
                 // Reload the metrics file
-                configuration.load(CONFIG_FILE);
+                configuration.load(Metrics.CONFIG_FILE);
             } catch (final IOException ex) {
                 Bukkit.getLogger().log(Level.INFO,
                         "[Metrics] " + ex.getMessage());
@@ -319,7 +319,7 @@ public class Metrics {
 
             // Disable Task, if it is running
             if (taskId > 0) {
-                this.plugin.getServer().getScheduler().cancelTask(taskId);
+                plugin.getServer().getScheduler().cancelTask(taskId);
                 taskId = -1;
             }
         }
@@ -335,16 +335,18 @@ public class Metrics {
 
         // Construct the post data
         final StringBuilder data = new StringBuilder();
-        data.append(encode("guid")).append('=').append(encode(guid));
-        encodeDataPair(data, "version", description.getVersion());
-        encodeDataPair(data, "server", Bukkit.getVersion());
-        encodeDataPair(data, "players",
+        data.append(Metrics.encode("guid")).append('=')
+                .append(Metrics.encode(guid));
+        Metrics.encodeDataPair(data, "version", description.getVersion());
+        Metrics.encodeDataPair(data, "server", Bukkit.getVersion());
+        Metrics.encodeDataPair(data, "players",
                 Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
-        encodeDataPair(data, "revision", String.valueOf(REVISION));
+        Metrics.encodeDataPair(data, "revision",
+                String.valueOf(Metrics.REVISION));
 
         // If we're pinging, append it
         if (isPing) {
-            encodeDataPair(data, "ping", "true");
+            Metrics.encodeDataPair(data, "ping", "true");
         }
 
         // Acquire a lock on the graphs, which lets us make the assumption we
@@ -363,8 +365,9 @@ public class Metrics {
                     // Legacy (R4) submitters use the format Custom%s, or
                     // CustomPLOTTERNAME
                     final String key = String.format("C%s%s%s%s",
-                            CUSTOM_DATA_SEPARATOR, graph.getName(),
-                            CUSTOM_DATA_SEPARATOR, plotter.getColumnName());
+                            Metrics.CUSTOM_DATA_SEPARATOR, graph.getName(),
+                            Metrics.CUSTOM_DATA_SEPARATOR,
+                            plotter.getColumnName());
 
                     // The value to send, which for the foreseeable future is
                     // just the string
@@ -372,15 +375,15 @@ public class Metrics {
                     final String value = Integer.toString(plotter.getValue());
 
                     // Add it to the http post data :)
-                    encodeDataPair(data, key, value);
+                    Metrics.encodeDataPair(data, key, value);
                 }
             }
         }
 
         // Create the url
-        final URL url = new URL(BASE_URL
-                + String.format(REPORT_URL, encode(plugin.getDescription()
-                        .getName())));
+        final URL url = new URL(Metrics.BASE_URL
+                + String.format(Metrics.REPORT_URL,
+                        Metrics.encode(plugin.getDescription().getName())));
 
         // Connect to the website
         URLConnection connection;
@@ -462,8 +465,8 @@ public class Metrics {
     private static void encodeDataPair(final StringBuilder buffer,
             final String key, final String value)
             throws UnsupportedEncodingException {
-        buffer.append('&').append(encode(key)).append('=')
-                .append(encode(value));
+        buffer.append('&').append(Metrics.encode(key)).append('=')
+                .append(Metrics.encode(value));
     }
 
     /**

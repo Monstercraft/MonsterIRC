@@ -50,7 +50,7 @@ public class MultiverseHook extends MonsterIRC {
             return;
         }
 
-        mcMMOHook = ((MultiverseCore) mcMMOPlugin);
+        mcMMOHook = (MultiverseCore) mcMMOPlugin;
         IRC.log("Multiverse detected; hooking: "
                 + ((MultiverseCore) mcMMOPlugin).getDescription().getFullName());
     }

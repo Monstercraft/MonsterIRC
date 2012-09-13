@@ -75,11 +75,11 @@ public class IRCChannel {
         this.adminCommands = hopCommands;
         this.voiceCommands = voiceCommands;
         this.userCommands = userCommands;
-        this.ops = new ArrayList<String>();
-        this.hops = new ArrayList<String>();
-        this.admins = new ArrayList<String>();
-        this.voices = new ArrayList<String>();
-        this.ChatChannel = null;
+        ops = new ArrayList<String>();
+        hops = new ArrayList<String>();
+        admins = new ArrayList<String>();
+        voices = new ArrayList<String>();
+        ChatChannel = null;
     }
 
     /**
@@ -126,10 +126,10 @@ public class IRCChannel {
         this.adminCommands = hopCommands;
         this.voiceCommands = voiceCommands;
         this.userCommands = userCommands;
-        this.ops = new ArrayList<String>();
-        this.voices = new ArrayList<String>();
-        this.hops = new ArrayList<String>();
-        this.admins = new ArrayList<String>();
+        ops = new ArrayList<String>();
+        voices = new ArrayList<String>();
+        hops = new ArrayList<String>();
+        admins = new ArrayList<String>();
     }
 
     public IRCChannel(final String password, final List<String> blockedEvents,
@@ -151,10 +151,10 @@ public class IRCChannel {
         this.adminCommands = hopCommands;
         this.voiceCommands = voiceCommands;
         this.userCommands = userCommands;
-        this.ops = new ArrayList<String>();
-        this.voices = new ArrayList<String>();
-        this.hops = new ArrayList<String>();
-        this.admins = new ArrayList<String>();
+        ops = new ArrayList<String>();
+        voices = new ArrayList<String>();
+        hops = new ArrayList<String>();
+        admins = new ArrayList<String>();
         this.node = node;
     }
 

@@ -7,5 +7,9 @@ package org.monstercraft.irc.plugin.util;
  * 
  */
 public enum ChatType {
-    GLOBAL(), HEROCHAT(), MCMMOADMINCHAT(), TOWNYCHAT(), MTADMINCHAT();
+    GLOBAL(),
+    HEROCHAT(),
+    MCMMOADMINCHAT(),
+    TOWNYCHAT(),
+    MTADMINCHAT();
 }

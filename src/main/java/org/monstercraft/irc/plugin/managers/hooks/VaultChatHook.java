@@ -51,7 +51,7 @@ public class VaultChatHook extends MonsterIRC {
             ChatHook = chatProvider.getProvider();
         }
 
-        return (ChatHook != null);
+        return ChatHook != null;
     }
 
     /**

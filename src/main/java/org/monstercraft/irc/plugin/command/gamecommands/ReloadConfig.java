@@ -20,7 +20,7 @@ public class ReloadConfig extends GameCommand {
         if (sender instanceof Player) {
             if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
                 if (!MonsterIRC.getHandleManager().getPermissionsHandler()
-                        .hasCommandPerms(((Player) sender), this)) {
+                        .hasCommandPerms((Player) sender, this)) {
                     sender.sendMessage("[IRC] You don't have permission to preform that command.");
                     return true;
                 }
@@ -39,6 +39,7 @@ public class ReloadConfig extends GameCommand {
     }
 
     private final Runnable connect = new Runnable() {
+        @Override
         public void run() {
             MonsterIRC.getSettingsManager().reload();
             MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();
