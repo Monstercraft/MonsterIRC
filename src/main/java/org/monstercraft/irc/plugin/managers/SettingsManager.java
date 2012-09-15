@@ -127,8 +127,6 @@ public class SettingsManager {
             Variables.port = config.getInt("IRC.SETTINGS.PORT", Variables.port);
             Variables.limit = config.getInt(
                     "IRC.OPTIONS.MESSAGE_LIMIT_PER_SEC", Variables.limit);
-            Variables.timeout = config.getInt("IRC.OPTIONS.TIMEOUT",
-                    Variables.timeout);
             Variables.tries = config.getInt("IRC.OPTIONS.RETRYS",
                     Variables.tries);
             Variables.debug = config.getBoolean("IRC.OPTIONS.DEBUG",

@@ -62,8 +62,8 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
         MonsterIRC.listener = new MonsterIRCListener(this);
         MonsterIRC.IRCserver = new IRCServer(Variables.server,
                 Variables.serverPass, Variables.port, Variables.name,
-                Variables.password, Variables.ident, Variables.timeout,
-                Variables.tries, Variables.connectCommands);
+                Variables.password, Variables.ident, 5000, Variables.tries,
+                Variables.connectCommands);
         IRC.setServer(MonsterIRC.IRCserver);
         MonsterIRC.handles = new HandleManager(this);
         getServer().getPluginManager()
