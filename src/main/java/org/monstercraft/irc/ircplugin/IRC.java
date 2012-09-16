@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.Configuration.Variables;
-import org.monstercraft.irc.plugin.managers.listeners.TownyChatListener;
+import org.monstercraft.irc.plugin.towny.TownyChatListener;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
@@ -329,43 +329,57 @@ public class IRC {
                                                                 .getWorld(name)),
                                         message));
             } else if (c.getChatType() == ChatType.TOWNYCHAT) {
-                TownyChatListener.sendMessage(ColorUtils.formatIRCtoGame(
-                        c.getTownyChannel().getChannelTag()
-                                + Variables.mcformat
-                                        .replace(
-                                                "{name}",
-                                                StringUtils
-                                                        .getDisplayName(name))
-                                        .replace("{herochatTag}", "")
-                                        .replace("{HCchannelColor}", "")
-                                        .replace(
-                                                "{message}",
+                TownyChatListener
+                        .sendMessage(
+                                StringUtils.getDisplayName(name),
+                                ColorUtils
+                                        .formatIRCtoGame(
                                                 c.getTownyChannel()
-                                                        .getMessageColour()
-                                                        + message)
-                                        .replace("{prefix}",
-                                                StringUtils.getPrefix(name))
-                                        .replace("{suffix}",
-                                                StringUtils.getSuffix(name))
-                                        .replace(
-                                                "{groupPrefix}",
-                                                StringUtils
-                                                        .getGroupPrefix(name))
-                                        .replace(
-                                                "{groupSuffix}",
-                                                StringUtils
-                                                        .getGroupSuffix(name))
-                                        .replace(
-                                                "{mvWorld}",
-                                                StringUtils
-                                                        .getMvWorldAlias(name))
-                                        .replace(
-                                                "{mvColor}",
-                                                StringUtils
-                                                        .getMvWorldColor(name))
-                                        .replace("{world}",
-                                                StringUtils.getWorld(name)),
-                        message), c);
+                                                        .getChannelTag()
+                                                        + Variables.mcformat
+                                                                .replace(
+                                                                        "{name}",
+                                                                        "")
+                                                                .replace(
+                                                                        "{herochatTag}",
+                                                                        "")
+                                                                .replace(
+                                                                        "{HCchannelColor}",
+                                                                        "")
+                                                                .replace(
+                                                                        "{message}",
+                                                                        c.getTownyChannel()
+                                                                                .getMessageColour()
+                                                                                + message)
+                                                                .replace(
+                                                                        "{prefix}",
+                                                                        StringUtils
+                                                                                .getPrefix(name))
+                                                                .replace(
+                                                                        "{suffix}",
+                                                                        StringUtils
+                                                                                .getSuffix(name))
+                                                                .replace(
+                                                                        "{groupPrefix}",
+                                                                        StringUtils
+                                                                                .getGroupPrefix(name))
+                                                                .replace(
+                                                                        "{groupSuffix}",
+                                                                        StringUtils
+                                                                                .getGroupSuffix(name))
+                                                                .replace(
+                                                                        "{mvWorld}",
+                                                                        StringUtils
+                                                                                .getMvWorldAlias(name))
+                                                                .replace(
+                                                                        "{mvColor}",
+                                                                        StringUtils
+                                                                                .getMvWorldColor(name))
+                                                                .replace(
+                                                                        "{world}",
+                                                                        StringUtils
+                                                                                .getWorld(name)),
+                                                message), c);
             }
         } catch (final Exception e) {
             IRC.debug(e);

@@ -18,7 +18,7 @@ import org.monstercraft.irc.plugin.managers.SettingsManager;
 import org.monstercraft.irc.plugin.managers.listeners.AdminChatListener;
 import org.monstercraft.irc.plugin.managers.listeners.IRCEventListener;
 import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
-import org.monstercraft.irc.plugin.managers.listeners.TownyChatListener;
+import org.monstercraft.irc.plugin.towny.TownyChatListener;
 import org.monstercraft.irc.plugin.util.Metrics;
 import org.monstercraft.irc.plugin.util.Metrics.Graph;
 import org.monstercraft.irc.plugin.util.log.TailLogHandler;

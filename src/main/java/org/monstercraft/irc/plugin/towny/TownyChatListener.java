@@ -1,5 +1,11 @@
-package org.monstercraft.irc.plugin.managers.listeners;
+package org.monstercraft.irc.plugin.towny;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
@@ -19,10 +25,19 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.gmail.nossr50.util.Users;
 import com.palmergames.bukkit.TownyChat.Chat;
+import com.palmergames.bukkit.TownyChat.CraftIRCHandler;
+import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.channelTypes;
+import com.palmergames.bukkit.TownyChat.config.ChatSettings;
+import com.palmergames.bukkit.TownyChat.listener.LocalTownyChatEvent;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
+import com.palmergames.bukkit.util.BukkitTools;
 import com.palmergames.util.StringMgmt;
 
 @SuppressWarnings("deprecation")
@@ -124,8 +139,18 @@ public class TownyChatListener implements Listener {
         }
     }
 
-    public static void sendMessage(String message, IRCChannel c) {
+    public static void sendMessage(String sender, String message, IRCChannel c) {
         Channel channel = c.getTownyChannel();
-        channel.chatProcess(new PlayerChatEvent(null, message));
+        chatProcess(sender, channel, message);
+    }
+
+    public static void chatProcess(String sernder, Channel channel, String mesage) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (plugin.getTowny().isPermissions()
+                    && TownyUniverse.getPermissionSource().has(p,
+                            channel.getPermission())) {
+
+            }
+        }
     }
 }
