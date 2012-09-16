@@ -28,18 +28,13 @@ public class TownyChatListener implements Listener {
 
     @SuppressWarnings("unchecked")
     public static WeakHashMap<Player, String> getChat() throws Exception {
-        // Fetch the motd field
         final Field field = TownyChatPlayerListener.class
                 .getDeclaredField("directedChat");
-        // Fetch the instance of the server
-        final Field chat = Chat.class.getDeclaredField("TownyPlayerListener");
-        // set all fields accessable
+        final Field chat = plugin.getClass().getDeclaredField("TownyPlayerListener");
         field.setAccessible(true);
         chat.setAccessible(true);
-        // fetch the instance of the server
         TownyChatPlayerListener instance = (TownyChatPlayerListener) chat
                 .get(MonsterIRC.getHookManager().getChatHook());
-        // retrieve the motd
         return (WeakHashMap<Player, String>) field.get(instance);
     }
 
