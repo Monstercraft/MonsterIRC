@@ -34,7 +34,6 @@ public class IRCChannel {
     private List<String> listenChatChannels;
     private final List<String> blockedEvents;
     private final String password;
-    private String node;
 
     /**
      * Creates an IRCChannel to join. .
@@ -137,8 +136,7 @@ public class IRCChannel {
             final String channel, final String ChatChannel,
             final ChatType type, final List<String> opCommands,
             final List<String> hopCommands, final List<String> adminCommands,
-            final List<String> voiceCommands, final List<String> userCommands,
-            final String node) {
+            final List<String> voiceCommands, final List<String> userCommands) {
         this.blockedEvents = blockedEvents;
         this.password = password;
         this.channel = channel;
@@ -155,7 +153,6 @@ public class IRCChannel {
         voices = new ArrayList<String>();
         hops = new ArrayList<String>();
         admins = new ArrayList<String>();
-        this.node = node;
     }
 
     /**
@@ -321,10 +318,6 @@ public class IRCChannel {
             }
         }
         return false;
-    }
-
-    public String getTownyNode() {
-        return node;
     }
 
 }

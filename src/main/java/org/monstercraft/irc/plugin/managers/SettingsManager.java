@@ -333,8 +333,7 @@ public class SettingsManager {
                             config.getStringList("CHANNEL.COMMANDS.HOP"),
                             config.getStringList("CHANNEL.COMMANDS.ADMINS"),
                             config.getStringList("CHANNEL.COMMANDS.VOICE"),
-                            config.getStringList("CHANNEL.COMMANDS.USERS"),
-                            config.getString("CHANNEL.CHATTYPE.TOWNY.PERMS")));
+                            config.getStringList("CHANNEL.COMMANDS.USERS")));
                 }
             } catch (final Exception e) {
                 IRC.debug(e);
@@ -379,7 +378,6 @@ public class SettingsManager {
         config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
         config.addDefault("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
         config.addDefault("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
-        config.addDefault("CHANNEL.CHATTYPE.TOWNY.PERMS", "towny.chat.irc");
         config.addDefault("CHANNEL.COMMANDS.OP", op);
         config.addDefault("CHANNEL.COMMANDS.HOP", hop);
         config.addDefault("CHANNEL.COMMANDS.ADMIN", admin);

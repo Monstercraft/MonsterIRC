@@ -18,6 +18,7 @@ import org.monstercraft.irc.plugin.managers.SettingsManager;
 import org.monstercraft.irc.plugin.managers.listeners.AdminChatListener;
 import org.monstercraft.irc.plugin.managers.listeners.IRCEventListener;
 import org.monstercraft.irc.plugin.managers.listeners.MonsterIRCListener;
+import org.monstercraft.irc.plugin.managers.listeners.TownyChatListener;
 import org.monstercraft.irc.plugin.util.Metrics;
 import org.monstercraft.irc.plugin.util.Metrics.Graph;
 import org.monstercraft.irc.plugin.util.log.TailLogHandler;
@@ -71,6 +72,11 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
         if (getServer().getPluginManager().getPlugin("MonsterTickets") != null) {
             getServer().getPluginManager().registerEvents(
                     new AdminChatListener(), this);
+        }
+        if (getServer().getPluginManager().getPlugin("TownyChat") != null) {
+            getServer().getPluginManager().registerEvents(
+                    new TownyChatListener(MonsterIRC.getHookManager()
+                            .getTownyChatHook()), this);
         }
         MonsterIRC.getEventManager().addListener(new IRCEventListener(this));
         final Thread t = new Thread(this);

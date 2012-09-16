@@ -1,7 +1,5 @@
 package org.monstercraft.irc.plugin.managers.listeners;
 
-import java.util.WeakHashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,7 +7,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -25,7 +22,6 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.dthielke.herochat.Herochat;
 import com.gmail.nossr50.util.Users;
-import com.palmergames.bukkit.TownyChat.channels.Channel;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
@@ -76,6 +72,9 @@ public class MonsterIRCListener implements Listener {
             final Player player = event.getPlayer();
             for (final IRCChannel c : MonsterIRC.getChannels()) {
                 if (c.getChatType() == ChatType.MTADMINCHAT) {
+                    continue;
+                }
+                if (c.getChatType() == ChatType.TOWNYCHAT) {
                     continue;
                 }
                 MonsterIRCListener.handleMessage(player, c, event.getMessage());
@@ -348,89 +347,6 @@ public class MonsterIRCListener implements Listener {
             Variables.linesToIrc++;
             IRC.sendMessageToChannel(c,
                     ColorUtils.formatGametoIRC(result.toString()));
-        } else if (c.getChatType() == ChatType.TOWNYCHAT) {
-            if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-                if (Users.getProfile(player.getName()).getAdminChatMode()) {
-                    return;
-                }
-                if (Users.getProfile(player.getName()).getPartyChatMode()) {
-                    return;
-                }
-            }
-            if (MonsterIRCListener.directedChat.containsKey(player)) {
-                if (MonsterIRCListener.directedChat.get(player).equals(
-                        c.getTownyChannel())
-                        && MonsterIRC.getHandleManager()
-                                .getPermissionsHandler()
-                                .hasNode(player, c.getTownyNode())) {
-                    result.append(Variables.ircformat
-                            .replace("{HCchannelColor}", "&f")
-                            .replace("{heroChatTag}", "")
-                            .replace("{prefix}",
-                                    StringUtils.getPrefix(player.getName())
-
-                            )
-                            .replace(
-                                    "{name}",
-                                    StringUtils.getDisplayName(player
-                                            .getDisplayName()))
-                            .replace("{suffix}",
-                                    StringUtils.getSuffix(player.getName()))
-
-                            .replace(
-                                    "{groupPrefix}",
-                                    StringUtils.getGroupPrefix(player.getName()))
-                            .replace(
-                                    "{groupSuffix}",
-                                    StringUtils.getGroupSuffix(player.getName()))
-                            .replace("{message}", " " + message)
-                            .replace(
-                                    "{mvWorld}",
-                                    StringUtils.getMvWorldAlias(player
-                                            .getWorld().getName()))
-                            .replace(
-                                    "{mvColor}",
-                                    StringUtils.getMvWorldColor(player
-                                            .getWorld().getName()))
-                            .replace(
-                                    "{world}",
-                                    StringUtils.getWorld(player.getWorld()
-                                            .getName())));
-                    Variables.linesToIrc++;
-                    IRC.sendMessageToChannel(c,
-                            ColorUtils.formatGametoIRC(result.toString()));
-                }
-            }
-        }
-    }
-
-    private static WeakHashMap<Player, Channel> directedChat = new WeakHashMap<Player, Channel>();
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerCommandPreprocess(
-            final PlayerCommandPreprocessEvent event) {
-        if (MonsterIRC.getHookManager().getTownyChatHook() != null) {
-            final Player player = event.getPlayer();
-            final String split[] = event.getMessage().split("\\ ");
-            final String command = split[0].trim().toLowerCase()
-                    .replace("/", "");
-            final Channel channel = MonsterIRC.getHookManager()
-                    .getTownyChatHook().getChannelsHandler()
-                    .getChannel(player, command);
-            if (channel != null) {
-                if (MonsterIRCListener.directedChat.containsKey(player)) {
-                    boolean doReturn = false;
-                    if (MonsterIRCListener.directedChat.get(player).equals(
-                            channel)) {
-                        doReturn = true;
-                    }
-                    MonsterIRCListener.directedChat.remove(player);
-                    if (doReturn) {
-                        return;
-                    }
-                }
-                MonsterIRCListener.directedChat.put(player, channel);
-            }
         }
     }
 }
