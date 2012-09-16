@@ -75,8 +75,7 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
         }
         if (getServer().getPluginManager().getPlugin("TownyChat") != null) {
             getServer().getPluginManager().registerEvents(
-                    new TownyChatListener(MonsterIRC.getHookManager()
-                            .getTownyChatHook()), this);
+                    new TownyChatListener(), this);
         }
         MonsterIRC.getEventManager().addListener(new IRCEventListener(this));
         final Thread t = new Thread(this);
