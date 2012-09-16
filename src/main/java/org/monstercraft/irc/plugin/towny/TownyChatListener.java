@@ -18,23 +18,44 @@ import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 import com.gmail.nossr50.util.Users;
+import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
+import com.palmergames.bukkit.TownyChat.channels.channelTypes;
 
 @SuppressWarnings("deprecation")
 public class TownyChatListener implements Listener {
+
+    private static Chat plugin;
+
+    public boolean inChannel(Channel c, Player p) {
+        if (plugin.getChannelsHandler().getChannel(p, channelTypes.GLOBAL)
+                .equals(c)) {
+            return true;
+        }
+        return false;
+    }
+
+    public TownyChatListener(Chat paramChat) {
+
+        plugin = paramChat;
+    }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerChat(PlayerChatEvent paramPlayerChatEvent) {
         Player localPlayer = paramPlayerChatEvent.getPlayer();
         for (IRCChannel c : MonsterIRC.getChannels()) {
             if (c.getChatType() == ChatType.TOWNYCHAT) {
-                if (TownyChatListener.directedChat.get(localPlayer).equals(
-                        c.getTownyChannel())
-                        && MonsterIRC
+                if (c.getTownyChannel() == null) {
+                    IRC.log("The towny channel you entered was not found!");
+                    return;
+                }
+                if (inChannel(c.getTownyChannel(), localPlayer)
+                        || (TownyChatListener.directedChat.get(localPlayer)
+                                .equals(c.getTownyChannel()) && MonsterIRC
                                 .getHandleManager()
                                 .getPermissionsHandler()
                                 .hasNode(localPlayer,
-                                        c.getTownyChannel().getPermission())) {
+                                        c.getTownyChannel().getPermission()))) {
                     handle(c, localPlayer, paramPlayerChatEvent.getMessage());
                 }
             }
