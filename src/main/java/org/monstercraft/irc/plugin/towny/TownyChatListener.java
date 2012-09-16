@@ -21,7 +21,6 @@ import com.gmail.nossr50.util.Users;
 import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.listener.TownyChatPlayerListener;
-import com.palmergames.bukkit.towny.listeners.TownyPlayerListener;
 
 @SuppressWarnings("deprecation")
 public class TownyChatListener implements Listener {
@@ -30,7 +29,7 @@ public class TownyChatListener implements Listener {
     @SuppressWarnings("unchecked")
     public static WeakHashMap<Player, String> getChat() throws Exception {
         // Fetch the motd field
-        final Field field = TownyPlayerListener.class
+        final Field field = TownyChatPlayerListener.class
                 .getDeclaredField("directedChat");
         // Fetch the instance of the server
         final Field chat = Chat.class.getDeclaredField("TownyPlayerListener");
