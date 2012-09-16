@@ -1,7 +1,6 @@
 package org.monstercraft.irc.plugin.towny;
 
-import java.lang.reflect.Field;
-import java.util.WeakHashMap;
+import java.util.Iterator;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,22 +19,23 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import com.gmail.nossr50.util.Users;
 import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
-import com.palmergames.bukkit.TownyChat.listener.TownyChatPlayerListener;
 
 @SuppressWarnings("deprecation")
 public class TownyChatListener implements Listener {
     private static Chat plugin;
 
-    @SuppressWarnings("unchecked")
-    public static WeakHashMap<Player, String> getChat() throws Exception {
-        final Field field = TownyChatPlayerListener.class
-                .getDeclaredField("directedChat");
-        final Field chat = plugin.getClass().getDeclaredField("TownyPlayerListener");
-        field.setAccessible(true);
-        chat.setAccessible(true);
-        TownyChatPlayerListener instance = (TownyChatPlayerListener) chat
-                .get(MonsterIRC.getHookManager().getChatHook());
-        return (WeakHashMap<Player, String>) field.get(instance);
+    public boolean inChannel(Channel c, Player p) {
+        Iterator<Channel> localObject1 = plugin.getChannelsHandler()
+                .getAllChannels().values().iterator();
+        Object localObject2;
+        while ((localObject1).hasNext()) {
+            localObject2 = (Channel) (localObject1).next();
+            if (plugin.getTowny().hasPlayerMode(p,
+                    ((Channel) localObject2).getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public TownyChatListener(Chat paramChat) {
@@ -45,17 +45,9 @@ public class TownyChatListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerChat(PlayerChatEvent paramPlayerChatEvent) {
         Player localPlayer = paramPlayerChatEvent.getPlayer();
-        Channel channel = null;
-        try {
-            channel = plugin.getChannelsHandler().getChannel(localPlayer,
-                    (String) getChat().get(localPlayer));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
         for (IRCChannel c : MonsterIRC.getChannels()) {
             if (c.getChatType() == ChatType.TOWNYCHAT) {
-                if (c.getTownyChannel() == channel) {
+                if (inChannel(c.getTownyChannel(), localPlayer)) {
                     handle(c, localPlayer, paramPlayerChatEvent.getMessage());
                 }
             }
