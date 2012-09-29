@@ -1,16 +1,17 @@
 package org.monstercraft.irc.plugin.util;
 
 public enum IRCRank {
-    USER("", 0),
-    VOICE("+", 1),
-    OWNER("~", 5),
-    HALFOP("%", 1),
-    ADMIN("&", 4),
-    OP("@", 3);
+    USER("", 0, "User"),
+    VOICE("+", 1, "Voice"),
+    OWNER("~", 5, "Owner"),
+    HALFOP("%", 1, "Half-OP"),
+    ADMIN("&", 4, "Admin"),
+    OP("@", 3, "OP");
 
-    IRCRank(final String prefix, final int rank) {
+    IRCRank(final String prefix, final int rank, final String name) {
         this.prefix = prefix;
         this.rank = rank;
+        this.name = name;
     }
 
     public String getPrefix() {
@@ -21,7 +22,13 @@ public enum IRCRank {
         return rank;
     }
 
+    public String getName() {
+        return name;
+    }
+
     private final String prefix;
 
     private final int rank;
+
+    private final String name;
 }

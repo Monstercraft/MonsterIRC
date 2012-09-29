@@ -26,18 +26,13 @@ public class IRCClient {
     }
 
     public IRCRank getHighestRank() {
-        if (ranks.contains(IRCRank.OP)) {
-            return IRCRank.OP;
-        } else if (ranks.contains(IRCRank.OWNER)) {
-            return IRCRank.OWNER;
-        } else if (ranks.contains(IRCRank.ADMIN)) {
-            return IRCRank.ADMIN;
-        } else if (ranks.contains(IRCRank.HALFOP)) {
-            return IRCRank.HALFOP;
-        } else if (ranks.contains(IRCRank.VOICE)) {
-            return IRCRank.VOICE;
+        IRCRank rank = IRCRank.USER;
+        for (final IRCRank r : ranks) {
+            if (r.toInt() > rank.toInt()) {
+                rank = r;
+            }
         }
-        return IRCRank.USER;
+        return rank;
     }
 
     public ArrayList<IRCRank> getRanks() {

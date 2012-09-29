@@ -288,6 +288,9 @@ public class IRCChannel {
         if (hostMask == null) {
             hostMask = "";
         }
+        if (getUser(nick) != null) {
+            return;
+        }
         final IRCClient client = new IRCClient(rank, nick, hostMask);
         users.add(client);
     }

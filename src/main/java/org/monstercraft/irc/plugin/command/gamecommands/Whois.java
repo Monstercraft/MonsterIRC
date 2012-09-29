@@ -35,7 +35,7 @@ public class Whois extends GameCommand {
                     + "Invalid command usage, type /irc help whois for more info.");
             return true;
         }
-        for (IRCChannel c : MonsterIRC.getChannels()) {
+        for (final IRCChannel c : MonsterIRC.getChannels()) {
             IRCClient client;
             if ((client = c.getUser(split[2])) != null) {
                 if (client.getNick() != null) {
@@ -45,7 +45,7 @@ public class Whois extends GameCommand {
                 if (client.getHighestRank() != null) {
                     sender.sendMessage(ChatColor.GREEN + "Highest Rank: "
                             + ChatColor.WHITE
-                            + client.getHighestRank().getPrefix());
+                            + client.getHighestRank().getName());
                 }
                 if (client.getHighestRank() != null) {
                     sender.sendMessage(ChatColor.GREEN + "Hostmask: "
