@@ -7,7 +7,9 @@ import org.monstercraft.irc.ircplugin.IRC;
 import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.util.ColorUtils;
+import org.monstercraft.irc.plugin.util.IRCRank;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.wrappers.IRCClient;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
 public class IRCEventListener implements IRCListener {
@@ -84,37 +86,38 @@ public class IRCEventListener implements IRCListener {
                 remove = mode.substring(0, posIndex);
             }
         }
+        final IRCClient client = channel.getUser(user);
         if (add.contains("+")) {
             if (add.contains("q")) {
-                channel.getOpList().add(user);
+                client.addRank(IRCRank.OWNER);
             }
             if (add.contains("o")) {
-                channel.getOpList().add(user);
+                client.addRank(IRCRank.OP);
             }
             if (add.contains("h")) {
-                channel.getHOpList().add(user);
+                client.addRank(IRCRank.HALFOP);
             }
             if (add.contains("a")) {
-                channel.getAdminList().add(user);
+                client.addRank(IRCRank.ADMIN);
             }
             if (add.contains("v")) {
-                channel.getVoiceList().add(user);
+                client.addRank(IRCRank.VOICE);
             }
         } else if (remove.contains("-")) {
             if (remove.contains("q")) {
-                channel.getOpList().remove(user);
+                client.removeRank(IRCRank.OWNER);
             }
             if (remove.contains("o")) {
-                channel.getOpList().remove(user);
+                client.removeRank(IRCRank.OP);
             }
             if (remove.contains("h")) {
-                channel.getHOpList().remove(user);
+                client.removeRank(IRCRank.HALFOP);
             }
             if (remove.contains("a")) {
-                channel.getAdminList().remove(user);
+                client.removeRank(IRCRank.ADMIN);
             }
             if (remove.contains("v")) {
-                channel.getVoiceList().remove(user);
+                client.removeRank(IRCRank.VOICE);
             }
         }
 
@@ -126,6 +129,7 @@ public class IRCEventListener implements IRCListener {
             onMessage(channel, channel.getChannel(), user + " has left "
                     + channel.getChannel());
         }
+        channel.removeUser(user);
     }
 
     @Override
@@ -134,14 +138,31 @@ public class IRCEventListener implements IRCListener {
             onMessage(channel, channel.getChannel(), user + " has quit "
                     + channel.getChannel());
         }
+        channel.removeUser(user);
     }
 
     @Override
-    public void onJoin(final IRCChannel channel, final String user) {
+    public void onJoin(final IRCChannel channel, final String user,
+            final String hostmask) {
         if (!channel.getBlockedEvents().contains("irc_join")) {
             onMessage(channel, channel.getChannel(), user + " has joined "
                     + channel.getChannel());
         }
+        try {
+            channel.addUser(user, null, hostmask);
+        } catch (final Exception e) {
+            IRC.debug(e);
+        }
+    }
+
+    @Override
+    public void onNickChange(final IRCChannel channel, final String oldNick,
+            final String newNick) {
+        if (!channel.getBlockedEvents().contains("irc_nick")) {
+            onMessage(channel, channel.getChannel(), oldNick
+                    + " is now known as " + newNick);
+        }
+        channel.getUser(oldNick).updateNick(newNick);
     }
 
     // unused events

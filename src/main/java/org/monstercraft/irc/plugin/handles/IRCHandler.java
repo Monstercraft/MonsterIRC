@@ -27,6 +27,7 @@ import org.monstercraft.irc.plugin.handles.thread.InputThread;
 import org.monstercraft.irc.plugin.handles.thread.OutputThread;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
+import org.monstercraft.irc.plugin.wrappers.IRCClient;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
 /**
@@ -225,7 +226,7 @@ public class IRCHandler {
                 .getNick());
         plugin.getServer().getPluginManager().callEvent(jevent);
         final PluginJoinEvent pje = new PluginJoinEvent(channel, getServer()
-                .getNick());
+                .getNick(), "localhost");
         MonsterIRC.getEventManager().dispatchEvent(pje);
     }
 
@@ -364,7 +365,18 @@ public class IRCHandler {
     public void ban(final String nick, final String channel) {
         if (isConnected()) {
             try {
-                kick(nick, channel, "Derp.");
+                IRCClient client;
+                if ((client = IRC.getChannel(channel).getUser(nick)) != null) {
+                    if (client.getHostmask() != null) {
+                        if (!client.getHostmask().equalsIgnoreCase("")) {
+                            kick(nick, channel, "Banned from ingame.");
+                            write("MODE " + channel + " +b "
+                                    + client.getHostmask());
+                            return;
+                        }
+                    }
+                }
+                kick(nick, channel, "Banned from ingame.");
                 write("MODE " + channel + " +b " + nick);
             } catch (final IOException e) {
                 IRC.debug(e);

@@ -6,31 +6,31 @@ import org.monstercraft.irc.ircplugin.event.EventMulticaster;
 import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-public class PluginJoinEvent extends IRCEvent {
+public class PluginNickChangeEvent extends IRCEvent {
 
     private static final long serialVersionUID = 8708860642802706979L;
 
+    private final String oldNick;
+
+    private final String newNick;
+
     private final IRCChannel channel;
 
-    private final String user;
-
-    private final String message;
-
-    public PluginJoinEvent(final IRCChannel channel, final String user,
-            final String message) {
+    public PluginNickChangeEvent(final IRCChannel channel,
+            final String oldNick, final String newNick) {
+        this.oldNick = oldNick;
+        this.newNick = newNick;
         this.channel = channel;
-        this.user = user;
-        this.message = message;
     }
 
     @Override
     public void dispatch(final EventListener el) {
-        ((IRCListener) el).onJoin(channel, user, message);
+        ((IRCListener) el).onNickChange(channel, oldNick, newNick);
     }
 
     @Override
     public long getMask() {
-        return EventMulticaster.IRC_JOIN_EVENT;
+        return EventMulticaster.IRC_NICK_EVENT;
     }
 
 }

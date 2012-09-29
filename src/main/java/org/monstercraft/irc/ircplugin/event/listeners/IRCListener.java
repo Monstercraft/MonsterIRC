@@ -29,5 +29,8 @@ public interface IRCListener extends EventListener {
 
     public abstract void onQuit(IRCChannel channel, String user);
 
-    public abstract void onJoin(IRCChannel channel, String user);
+    public abstract void onJoin(IRCChannel channel, String user, String message);
+
+    public abstract void onNickChange(IRCChannel channel, String oldNick,
+            String newNick);
 }

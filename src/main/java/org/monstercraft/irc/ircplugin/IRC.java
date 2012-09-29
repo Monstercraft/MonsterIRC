@@ -11,6 +11,7 @@ import org.monstercraft.irc.plugin.Configuration.Variables;
 import org.monstercraft.irc.plugin.towny.TownyChatListener;
 import org.monstercraft.irc.plugin.util.ChatType;
 import org.monstercraft.irc.plugin.util.ColorUtils;
+import org.monstercraft.irc.plugin.util.IRCRank;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
@@ -398,8 +399,17 @@ public class IRC {
      * 
      * @return The list of Operators.
      */
+    public static boolean isOwner(final IRCChannel channel, final String sender) {
+        return channel.getUser(sender).getRanks().contains(IRCRank.OWNER);
+    }
+
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     * 
+     * @return The list of Operators.
+     */
     public static boolean isOp(final IRCChannel channel, final String sender) {
-        return channel.getOpList().contains(sender);
+        return channel.getUser(sender).getRanks().contains(IRCRank.OP);
     }
 
     /**
@@ -408,7 +418,7 @@ public class IRC {
      * @return The list of Operators.
      */
     public static boolean isHalfOP(final IRCChannel channel, final String sender) {
-        return channel.getOpList().contains(sender);
+        return channel.getUser(sender).getRanks().contains(IRCRank.HALFOP);
     }
 
     /**
@@ -417,7 +427,7 @@ public class IRC {
      * @return True if the user is admin; otherwise false.
      */
     public static boolean isAdmin(final IRCChannel channel, final String sender) {
-        return channel.getOpList().contains(sender);
+        return channel.getUser(sender).getRanks().contains(IRCRank.ADMIN);
     }
 
     /**
@@ -426,22 +436,18 @@ public class IRC {
      * @return The list of Voices.
      */
     public static boolean isVoice(final IRCChannel channel, final String sender) {
-        return channel.getVoiceList().contains(sender);
+        return channel.getUser(sender).getRanks().contains(IRCRank.VOICE);
     }
 
-    public static boolean isVoicePlus(final IRCChannel channel,
-            final String sender) {
-        if (IRC.isVoice(channel, sender)) {
-            return true;
-        }
-        if (IRC.isHalfOP(channel, sender)) {
-            return true;
-        }
-        if (IRC.isAdmin(channel, sender)) {
-            return true;
-        }
-        if (IRC.isOp(channel, sender)) {
-            return true;
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     * 
+     * @return The list of Operators.
+     */
+    public static boolean isOwner(final String channel, final String sender) {
+        final IRCChannel c = IRC.getChannel(channel);
+        if (c != null) {
+            return c.getUser(sender).getRanks().contains(IRCRank.OWNER);
         }
         return false;
     }
@@ -454,7 +460,7 @@ public class IRC {
     public static boolean isOp(final String channel, final String sender) {
         final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
-            return c.getOpList().contains(sender);
+            return c.getUser(sender).getRanks().contains(IRCRank.OP);
         }
         return false;
     }
@@ -467,7 +473,7 @@ public class IRC {
     public static boolean isHalfOP(final String channel, final String sender) {
         final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
-            return c.getHOpList().contains(sender);
+            return c.getUser(sender).getRanks().contains(IRCRank.HALFOP);
         }
         return false;
     }
@@ -480,7 +486,7 @@ public class IRC {
     public static boolean isAdmin(final String channel, final String sender) {
         final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
-            return c.getAdminList().contains(sender);
+            return c.getUser(sender).getRanks().contains(IRCRank.ADMIN);
         }
         return false;
     }
@@ -493,25 +499,19 @@ public class IRC {
     public static boolean isVoice(final String channel, final String sender) {
         final IRCChannel c = IRC.getChannel(channel);
         if (c != null) {
-            return c.getVoiceList().contains(sender);
+            return c.getUser(sender).getRanks().contains(IRCRank.VOICE);
         }
         return false;
     }
 
     public static boolean isVoicePlus(final String channel, final String sender) {
-        if (IRC.isVoice(channel, sender)) {
-            return true;
-        }
-        if (IRC.isHalfOP(channel, sender)) {
-            return true;
-        }
-        if (IRC.isAdmin(channel, sender)) {
-            return true;
-        }
-        if (IRC.isOp(channel, sender)) {
-            return true;
-        }
-        return false;
+        return IRC.isVoicePlus(IRC.getChannel(channel), sender);
+    }
+
+    public static boolean isVoicePlus(final IRCChannel channel,
+            final String sender) {
+        return channel.getUser(sender).getHighestRank().toInt() >= IRCRank.VOICE
+                .toInt();
     }
 
     /**

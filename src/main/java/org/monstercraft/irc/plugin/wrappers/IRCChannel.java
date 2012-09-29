@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.monstercraft.irc.MonsterIRC;
 import org.monstercraft.irc.plugin.util.ChatType;
+import org.monstercraft.irc.plugin.util.IRCRank;
 
 import com.dthielke.herochat.Channel;
 import com.dthielke.herochat.Herochat;
@@ -27,13 +28,10 @@ public class IRCChannel {
     private final List<String> hopCommands;
     private final List<String> adminCommands;
     private final List<String> userCommands;
-    private final List<String> ops;
-    private final List<String> admins;
-    private final List<String> hops;
-    private final List<String> voices;
     private List<String> listenChatChannels;
     private final List<String> blockedEvents;
     private final String password;
+    private final ArrayList<IRCClient> users = new ArrayList<IRCClient>();
 
     /**
      * Creates an IRCChannel to join. .
@@ -74,10 +72,6 @@ public class IRCChannel {
         this.adminCommands = hopCommands;
         this.voiceCommands = voiceCommands;
         this.userCommands = userCommands;
-        ops = new ArrayList<String>();
-        hops = new ArrayList<String>();
-        admins = new ArrayList<String>();
-        voices = new ArrayList<String>();
         ChatChannel = null;
     }
 
@@ -125,10 +119,6 @@ public class IRCChannel {
         this.adminCommands = hopCommands;
         this.voiceCommands = voiceCommands;
         this.userCommands = userCommands;
-        ops = new ArrayList<String>();
-        voices = new ArrayList<String>();
-        hops = new ArrayList<String>();
-        admins = new ArrayList<String>();
     }
 
     public IRCChannel(final String password, final List<String> blockedEvents,
@@ -149,10 +139,6 @@ public class IRCChannel {
         this.adminCommands = hopCommands;
         this.voiceCommands = voiceCommands;
         this.userCommands = userCommands;
-        ops = new ArrayList<String>();
-        voices = new ArrayList<String>();
-        hops = new ArrayList<String>();
-        admins = new ArrayList<String>();
     }
 
     /**
@@ -265,39 +251,12 @@ public class IRCChannel {
     }
 
     /**
-     * Fetches the OPS in this channel.
+     * The option to show join and leave messages.
      * 
-     * @return The OPS in this channel.
+     * @return True if the option to show ingame events is enabled; otherwise false.
      */
-    public List<String> getOpList() {
-        return ops;
-    }
-
-    /**
-     * Fetches the OPS in this channel.
-     * 
-     * @return The OPS in this channel.
-     */
-    public List<String> getHOpList() {
-        return hops;
-    }
-
-    /**
-     * Fetches the OPS in this channel.
-     * 
-     * @return The OPS in this channel.
-     */
-    public List<String> getAdminList() {
-        return admins;
-    }
-
-    /**
-     * Fetches the voices in this channel.
-     * 
-     * @return The voices in this channel.
-     */
-    public List<String> getVoiceList() {
-        return voices;
+    public List<String> getBlockedEvents() {
+        return blockedEvents;
     }
 
     /**
@@ -305,8 +264,32 @@ public class IRCChannel {
      * 
      * @return True if the option to show ingame events is enabled; otherwise false.
      */
-    public List<String> getBlockedEvents() {
-        return blockedEvents;
+    public ArrayList<IRCClient> getUsers() {
+        return users;
+    }
+
+    public IRCClient getUser(final String nick) {
+        for (final IRCClient user : users) {
+            if (user.getNick().toLowerCase().equals(nick.toLowerCase())) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public void removeUser(final String nick) {
+        users.remove(getUser(nick));
+    }
+
+    public void addUser(final String nick, IRCRank rank, String hostMask) {
+        if (rank == null) {
+            rank = IRCRank.USER;
+        }
+        if (hostMask == null) {
+            hostMask = "";
+        }
+        final IRCClient client = new IRCClient(rank, nick, hostMask);
+        users.add(client);
     }
 
     public boolean isHeroChatListenChannel(final String activeChannelName) {

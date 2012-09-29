@@ -290,7 +290,7 @@ public class Configuration {
         /**
          * The time to wait before disconnecting.
          */
-//        public static int timeout = 2000;
+        // public static int timeout = 2000;
 
         /**
          * The time to wait before disconnecting.

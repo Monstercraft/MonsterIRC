@@ -27,35 +27,36 @@ public class TownyChatListener implements Listener {
 
     private static Chat plugin;
 
-    public boolean inChannel(Channel c, Player p) {
-        if (plugin.getChannelsHandler().getChannel(p, channelTypes.GLOBAL)
-                .equals(c)) {
+    public boolean inChannel(final Channel c, final Player p) {
+        if (TownyChatListener.plugin.getChannelsHandler()
+                .getChannel(p, channelTypes.GLOBAL).equals(c)) {
             return true;
         }
         return false;
     }
 
-    public TownyChatListener(Chat paramChat) {
+    public TownyChatListener(final Chat paramChat) {
 
-        plugin = paramChat;
+        TownyChatListener.plugin = paramChat;
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerChat(PlayerChatEvent paramPlayerChatEvent) {
-        Player localPlayer = paramPlayerChatEvent.getPlayer();
-        for (IRCChannel c : MonsterIRC.getChannels()) {
+    public void onPlayerChat(final PlayerChatEvent paramPlayerChatEvent) {
+        final Player localPlayer = paramPlayerChatEvent.getPlayer();
+        for (final IRCChannel c : MonsterIRC.getChannels()) {
             if (c.getChatType() == ChatType.TOWNYCHAT) {
                 if (c.getTownyChannel() == null) {
                     IRC.log("The towny channel you entered was not found!");
                     return;
                 }
                 if (inChannel(c.getTownyChannel(), localPlayer)
-                        || (TownyChatListener.directedChat.get(localPlayer)
-                                .equals(c.getTownyChannel()) && MonsterIRC
+                        || TownyChatListener.directedChat.get(localPlayer)
+                                .equals(c.getTownyChannel())
+                        && MonsterIRC
                                 .getHandleManager()
                                 .getPermissionsHandler()
                                 .hasNode(localPlayer,
-                                        c.getTownyChannel().getPermission()))) {
+                                        c.getTownyChannel().getPermission())) {
                     handle(c, localPlayer, paramPlayerChatEvent.getMessage());
                 }
             }
@@ -92,7 +93,8 @@ public class TownyChatListener implements Listener {
         }
     }
 
-    public void handle(IRCChannel c, Player player, String message) {
+    public void handle(final IRCChannel c, final Player player,
+            final String message) {
         if (c.getChatType() == ChatType.TOWNYCHAT) {
             if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
                 if (Users.getProfile(player.getName()).getAdminChatMode()) {
@@ -102,7 +104,7 @@ public class TownyChatListener implements Listener {
                     return;
                 }
             }
-            String msg = (Variables.ircformat
+            final String msg = Variables.ircformat
                     .replace("{HCchannelColor}",
                             c.getTownyChannel().getMessageColour())
                     .replace("{heroChatTag}",
@@ -128,20 +130,21 @@ public class TownyChatListener implements Listener {
                     .replace(
                             "{mvColor}",
                             StringUtils.getMvWorldColor(player.getWorld()
-                                    .getName())).replace("{world}",
-                    StringUtils.getWorld(player.getWorld().getName())));
+                                    .getName()))
+                    .replace("{world}",
+                            StringUtils.getWorld(player.getWorld().getName()));
             Variables.linesToIrc++;
             IRC.sendMessageToChannel(c, ColorUtils.formatGametoIRC(msg));
         }
     }
 
-    public static void sendMessage(String message, IRCChannel c) {
-        Channel channel = c.getTownyChannel();
-        chatProcess(channel, message);
+    public static void sendMessage(final String message, final IRCChannel c) {
+        final Channel channel = c.getTownyChannel();
+        TownyChatListener.chatProcess(channel, message);
     }
 
-    public static void chatProcess(Channel channel, String message) {
-        for (Player p : Bukkit.getOnlinePlayers()) {
+    public static void chatProcess(final Channel channel, final String message) {
+        for (final Player p : Bukkit.getOnlinePlayers()) {
             if (p.hasPermission(channel.getPermission())) {
                 p.sendMessage(message);
             }

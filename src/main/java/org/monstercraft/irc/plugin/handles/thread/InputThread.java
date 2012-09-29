@@ -14,6 +14,7 @@ import org.monstercraft.irc.ircplugin.event.events.PluginJoinEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginKickEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginMessageEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginModeEvent;
+import org.monstercraft.irc.ircplugin.event.events.PluginNickChangeEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginPartEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginPrivateMessageEvent;
 import org.monstercraft.irc.ircplugin.event.events.PluginQuitEvent;
@@ -23,10 +24,12 @@ import org.monstercraft.irc.plugin.event.events.IRCJoinEvent;
 import org.monstercraft.irc.plugin.event.events.IRCKickEvent;
 import org.monstercraft.irc.plugin.event.events.IRCMessageEvent;
 import org.monstercraft.irc.plugin.event.events.IRCModeEvent;
+import org.monstercraft.irc.plugin.event.events.IRCNickEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPartEvent;
 import org.monstercraft.irc.plugin.event.events.IRCPrivateMessageEvent;
 import org.monstercraft.irc.plugin.event.events.IRCQuitEvent;
 import org.monstercraft.irc.plugin.handles.IRCHandler;
+import org.monstercraft.irc.plugin.util.IRCRank;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class InputThread extends Thread implements Runnable {
@@ -164,7 +167,20 @@ public class InputThread extends Thread implements Runnable {
                                 MonsterIRC.getEventManager().dispatchEvent(
                                         new PluginQuitEvent(c, sender));
                                 break;
-
+                            } else if (subline.toLowerCase().contains("nick")) {
+                                final String sender = line.substring(1,
+                                        line.indexOf("!"));
+                                final String newNick = line.substring(line
+                                        .indexOf(" :") + 2);
+                                plugin.getServer()
+                                        .getPluginManager()
+                                        .callEvent(
+                                                new IRCNickEvent(c, sender,
+                                                        newNick));
+                                MonsterIRC.getEventManager().dispatchEvent(
+                                        new PluginNickChangeEvent(c, sender,
+                                                newNick));
+                                break;
                             } else if (subline.toLowerCase().contains(
                                     ("KICK " + c.getChannel()).toLowerCase())) {
                                 final String kicker = line.substring(1,
@@ -197,30 +213,22 @@ public class InputThread extends Thread implements Runnable {
                                     list.add(st.nextToken());
                                 }
                                 for (final String s : list) {
-                                    if (s.contains("@")) {
-                                        c.getOpList()
-                                                .add(s.substring(s.indexOf("@") + 1));
-                                        IRC.debug(s.substring(s.indexOf("@") + 1)
-                                                + " is an OP in "
-                                                + c.getChannel());
-                                    } else if (s.contains("+")) {
-                                        c.getVoiceList()
-                                                .add(s.substring(s.indexOf("+") + 1));
-                                        IRC.debug(s.substring(s.indexOf("+") + 1)
-                                                + " is voice in "
-                                                + c.getChannel());
-                                    } else if (s.contains("~")) {
-                                        c.getOpList()
-                                                .add(s.substring(s.indexOf("~") + 1));
-                                        IRC.debug(s.substring(s.indexOf("~") + 1)
-                                                + " is an OP in "
-                                                + c.getChannel());
-                                    } else if (s.contains("%")) {
-                                        c.getHOpList()
-                                                .add(s.substring(s.indexOf("%") + 1));
-                                        IRC.debug(s.substring(s.indexOf("%") + 1)
-                                                + " is half op in "
-                                                + c.getChannel());
+                                    IRCRank rank = IRCRank.USER;
+                                    if (s.contains("q")) {
+                                        rank = IRCRank.OWNER;
+                                    } else if (s.contains("a")) {
+                                        rank = IRCRank.ADMIN;
+                                    } else if (s.contains("o")) {
+                                        rank = IRCRank.OP;
+                                    } else if (s.contains("h")) {
+                                        rank = IRCRank.HALFOP;
+                                    } else if (s.contains("v")) {
+                                        rank = IRCRank.VOICE;
+                                    }
+                                    if (rank.equals(IRCRank.USER)) {
+                                        c.addUser(s, rank, "");
+                                    } else {
+                                        c.addUser(s.substring(1), rank, null);
                                     }
                                 }
                                 break;
@@ -272,10 +280,12 @@ public class InputThread extends Thread implements Runnable {
                                     .getNick())) {
                                 break;
                             }
+                            final String host = line.substring(
+                                    line.indexOf('!'), line.indexOf(" J") - 1);
                             plugin.getServer().getPluginManager()
                                     .callEvent(new IRCJoinEvent(c, name));
                             MonsterIRC.getEventManager().dispatchEvent(
-                                    new PluginJoinEvent(c, name));
+                                    new PluginJoinEvent(c, name, host));
                             break;
                         }
                     } catch (final Exception e) {

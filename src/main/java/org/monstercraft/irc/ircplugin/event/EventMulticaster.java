@@ -35,6 +35,8 @@ public class EventMulticaster implements EventListener {
 
     public static final long IRC_QUIT_EVENT = 0x1100;
 
+    public static final long IRC_NICK_EVENT = 0x1200;
+
     private static final Object treeLock = new Object();
 
     private final List<IRCListener> listeners = new ArrayList<IRCListener>(5);
