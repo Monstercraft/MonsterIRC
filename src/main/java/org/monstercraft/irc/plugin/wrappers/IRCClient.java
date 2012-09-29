@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import org.monstercraft.irc.plugin.util.IRCRank;
 
 public class IRCClient {
-    private final String prefix;
     private String nick;
     private final String hostMask;
     private final ArrayList<IRCRank> ranks = new ArrayList<IRCRank>();
 
     IRCClient(final IRCRank rank, final String nick, final String hostMask) {
         ranks.add(rank);
-        prefix = rank.getPrefix();
         this.nick = nick;
         this.hostMask = hostMask;
     }
@@ -22,7 +20,7 @@ public class IRCClient {
     }
 
     public String getPrefix() {
-        return prefix;
+        return getHighestRank().getPrefix();
     }
 
     public IRCRank getHighestRank() {

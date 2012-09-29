@@ -20,6 +20,12 @@ public class Other extends IRCCommand {
     @Override
     public boolean execute(final String sender, final String message,
             final IRCChannel channel) {
+        if (channel.getUser(sender) == null) {
+            IRC.sendMessageToUser(
+                    sender,
+                    "Something broke with MonsterIRC! Please tell the server owner this message! Error: null sender");
+            return true;
+        }
         if (IRC.isOp(channel, sender)) {
             if (channel.getOpCommands().contains("*")) {
                 try {

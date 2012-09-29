@@ -156,19 +156,6 @@ public class SettingsManager {
         } catch (final Exception e) {
             IRC.debug(e);
         }
-        final String defaultFormat = "<{groupPrefix}{prefix}{name}{suffix}{groupSuffix}>: {message}";
-        if (Variables.mcformat.contains("{name}")
-                && Variables.mcformat.contains("{message}")) {
-        } else {
-            IRC.debug("Invalid Minecraft format detected!", Variables.debug);
-            Variables.mcformat = defaultFormat;
-        }
-        if (Variables.ircformat.contains("{name}")
-                && Variables.ircformat.contains("{message}")) {
-        } else {
-            IRC.debug("Invalid IRC format detected!", Variables.debug);
-            Variables.ircformat = defaultFormat;
-        }
     }
 
     /**

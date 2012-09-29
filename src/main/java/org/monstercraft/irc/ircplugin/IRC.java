@@ -245,6 +245,9 @@ public class IRC {
                                                                             .getColor()
                                                                             .toString())
                                                             .replace(
+                                                                    "{channel}",
+                                                                    c.getChannel())
+                                                            .replace(
                                                                     "{herochatTag}",
                                                                     "")
                                                             .replace(
@@ -300,6 +303,8 @@ public class IRC {
                                                                 + message)
                                                 .replace("{HCchannelColor}", "")
                                                 .replace("{herochatTag}", "")
+                                                .replace("{channel}",
+                                                        c.getChannel())
                                                 .replace(
                                                         "{prefix}",
                                                         StringUtils
@@ -345,6 +350,7 @@ public class IRC {
                                                 "{HCchannelColor}",
                                                 c.getTownyChannel()
                                                         .getMessageColour())
+                                        .replace("{channel}", c.getChannel())
                                         .replace("{message}", message)
                                         .replace("{prefix}",
                                                 StringUtils.getPrefix(name))
