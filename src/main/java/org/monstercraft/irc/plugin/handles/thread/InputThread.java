@@ -167,7 +167,7 @@ public class InputThread extends Thread implements Runnable {
                                 MonsterIRC.getEventManager().dispatchEvent(
                                         new PluginQuitEvent(c, sender));
                                 break;
-                            } else if (subline.toLowerCase().contains("nick")) {
+                            } else if (subline.toLowerCase().contains(" nick ")) {
                                 final String sender = line.substring(1,
                                         line.indexOf("!"));
                                 final String newNick = line.substring(line
