@@ -214,15 +214,15 @@ public class InputThread extends Thread implements Runnable {
                                 }
                                 for (final String s : list) {
                                     IRCRank rank = IRCRank.USER;
-                                    if (s.contains("q")) {
+                                    if (s.startsWith("~")) {
                                         rank = IRCRank.OWNER;
-                                    } else if (s.contains("a")) {
+                                    } else if (s.contains("&")) {
                                         rank = IRCRank.ADMIN;
-                                    } else if (s.contains("o")) {
+                                    } else if (s.contains("@")) {
                                         rank = IRCRank.OP;
-                                    } else if (s.contains("h")) {
+                                    } else if (s.contains("%")) {
                                         rank = IRCRank.HALFOP;
-                                    } else if (s.contains("v")) {
+                                    } else if (s.contains("+")) {
                                         rank = IRCRank.VOICE;
                                     }
                                     if (rank.equals(IRCRank.USER)) {
