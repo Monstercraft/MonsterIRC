@@ -48,8 +48,11 @@ public class Whois extends GameCommand {
                             + client.getHighestRank().getName());
                 }
                 if (client.getHighestRank() != null) {
-                    sender.sendMessage(ChatColor.GREEN + "Hostmask: "
-                            + ChatColor.WHITE + client.getHostmask());
+                    sender.sendMessage(ChatColor.GREEN
+                            + "Hostmask: "
+                            + ChatColor.WHITE
+                            + (client.getHostmask().equalsIgnoreCase("") ? "Not found"
+                                    : client.getHostmask()));
                 }
                 return true;
             }

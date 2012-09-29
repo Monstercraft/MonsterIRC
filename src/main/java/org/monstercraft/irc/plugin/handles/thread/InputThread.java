@@ -280,12 +280,14 @@ public class InputThread extends Thread implements Runnable {
                                     .getNick())) {
                                 break;
                             }
-                            final String host = line.substring(
-                                    line.indexOf('!'), line.indexOf(" J") - 1);
+                            final String longName = line.substring(
+                                    line.indexOf('!'), line.indexOf(" J"));
+                            final String hostmask = longName.substring(longName
+                                    .indexOf('@') + 1);
                             plugin.getServer().getPluginManager()
                                     .callEvent(new IRCJoinEvent(c, name));
                             MonsterIRC.getEventManager().dispatchEvent(
-                                    new PluginJoinEvent(c, name, host));
+                                    new PluginJoinEvent(c, name, hostmask));
                             break;
                         }
                     } catch (final Exception e) {
