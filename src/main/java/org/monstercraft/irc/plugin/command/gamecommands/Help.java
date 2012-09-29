@@ -120,6 +120,18 @@ public class Help extends GameCommand {
                     + "/irc raw" + ColorUtils.DARK_GRAY.getMinecraftColor()
                     + " (message)");
         }
+        if (MonsterIRC.getHandleManager().getPermissionsHandler()
+                .hasCommandPerms(sender, new PrivateMessage())) {
+            sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+                    + "/irc names" + ColorUtils.DARK_GRAY.getMinecraftColor()
+                    + " (channel)");
+        }
+        if (MonsterIRC.getHandleManager().getPermissionsHandler()
+                .hasCommandPerms(sender, new PrivateMessage())) {
+            sender.sendMessage(ColorUtils.GREEN.getMinecraftColor()
+                    + "/irc whois" + ColorUtils.DARK_GRAY.getMinecraftColor()
+                    + " (name)");
+        }
         sender.sendMessage(ColorUtils.YELLOW.getMinecraftColor()
                 + "For more info on a certian command type"
                 + ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
@@ -139,6 +151,8 @@ public class Help extends GameCommand {
         sender.sendMessage("irc reload - Reloads the configuration file.");
         sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
         sender.sendMessage("irc r (message) - Reply to the last pm.");
+        sender.sendMessage("irc names (channel) - List the users connected to the channel.");
+        sender.sendMessage("irc whois (name) - Get the information of an IRC user.");
         sender.sendMessage("For more info on a certian command type"
                 + ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
     }

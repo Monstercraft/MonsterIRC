@@ -369,14 +369,14 @@ public class IRCHandler {
                 if ((client = IRC.getChannel(channel).getUser(nick)) != null) {
                     if (client.getHostmask() != null) {
                         if (!client.getHostmask().equalsIgnoreCase("")) {
-                            kick(nick, channel, "Banned from ingame.");
+                            kick(nick, channel, "Bye.");
                             write("MODE " + channel + " +b "
                                     + client.getHostmask());
                             return;
                         }
                     }
                 }
-                kick(nick, channel, "Banned from ingame.");
+                kick(nick, channel, "Bye.");
                 write("MODE " + channel + " +b " + nick);
             } catch (final IOException e) {
                 IRC.debug(e);
