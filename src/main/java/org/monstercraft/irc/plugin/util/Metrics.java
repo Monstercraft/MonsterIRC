@@ -1,5 +1,3 @@
-package org.monstercraft.irc.plugin.util;
-
 /*
  * Copyright 2011 Tyler Blair. All rights reserved.
  * 
@@ -18,6 +16,8 @@ package org.monstercraft.irc.plugin.util;
  * The views and conclusions contained in the software and documentation are those of the authors and contributors and should not be interpreted as representing official policies, either expressed or
  * implied, of anybody else.
  */
+
+package org.monstercraft.irc.plugin.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -72,11 +72,6 @@ public class Metrics {
      * The url used to report a server's status
      */
     private static final String REPORT_URL = "/report/%s";
-
-    /**
-     * The file where guid and opt out is stored in
-     */
-    private static final String CONFIG_FILE = "plugins/PluginMetrics/config.yml";
 
     /**
      * The separator to use for custom data. This MUST NOT change unless you are hosting your own version of metrics and want to change it.
@@ -137,7 +132,7 @@ public class Metrics {
         this.plugin = plugin;
 
         // load the config
-        configurationFile = new File(Metrics.CONFIG_FILE);
+        configurationFile = getConfigFile();
         configuration = YamlConfiguration.loadConfiguration(configurationFile);
 
         // add some defaults
@@ -159,6 +154,7 @@ public class Metrics {
      * Construct and create a Graph that can be used to separate specific plotters to their own graphs on the metrics website. Plotters can be added to the graph object returned.
      * 
      * @param name
+     *            The name of the graph
      * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
      */
     public Graph createGraph(final String name) {
@@ -177,9 +173,24 @@ public class Metrics {
     }
 
     /**
+     * Add a Graph object to Metrics that represents data for the plugin that should be sent to the backend
+     * 
+     * @param graph
+     *            The name of the graph
+     */
+    public void addGraph(final Graph graph) {
+        if (graph == null) {
+            throw new IllegalArgumentException("Graph cannot be null");
+        }
+
+        graphs.add(graph);
+    }
+
+    /**
      * Adds a custom data plotter to the default graph
      * 
      * @param plotter
+     *            The plotter to use to plot custom data
      */
     public void addCustomData(final Plotter plotter) {
         if (plotter == null) {
@@ -220,28 +231,26 @@ public class Metrics {
                         @Override
                         public void run() {
                             try {
-                                // This has to be synchronized or it can collide
-                                // with the disable method.
+                                // This has to be synchronized or it can collide with the disable method.
                                 synchronized (optOutLock) {
-                                    // Disable Task, if it is running and the
-                                    // server owner decided to opt-out
+                                    // Disable Task, if it is running and the server owner decided to opt-out
                                     if (isOptOut() && taskId > 0) {
                                         plugin.getServer().getScheduler()
                                                 .cancelTask(taskId);
                                         taskId = -1;
+                                        // Tell all plotters to stop gathering information.
+                                        for (final Graph graph : graphs) {
+                                            graph.onOptOut();
+                                        }
                                     }
                                 }
 
-                                // We use the inverse of firstPost because if it
-                                // is the first time we are posting,
-                                // it is not a interval ping, so it evaluates to
-                                // FALSE
-                                // Each time thereafter it will evaluate to
-                                // TRUE, i.e PING!
+                                // We use the inverse of firstPost because if it is the first time we are posting,
+                                // it is not a interval ping, so it evaluates to FALSE
+                                // Each time thereafter it will evaluate to TRUE, i.e PING!
                                 postPlugin(!firstPost);
 
-                                // After the first post we set firstPost to
-                                // false
+                                // After the first post we set firstPost to false
                                 // Each post thereafter will be a ping
                                 firstPost = false;
                             } catch (final IOException e) {
@@ -258,13 +267,13 @@ public class Metrics {
     /**
      * Has the server owner denied plugin metrics?
      * 
-     * @return
+     * @return true if metrics should be opted out of it
      */
     public boolean isOptOut() {
         synchronized (optOutLock) {
             try {
                 // Reload the metrics file
-                configuration.load(Metrics.CONFIG_FILE);
+                configuration.load(getConfigFile());
             } catch (final IOException ex) {
                 Bukkit.getLogger().log(Level.INFO,
                         "[Metrics] " + ex.getMessage());
@@ -284,11 +293,9 @@ public class Metrics {
      * @throws IOException
      */
     public void enable() throws IOException {
-        // This has to be synchronized or it can collide with the check in the
-        // task.
+        // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
-            // Check if the server owner has already set opt-out, if not, set
-            // it.
+            // Check if the server owner has already set opt-out, if not, set it.
             if (isOptOut()) {
                 configuration.set("opt-out", false);
                 configuration.save(configurationFile);
@@ -307,11 +314,9 @@ public class Metrics {
      * @throws IOException
      */
     public void disable() throws IOException {
-        // This has to be synchronized or it can collide with the check in the
-        // task.
+        // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
-            // Check if the server owner has already set opt-out, if not, set
-            // it.
+            // Check if the server owner has already set opt-out, if not, set it.
             if (!isOptOut()) {
                 configuration.set("opt-out", true);
                 configuration.save(configurationFile);
@@ -326,11 +331,27 @@ public class Metrics {
     }
 
     /**
+     * Gets the File object of the config file that should be used to store data such as the GUID and opt-out status
+     * 
+     * @return the File object for the config file
+     */
+    public File getConfigFile() {
+        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
+        // is to abuse the plugin object we already have
+        // plugin.getDataFolder() => base/plugins/PluginA/
+        // pluginsFolder => base/plugins/
+        // The base is not necessarily relative to the startup directory.
+        final File pluginsFolder = plugin.getDataFolder().getParentFile();
+
+        // return => base/plugins/PluginMetrics/config.yml
+        return new File(new File(pluginsFolder, "PluginMetrics"), "config.yml");
+    }
+
+    /**
      * Generic method that posts a plugin to the metrics website
      */
     private void postPlugin(final boolean isPing) throws IOException {
-        // The plugin's description file containg all of the plugin data such as
-        // name, version, author, etc
+        // The plugin's description file containg all of the plugin data such as name, version, author, etc
         final PluginDescriptionFile description = plugin.getDescription();
 
         // Construct the post data
@@ -349,8 +370,7 @@ public class Metrics {
             Metrics.encodeDataPair(data, "ping", "true");
         }
 
-        // Acquire a lock on the graphs, which lets us make the assumption we
-        // also lock everything
+        // Acquire a lock on the graphs, which lets us make the assumption we also lock everything
         // inside of the graph (e.g plotters)
         synchronized (graphs) {
             final Iterator<Graph> iter = graphs.iterator();
@@ -360,17 +380,14 @@ public class Metrics {
 
                 for (final Plotter plotter : graph.getPlotters()) {
                     // The key name to send to the metrics server
-                    // The format is C-GRAPHNAME-PLOTTERNAME where separator -
-                    // is defined at the top
-                    // Legacy (R4) submitters use the format Custom%s, or
-                    // CustomPLOTTERNAME
+                    // The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
+                    // Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
                     final String key = String.format("C%s%s%s%s",
                             Metrics.CUSTOM_DATA_SEPARATOR, graph.getName(),
                             Metrics.CUSTOM_DATA_SEPARATOR,
                             plotter.getColumnName());
 
-                    // The value to send, which for the foreseeable future is
-                    // just the string
+                    // The value to send, which for the foreseeable future is just the string
                     // value of plotter.getValue()
                     final String value = Integer.toString(plotter.getValue());
 
@@ -436,7 +453,7 @@ public class Metrics {
     /**
      * Check if mineshafter is present. If it is, we need to bypass it to send POST requests
      * 
-     * @return
+     * @return true if mineshafter is installed on the server
      */
     private boolean isMineshafterPresent() {
         try {
@@ -458,9 +475,11 @@ public class Metrics {
      * </code>
      * 
      * @param buffer
+     *            the stringbuilder to append the data pair onto
      * @param key
+     *            the key value
      * @param value
-     * @return
+     *            the value
      */
     private static void encodeDataPair(final StringBuilder buffer,
             final String key, final String value)
@@ -473,7 +492,8 @@ public class Metrics {
      * Encode text as UTF-8
      * 
      * @param text
-     * @return
+     *            the text to encode
+     * @return the encoded text, as UTF-8
      */
     private static String encode(final String text)
             throws UnsupportedEncodingException {
@@ -502,7 +522,7 @@ public class Metrics {
         /**
          * Gets the graph's name
          * 
-         * @return
+         * @return the Graph's name
          */
         public String getName() {
             return name;
@@ -512,6 +532,7 @@ public class Metrics {
          * Add a plotter to the graph, which will be used to plot entries
          * 
          * @param plotter
+         *            the plotter to add to the graph
          */
         public void addPlotter(final Plotter plotter) {
             plotters.add(plotter);
@@ -521,6 +542,7 @@ public class Metrics {
          * Remove a plotter from the graph
          * 
          * @param plotter
+         *            the plotter to remove from the graph
          */
         public void removePlotter(final Plotter plotter) {
             plotters.remove(plotter);
@@ -529,7 +551,7 @@ public class Metrics {
         /**
          * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
          * 
-         * @return
+         * @return an unmodifiable {@link Set} of the plotter objects
          */
         public Set<Plotter> getPlotters() {
             return Collections.unmodifiableSet(plotters);
@@ -548,6 +570,12 @@ public class Metrics {
 
             final Graph graph = (Graph) object;
             return graph.name.equals(name);
+        }
+
+        /**
+         * Called when the server owner decides to opt-out of Metrics while the server is running.
+         */
+        protected void onOptOut() {
         }
 
     }
@@ -573,15 +601,17 @@ public class Metrics {
          * Construct a plotter with a specific plot name
          * 
          * @param name
+         *            the name of the plotter to use, which will show up on the website
          */
         public Plotter(final String name) {
             this.name = name;
         }
 
         /**
-         * Get the current value for the plotted point
+         * Get the current value for the plotted point. Since this function defers to an external function it may or may not return immediately thus cannot be guaranteed to be thread friendly or safe.
+         * This function can be called from any thread so care should be taken when accessing resources that need to be synchronized.
          * 
-         * @return
+         * @return the current value for the point to be plotted.
          */
         public abstract int getValue();
 
@@ -602,7 +632,7 @@ public class Metrics {
 
         @Override
         public int hashCode() {
-            return getColumnName().hashCode() + getValue();
+            return getColumnName().hashCode();
         }
 
         @Override
