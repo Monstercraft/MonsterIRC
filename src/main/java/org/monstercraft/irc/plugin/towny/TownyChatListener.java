@@ -109,6 +109,8 @@ public class TownyChatListener implements Listener {
                             c.getTownyChannel().getMessageColour())
                     .replace("{heroChatTag}",
                             c.getTownyChannel().getChannelTag())
+                    .replace("{heroChatName}",
+                            "")
                     .replace("{prefix}",
                             StringUtils.getPrefix(player.getName())
 

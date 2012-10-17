@@ -251,6 +251,9 @@ public class IRC {
                                                                     "{herochatTag}",
                                                                     "")
                                                             .replace(
+                                                                    "{herochatName}",
+                                                                    "")
+                                                            .replace(
                                                                     "{message}",
                                                                     message)
                                                             .replace(
@@ -303,6 +306,7 @@ public class IRC {
                                                                 + message)
                                                 .replace("{HCchannelColor}", "")
                                                 .replace("{herochatTag}", "")
+                                                .replace("{herochatName}", "")
                                                 .replace("{channel}",
                                                         c.getChannel())
                                                 .replace(
@@ -346,6 +350,9 @@ public class IRC {
                                                 "{herochatTag}",
                                                 c.getTownyChannel()
                                                         .getChannelTag())
+                                        .replace(
+                                                "{herochatName}",
+                                                "")
                                         .replace(
                                                 "{HCchannelColor}",
                                                 c.getTownyChannel()
