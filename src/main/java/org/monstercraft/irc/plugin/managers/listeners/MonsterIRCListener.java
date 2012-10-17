@@ -178,6 +178,7 @@ public class MonsterIRCListener implements Listener {
             result2.append(Variables.ircformat
                     .replace("{HCchannelColor}", "&f")
                     .replace("{heroChatTag}", "[Console]")
+                    .replace("{heroChatName}", "[Console]")
                     .replace("{prefix}", StringUtils.getPrefix("Console"))
                     .replace("{name}", StringUtils.getDisplayName("Console"))
                     .replace("{suffix}", StringUtils.getSuffix("Console"))
@@ -269,6 +270,19 @@ public class MonsterIRCListener implements Listener {
                                             + "]"
                                             + ColorUtils.NORMAL.getIRCColor()
                                             + "")
+                            .replace(
+                                    "{heroChatName}",
+                                    Herochat.getChatterManager()
+                                            .getChatter(player)
+                                            .getActiveChannel().getColor()
+                                            + "["
+                                            + Herochat.getChatterManager()
+                                            .getChatter(player)
+                                            .getActiveChannel()
+                                            .getName()
+                                            + "]"
+                                            + ColorUtils.NORMAL.getIRCColor()
+                                            + "")
                             .replace("{prefix}",
                                     StringUtils.getPrefix(player.getName()))
                             .replace(
@@ -322,6 +336,7 @@ public class MonsterIRCListener implements Listener {
             result.append(Variables.ircformat
                     .replace("{HCchannelColor}", "&f")
                     .replace("{heroChatTag}", "")
+                    .replace("{heroChatName}", "")
                     .replace("{prefix}",
                             StringUtils.getPrefix(player.getName()))
                     .replace("{name}",
