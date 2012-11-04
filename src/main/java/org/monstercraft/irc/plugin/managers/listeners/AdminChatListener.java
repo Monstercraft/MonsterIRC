@@ -27,6 +27,8 @@ public class AdminChatListener implements Listener {
 
                         )
                         .replace("{name}", StringUtils.getDisplayName(player))
+                        .replace("{displayName}",
+                                StringUtils.getDisplayName(player))
                         .replace("{suffix}", StringUtils.getSuffix(player))
 
                         .replace("{groupPrefix}",

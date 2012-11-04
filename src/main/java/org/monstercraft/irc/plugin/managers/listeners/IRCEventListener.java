@@ -87,6 +87,11 @@ public class IRCEventListener implements IRCListener {
             }
         }
         final IRCClient client = channel.getUser(user);
+        if (client == null || channel == null) {
+            IRC.log("There was an error setting " + user + "'s mode in "
+                    + channel.getChannel());
+            return;
+        }
         if (add.contains("+")) {
             if (add.contains("q")) {
                 client.addRank(IRCRank.OWNER);

@@ -240,6 +240,10 @@ public class IRC {
                                                                     StringUtils
                                                                             .getDisplayName(name))
                                                             .replace(
+                                                                    "{displayName}",
+                                                                    StringUtils
+                                                                            .getDisplayName(name))
+                                                            .replace(
                                                                     "{HCchannelColor}",
                                                                     c.getHeroChatChannel()
                                                                             .getColor()
@@ -300,6 +304,10 @@ public class IRC {
                                                         StringUtils
                                                                 .getDisplayName(name))
                                                 .replace(
+                                                        "{displayName}",
+                                                        StringUtils
+                                                                .getDisplayName(name))
+                                                .replace(
                                                         "{message}",
                                                         ColorUtils.WHITE
                                                                 .getMinecraftColor()
@@ -347,12 +355,14 @@ public class IRC {
                                                 StringUtils
                                                         .getDisplayName(name))
                                         .replace(
+                                                "{displayName}",
+                                                StringUtils
+                                                        .getDisplayName(name))
+                                        .replace(
                                                 "{herochatTag}",
                                                 c.getTownyChannel()
                                                         .getChannelTag())
-                                        .replace(
-                                                "{herochatName}",
-                                                "")
+                                        .replace("{herochatName}", "")
                                         .replace(
                                                 "{HCchannelColor}",
                                                 c.getTownyChannel()

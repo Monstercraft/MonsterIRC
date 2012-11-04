@@ -181,6 +181,8 @@ public class MonsterIRCListener implements Listener {
                     .replace("{heroChatName}", "[Console]")
                     .replace("{prefix}", StringUtils.getPrefix("Console"))
                     .replace("{name}", StringUtils.getDisplayName("Console"))
+                    .replace("{displayName}",
+                            StringUtils.getDisplayName("Console"))
                     .replace("{suffix}", StringUtils.getSuffix("Console"))
                     .replace("{groupPrefix}",
                             StringUtils.getGroupPrefix("Console"))
@@ -210,6 +212,9 @@ public class MonsterIRCListener implements Listener {
                             )
                             .replace(
                                     "{name}",
+                                    StringUtils.getDisplayName(player.getName()))
+                            .replace(
+                                    "{displayName}",
                                     StringUtils.getDisplayName(player
                                             .getDisplayName()))
                             .replace("{suffix}",
@@ -277,9 +282,9 @@ public class MonsterIRCListener implements Listener {
                                             .getActiveChannel().getColor()
                                             + "["
                                             + Herochat.getChatterManager()
-                                            .getChatter(player)
-                                            .getActiveChannel()
-                                            .getName()
+                                                    .getChatter(player)
+                                                    .getActiveChannel()
+                                                    .getName()
                                             + "]"
                                             + ColorUtils.NORMAL.getIRCColor()
                                             + "")
@@ -287,6 +292,9 @@ public class MonsterIRCListener implements Listener {
                                     StringUtils.getPrefix(player.getName()))
                             .replace(
                                     "{name}",
+                                    StringUtils.getDisplayName(player.getName()))
+                            .replace(
+                                    "{displayName}",
                                     StringUtils.getDisplayName(player
                                             .getDisplayName()))
                             .replace("{suffix}",
@@ -340,6 +348,8 @@ public class MonsterIRCListener implements Listener {
                     .replace("{prefix}",
                             StringUtils.getPrefix(player.getName()))
                     .replace("{name}",
+                            StringUtils.getDisplayName(player.getName()))
+                    .replace("{displayName}",
                             StringUtils.getDisplayName(player.getDisplayName()))
                     .replace("{suffix}",
                             StringUtils.getSuffix(player.getName()))

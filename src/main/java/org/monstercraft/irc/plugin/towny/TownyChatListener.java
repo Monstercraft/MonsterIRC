@@ -109,13 +109,14 @@ public class TownyChatListener implements Listener {
                             c.getTownyChannel().getMessageColour())
                     .replace("{heroChatTag}",
                             c.getTownyChannel().getChannelTag())
-                    .replace("{heroChatName}",
-                            "")
+                    .replace("{heroChatName}", "")
                     .replace("{prefix}",
                             StringUtils.getPrefix(player.getName())
 
                     )
                     .replace("{name}",
+                            StringUtils.getDisplayName(player.getName()))
+                    .replace("{displayName}",
                             StringUtils.getDisplayName(player.getDisplayName()))
                     .replace("{suffix}",
                             StringUtils.getSuffix(player.getName()))
