@@ -22,6 +22,7 @@ public class AdminChatListener implements Listener {
                 result.append(Variables.ircformat
                         .replace("{HCchannelColor}", "")
                         .replace("{heroChatTag}", "")
+                        .replace("{heroChatName}", "")
                         .replace("{prefix}", StringUtils.getPrefix(player)
 
                         )
