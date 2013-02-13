@@ -97,10 +97,10 @@ public class TownyChatListener implements Listener {
             final String message) {
         if (c.getChatType() == ChatType.TOWNYCHAT) {
             if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-                if (Users.getProfile(player.getName()).getAdminChatMode()) {
+                if (Users.getPlayer(player.getName()).getAdminChatMode()) {
                     return;
                 }
-                if (Users.getProfile(player.getName()).getPartyChatMode()) {
+                if (Users.getPlayer(player.getName()).getPartyChatMode()) {
                     return;
                 }
             }

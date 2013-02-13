@@ -216,7 +216,7 @@ public class IRC {
                     for (final Player p : IRC.getIRCPlugin().getServer()
                             .getOnlinePlayers()) {
                         if (p.isOp()
-                                || Users.getProfile(p.getName())
+                                || Users.getPlayer(p.getName())
                                         .getAdminChatMode()) {
                             p.sendMessage(ColorUtils.formatIRCtoGame(format,
                                     message));
