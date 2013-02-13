@@ -1,5 +1,7 @@
 package org.monstercraft.irc.plugin.command.irccommand;
 
+import java.util.Vector;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.monstercraft.irc.MonsterIRC;
@@ -21,22 +23,40 @@ public class List extends IRCCommand {
     @Override
     public boolean execute(final String sender, final String message,
             final IRCChannel channel) {
-        final Player[] players = Bukkit.getServer().getOnlinePlayers();
-        final StringBuilder sb = new StringBuilder();
-        sb.append("Players currently online" + "(" + players.length + "/"
-                + Bukkit.getServer().getMaxPlayers() + "): ");
-        for (int i = 0; i < players.length; i++) {
-            if (i == players.length - 1) {
-                sb.append(players[i].getName());
-            } else {
-                sb.append(players[i].getName() + ", ");
-            }
-        }
-        if (IRC.isVoicePlus(channel, sender)) {
-            IRC.sendMessageToChannel(channel, sb.toString());
-        } else {
-            IRC.sendNotice(sender, sb.toString());
-        }
-        return true;
+    	final Player[] players = Bukkit.getServer().getOnlinePlayers();
+		Vector<String> messages = new Vector<String>();
+		StringBuilder sb = new StringBuilder();
+		int last = players.length - 1;
+		int max = 424;
+
+		sb.append("Players currently online");
+		sb.append("(");
+		sb.append(players.length);
+		sb.append("/");
+		sb.append(Bukkit.getServer().getMaxPlayers());
+		sb.append("): ");
+
+		for (Player player : players) {
+			if (player.getName().length() + sb.length() <= max) {
+				sb.append(player.getName());
+				if (!player.equals(players[last])) {
+					sb.append(", ");
+				}
+			} else {
+				messages.add(sb.toString());
+				sb = new StringBuilder(max);
+				sb.append(player.getName());
+			}
+		}
+		messages.add(sb.toString());
+
+		if (IRC.isVoicePlus(channel, sender)) {//
+			for (String s : messages) {
+				IRC.sendMessageToChannel(channel, s);
+			}
+		} else {
+			IRC.sendNotice(sender, sb.toString());
+		}
+		return true;
     }
 }
