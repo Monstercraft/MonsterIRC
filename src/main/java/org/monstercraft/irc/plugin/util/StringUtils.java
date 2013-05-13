@@ -21,10 +21,8 @@ public class StringUtils {
             if (MonsterIRC.getHookManager() != null) {
                 if (MonsterIRC.getHookManager().getChatHook() != null) {
                     if (MonsterIRC.getHookManager().getChatHook().isEnabled()) {
-                        if (MonsterIRC.getHookManager().getChatHook()
-                                .getPlayerPrefix("", name) != null) {
-                            s = MonsterIRC.getHookManager().getChatHook()
-                                    .getPlayerPrefix("", name);
+                        if (MonsterIRC.getHookManager().getChatHook().getPlayerPrefix("", name) != null) {
+                            s = MonsterIRC.getHookManager().getChatHook().getPlayerPrefix("", name);
                         }
                     }
                 }

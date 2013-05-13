@@ -17,7 +17,7 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 import org.monstercraft.irc.plugin.util.StringUtils;
 import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
-import com.gmail.nossr50.util.Users;
+import com.gmail.nossr50.util.player.UserManager;
 import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.channelTypes;
@@ -97,10 +97,10 @@ public class TownyChatListener implements Listener {
             final String message) {
         if (c.getChatType() == ChatType.TOWNYCHAT) {
             if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-                if (Users.getPlayer(player.getName()).getAdminChatMode()) {
+                if (UserManager.getPlayer(player.getName()).getAdminChatMode()) {
                     return;
                 }
-                if (Users.getPlayer(player.getName()).getPartyChatMode()) {
+                if (UserManager.getPlayer(player.getName()).getPartyChatMode()) {
                     return;
                 }
             }

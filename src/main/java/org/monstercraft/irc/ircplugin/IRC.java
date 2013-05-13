@@ -17,7 +17,7 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 import org.monstercraft.irc.plugin.wrappers.IRCServer;
 import org.monstercraft.support.MonsterTickets;
 
-import com.gmail.nossr50.util.Users;
+import com.gmail.nossr50.util.player.UserManager;
 
 public class IRC {
 
@@ -216,7 +216,7 @@ public class IRC {
                     for (final Player p : IRC.getIRCPlugin().getServer()
                             .getOnlinePlayers()) {
                         if (p.isOp()
-                                || Users.getPlayer(p.getName())
+                                || UserManager.getPlayer(p.getName())
                                         .getAdminChatMode()) {
                             p.sendMessage(ColorUtils.formatIRCtoGame(format,
                                     message));
