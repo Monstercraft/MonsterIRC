@@ -59,7 +59,7 @@ public class MonsterIRCListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChat(final AsyncPlayerChatEvent event) {
         if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-            if (!Users.getPlayer(event.getPlayer().getName())
+            if (!Users.getProfile(event.getPlayer().getName())
                     .getAdminChatMode()) {
                 if (event.isCancelled()) {
                     return;
@@ -202,7 +202,7 @@ public class MonsterIRCListener implements Listener {
         final StringBuffer result = new StringBuffer();
         if (c.getChatType() == ChatType.MCMMOADMINCHAT) {
             if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-                if (Users.getPlayer(player.getName()).getAdminChatMode()) {
+                if (Users.getProfile(player.getName()).getAdminChatMode()) {
                     result.append(Variables.ircformat
                             .replace("{HCchannelColor}", "")
                             .replace("{heroChatTag}", "")
@@ -246,10 +246,10 @@ public class MonsterIRCListener implements Listener {
             }
         } else if (c.getChatType() == ChatType.HEROCHAT) {
             if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-                if (Users.getPlayer(player.getName()).getAdminChatMode()) {
+                if (Users.getProfile(player.getName()).getAdminChatMode()) {
                     return;
                 }
-                if (Users.getPlayer(player.getName()).getPartyChatMode()) {
+                if (Users.getProfile(player.getName()).getPartyChatMode()) {
                     return;
                 }
             }
@@ -334,10 +334,10 @@ public class MonsterIRCListener implements Listener {
             }
         } else if (c.getChatType() == ChatType.GLOBAL) {
             if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-                if (Users.getPlayer(player.getName()).getAdminChatMode()) {
+                if (Users.getProfile(player.getName()).getAdminChatMode()) {
                     return;
                 }
-                if (Users.getPlayer(player.getName()).getPartyChatMode()) {
+                if (Users.getProfile(player.getName()).getPartyChatMode()) {
                     return;
                 }
             }
