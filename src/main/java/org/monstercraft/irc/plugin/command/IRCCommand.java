@@ -5,15 +5,15 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**
  * This class is the Abstract IRC command.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public abstract class IRCCommand extends MonsterIRC {
 
     /**
      * Checks if the command can be executed by the certian user.
-     * 
+     *
      * @param sender
      *            The command sender.
      * @param message
@@ -27,7 +27,7 @@ public abstract class IRCCommand extends MonsterIRC {
 
     /**
      * The action to perfrom when executing the command.
-     * 
+     *
      * @param sender
      *            The command sender.
      * @param message

@@ -32,9 +32,9 @@ import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
 /**
  * This handles all of the IRC related stuff.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class IRCHandler {
 
@@ -49,7 +49,7 @@ public class IRCHandler {
 
     /**
      * Creates an instance of the IRCHandler class.
-     * 
+     *
      * @param plugin
      *            The parent plugin.
      */
@@ -58,8 +58,54 @@ public class IRCHandler {
     }
 
     /**
+     * Bans a user from the IRC channel if the bot is OP.
+     *
+     * @param Nick
+     *            The user to ban.
+     * @param channel
+     *            The channel to ban in.
+     */
+    public void ban(final String nick, final String channel) {
+        if (this.isConnected()) {
+            try {
+                IRCClient client;
+                if ((client = IRC.getChannel(channel).getUser(nick)) != null) {
+                    if (client.getHostmask() != null) {
+                        if (!client.getHostmask().equalsIgnoreCase("")) {
+                            this.kick(nick, channel, "Bye.");
+                            this.write("MODE " + channel + " +b "
+                                    + client.getHostmask());
+                            return;
+                        }
+                    }
+                }
+                this.kick(nick, channel, "Bye.");
+                this.write("MODE " + channel + " +b " + nick);
+            } catch (final IOException e) {
+                IRC.debug(e);
+            }
+        }
+    }
+
+    /**
+     * Changes the nickname of the IRC bot.
+     *
+     * @param Nick
+     *            The name to change to.
+     */
+    public void changeNick(final String Nick) {
+        if (this.isConnected()) {
+            try {
+                this.write("NICK " + Nick);
+            } catch (final IOException e) {
+                IRC.debug(e);
+            }
+        }
+    }
+
+    /**
      * Connects to an IRC server then a channel.
-     * 
+     *
      * @param server
      *            The server to connect to.
      * @return True if connected successfully; otherwise false.
@@ -69,7 +115,7 @@ public class IRCHandler {
         if (connection != null) {
             if (connection.isConnected()) {
                 IRC.log("Attempting to disconnect before re-connecting!");
-                disconnect();
+                this.disconnect();
             }
         }
         String line = null;
@@ -96,13 +142,13 @@ public class IRCHandler {
                         connection.getInputStream()));
                 IRC.log("Attempting to connect to chat.");
                 if (!server.getPassword().equalsIgnoreCase("")) {
-                    write("PASS " + server.getPassword());
+                    this.write("PASS " + server.getPassword());
                 }
-                write("NICK " + server.getNick());
-                write("USER " + server.getNick() + " 8 * :"
+                this.write("NICK " + server.getNick());
+                this.write("USER " + server.getNick() + " 8 * :"
                         + plugin.getDescription().getVersion());
                 IRC.log("Processing connection....");
-                while ((line = getReader().readLine()) != null) {
+                while ((line = this.getReader().readLine()) != null) {
                     IRC.debug(line, Variables.debug);
                     if (line.contains("004") || line.contains("376")) {
                         break;
@@ -110,28 +156,29 @@ public class IRCHandler {
                         if (!server.isIdentifing()) {
                             IRC.log("Your nickname is already in use, please switch it");
                             IRC.log("using \"nick [NAME]\" and try to connect again.");
-                            disconnect();
+                            this.disconnect();
                             return false;
                         } else {
                             IRC.log("Sending ghost command....");
-                            write("NICKSERV GHOST " + server.getNick() + " "
-                                    + server.getNickservPassword());
+                            this.write("NICKSERV GHOST " + server.getNick()
+                                    + " " + server.getNickservPassword());
 
                             continue;
                         }
                     } else if (line.toLowerCase().startsWith("ping ")) {
-                        write("PONG " + line.substring(5));
+                        this.write("PONG " + line.substring(5));
 
                         continue;
                     }
                 }
                 if (server.isIdentifing()) {
                     IRC.log("Identifying with Nickserv....");
-                    write("NICKSERV IDENTIFY " + server.getNickservPassword());
+                    this.write("NICKSERV IDENTIFY "
+                            + server.getNickservPassword());
 
                 }
                 for (final String s : server.getConnectCommands()) {
-                    write(s);
+                    this.write(s);
 
                 }
                 final IRCConnectEvent cevent = new IRCConnectEvent(server);
@@ -153,7 +200,7 @@ public class IRCHandler {
                 print.start();
             } catch (final Exception e) {
                 IRC.log("Failed to connect to IRC! Try again in about 1 minute!");
-                disconnect();
+                this.disconnect();
             }
         } else {
             IRC.log("The IRC server seems to be down or running slowly!");
@@ -161,27 +208,27 @@ public class IRCHandler {
             IRC.log("Your ping is:" + ping);
             return false;
         }
-        return isConnected();
+        return this.isConnected();
     }
 
     /**
      * Disconnects a user from the IRC server.
-     * 
+     *
      * @return True if we disconnect successfully; otherwise false.
      */
     public boolean disconnect() {
-        if (isConnected()) {
+        if (this.isConnected()) {
             if (Variables.partOnDC) {
                 for (final IRCChannel c : Variables.channels) {
-                    part(c);
+                    this.part(c);
                 }
             }
             try {
-                write("QUIT Leaving.");
+                this.write("QUIT Leaving.");
                 input.close();
                 outputQueue.clear();
                 output.close();
-                getReader().close();
+                this.getReader().close();
                 connection.close();
                 IRC.log("Successfully disconnected from IRC.");
             } catch (final Exception e) {
@@ -193,12 +240,24 @@ public class IRCHandler {
         plugin.getServer().getPluginManager().callEvent(devent);
         final PluginDisconnectEvent pde = new PluginDisconnectEvent(server);
         MonsterIRC.getEventManager().dispatchEvent(pde);
-        return !isConnected();
+        return !this.isConnected();
+    }
+
+    public Queue<String> getQueue() {
+        return outputQueue;
+    }
+
+    public BufferedReader getReader() {
+        return input;
+    }
+
+    public IRCServer getServer() {
+        return server;
     }
 
     /**
      * Checks if the user is connected to an IRC server.
-     * 
+     *
      * @return True if conencted to an IRC server; othewise false.
      */
     public boolean isConnected() {
@@ -208,7 +267,7 @@ public class IRCHandler {
 
     /**
      * Joins an IRC channel on that server.
-     * 
+     *
      * @param channel
      *            The channel to join.
      * @throws IOException
@@ -217,45 +276,82 @@ public class IRCHandler {
         if (channel.getPassword() != null && channel.getPassword() != "") {
             final String pass = "JOIN " + channel.getChannel() + " "
                     + channel.getPassword();
-            write(pass);
+            this.write(pass);
         } else {
             final String nopass = "JOIN " + channel.getChannel();
-            write(nopass);
+            this.write(nopass);
         }
-        final IRCJoinEvent jevent = new IRCJoinEvent(channel, getServer()
+        final IRCJoinEvent jevent = new IRCJoinEvent(channel, this.getServer()
                 .getNick());
         plugin.getServer().getPluginManager().callEvent(jevent);
-        final PluginJoinEvent pje = new PluginJoinEvent(channel, getServer()
-                .getNick(), "localhost");
+        final PluginJoinEvent pje = new PluginJoinEvent(channel, this
+                .getServer().getNick(), "localhost");
         MonsterIRC.getEventManager().dispatchEvent(pje);
     }
 
     /**
+     * Bans a user from the IRC channel if the bot is OP.
+     *
+     * @param Nick
+     *            The user to kick.
+     * @param channel
+     *            The channel to ban in.
+     */
+    public void kick(final String Nick, final String channel,
+            final String reason) {
+        if (this.isConnected()) {
+            try {
+                this.write("KICK " + channel + " " + Nick + " " + reason);
+            } catch (final IOException e) {
+                IRC.debug(e);
+            }
+        }
+    }
+
+    /**
+     * Bans a user from the IRC channel if the bot is OP.
+     *
+     * @param Nick
+     *            The user to kick.
+     * @param channel
+     *            The channel to ban in.
+     */
+    public void mode(final String nick, final String channel, final String mode) {
+        if (this.isConnected()) {
+            try {
+                this.write("MODE " + channel + " " + mode + " " + nick);
+            } catch (final IOException e) {
+                IRC.debug(e);
+            }
+        }
+    }
+
+    /**
      * Quits a channel in the IRC
-     * 
+     *
      * @param channel
      *            The channel to leave.
      * @throws IOException
      */
     public void part(final IRCChannel channel) {
         try {
-            if (isConnected()) {
-                write("PART " + channel.getChannel());
+            if (this.isConnected()) {
+                this.write("PART " + channel.getChannel());
 
             }
         } catch (final IOException e) {
         }
-        final IRCPartEvent levent = new IRCPartEvent(channel, getServer()
+        final IRCPartEvent levent = new IRCPartEvent(channel, this.getServer()
                 .getNick());
         plugin.getServer().getPluginManager().callEvent(levent);
-        final PluginPartEvent ppe = new PluginPartEvent(channel, getServer()
-                .getNick());
+        final PluginPartEvent ppe = new PluginPartEvent(channel, this
+                .getServer().getNick());
         MonsterIRC.getEventManager().dispatchEvent(ppe);
     }
 
     /**
      * Sends a message to the specified channel.
-     * 
+     *
      * @param Message
      *            The message to send.
      * @param channel
@@ -273,19 +369,7 @@ public class IRCHandler {
 
     /**
      * Sends a message to the specified channel.
-     * 
-     * @param Message
-     *            The message to send.
-     * @param channel
-     *            The channel to send the message to.
-     */
-    public void sendRaw(final String RawMessage) {
-        outputQueue.add(RawMessage);
-    }
-
-    /**
-     * Sends a message to the specified channel.
-     * 
+     *
      * @param Message
      *            The message to send.
      * @param channel
@@ -302,102 +386,19 @@ public class IRCHandler {
     }
 
     /**
-     * Changes the nickname of the IRC bot.
-     * 
-     * @param Nick
-     *            The name to change to.
-     */
-    public void changeNick(final String Nick) {
-        if (isConnected()) {
-            try {
-                write("NICK " + Nick);
-            } catch (final IOException e) {
-                IRC.debug(e);
-            }
-        }
-    }
-
-    /**
-     * Bans a user from the IRC channel if the bot is OP.
-     * 
-     * @param Nick
-     *            The user to kick.
+     * Sends a message to the specified channel.
+     *
+     * @param Message
+     *            The message to send.
      * @param channel
-     *            The channel to ban in.
+     *            The channel to send the message to.
      */
-    public void kick(final String Nick, final String channel,
-            final String reason) {
-        if (isConnected()) {
-            try {
-                write("KICK " + channel + " " + Nick + " " + reason);
-            } catch (final IOException e) {
-                IRC.debug(e);
-            }
-        }
-    }
-
-    /**
-     * Bans a user from the IRC channel if the bot is OP.
-     * 
-     * @param Nick
-     *            The user to kick.
-     * @param channel
-     *            The channel to ban in.
-     */
-    public void mode(final String nick, final String channel, final String mode) {
-        if (isConnected()) {
-            try {
-                write("MODE " + channel + " " + mode + " " + nick);
-            } catch (final IOException e) {
-                IRC.debug(e);
-            }
-        }
-    }
-
-    /**
-     * Bans a user from the IRC channel if the bot is OP.
-     * 
-     * @param Nick
-     *            The user to ban.
-     * @param channel
-     *            The channel to ban in.
-     */
-    public void ban(final String nick, final String channel) {
-        if (isConnected()) {
-            try {
-                IRCClient client;
-                if ((client = IRC.getChannel(channel).getUser(nick)) != null) {
-                    if (client.getHostmask() != null) {
-                        if (!client.getHostmask().equalsIgnoreCase("")) {
-                            kick(nick, channel, "Bye.");
-                            write("MODE " + channel + " +b "
-                                    + client.getHostmask());
-                            return;
-                        }
-                    }
-                }
-                kick(nick, channel, "Bye.");
-                write("MODE " + channel + " +b " + nick);
-            } catch (final IOException e) {
-                IRC.debug(e);
-            }
-        }
+    public void sendRaw(final String RawMessage) {
+        outputQueue.add(RawMessage);
     }
 
     public void write(final String string) throws IOException {
         output.write(string + "\r\n");
         output.flush();
-    }
-
-    public BufferedReader getReader() {
-        return input;
-    }
-
-    public IRCServer getServer() {
-        return server;
-    }
-
-    public Queue<String> getQueue() {
-        return outputQueue;
     }
 }

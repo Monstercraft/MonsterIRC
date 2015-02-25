@@ -9,9 +9,9 @@ import org.monstercraft.irc.plugin.handles.IRCPluginHandler;
 
 /**
  * This class contains all of the plugins handles.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class HandleManager {
 
@@ -22,7 +22,7 @@ public class HandleManager {
 
     /**
      * Creates an instance of the Handle class.
-     * 
+     *
      * @param plugin
      *            The parent plugin.
      */
@@ -36,7 +36,7 @@ public class HandleManager {
 
     /**
      * Fetches the IRCHandler.
-     * 
+     *
      * @return The IRCHandler.
      */
     public IRCHandler getIRCHandler() {
@@ -45,7 +45,7 @@ public class HandleManager {
 
     /**
      * Fetches the permission handler.
-     * 
+     *
      * @return The PermissionsHandler.
      */
     public IRCPermissionsHandler getPermissionsHandler() {
@@ -54,7 +54,7 @@ public class HandleManager {
 
     /**
      * Fetches the plugin handler.
-     * 
+     *
      * @return The PluginHandler.
      */
     public IRCPluginHandler getPluginHandler() {
@@ -62,8 +62,17 @@ public class HandleManager {
     }
 
     /**
+     * Sets the new plugin handler.
+     *
+     * @return The new plugin Handler.
+     */
+    public void setIRCPluginHandler() {
+        ph = new IRCPluginHandler(plugin);
+    }
+
+    /**
      * Sets the PermissionsHandler.
-     * 
+     *
      * @param hook
      *            The hook into Permissions.
      * @return The new permissions Handler.
@@ -73,15 +82,6 @@ public class HandleManager {
             return perms = new IRCPermissionsHandler(hook);
         }
         return perms;
-    }
-
-    /**
-     * Sets the new plugin handler.
-     * 
-     * @return The new plugin Handler.
-     */
-    public void setIRCPluginHandler() {
-        ph = new IRCPluginHandler(plugin);
     }
 
 }

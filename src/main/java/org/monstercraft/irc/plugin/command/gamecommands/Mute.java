@@ -42,8 +42,8 @@ public class Mute extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.mute";
+    public String getCommandName() {
+        return "Mute";
     }
 
     @Override
@@ -60,8 +60,8 @@ public class Mute extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Mute";
+    public String getPermission() {
+        return "irc.mute";
     }
 
 }

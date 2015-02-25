@@ -8,9 +8,9 @@ import com.palmergames.bukkit.TownyChat.Chat;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class TownyChatHook extends MonsterIRC {
 
@@ -19,13 +19,22 @@ public class TownyChatHook extends MonsterIRC {
 
     /**
      * Creates an instance of the TownyChatHook class.
-     * 
+     *
      * @param plugin
      *            The parent plugin.
      */
     public TownyChatHook(final MonsterIRC plugin) {
         this.plugin = plugin;
-        initTownyChatHook();
+        this.initTownyChatHook();
+    }
+
+    /**
+     * Fetches the hook into TownyChat.
+     *
+     * @return The hook into TownyChat.
+     */
+    public Chat getHook() {
+        return TownyChatHook;
     }
 
     private void initTownyChatHook() {
@@ -50,15 +59,6 @@ public class TownyChatHook extends MonsterIRC {
         TownyChatHook = (Chat) TownyChatPlugin;
         IRC.log("TownyChat detected; hooking: "
                 + ((Chat) TownyChatPlugin).getDescription().getFullName());
-    }
-
-    /**
-     * Fetches the hook into TownyChat.
-     * 
-     * @return The hook into TownyChat.
-     */
-    public Chat getHook() {
-        return TownyChatHook;
     }
 
 }

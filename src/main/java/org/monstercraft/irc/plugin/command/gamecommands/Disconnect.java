@@ -33,8 +33,8 @@ public class Disconnect extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.disconnect";
+    public String getCommandName() {
+        return "Diconnect";
     }
 
     @Override
@@ -50,8 +50,8 @@ public class Disconnect extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Diconnect";
+    public String getPermission() {
+        return "irc.disconnect";
     }
 
 }

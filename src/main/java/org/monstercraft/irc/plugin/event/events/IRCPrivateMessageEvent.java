@@ -5,6 +5,10 @@ import org.monstercraft.irc.plugin.event.IRCEvent;
 
 public class IRCPrivateMessageEvent extends IRCEvent {
 
+    public static HandlerList getHandlerList() {
+        return IRCPrivateMessageEvent.handlers;
+    }
+
     public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCPrivateMessageEvent";
 
     private static final HandlerList handlers = new HandlerList();
@@ -22,16 +26,8 @@ public class IRCPrivateMessageEvent extends IRCEvent {
         this.message = message;
     }
 
-    public String getTo() {
-        return to;
-    }
-
     public String getFrom() {
         return from;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     @Override
@@ -39,8 +35,12 @@ public class IRCPrivateMessageEvent extends IRCEvent {
         return IRCPrivateMessageEvent.handlers;
     }
 
-    public static HandlerList getHandlerList() {
-        return IRCPrivateMessageEvent.handlers;
+    public String getMessage() {
+        return message;
+    }
+
+    public String getTo() {
+        return to;
     }
 
 }

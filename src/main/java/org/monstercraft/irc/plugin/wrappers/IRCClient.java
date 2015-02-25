@@ -15,12 +15,10 @@ public class IRCClient {
         this.hostMask = hostMask;
     }
 
-    public String getHostmask() {
-        return hostMask;
-    }
-
-    public String getPrefix() {
-        return getHighestRank().getPrefix();
+    public void addRank(final IRCRank rank) {
+        if (!ranks.contains(rank)) {
+            ranks.add(rank);
+        }
     }
 
     public IRCRank getHighestRank() {
@@ -33,22 +31,20 @@ public class IRCClient {
         return rank;
     }
 
-    public ArrayList<IRCRank> getRanks() {
-        return ranks;
+    public String getHostmask() {
+        return hostMask;
     }
 
     public String getNick() {
         return nick;
     }
 
-    public void updateNick(final String nick) {
-        this.nick = nick;
+    public String getPrefix() {
+        return this.getHighestRank().getPrefix();
     }
 
-    public void addRank(final IRCRank rank) {
-        if (!ranks.contains(rank)) {
-            ranks.add(rank);
-        }
+    public ArrayList<IRCRank> getRanks() {
+        return ranks;
     }
 
     public void removeRank(final IRCRank rank) {
@@ -59,6 +55,10 @@ public class IRCClient {
 
     @Override
     public String toString() {
-        return getPrefix() + getNick();
+        return this.getPrefix() + this.getNick();
+    }
+
+    public void updateNick(final String nick) {
+        this.nick = nick;
     }
 }

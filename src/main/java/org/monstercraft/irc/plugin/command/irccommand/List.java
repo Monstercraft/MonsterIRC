@@ -23,40 +23,40 @@ public class List extends IRCCommand {
     @Override
     public boolean execute(final String sender, final String message,
             final IRCChannel channel) {
-    	final Player[] players = Bukkit.getServer().getOnlinePlayers();
-		Vector<String> messages = new Vector<String>();
-		StringBuilder sb = new StringBuilder();
-		int last = players.length - 1;
-		int max = 424;
+        final Player[] players = Bukkit.getServer().getOnlinePlayers();
+        final Vector<String> messages = new Vector<String>();
+        StringBuilder sb = new StringBuilder();
+        final int last = players.length - 1;
+        final int max = 424;
 
-		sb.append("Players currently online");
-		sb.append("(");
-		sb.append(players.length);
-		sb.append("/");
-		sb.append(Bukkit.getServer().getMaxPlayers());
-		sb.append("): ");
+        sb.append("Players currently online");
+        sb.append("(");
+        sb.append(players.length);
+        sb.append("/");
+        sb.append(Bukkit.getServer().getMaxPlayers());
+        sb.append("): ");
 
-		for (Player player : players) {
-			if (player.getName().length() + sb.length() <= max) {
-				sb.append(player.getName());
-				if (!player.equals(players[last])) {
-					sb.append(", ");
-				}
-			} else {
-				messages.add(sb.toString());
-				sb = new StringBuilder(max);
-				sb.append(player.getName());
-			}
-		}
-		messages.add(sb.toString());
+        for (final Player player : players) {
+            if (player.getName().length() + sb.length() <= max) {
+                sb.append(player.getName());
+                if (!player.equals(players[last])) {
+                    sb.append(", ");
+                }
+            } else {
+                messages.add(sb.toString());
+                sb = new StringBuilder(max);
+                sb.append(player.getName());
+            }
+        }
+        messages.add(sb.toString());
 
-		if (IRC.isVoicePlus(channel, sender)) {//
-			for (String s : messages) {
-				IRC.sendMessageToChannel(channel, s);
-			}
-		} else {
-			IRC.sendNotice(sender, sb.toString());
-		}
-		return true;
+        if (IRC.isVoicePlus(channel, sender)) {//
+            for (final String s : messages) {
+                IRC.sendMessageToChannel(channel, s);
+            }
+        } else {
+            IRC.sendNotice(sender, sb.toString());
+        }
+        return true;
     }
 }

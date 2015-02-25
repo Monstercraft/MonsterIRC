@@ -46,8 +46,8 @@ public class Nick extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.nick";
+    public String getCommandName() {
+        return "Nick";
     }
 
     @Override
@@ -64,8 +64,8 @@ public class Nick extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Nick";
+    public String getPermission() {
+        return "irc.nick";
     }
 
 }

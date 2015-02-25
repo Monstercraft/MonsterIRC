@@ -21,47 +21,32 @@ import com.gmail.nossr50.util.Users;
 
 public class IRC {
 
-    private final static Logger logger = Logger.getLogger(IRC.class
-            .getSimpleName());
-
-    public static Plugin getIRCPlugin() {
-        return Bukkit.getServer().getPluginManager().getPlugin("MonsterIRC");
-    }
-
     /**
-     * Fetches the logger.
-     * 
-     * @return The logger.
+     * Sends a message to the MonsterIRC channel.
+     *
+     * @param channel
+     *            The channel to send it to.
+     * @param message
+     *            The message to send.
      */
-    public static Logger getLogger() {
-        return IRC.logger;
-    }
-
-    /**
-     * Logs a message to the console.
-     * 
-     * @param msg
-     *            The message to print.
-     */
-    public static void log(final String msg) {
-        IRC.logger.log(Level.INFO, "[MonsterIRC] " + msg);
+    public static void ban(final String channel, final String nick) {
+        MonsterIRC.getHandleManager().getIRCHandler().ban(nick, channel);
     }
 
     /**
      * Logs debugging messages to the console.
-     * 
+     *
      * @param error
      *            The message to print.
      */
-    public static void debug(final String error, final boolean console) {
-        if (console) {
-            IRC.logger.log(Level.WARNING, "[MonsterIRC - Debug] " + error);
-        }
+    public static void debug(final Exception error) {
+        IRC.logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
+        error.printStackTrace();
     }
 
     /**
      * Logs debugging messages to the console.
-     * 
+     *
      * @param error
      *            The message to print.
      */
@@ -73,18 +58,207 @@ public class IRC {
 
     /**
      * Logs debugging messages to the console.
-     * 
+     *
      * @param error
      *            The message to print.
      */
-    public static void debug(final Exception error) {
-        IRC.logger.log(Level.SEVERE, "[MonsterIRC - Critical error detected!]");
-        error.printStackTrace();
+    public static void debug(final String error, final boolean console) {
+        if (console) {
+            IRC.logger.log(Level.WARNING, "[MonsterIRC - Debug] " + error);
+        }
+    }
+
+    /**
+     *
+     * @param channel
+     * @return
+     */
+    public static IRCChannel getChannel(final String channel) {
+        for (final IRCChannel c : MonsterIRC.getChannels()) {
+            if (c.getChannel().equalsIgnoreCase(channel)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public static Plugin getIRCPlugin() {
+        return Bukkit.getServer().getPluginManager().getPlugin("MonsterIRC");
+    }
+
+    /**
+     * Fetches the logger.
+     *
+     * @return The logger.
+     */
+    public static Logger getLogger() {
+        return IRC.logger;
+    }
+
+    public static IRCServer getServer() {
+        return IRC.server;
+    }
+
+    /**
+     * Fetches the list of Admins in the current IRC channel.
+     *
+     * @return True if the user is admin; otherwise false.
+     */
+    public static boolean isAdmin(final IRCChannel channel, final String sender) {
+        return channel.getUser(sender).getRanks().contains(IRCRank.ADMIN);
+    }
+
+    /**
+     * Fetches the list of Admins in the current IRC channel.
+     *
+     * @return True if the user is admin; otherwise false.
+     */
+    public static boolean isAdmin(final String channel, final String sender) {
+        final IRCChannel c = IRC.getChannel(channel);
+        if (c != null) {
+            return c.getUser(sender).getRanks().contains(IRCRank.ADMIN);
+        }
+        return false;
+    }
+
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     *
+     * @return The list of Operators.
+     */
+    public static boolean isHalfOP(final IRCChannel channel, final String sender) {
+        return channel.getUser(sender).getRanks().contains(IRCRank.HALFOP);
+    }
+
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     *
+     * @return The list of Operators.
+     */
+    public static boolean isHalfOP(final String channel, final String sender) {
+        final IRCChannel c = IRC.getChannel(channel);
+        if (c != null) {
+            return c.getUser(sender).getRanks().contains(IRCRank.HALFOP);
+        }
+        return false;
+    }
+
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     *
+     * @return The list of Operators.
+     */
+    public static boolean isOp(final IRCChannel channel, final String sender) {
+        return channel.getUser(sender).getRanks().contains(IRCRank.OP);
+    }
+
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     *
+     * @return The list of Operators.
+     */
+    public static boolean isOp(final String channel, final String sender) {
+        final IRCChannel c = IRC.getChannel(channel);
+        if (c != null) {
+            return c.getUser(sender).getRanks().contains(IRCRank.OP);
+        }
+        return false;
+    }
+
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     *
+     * @return The list of Operators.
+     */
+    public static boolean isOwner(final IRCChannel channel, final String sender) {
+        return channel.getUser(sender).getRanks().contains(IRCRank.OWNER);
+    }
+
+    /**
+     * Fetches the list of Operaters in the current IRC channel.
+     *
+     * @return The list of Operators.
+     */
+    public static boolean isOwner(final String channel, final String sender) {
+        final IRCChannel c = IRC.getChannel(channel);
+        if (c != null) {
+            return c.getUser(sender).getRanks().contains(IRCRank.OWNER);
+        }
+        return false;
+    }
+
+    /**
+     * Fetches the list of Voices in the current IRC channel.
+     *
+     * @return The list of Voices.
+     */
+    public static boolean isVoice(final IRCChannel channel, final String sender) {
+        return channel.getUser(sender).getRanks().contains(IRCRank.VOICE);
+    }
+
+    /**
+     * Fetches the list of Voices in the current IRC channel.
+     *
+     * @return The list of Voices.
+     */
+    public static boolean isVoice(final String channel, final String sender) {
+        final IRCChannel c = IRC.getChannel(channel);
+        if (c != null) {
+            return c.getUser(sender).getRanks().contains(IRCRank.VOICE);
+        }
+        return false;
+    }
+
+    public static boolean isVoicePlus(final IRCChannel channel,
+            final String sender) {
+        return channel.getUser(sender).getHighestRank().toInt() >= IRCRank.VOICE
+                .toInt();
+    }
+
+    public static boolean isVoicePlus(final String channel, final String sender) {
+        return IRC.isVoicePlus(IRC.getChannel(channel), sender);
     }
 
     /**
      * Sends a message to the MonsterIRC channel.
-     * 
+     *
+     * @param channel
+     *            The channel to send it to.
+     * @param message
+     *            The message to send.
+     */
+    public static void kick(final String channel, final String nick,
+            final String reason) {
+        MonsterIRC.getHandleManager().getIRCHandler()
+                .kick(nick, channel, reason);
+    }
+
+    /**
+     * Logs a message to the console.
+     *
+     * @param msg
+     *            The message to print.
+     */
+    public static void log(final String msg) {
+        IRC.logger.log(Level.INFO, "[MonsterIRC] " + msg);
+    }
+
+    /**
+     * Sends a message to the MonsterIRC channel.
+     *
+     * @param channel
+     *            The channel to send it to.
+     * @param message
+     *            The message to send.
+     */
+    public static void mode(final String channel, final String nick,
+            final String mode) {
+        MonsterIRC.getHandleManager().getIRCHandler().mode(nick, channel, mode);
+    }
+
+    /**
+     * Sends a message to the MonsterIRC channel.
+     *
      * @param channel
      *            The channel to send it to.
      * @param message
@@ -98,7 +272,7 @@ public class IRC {
 
     /**
      * Sends a message to the MonsterIRC channel.
-     * 
+     *
      * @param channel
      *            The channel to send it to.
      * @param message
@@ -115,81 +289,8 @@ public class IRC {
     }
 
     /**
-     * Sends a raw message to the IRC server.
-     * 
-     * @param RawMessage
-     *            The message to send.
-     */
-    public static void sendRawLine(final String Line) {
-        MonsterIRC.getHandleManager().getIRCHandler().sendRaw(Line);
-    }
-
-    /**
-     * Sends a message to the MonsterIRC channel.
-     * 
-     * @param channel
-     *            The channel to send it to.
-     * @param message
-     *            The message to send.
-     */
-    public static void kick(final String channel, final String nick,
-            final String reason) {
-        MonsterIRC.getHandleManager().getIRCHandler()
-                .kick(nick, channel, reason);
-    }
-
-    /**
-     * Sends a message to the MonsterIRC channel.
-     * 
-     * @param channel
-     *            The channel to send it to.
-     * @param message
-     *            The message to send.
-     */
-    public static void ban(final String channel, final String nick) {
-        MonsterIRC.getHandleManager().getIRCHandler().ban(nick, channel);
-    }
-
-    /**
-     * Sends a message to the MonsterIRC channel.
-     * 
-     * @param channel
-     *            The channel to send it to.
-     * @param message
-     *            The message to send.
-     */
-    public static void mode(final String channel, final String nick,
-            final String mode) {
-        MonsterIRC.getHandleManager().getIRCHandler().mode(nick, channel, mode);
-    }
-
-    /**
-     * Sends a message to the MonsterIRC channel.
-     * 
-     * @param to
-     *            The person to send the message to.
-     * @param message
-     *            The message to send.
-     */
-    public static void sendMessageToUser(final String to, final String message) {
-        MonsterIRC.getHandleManager().getIRCHandler().sendMessage(to, message);
-    }
-
-    /**
-     * Sends a message to a user on the MonsterIRC server.
-     * 
-     * @param to
-     *            The user to send it to.
-     * @param message
-     *            The message to send.
-     */
-    public static void sendNotice(final String to, final String message) {
-        MonsterIRC.getHandleManager().getIRCHandler().sendNotice(to, message);
-    }
-
-    /**
      * Handles a message accoradingly.
-     * 
+     *
      * @param c
      *            The IRCChannel to handle the message for.
      * @param name
@@ -400,7 +501,7 @@ public class IRC {
 
     /**
      * Handles a message accoradingly.
-     * 
+     *
      * @param c
      *            The IRCChannel to handle the message for.
      * @param name
@@ -418,146 +519,45 @@ public class IRC {
     }
 
     /**
-     * Fetches the list of Operaters in the current IRC channel.
-     * 
-     * @return The list of Operators.
+     * Sends a message to the MonsterIRC channel.
+     *
+     * @param to
+     *            The person to send the message to.
+     * @param message
+     *            The message to send.
      */
-    public static boolean isOwner(final IRCChannel channel, final String sender) {
-        return channel.getUser(sender).getRanks().contains(IRCRank.OWNER);
+    public static void sendMessageToUser(final String to, final String message) {
+        MonsterIRC.getHandleManager().getIRCHandler().sendMessage(to, message);
     }
 
     /**
-     * Fetches the list of Operaters in the current IRC channel.
-     * 
-     * @return The list of Operators.
+     * Sends a message to a user on the MonsterIRC server.
+     *
+     * @param to
+     *            The user to send it to.
+     * @param message
+     *            The message to send.
      */
-    public static boolean isOp(final IRCChannel channel, final String sender) {
-        return channel.getUser(sender).getRanks().contains(IRCRank.OP);
+    public static void sendNotice(final String to, final String message) {
+        MonsterIRC.getHandleManager().getIRCHandler().sendNotice(to, message);
     }
 
     /**
-     * Fetches the list of Operaters in the current IRC channel.
-     * 
-     * @return The list of Operators.
+     * Sends a raw message to the IRC server.
+     *
+     * @param RawMessage
+     *            The message to send.
      */
-    public static boolean isHalfOP(final IRCChannel channel, final String sender) {
-        return channel.getUser(sender).getRanks().contains(IRCRank.HALFOP);
+    public static void sendRawLine(final String Line) {
+        MonsterIRC.getHandleManager().getIRCHandler().sendRaw(Line);
     }
-
-    /**
-     * Fetches the list of Admins in the current IRC channel.
-     * 
-     * @return True if the user is admin; otherwise false.
-     */
-    public static boolean isAdmin(final IRCChannel channel, final String sender) {
-        return channel.getUser(sender).getRanks().contains(IRCRank.ADMIN);
-    }
-
-    /**
-     * Fetches the list of Voices in the current IRC channel.
-     * 
-     * @return The list of Voices.
-     */
-    public static boolean isVoice(final IRCChannel channel, final String sender) {
-        return channel.getUser(sender).getRanks().contains(IRCRank.VOICE);
-    }
-
-    /**
-     * Fetches the list of Operaters in the current IRC channel.
-     * 
-     * @return The list of Operators.
-     */
-    public static boolean isOwner(final String channel, final String sender) {
-        final IRCChannel c = IRC.getChannel(channel);
-        if (c != null) {
-            return c.getUser(sender).getRanks().contains(IRCRank.OWNER);
-        }
-        return false;
-    }
-
-    /**
-     * Fetches the list of Operaters in the current IRC channel.
-     * 
-     * @return The list of Operators.
-     */
-    public static boolean isOp(final String channel, final String sender) {
-        final IRCChannel c = IRC.getChannel(channel);
-        if (c != null) {
-            return c.getUser(sender).getRanks().contains(IRCRank.OP);
-        }
-        return false;
-    }
-
-    /**
-     * Fetches the list of Operaters in the current IRC channel.
-     * 
-     * @return The list of Operators.
-     */
-    public static boolean isHalfOP(final String channel, final String sender) {
-        final IRCChannel c = IRC.getChannel(channel);
-        if (c != null) {
-            return c.getUser(sender).getRanks().contains(IRCRank.HALFOP);
-        }
-        return false;
-    }
-
-    /**
-     * Fetches the list of Admins in the current IRC channel.
-     * 
-     * @return True if the user is admin; otherwise false.
-     */
-    public static boolean isAdmin(final String channel, final String sender) {
-        final IRCChannel c = IRC.getChannel(channel);
-        if (c != null) {
-            return c.getUser(sender).getRanks().contains(IRCRank.ADMIN);
-        }
-        return false;
-    }
-
-    /**
-     * Fetches the list of Voices in the current IRC channel.
-     * 
-     * @return The list of Voices.
-     */
-    public static boolean isVoice(final String channel, final String sender) {
-        final IRCChannel c = IRC.getChannel(channel);
-        if (c != null) {
-            return c.getUser(sender).getRanks().contains(IRCRank.VOICE);
-        }
-        return false;
-    }
-
-    public static boolean isVoicePlus(final String channel, final String sender) {
-        return IRC.isVoicePlus(IRC.getChannel(channel), sender);
-    }
-
-    public static boolean isVoicePlus(final IRCChannel channel,
-            final String sender) {
-        return channel.getUser(sender).getHighestRank().toInt() >= IRCRank.VOICE
-                .toInt();
-    }
-
-    /**
-     * 
-     * @param channel
-     * @return
-     */
-    public static IRCChannel getChannel(final String channel) {
-        for (final IRCChannel c : MonsterIRC.getChannels()) {
-            if (c.getChannel().equalsIgnoreCase(channel)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    private static IRCServer server;
 
     public static void setServer(final IRCServer server) {
         IRC.server = server;
     }
 
-    public static IRCServer getServer() {
-        return IRC.server;
-    }
+    private final static Logger logger = Logger.getLogger(IRC.class
+            .getSimpleName());
+
+    private static IRCServer server;
 }

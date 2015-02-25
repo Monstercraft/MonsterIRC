@@ -9,6 +9,14 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class Connect extends GameCommand {
 
+    private final Runnable connect = new Runnable() {
+        @Override
+        public void run() {
+            MonsterIRC.getHandleManager().getIRCHandler()
+                    .connect(IRC.getServer());
+        }
+    };
+
     @Override
     public boolean canExecute(final CommandSender sender, final String[] split) {
         return split[0].contains("irc") && split[1].equalsIgnoreCase("connect");
@@ -41,17 +49,9 @@ public class Connect extends GameCommand {
         return true;
     }
 
-    private final Runnable connect = new Runnable() {
-        @Override
-        public void run() {
-            MonsterIRC.getHandleManager().getIRCHandler()
-                    .connect(IRC.getServer());
-        }
-    };
-
     @Override
-    public String getPermission() {
-        return "irc.connect";
+    public String getCommandName() {
+        return "Connect";
     }
 
     @Override
@@ -67,8 +67,8 @@ public class Connect extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Connect";
+    public String getPermission() {
+        return "irc.connect";
     }
 
 }

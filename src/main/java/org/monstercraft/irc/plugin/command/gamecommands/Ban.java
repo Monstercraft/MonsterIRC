@@ -47,8 +47,8 @@ public class Ban extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.ban";
+    public String getCommandName() {
+        return "Ban";
     }
 
     @Override
@@ -66,8 +66,8 @@ public class Ban extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Ban";
+    public String getPermission() {
+        return "irc.ban";
     }
 
 }

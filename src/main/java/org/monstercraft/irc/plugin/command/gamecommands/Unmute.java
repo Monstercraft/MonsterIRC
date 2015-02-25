@@ -42,11 +42,6 @@ public class Unmute extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.unmute";
-    }
-
-    @Override
     public String getCommandName() {
         return "unmute";
     }
@@ -62,6 +57,11 @@ public class Unmute extends GameCommand {
                 ColorUtils.RED.getMinecraftColor() + "Usage: "
                         + ColorUtils.WHITE.getMinecraftColor()
                         + "/irc unmute (user)" };
+    }
+
+    @Override
+    public String getPermission() {
+        return "irc.unmute";
     }
 
 }

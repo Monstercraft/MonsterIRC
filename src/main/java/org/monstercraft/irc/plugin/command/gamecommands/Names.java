@@ -56,8 +56,8 @@ public class Names extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.names";
+    public String getCommandName() {
+        return "Names";
     }
 
     @Override
@@ -74,8 +74,8 @@ public class Names extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Names";
+    public String getPermission() {
+        return "irc.names";
     }
 
 }

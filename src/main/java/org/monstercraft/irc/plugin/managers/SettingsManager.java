@@ -19,9 +19,9 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**
  * This class contains all of the plugins settings.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class SettingsManager {
     private boolean firstRun = false;
@@ -29,64 +29,80 @@ public class SettingsManager {
 
     /**
      * Creates an instance of the Settings class.
-     * 
+     *
      * @param plugin
      *            The parent plugin.
      */
     public SettingsManager(final MonsterIRC plugin) {
         this.plugin = plugin;
-        load();
-        populateChannels();
+        this.load();
+        this.populateChannels();
     }
 
     /**
-     * Reload all of the configuration files.
+     * This methods creates the default sample channel files for the plugin.
      */
-    public void reload() {
-        load();
-        populateChannels();
+    public void createDefaultChannel() {
+        final File SAMPLE_CHANNEL = new File(Configuration.Paths.CHANNELS
+                + File.separator + "#Sample.channel");
+        final FileConfiguration config = this.getSampleChannel();
+        config.options().copyDefaults(true);
+        this.save(config, SAMPLE_CHANNEL);
+        firstRun = true;
     }
 
     /**
-     * Saves the config file.
-     * 
-     * @param config
-     *            The config to save.
-     * @param file
-     *            The file to save it to.
+     * Check if this is the first time the plugin ran.
+     *
+     * @return True if this is the first run of the plugin; otherwise false.
      */
-    private void save(final FileConfiguration config, final File file) {
-        try {
-            config.save(file);
-        } catch (final IOException e) {
-            IRC.debug(e);
-        }
+    public boolean firstRun() {
+        return firstRun;
     }
 
-    /**
-     * Saves the muted users.
-     */
-    public void saveMuted() {
-        final FileConfiguration config = plugin.getConfig();
-        final File CONFIGURATION_FILE = Configuration.Paths.SETTINGS_FILE;
-        final boolean exists = CONFIGURATION_FILE.exists();
-        if (exists) {
-            try {
-                config.load(CONFIGURATION_FILE);
-            } catch (final Exception e) {
-                IRC.debug(e);
-            }
-            config.set("IRC.MUTED", Variables.muted);
-        } else {
-            IRC.debug("No file found, can not save muted users!",
-                    Variables.debug);
-            return;
-        }
-        try {
-            config.save(CONFIGURATION_FILE);
-        } catch (final IOException e) {
-            IRC.debug(e);
-        }
+    private FileConfiguration getSampleChannel() {
+        final ArrayList<String> op = new ArrayList<String>();
+        final ArrayList<String> hop = new ArrayList<String>();
+        final ArrayList<String> admin = new ArrayList<String>();
+        final ArrayList<String> voice = new ArrayList<String>();
+        final ArrayList<String> user = new ArrayList<String>();
+        final ArrayList<String> channels = new ArrayList<String>();
+        final ArrayList<String> blockedEvents = new ArrayList<String>();
+        channels.add("Global");
+        channels.add("Overworld");
+        op.add("*");
+        hop.add("*");
+        admin.add("list");
+        voice.add("give");
+        user.add("help");
+        blockedEvents.add("game_leave");
+        blockedEvents.add("game_join");
+        blockedEvents.add("game_death");
+        blockedEvents.add("irc_leave");
+        blockedEvents.add("irc_join");
+        blockedEvents.add("irc_kick");
+        final FileConfiguration config = new YamlConfiguration();
+        config.options()
+                .header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
+        config.addDefault("CHANNEL.SETTINGS.AUTOJOIN", true);
+        config.addDefault("CHANNEL.SETTINGS.DEFAULT", true);
+        config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
+        config.addDefault("CHANNEL.SETTINGS.BLOCKED_EVENTS", blockedEvents);
+        config.addDefault("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
+        config.addDefault("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
+        config.addDefault("CHANNEL.CHATTYPE.MONSTER_TICKETS.ADMINCHAT.ENABLED",
+                false);
+        config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
+        config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
+        config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
+        config.addDefault("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
+        config.addDefault("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
+        config.addDefault("CHANNEL.COMMANDS.OP", op);
+        config.addDefault("CHANNEL.COMMANDS.HOP", hop);
+        config.addDefault("CHANNEL.COMMANDS.ADMIN", admin);
+        config.addDefault("CHANNEL.COMMANDS.VOICE", voice);
+        config.addDefault("CHANNEL.COMMANDS.USERS", user);
+        return config;
     }
 
     /**
@@ -152,7 +168,7 @@ public class SettingsManager {
                     .getStringList("IRC.ON_CONNECT_COMMANDS");
             Variables.muted = config.getStringList("IRC.MUTED");
             Configuration.fixCase(Variables.muted);
-            save(config, CONFIGURATION_FILE);
+            this.save(config, CONFIGURATION_FILE);
         } catch (final Exception e) {
             IRC.debug(e);
         }
@@ -177,10 +193,10 @@ public class SettingsManager {
                     }
                 }
             } else {
-                createDefaultChannel();
+                this.createDefaultChannel();
             }
         } else {
-            createDefaultChannel();
+            this.createDefaultChannel();
         }
         if (files.isEmpty()) {
             IRC.log("***************************************");
@@ -192,17 +208,17 @@ public class SettingsManager {
             IRC.log("***************************************");
             IRC.log("***************************************");
             IRC.log("***************************************");
-            createDefaultChannel();
+            this.createDefaultChannel();
             return;
         }
         final FileConfiguration config = new YamlConfiguration();
         for (final File f : files) {
             try {
-                final FileConfiguration defaultConfig = getSampleChannel();
+                final FileConfiguration defaultConfig = this.getSampleChannel();
                 config.setDefaults(defaultConfig.getDefaults());
                 config.options().copyDefaults(true);
                 config.load(f);
-                save(config, f);
+                this.save(config, f);
             } catch (final Exception e) {
                 IRC.debug(e);
             }
@@ -328,69 +344,53 @@ public class SettingsManager {
         }
     }
 
-    private FileConfiguration getSampleChannel() {
-        final ArrayList<String> op = new ArrayList<String>();
-        final ArrayList<String> hop = new ArrayList<String>();
-        final ArrayList<String> admin = new ArrayList<String>();
-        final ArrayList<String> voice = new ArrayList<String>();
-        final ArrayList<String> user = new ArrayList<String>();
-        final ArrayList<String> channels = new ArrayList<String>();
-        final ArrayList<String> blockedEvents = new ArrayList<String>();
-        channels.add("Global");
-        channels.add("Overworld");
-        op.add("*");
-        hop.add("*");
-        admin.add("list");
-        voice.add("give");
-        user.add("help");
-        blockedEvents.add("game_leave");
-        blockedEvents.add("game_join");
-        blockedEvents.add("game_death");
-        blockedEvents.add("irc_leave");
-        blockedEvents.add("irc_join");
-        blockedEvents.add("irc_kick");
-        final FileConfiguration config = new YamlConfiguration();
-        config.options()
-                .header("MonsterIRC's configs - Refer to \"http://dev.bukkit.org/server-mods/monsterirc/pages/channel-setup/\" for help");
-        config.addDefault("CHANNEL.SETTINGS.AUTOJOIN", true);
-        config.addDefault("CHANNEL.SETTINGS.DEFAULT", true);
-        config.addDefault("CHANNEL.SETTINGS.PASSWORD", "");
-        config.addDefault("CHANNEL.SETTINGS.BLOCKED_EVENTS", blockedEvents);
-        config.addDefault("CHANNEL.CHATTYPE.GLOBAL.ENABLED", false);
-        config.addDefault("CHANNEL.CHATTYPE.MCMMO.ADMINCHAT.ENABLED", false);
-        config.addDefault("CHANNEL.CHATTYPE.MONSTER_TICKETS.ADMINCHAT.ENABLED",
-                false);
-        config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.ENABLED", false);
-        config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.CHANNEL", "IRC");
-        config.addDefault("CHANNEL.CHATTYPE.HEROCHAT.LISTEN", channels);
-        config.addDefault("CHANNEL.CHATTYPE.TOWNY.ENABLED", false);
-        config.addDefault("CHANNEL.CHATTYPE.TOWNY.CHANNEL", "IRC");
-        config.addDefault("CHANNEL.COMMANDS.OP", op);
-        config.addDefault("CHANNEL.COMMANDS.HOP", hop);
-        config.addDefault("CHANNEL.COMMANDS.ADMIN", admin);
-        config.addDefault("CHANNEL.COMMANDS.VOICE", voice);
-        config.addDefault("CHANNEL.COMMANDS.USERS", user);
-        return config;
+    /**
+     * Reload all of the configuration files.
+     */
+    public void reload() {
+        this.load();
+        this.populateChannels();
     }
 
     /**
-     * This methods creates the default sample channel files for the plugin.
+     * Saves the config file.
+     *
+     * @param config
+     *            The config to save.
+     * @param file
+     *            The file to save it to.
      */
-    public void createDefaultChannel() {
-        final File SAMPLE_CHANNEL = new File(Configuration.Paths.CHANNELS
-                + File.separator + "#Sample.channel");
-        final FileConfiguration config = getSampleChannel();
-        config.options().copyDefaults(true);
-        save(config, SAMPLE_CHANNEL);
-        firstRun = true;
+    private void save(final FileConfiguration config, final File file) {
+        try {
+            config.save(file);
+        } catch (final IOException e) {
+            IRC.debug(e);
+        }
     }
 
     /**
-     * Check if this is the first time the plugin ran.
-     * 
-     * @return True if this is the first run of the plugin; otherwise false.
+     * Saves the muted users.
      */
-    public boolean firstRun() {
-        return firstRun;
+    public void saveMuted() {
+        final FileConfiguration config = plugin.getConfig();
+        final File CONFIGURATION_FILE = Configuration.Paths.SETTINGS_FILE;
+        final boolean exists = CONFIGURATION_FILE.exists();
+        if (exists) {
+            try {
+                config.load(CONFIGURATION_FILE);
+            } catch (final Exception e) {
+                IRC.debug(e);
+            }
+            config.set("IRC.MUTED", Variables.muted);
+        } else {
+            IRC.debug("No file found, can not save muted users!",
+                    Variables.debug);
+            return;
+        }
+        try {
+            config.save(CONFIGURATION_FILE);
+        } catch (final IOException e) {
+            IRC.debug(e);
+        }
     }
 }

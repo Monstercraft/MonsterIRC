@@ -56,8 +56,8 @@ public class Join extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.join";
+    public String getCommandName() {
+        return "Join";
     }
 
     @Override
@@ -73,8 +73,8 @@ public class Join extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Join";
+    public String getPermission() {
+        return "irc.join";
     }
 
 }

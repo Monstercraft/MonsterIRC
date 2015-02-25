@@ -8,9 +8,9 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class MultiverseHook extends MonsterIRC {
 
@@ -19,13 +19,22 @@ public class MultiverseHook extends MonsterIRC {
 
     /**
      * Creates a hook into mcmmo.
-     * 
+     *
      * @param plugin
      *            The IRC plugin.
      */
     public MultiverseHook(final MonsterIRC plugin) {
         this.plugin = plugin;
-        initmcMMOHook();
+        this.initmcMMOHook();
+    }
+
+    /**
+     * Fetches the hook into mcMMO.
+     *
+     * @return the hook into mcMMO.
+     */
+    public MultiverseCore getHook() {
+        return mcMMOHook;
     }
 
     /**
@@ -53,15 +62,6 @@ public class MultiverseHook extends MonsterIRC {
         mcMMOHook = (MultiverseCore) mcMMOPlugin;
         IRC.log("Multiverse detected; hooking: "
                 + ((MultiverseCore) mcMMOPlugin).getDescription().getFullName());
-    }
-
-    /**
-     * Fetches the hook into mcMMO.
-     * 
-     * @return the hook into mcMMO.
-     */
-    public MultiverseCore getHook() {
-        return mcMMOHook;
     }
 
 }

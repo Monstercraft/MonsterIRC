@@ -10,11 +10,6 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 public class Reply extends GameCommand {
 
     @Override
-    public String getPermission() {
-        return "irc.reply";
-    }
-
-    @Override
     public boolean canExecute(final CommandSender sender, final String[] split) {
         return split[0].contains("irc") && split[1].equalsIgnoreCase("r");
     }
@@ -80,6 +75,11 @@ public class Reply extends GameCommand {
                 ColorUtils.RED.getMinecraftColor() + "Usage: "
                         + ColorUtils.WHITE.getMinecraftColor()
                         + "/irc r (message)" };
+    }
+
+    @Override
+    public String getPermission() {
+        return "irc.reply";
     }
 
 }

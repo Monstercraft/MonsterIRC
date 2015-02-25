@@ -4,9 +4,9 @@ import java.util.List;
 
 /**
  * This class creates an IRCServer to connect to.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class IRCServer {
 
@@ -22,7 +22,7 @@ public class IRCServer {
 
     /**
      * Creates an IRCServer to connect to.
-     * 
+     *
      * @param server
      *            The IRC server to connect to.
      * @param port
@@ -56,35 +56,17 @@ public class IRCServer {
     }
 
     /**
-     * Fetches the servers address.
-     * 
-     * @return The servers address.
+     * Fetches the commands to send on connection.
+     *
+     * @return The commands to send upon connecting to the server.
      */
-    public String getServer() {
-        return server;
-    }
-
-    /**
-     * Fetches the servers address.
-     * 
-     * @return The servers password.
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Fetches the servers port.
-     * 
-     * @return The servers port.
-     */
-    public int getPort() {
-        return port;
+    public List<String> getConnectCommands() {
+        return connectCommands;
     }
 
     /**
      * Fetches the users nick name.
-     * 
+     *
      * @return The users nick name.
      */
     public String getNick() {
@@ -93,7 +75,7 @@ public class IRCServer {
 
     /**
      * Fetches the users password.
-     * 
+     *
      * @return The users password.
      */
     public String getNickservPassword() {
@@ -101,26 +83,26 @@ public class IRCServer {
     }
 
     /**
-     * Checks if the user is identifying with nickserv.
-     * 
-     * @return True if the user is identifying with nickserv; otherwise false.
+     * Fetches the servers address.
+     *
+     * @return The servers password.
      */
-    public boolean isIdentifing() {
-        return identify;
+    public String getPassword() {
+        return password;
     }
 
     /**
-     * Fetches the time to wait before retring the conenction.
-     * 
-     * @return The time in ms.
+     * Fetches the servers port.
+     *
+     * @return The servers port.
      */
-    public int getTimeout() {
-        return timeoutMs;
+    public int getPort() {
+        return port;
     }
 
     /**
      * The amount of times to test the connection.
-     * 
+     *
      * @return The amount of times to retry the connection.
      */
     public int getRetrys() {
@@ -128,12 +110,30 @@ public class IRCServer {
     }
 
     /**
-     * Fetches the commands to send on connection.
-     * 
-     * @return The commands to send upon connecting to the server.
+     * Fetches the servers address.
+     *
+     * @return The servers address.
      */
-    public List<String> getConnectCommands() {
-        return connectCommands;
+    public String getServer() {
+        return server;
+    }
+
+    /**
+     * Fetches the time to wait before retring the conenction.
+     *
+     * @return The time in ms.
+     */
+    public int getTimeout() {
+        return timeoutMs;
+    }
+
+    /**
+     * Checks if the user is identifying with nickserv.
+     *
+     * @return True if the user is identifying with nickserv; otherwise false.
+     */
+    public boolean isIdentifing() {
+        return identify;
     }
 
 }

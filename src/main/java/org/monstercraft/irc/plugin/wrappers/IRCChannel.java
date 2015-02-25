@@ -12,9 +12,9 @@ import com.dthielke.herochat.Herochat;
 
 /**
  * This class creates an IRC channel to join.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class IRCChannel {
 
@@ -35,7 +35,7 @@ public class IRCChannel {
 
     /**
      * Creates an IRCChannel to join. .
-     * 
+     *
      * @param password
      *            The password to the channel, if any;
      * @param showingameEvents
@@ -75,9 +75,29 @@ public class IRCChannel {
         ChatChannel = null;
     }
 
+    public IRCChannel(final String password, final List<String> blockedEvents,
+            final boolean autoJoin, final boolean defaultChannel,
+            final String channel, final String ChatChannel,
+            final ChatType type, final List<String> opCommands,
+            final List<String> hopCommands, final List<String> adminCommands,
+            final List<String> voiceCommands, final List<String> userCommands) {
+        this.blockedEvents = blockedEvents;
+        this.password = password;
+        this.channel = channel;
+        this.ChatChannel = ChatChannel;
+        this.type = type;
+        this.autoJoin = autoJoin;
+        this.defaultChannel = defaultChannel;
+        this.opCommands = opCommands;
+        this.hopCommands = hopCommands;
+        this.adminCommands = hopCommands;
+        this.voiceCommands = voiceCommands;
+        this.userCommands = userCommands;
+    }
+
     /**
      * Creates an IRCChannel to join.
-     * 
+     *
      * @param password
      *            The password to the channel, if any;
      * @param showingameEvents
@@ -121,111 +141,23 @@ public class IRCChannel {
         this.userCommands = userCommands;
     }
 
-    public IRCChannel(final String password, final List<String> blockedEvents,
-            final boolean autoJoin, final boolean defaultChannel,
-            final String channel, final String ChatChannel,
-            final ChatType type, final List<String> opCommands,
-            final List<String> hopCommands, final List<String> adminCommands,
-            final List<String> voiceCommands, final List<String> userCommands) {
-        this.blockedEvents = blockedEvents;
-        this.password = password;
-        this.channel = channel;
-        this.ChatChannel = ChatChannel;
-        this.type = type;
-        this.autoJoin = autoJoin;
-        this.defaultChannel = defaultChannel;
-        this.opCommands = opCommands;
-        this.hopCommands = hopCommands;
-        this.adminCommands = hopCommands;
-        this.voiceCommands = voiceCommands;
-        this.userCommands = userCommands;
-    }
-
-    /**
-     * Checks if the bot should aut-join the channel.
-     * 
-     * @return True if the bot should auto-join the channel; otherwise false.
-     */
-    public boolean isAutoJoin() {
-        return autoJoin;
-    }
-
-    /**
-     * Checks if the bot should aut-join the channel.
-     * 
-     * @return True if the bot should auto-join the channel; otherwise false.
-     */
-    public boolean isDefaultChannel() {
-        return defaultChannel;
-    }
-
-    /**
-     * Fetches the IRC channel name.
-     * 
-     * @return The IRC channel's name.
-     */
-    public String getChannel() {
-        return channel;
-    }
-
-    /**
-     * Fetches the channel's password.
-     * 
-     * @return the channel's password.
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Fetches the HeroChat channel to listen in.
-     * 
-     * @return The HeroChat channel to listen in.
-     */
-    public Channel getHeroChatChannel() {
-        return Herochat.getChannelManager().getChannel(ChatChannel);
-    }
-
-    /**
-     * Fetches the TownyChat channel to listen in.
-     * 
-     * @return The TownyChat channel to listen in.
-     */
-    public com.palmergames.bukkit.TownyChat.channels.Channel getTownyChannel() {
-        return MonsterIRC.getHookManager().getTownyChatHook()
-                .getChannelsHandler().getChannel(ChatChannel);
-    }
-
-    /**
-     * Fetches the ChatType.
-     * 
-     * @return The Chat type.
-     */
-    public ChatType getChatType() {
-        return type;
-    }
-
-    /**
-     * Fetches the commands list for channel OPS.
-     * 
-     * @return The commands list for channel OPS.
-     */
-    public List<String> getOpCommands() {
-        return opCommands;
-    }
-
-    /**
-     * Fetches the commands list for channel HOPS.
-     * 
-     * @return The commands list for channel HOPS.
-     */
-    public List<String> getHopCommands() {
-        return hopCommands;
+    public void addUser(final String nick, IRCRank rank, String hostMask) {
+        if (rank == null) {
+            rank = IRCRank.USER;
+        }
+        if (hostMask == null) {
+            hostMask = "";
+        }
+        if (this.getUser(nick) != null) {
+            return;
+        }
+        final IRCClient client = new IRCClient(rank, nick, hostMask);
+        users.add(client);
     }
 
     /**
      * Fetches the commands list for channel Admins.
-     * 
+     *
      * @return The commands list for channel Admins.
      */
     public List<String> getAdminCommands() {
@@ -233,26 +165,8 @@ public class IRCChannel {
     }
 
     /**
-     * Fetches the commands list for channel voices.
-     * 
-     * @return The commands list for channel voices.
-     */
-    public List<String> getVoiceCommands() {
-        return voiceCommands;
-    }
-
-    /**
-     * Fetches the commands list for normal users.
-     * 
-     * @return The commands list for normal users.
-     */
-    public List<String> getUserCommands() {
-        return userCommands;
-    }
-
-    /**
      * The option to show join and leave messages.
-     * 
+     *
      * @return True if the option to show ingame events is enabled; otherwise false.
      */
     public List<String> getBlockedEvents() {
@@ -260,12 +174,67 @@ public class IRCChannel {
     }
 
     /**
-     * The option to show join and leave messages.
-     * 
-     * @return True if the option to show ingame events is enabled; otherwise false.
+     * Fetches the IRC channel name.
+     *
+     * @return The IRC channel's name.
      */
-    public ArrayList<IRCClient> getUsers() {
-        return users;
+    public String getChannel() {
+        return channel;
+    }
+
+    /**
+     * Fetches the ChatType.
+     *
+     * @return The Chat type.
+     */
+    public ChatType getChatType() {
+        return type;
+    }
+
+    /**
+     * Fetches the HeroChat channel to listen in.
+     *
+     * @return The HeroChat channel to listen in.
+     */
+    public Channel getHeroChatChannel() {
+        return Herochat.getChannelManager().getChannel(ChatChannel);
+    }
+
+    /**
+     * Fetches the commands list for channel HOPS.
+     *
+     * @return The commands list for channel HOPS.
+     */
+    public List<String> getHopCommands() {
+        return hopCommands;
+    }
+
+    /**
+     * Fetches the commands list for channel OPS.
+     *
+     * @return The commands list for channel OPS.
+     */
+    public List<String> getOpCommands() {
+        return opCommands;
+    }
+
+    /**
+     * Fetches the channel's password.
+     *
+     * @return the channel's password.
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Fetches the TownyChat channel to listen in.
+     *
+     * @return The TownyChat channel to listen in.
+     */
+    public com.palmergames.bukkit.TownyChat.channels.Channel getTownyChannel() {
+        return MonsterIRC.getHookManager().getTownyChatHook()
+                .getChannelsHandler().getChannel(ChatChannel);
     }
 
     public IRCClient getUser(final String nick) {
@@ -277,22 +246,49 @@ public class IRCChannel {
         return null;
     }
 
-    public void removeUser(final String nick) {
-        users.remove(getUser(nick));
+    /**
+     * Fetches the commands list for normal users.
+     *
+     * @return The commands list for normal users.
+     */
+    public List<String> getUserCommands() {
+        return userCommands;
     }
 
-    public void addUser(final String nick, IRCRank rank, String hostMask) {
-        if (rank == null) {
-            rank = IRCRank.USER;
-        }
-        if (hostMask == null) {
-            hostMask = "";
-        }
-        if (getUser(nick) != null) {
-            return;
-        }
-        final IRCClient client = new IRCClient(rank, nick, hostMask);
-        users.add(client);
+    /**
+     * The option to show join and leave messages.
+     *
+     * @return True if the option to show ingame events is enabled; otherwise false.
+     */
+    public ArrayList<IRCClient> getUsers() {
+        return users;
+    }
+
+    /**
+     * Fetches the commands list for channel voices.
+     *
+     * @return The commands list for channel voices.
+     */
+    public List<String> getVoiceCommands() {
+        return voiceCommands;
+    }
+
+    /**
+     * Checks if the bot should aut-join the channel.
+     *
+     * @return True if the bot should auto-join the channel; otherwise false.
+     */
+    public boolean isAutoJoin() {
+        return autoJoin;
+    }
+
+    /**
+     * Checks if the bot should aut-join the channel.
+     *
+     * @return True if the bot should auto-join the channel; otherwise false.
+     */
+    public boolean isDefaultChannel() {
+        return defaultChannel;
     }
 
     public boolean isHeroChatListenChannel(final String activeChannelName) {
@@ -304,6 +300,10 @@ public class IRCChannel {
             }
         }
         return false;
+    }
+
+    public void removeUser(final String nick) {
+        users.remove(this.getUser(nick));
     }
 
 }

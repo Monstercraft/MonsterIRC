@@ -62,8 +62,8 @@ public class Whois extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.whois";
+    public String getCommandName() {
+        return "Whois";
     }
 
     @Override
@@ -80,8 +80,8 @@ public class Whois extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Whois";
+    public String getPermission() {
+        return "irc.whois";
     }
 
 }

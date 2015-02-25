@@ -6,6 +6,10 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class IRCQuitEvent extends IRCEvent {
 
+    public static HandlerList getHandlerList() {
+        return IRCQuitEvent.handlers;
+    }
+
     public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCQuitEvent";
 
     private static final HandlerList handlers = new HandlerList();
@@ -19,21 +23,17 @@ public class IRCQuitEvent extends IRCEvent {
         this.name = name;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return IRCQuitEvent.handlers;
+    }
+
     public IRCChannel getIRCChannel() {
         return channel;
     }
 
     public String getName() {
         return name;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return IRCQuitEvent.handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return IRCQuitEvent.handlers;
     }
 
 }

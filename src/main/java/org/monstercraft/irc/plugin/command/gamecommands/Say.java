@@ -77,11 +77,6 @@ public class Say extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.say";
-    }
-
-    @Override
     public String getCommandName() {
         return "Say";
     }
@@ -97,6 +92,11 @@ public class Say extends GameCommand {
                 ColorUtils.RED.getMinecraftColor() + "Usage: "
                         + ColorUtils.WHITE.getMinecraftColor()
                         + "/irc say (message)" };
+    }
+
+    @Override
+    public String getPermission() {
+        return "irc.say";
     }
 
 }

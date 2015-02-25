@@ -73,8 +73,8 @@ public class PrivateMessage extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.pm";
+    public String getCommandName() {
+        return "pm";
     }
 
     @Override
@@ -91,8 +91,8 @@ public class PrivateMessage extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "pm";
+    public String getPermission() {
+        return "irc.pm";
     }
 
 }

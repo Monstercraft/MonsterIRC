@@ -13,9 +13,9 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 
 /**
  * This class manages all of the hooks used within the plugin.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class HookManager {
 
@@ -27,7 +27,7 @@ public class HookManager {
 
     /**
      * Creates an instance of the HookManager class.
-     * 
+     *
      * @param plugin
      *            The parent plugin.
      */
@@ -40,8 +40,17 @@ public class HookManager {
     }
 
     /**
+     * Fetches the chat hook.
+     *
+     * @return The hook into chat by vault.
+     */
+    public Chat getChatHook() {
+        return chat.getHook();
+    }
+
+    /**
      * Fetches the mcMMO hook.
-     * 
+     *
      * @return The hook into mcMMO.
      */
     public MultiverseCore getMultiverseHook() {
@@ -50,7 +59,7 @@ public class HookManager {
 
     /**
      * Fetches the Permissions hook.
-     * 
+     *
      * @return The hook into Permissions.
      */
     public Permission getPermissionsHook() {
@@ -58,17 +67,8 @@ public class HookManager {
     }
 
     /**
-     * Fetches the chat hook.
-     * 
-     * @return The hook into chat by vault.
-     */
-    public Chat getChatHook() {
-        return chat.getHook();
-    }
-
-    /**
      * Fetches the PermissionsEx hook.
-     * 
+     *
      * @return The hook into PermissionsEx.
      */
     public com.palmergames.bukkit.TownyChat.Chat getTownyChatHook() {
@@ -77,16 +77,7 @@ public class HookManager {
 
     /**
      * Creates a new hook into the plugin.
-     * 
-     * @return The new PermissionsHook.
-     */
-    public void setPermissionsHook() {
-        permissions = new VaultPermissionsHook(plugin);
-    }
-
-    /**
-     * Creates a new hook into the plugin.
-     * 
+     *
      * @return The new chatHook.
      */
     public void setChatHook() {
@@ -95,7 +86,16 @@ public class HookManager {
 
     /**
      * Creates a new hook into the plugin.
-     * 
+     *
+     * @return The new PermissionsHook.
+     */
+    public void setPermissionsHook() {
+        permissions = new VaultPermissionsHook(plugin);
+    }
+
+    /**
+     * Creates a new hook into the plugin.
+     *
      * @param hook
      *            A hook into townychat.
      * @return The new TownyChatHook.

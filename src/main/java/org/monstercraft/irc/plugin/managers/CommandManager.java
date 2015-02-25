@@ -35,9 +35,9 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 /**
  * This class manages all of the plugins commands.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class CommandManager {
 
@@ -47,7 +47,7 @@ public class CommandManager {
 
     /**
      * Creates an instance
-     * 
+     *
      * @param plugin
      *            The parent plugin.
      */
@@ -79,7 +79,7 @@ public class CommandManager {
 
     /**
      * Executes a command that was ran in game or through the console.
-     * 
+     *
      * @param sender
      *            The command sender.
      * @param command
@@ -134,7 +134,7 @@ public class CommandManager {
 
     /**
      * Executes a command ran through IRC.
-     * 
+     *
      * @param sender
      *            The user that send the command.
      * @param arg

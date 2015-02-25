@@ -8,9 +8,9 @@ import org.monstercraft.irc.plugin.command.GameCommand;
 
 /**
  * This handles all of the plugins permissions.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class IRCPermissionsHandler extends MonsterIRC {
 
@@ -18,7 +18,7 @@ public class IRCPermissionsHandler extends MonsterIRC {
 
     /**
      * Creates an instance of the PermissionsHandler class.
-     * 
+     *
      * @param perms
      *            The Permissions hooks handler.
      */
@@ -28,7 +28,7 @@ public class IRCPermissionsHandler extends MonsterIRC {
 
     /**
      * Checks if the player has access to the command.
-     * 
+     *
      * @param player
      *            The player executing the command.
      * @param command

@@ -48,8 +48,8 @@ public class Leave extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.leave";
+    public String getCommandName() {
+        return "Leave";
     }
 
     @Override
@@ -66,8 +66,8 @@ public class Leave extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Leave";
+    public String getPermission() {
+        return "irc.leave";
     }
 
 }

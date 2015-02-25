@@ -21,6 +21,48 @@ public class IRCEventListener implements IRCListener {
     }
 
     @Override
+    public void onAction(final IRCChannel channel, final String sender,
+            final String message) {
+        if (!channel.getBlockedEvents().contains("irc_action")) {
+            this.onMessage(channel, channel.getChannel(), "* " + sender + " "
+                    + message);
+        }
+    }
+
+    // unused events
+    @Override
+    public void onConnect(final IRCServer server) {
+    }
+
+    @Override
+    public void onDisconnect(final IRCServer server) {
+    }
+
+    @Override
+    public void onJoin(final IRCChannel channel, final String user,
+            final String hostmask) {
+        if (!channel.getBlockedEvents().contains("irc_join")) {
+            this.onMessage(channel, channel.getChannel(), user + " has joined "
+                    + channel.getChannel());
+        }
+        try {
+            channel.addUser(user, null, hostmask);
+        } catch (final Exception e) {
+            IRC.debug(e);
+        }
+    }
+
+    @Override
+    public void onKick(final IRCChannel channel, final String kicker,
+            final String user, final String reason) {
+        if (!channel.getBlockedEvents().contains("irc_kick")) {
+            this.onMessage(channel, channel.getChannel(), user
+                    + " has been kicked from " + channel.getChannel() + " by "
+                    + kicker + "(" + reason + ")");
+        }
+    }
+
+    @Override
     public void onMessage(final IRCChannel channel, final String sender,
             final String message) {
         if (message.startsWith(Variables.commandPrefix)) {
@@ -36,41 +78,11 @@ public class IRCEventListener implements IRCListener {
     }
 
     @Override
-    public void onPrivateMessage(final String to, final String from,
-            final String message) {
-        final Player p = Bukkit.getPlayer(to);
-        if (p != null) {
-            p.sendMessage(ColorUtils.LIGHT_GRAY.getMinecraftColor()
-                    + "([IRC] from " + from + "):" + message);
-            Variables.reply.put(p, from);
-        }
-    }
-
-    @Override
-    public void onKick(final IRCChannel channel, final String kicker,
-            final String user, final String reason) {
-        if (!channel.getBlockedEvents().contains("irc_kick")) {
-            onMessage(channel, channel.getChannel(), user
-                    + " has been kicked from " + channel.getChannel() + " by "
-                    + kicker + "(" + reason + ")");
-        }
-    }
-
-    @Override
-    public void onAction(final IRCChannel channel, final String sender,
-            final String message) {
-        if (!channel.getBlockedEvents().contains("irc_action")) {
-            onMessage(channel, channel.getChannel(), "* " + sender + " "
-                    + message);
-        }
-    }
-
-    @Override
     public void onMode(final IRCChannel channel, final String sender,
             final String user, String mode) {
         if (!channel.getBlockedEvents().contains("irc_mode")) {
-            onMessage(channel, channel.getChannel(), sender + " gave mode "
-                    + mode + " to " + user + ".");
+            this.onMessage(channel, channel.getChannel(), sender
+                    + " gave mode " + mode + " to " + user + ".");
         }
         mode = mode.toLowerCase();
         String add = mode.toLowerCase();
@@ -129,54 +141,42 @@ public class IRCEventListener implements IRCListener {
     }
 
     @Override
-    public void onPart(final IRCChannel channel, final String user) {
-        if (!channel.getBlockedEvents().contains("irc_part")) {
-            onMessage(channel, channel.getChannel(), user + " has left "
-                    + channel.getChannel());
-        }
-        channel.removeUser(user);
-    }
-
-    @Override
-    public void onQuit(final IRCChannel channel, final String user) {
-        if (!channel.getBlockedEvents().contains("irc_quit")) {
-            onMessage(channel, channel.getChannel(), user + " has quit "
-                    + channel.getChannel());
-        }
-        channel.removeUser(user);
-    }
-
-    @Override
-    public void onJoin(final IRCChannel channel, final String user,
-            final String hostmask) {
-        if (!channel.getBlockedEvents().contains("irc_join")) {
-            onMessage(channel, channel.getChannel(), user + " has joined "
-                    + channel.getChannel());
-        }
-        try {
-            channel.addUser(user, null, hostmask);
-        } catch (final Exception e) {
-            IRC.debug(e);
-        }
-    }
-
-    @Override
     public void onNickChange(final IRCChannel channel, final String oldNick,
             final String newNick) {
         if (!channel.getBlockedEvents().contains("irc_nick")) {
-            onMessage(channel, channel.getChannel(), oldNick
+            this.onMessage(channel, channel.getChannel(), oldNick
                     + " is now known as " + newNick);
         }
         channel.getUser(oldNick).updateNick(newNick);
     }
 
-    // unused events
     @Override
-    public void onConnect(final IRCServer server) {
+    public void onPart(final IRCChannel channel, final String user) {
+        if (!channel.getBlockedEvents().contains("irc_part")) {
+            this.onMessage(channel, channel.getChannel(), user + " has left "
+                    + channel.getChannel());
+        }
+        channel.removeUser(user);
     }
 
     @Override
-    public void onDisconnect(final IRCServer server) {
+    public void onPrivateMessage(final String to, final String from,
+            final String message) {
+        final Player p = Bukkit.getPlayer(to);
+        if (p != null) {
+            p.sendMessage(ColorUtils.LIGHT_GRAY.getMinecraftColor()
+                    + "([IRC] from " + from + "):" + message);
+            Variables.reply.put(p, from);
+        }
+    }
+
+    @Override
+    public void onQuit(final IRCChannel channel, final String user) {
+        if (!channel.getBlockedEvents().contains("irc_quit")) {
+            this.onMessage(channel, channel.getChannel(), user + " has quit "
+                    + channel.getChannel());
+        }
+        channel.removeUser(user);
     }
 
 }

@@ -27,62 +27,111 @@ import org.monstercraft.irc.plugin.wrappers.IRCServer;
 
 /**
  * This class represents the main plugin. All actions related to the plugin are forwarded by this class
- * 
+ *
  * @author Fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class MonsterIRC extends JavaPlugin implements Runnable {
 
+    /**
+     * Fetches the irc channels.
+     *
+     * @return All of the IRCChannels
+     */
+    public static Set<IRCChannel> getChannels() {
+        return Variables.channels;
+    }
+
+    /**
+     * Fetches the event manager for IRC plugins.
+     *
+     * @return The event manager for IRC plugins.
+     */
+    public static EventManager getEventManager() {
+        return MonsterIRC.em;
+    }
+
+    /**
+     * The manager that holds the handlers.
+     *
+     * @return The handlers.
+     */
+    public static HandleManager getHandleManager() {
+        return MonsterIRC.handles;
+    }
+
+    /**
+     * The manager that creates the hooks with other plugins.
+     *
+     * @return The hooks.
+     */
+    public static HookManager getHookManager() {
+        return MonsterIRC.hooks;
+    }
+
+    /**
+     * Fetches the handler handling messages.
+     *
+     * @return The tailloghandler.
+     */
+    public static TailLogHandler getLogHandler() {
+        return MonsterIRC.tail;
+    }
+
+    /**
+     * The plugins settings.
+     *
+     * @return The settings.
+     */
+    protected static SettingsManager getSettingsManager() {
+        return MonsterIRC.settings;
+    }
+
+    /**
+     * Stops the plugin.
+     *
+     * @param plugin
+     *            The plugin to stop.
+     */
+    protected static void stop(final Plugin plugin) {
+        Bukkit.getServer().getPluginManager().disablePlugin(plugin);
+    }
+
     private static HandleManager handles = null;
     private static HookManager hooks = null;
+
     private CommandManager command = null;
+
     private static MonsterIRCListener listener = null;
 
     private static IRCServer IRCserver = null;
 
     private static SettingsManager settings = null;
+
     private final Object lock = new Object();
+
     private static EventManager em = null;
+
     private static TailLogHandler tail = null;
 
     /**
-     * Enables the plugin.
+     * The CommandManager that Assigns all the commands.
+     *
+     * @return The plugins command manager.
+     */
+    public CommandManager getCommandManager() {
+        return command;
+    }
+
+    /**
+     * Handles commands.
      */
 
     @Override
-    public void onEnable() {
-        MonsterIRC.tail = new TailLogHandler();
-        Bukkit.getLogger().addHandler(MonsterIRC.tail);
-        IRC.log("Starting plugin.");
-        new Configuration();
-        MonsterIRC.settings = new SettingsManager(this);
-        MonsterIRC.em = new EventManager();
-        MonsterIRC.em.start();
-        MonsterIRC.hooks = new HookManager(this);
-        command = new CommandManager();
-        MonsterIRC.listener = new MonsterIRCListener(this);
-        MonsterIRC.IRCserver = new IRCServer(Variables.server,
-                Variables.serverPass, Variables.port, Variables.name,
-                Variables.password, Variables.ident, 5000, Variables.tries,
-                Variables.connectCommands);
-        IRC.setServer(MonsterIRC.IRCserver);
-        MonsterIRC.handles = new HandleManager(this);
-        getServer().getPluginManager()
-                .registerEvents(MonsterIRC.listener, this);
-        if (getServer().getPluginManager().getPlugin("MonsterTickets") != null) {
-            getServer().getPluginManager().registerEvents(
-                    new AdminChatListener(), this);
-        }
-        if (getServer().getPluginManager().getPlugin("TownyChat") != null) {
-            getServer().getPluginManager().registerEvents(
-                    new TownyChatListener(MonsterIRC.getHookManager()
-                            .getTownyChatHook()), this);
-        }
-        MonsterIRC.getEventManager().addListener(new IRCEventListener(this));
-        final Thread t = new Thread(this);
-        t.setDaemon(true);
-        t.setPriority(Thread.MAX_PRIORITY);
-        t.start();
+    public boolean onCommand(final CommandSender sender, final Command command,
+            final String label, final String[] args) {
+        return this.getCommandManager().onGameCommand(sender, command, label,
+                args);
     }
 
     /**
@@ -109,86 +158,45 @@ public class MonsterIRC extends JavaPlugin implements Runnable {
     }
 
     /**
-     * Handles commands.
+     * Enables the plugin.
      */
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command,
-            final String label, final String[] args) {
-        return getCommandManager().onGameCommand(sender, command, label, args);
-    }
-
-    /**
-     * The plugins settings.
-     * 
-     * @return The settings.
-     */
-    protected static SettingsManager getSettingsManager() {
-        return MonsterIRC.settings;
-    }
-
-    /**
-     * The manager that holds the handlers.
-     * 
-     * @return The handlers.
-     */
-    public static HandleManager getHandleManager() {
-        return MonsterIRC.handles;
-    }
-
-    /**
-     * The manager that creates the hooks with other plugins.
-     * 
-     * @return The hooks.
-     */
-    public static HookManager getHookManager() {
-        return MonsterIRC.hooks;
-    }
-
-    /**
-     * The CommandManager that Assigns all the commands.
-     * 
-     * @return The plugins command manager.
-     */
-    public CommandManager getCommandManager() {
-        return command;
-    }
-
-    /**
-     * Fetches the irc channels.
-     * 
-     * @return All of the IRCChannels
-     */
-    public static Set<IRCChannel> getChannels() {
-        return Variables.channels;
-    }
-
-    /**
-     * Fetches the event manager for IRC plugins.
-     * 
-     * @return The event manager for IRC plugins.
-     */
-    public static EventManager getEventManager() {
-        return MonsterIRC.em;
-    }
-
-    /**
-     * Fetches the handler handling messages.
-     * 
-     * @return The tailloghandler.
-     */
-    public static TailLogHandler getLogHandler() {
-        return MonsterIRC.tail;
-    }
-
-    /**
-     * Stops the plugin.
-     * 
-     * @param plugin
-     *            The plugin to stop.
-     */
-    protected static void stop(final Plugin plugin) {
-        Bukkit.getServer().getPluginManager().disablePlugin(plugin);
+    public void onEnable() {
+        MonsterIRC.tail = new TailLogHandler();
+        Bukkit.getLogger().addHandler(MonsterIRC.tail);
+        IRC.log("Starting plugin.");
+        new Configuration();
+        MonsterIRC.settings = new SettingsManager(this);
+        MonsterIRC.em = new EventManager();
+        MonsterIRC.em.start();
+        MonsterIRC.hooks = new HookManager(this);
+        command = new CommandManager();
+        MonsterIRC.listener = new MonsterIRCListener(this);
+        MonsterIRC.IRCserver = new IRCServer(Variables.server,
+                Variables.serverPass, Variables.port, Variables.name,
+                Variables.password, Variables.ident, 5000, Variables.tries,
+                Variables.connectCommands);
+        IRC.setServer(MonsterIRC.IRCserver);
+        MonsterIRC.handles = new HandleManager(this);
+        this.getServer().getPluginManager()
+                .registerEvents(MonsterIRC.listener, this);
+        if (this.getServer().getPluginManager().getPlugin("MonsterTickets") != null) {
+            this.getServer().getPluginManager()
+                    .registerEvents(new AdminChatListener(), this);
+        }
+        if (this.getServer().getPluginManager().getPlugin("TownyChat") != null) {
+            this.getServer()
+                    .getPluginManager()
+                    .registerEvents(
+                            new TownyChatListener(MonsterIRC.getHookManager()
+                                    .getTownyChatHook()), this);
+        }
+        MonsterIRC.getEventManager().addListener(new IRCEventListener(this));
+        final Thread t = new Thread(this);
+        t.setDaemon(true);
+        t.setPriority(Thread.MAX_PRIORITY);
+        t.start();
     }
 
     @Override

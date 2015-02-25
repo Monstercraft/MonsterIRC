@@ -9,6 +9,17 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class ReloadConfig extends GameCommand {
 
+    private final Runnable connect = new Runnable() {
+        @Override
+        public void run() {
+            MonsterIRC.getSettingsManager().reload();
+            MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();
+            MonsterIRC.getHandleManager().setIRCPluginHandler();
+            MonsterIRC.getHandleManager().getIRCHandler()
+                    .connect(IRC.getServer());
+        }
+    };
+
     @Override
     public boolean canExecute(final CommandSender sender, final String[] split) {
         return split[0].equalsIgnoreCase("irc")
@@ -38,22 +49,6 @@ public class ReloadConfig extends GameCommand {
         return true;
     }
 
-    private final Runnable connect = new Runnable() {
-        @Override
-        public void run() {
-            MonsterIRC.getSettingsManager().reload();
-            MonsterIRC.getHandleManager().getPluginHandler().stopPlugins();
-            MonsterIRC.getHandleManager().setIRCPluginHandler();
-            MonsterIRC.getHandleManager().getIRCHandler()
-                    .connect(IRC.getServer());
-        }
-    };
-
-    @Override
-    public String getPermission() {
-        return "irc.reload";
-    }
-
     @Override
     public String getCommandName() {
         return "reload";
@@ -69,6 +64,11 @@ public class ReloadConfig extends GameCommand {
                         + "Reloads and Reconnects MonsterIRC.",
                 ColorUtils.RED.getMinecraftColor() + "Usage: "
                         + ColorUtils.WHITE.getMinecraftColor() + "/irc reload" };
+    }
+
+    @Override
+    public String getPermission() {
+        return "irc.reload";
     }
 
 }

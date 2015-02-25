@@ -5,29 +5,15 @@ import org.monstercraft.irc.MonsterIRC;
 
 /**
  * This class is the Abstract Game command.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public abstract class GameCommand extends MonsterIRC {
 
     /**
-     * The permission node to check.
-     * 
-     * @return The permission node.
-     */
-    public abstract String getPermission();
-
-    /**
-     * The commands name.
-     * 
-     * @return The commands name.
-     */
-    public abstract String getCommandName();
-
-    /**
      * Checks if the command can be executed by the certian user.
-     * 
+     *
      * @param sender
      *            The command sender.
      * @param split
@@ -39,7 +25,7 @@ public abstract class GameCommand extends MonsterIRC {
 
     /**
      * The action to perfrom when executing the command.
-     * 
+     *
      * @param sender
      *            The command sender.
      * @param split
@@ -50,9 +36,23 @@ public abstract class GameCommand extends MonsterIRC {
             final String[] split);
 
     /**
+     * The commands name.
+     *
+     * @return The commands name.
+     */
+    public abstract String getCommandName();
+
+    /**
      * The help string.
-     * 
+     *
      * @return The Help string.
      */
     public abstract String[] getHelp();
+
+    /**
+     * The permission node to check.
+     *
+     * @return The permission node.
+     */
+    public abstract String getPermission();
 }

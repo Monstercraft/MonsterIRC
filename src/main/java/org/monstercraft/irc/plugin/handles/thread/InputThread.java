@@ -38,12 +38,21 @@ public class InputThread extends Thread implements Runnable {
 
     private final MonsterIRC plugin;
 
+    private final byte ctcpControl = 1;
+
     public InputThread(final IRCHandler parent, final MonsterIRC plugin) {
         this.parent = parent;
         this.plugin = plugin;
     }
 
-    private final byte ctcpControl = 1;
+    private String getCTCPMessage(final String input) {
+        if (input.length() != 0) {
+            final String message = input.substring(input.indexOf(":", 1) + 1);
+            return message.substring(message.indexOf((char) ctcpControl) + 1,
+                    message.indexOf((char) ctcpControl, 1));
+        }
+        return null;
+    }
 
     private boolean isCTCP(final String input) {
         if (input.length() != 0) {
@@ -55,15 +64,6 @@ public class InputThread extends Thread implements Runnable {
             }
         }
         return false;
-    }
-
-    private String getCTCPMessage(final String input) {
-        if (input.length() != 0) {
-            final String message = input.substring(input.indexOf(":", 1) + 1);
-            return message.substring(message.indexOf((char) ctcpControl) + 1,
-                    message.indexOf((char) ctcpControl, 1));
-        }
-        return null;
     }
 
     @Override
@@ -84,9 +84,10 @@ public class InputThread extends Thread implements Runnable {
                     parent.write("PONG " + line.substring(5) + "\r\n");
                     IRC.debug("PONG " + line.substring(5), Variables.debug);
                     continue;
-                } else if (isCTCP(line)) {
+                } else if (this.isCTCP(line)) {
                     final String _name = line.substring(1, line.indexOf("!"));
-                    final String ctcpMsg = getCTCPMessage(line).toUpperCase();
+                    final String ctcpMsg = this.getCTCPMessage(line)
+                            .toUpperCase();
                     if (ctcpMsg.equals("VERSION")) {
                         parent.write("NOTICE "
                                 + _name
@@ -124,8 +125,8 @@ public class InputThread extends Thread implements Runnable {
                 }
                 for (final IRCChannel c : Variables.channels) {
                     try {
-                        if (isCTCP(line)) {
-                            final String ctcpMsg = getCTCPMessage(line);
+                        if (this.isCTCP(line)) {
+                            final String ctcpMsg = this.getCTCPMessage(line);
                             if (ctcpMsg.contains("ACTION")) {
                                 final String sender = line.substring(1,
                                         line.indexOf("!"));

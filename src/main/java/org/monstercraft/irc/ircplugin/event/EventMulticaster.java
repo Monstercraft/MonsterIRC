@@ -13,6 +13,27 @@ import org.monstercraft.irc.ircplugin.event.listeners.IRCListener;
 
 public class EventMulticaster implements EventListener {
 
+    public static long getDefaultMask(final EventListener el) {
+        int mask = 0;
+        if (el instanceof IRCListener) {
+            mask |= EventMulticaster.IRC_EVENT;
+        }
+
+        return mask;
+    }
+
+    /**
+     * Gets the default mask for an event.
+     */
+    public static long getDefaultMask(final EventObject e) {
+        long mask = 0;
+        if (e instanceof IRCEvent) {
+            final IRCEvent rse = (IRCEvent) e;
+            mask |= rse.getMask();
+        }
+        return mask;
+    }
+
     public static final long IRC_EVENT = 0x100;
 
     public static final long IRC_MESSAGE_EVENT = 0x200;
@@ -41,27 +62,6 @@ public class EventMulticaster implements EventListener {
 
     private final List<IRCListener> listeners = new ArrayList<IRCListener>(5);
 
-    public static long getDefaultMask(final EventListener el) {
-        int mask = 0;
-        if (el instanceof IRCListener) {
-            mask |= EventMulticaster.IRC_EVENT;
-        }
-
-        return mask;
-    }
-
-    /**
-     * Gets the default mask for an event.
-     */
-    public static long getDefaultMask(final EventObject e) {
-        long mask = 0;
-        if (e instanceof IRCEvent) {
-            final IRCEvent rse = (IRCEvent) e;
-            mask |= rse.getMask();
-        }
-        return mask;
-    }
-
     /**
      * Adds the listener to the tree with a default mask.
      */
@@ -70,7 +70,7 @@ public class EventMulticaster implements EventListener {
         if (el instanceof IRCListener) {
             mask = EventMulticaster.getDefaultMask(el);
         }
-        addListener(el, mask);
+        this.addListener(el, mask);
     }
 
     /**
@@ -95,7 +95,7 @@ public class EventMulticaster implements EventListener {
      * Fires an event to all applicable listeners.
      */
     public void fireEvent(final EventObject e) {
-        fireEvent(e, EventMulticaster.getDefaultMask(e));
+        this.fireEvent(e, EventMulticaster.getDefaultMask(e));
     }
 
     /**

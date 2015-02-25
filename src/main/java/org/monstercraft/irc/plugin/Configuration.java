@@ -33,35 +33,11 @@ import org.w3c.dom.NodeList;
 
 /**
  * This class holds all of the configuration data used within the plugin.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class Configuration {
-
-    static {
-        IRC.getLogger().setLevel(Level.ALL);
-        final ArrayList<String> dirs = new ArrayList<String>();
-        dirs.add(Paths.PLUGINS);
-        dirs.add(Paths.CHANNELS);
-        for (final String name : dirs) {
-            final File dir = new File(name);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-        }
-    }
-
-    public static boolean usingMultiverse() {
-        final Plugin p = Bukkit.getServer().getPluginManager()
-                .getPlugin("Multiverse-Core");
-        if (p != null) {
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled(p)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public static class Paths {
 
@@ -91,114 +67,6 @@ public class Configuration {
 
     public static class URLS {
         public static String UPDATE_URL = "http://dev.bukkit.org/server-mods/monsterirc/files.rss";
-    }
-
-    public static String getCurrentVerison(final Plugin plugin) {
-        return plugin.getDescription().getVersion();
-    }
-
-    /**
-     * Checks to see if the plugin is the latest version. Thanks to vault for letting me use their code.
-     * 
-     * @param currentVersion
-     *            The version that is currently running.
-     * @return The latest version
-     */
-    public static String checkForUpdates(final Plugin plugin, final String site) {
-        final String currentVersion = Configuration.getCurrentVerison(plugin);
-        try {
-            final URL url = new URL(site);
-            final Document doc = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder()
-                    .parse(url.openConnection().getInputStream());
-            doc.getDocumentElement().normalize();
-            final NodeList nodes = doc.getElementsByTagName("item");
-            final Node firstNode = nodes.item(0);
-            if (firstNode.getNodeType() == 1) {
-                final Element firstElement = (Element) firstNode;
-                final NodeList firstElementTagName = firstElement
-                        .getElementsByTagName("title");
-                final Element firstNameElement = (Element) firstElementTagName
-                        .item(0);
-                final NodeList firstNodes = firstNameElement.getChildNodes();
-                return firstNodes.item(0).getNodeValue();
-            }
-        } catch (final Exception e) {
-            IRC.debug(e);
-        }
-        return currentVersion;
-    }
-
-    /**
-     * Pings the host.
-     * 
-     * @param host
-     *            The host to ping.
-     * @param port
-     *            The port the host is on.
-     * @param timeoutMs
-     *            The time in ms for the maximum ping response.
-     * @return The time in ms the ping took.
-     */
-    public static long ping(final String host, final int port,
-            final int timeoutMs) {
-        long start = -1;
-        long end = -1;
-        long total = -1;
-        final Socket s = new Socket();
-        try {
-            final InetAddress addr = InetAddress.getByName(host.trim());
-            final InetSocketAddress sockaddr = new InetSocketAddress(addr, port);
-            start = System.currentTimeMillis();
-            s.connect(sockaddr, timeoutMs);
-            end = System.currentTimeMillis();
-        } catch (final SocketTimeoutException e) {
-            IRC.log("The socket has timed out when attempting to connect!");
-            IRC.log("Try running /irc reload in a few mins!");
-            start = -1;
-            end = -1;
-            total = -1;
-        } catch (final ConnectException e) {
-            IRC.log("Your connection was refused by the IRC server!");
-            IRC.log("Try running /irc reload in a few mins!");
-            start = -1;
-            end = -1;
-            total = -1;
-        } catch (final IOException e) {
-            IRC.debug(e);
-            start = -1;
-            end = -1;
-            total = -1;
-        } finally {
-            if (s != null) {
-                try {
-                    s.close();
-                } catch (final Exception e) {
-                    IRC.debug(e);
-                }
-            }
-            if (start != -1 && end != -1) {
-                total = end - start;
-            }
-        }
-        return total;
-    }
-
-    public static String getClassPath() {
-        String path = new File(Configuration.class.getProtectionDomain()
-                .getCodeSource().getLocation().getPath()).getAbsolutePath();
-        try {
-            path = URLDecoder.decode(path, "UTF-8");
-        } catch (final UnsupportedEncodingException ignored) {
-        }
-        return path;
-    }
-
-    public static void fixCase(final List<String> strings) {
-        final ListIterator<String> iterator = strings.listIterator();
-        while (iterator.hasNext()) {
-            iterator.set(iterator.next().toLowerCase());
-        }
     }
 
     public static class Variables {
@@ -320,5 +188,137 @@ public class Configuration {
         public static int commandsGame;
 
         public static int commandsIRC;
+    }
+
+    /**
+     * Checks to see if the plugin is the latest version. Thanks to vault for letting me use their code.
+     *
+     * @param currentVersion
+     *            The version that is currently running.
+     * @return The latest version
+     */
+    public static String checkForUpdates(final Plugin plugin, final String site) {
+        final String currentVersion = Configuration.getCurrentVerison(plugin);
+        try {
+            final URL url = new URL(site);
+            final Document doc = DocumentBuilderFactory.newInstance()
+                    .newDocumentBuilder()
+                    .parse(url.openConnection().getInputStream());
+            doc.getDocumentElement().normalize();
+            final NodeList nodes = doc.getElementsByTagName("item");
+            final Node firstNode = nodes.item(0);
+            if (firstNode.getNodeType() == 1) {
+                final Element firstElement = (Element) firstNode;
+                final NodeList firstElementTagName = firstElement
+                        .getElementsByTagName("title");
+                final Element firstNameElement = (Element) firstElementTagName
+                        .item(0);
+                final NodeList firstNodes = firstNameElement.getChildNodes();
+                return firstNodes.item(0).getNodeValue();
+            }
+        } catch (final Exception e) {
+            IRC.debug(e);
+        }
+        return currentVersion;
+    }
+
+    public static void fixCase(final List<String> strings) {
+        final ListIterator<String> iterator = strings.listIterator();
+        while (iterator.hasNext()) {
+            iterator.set(iterator.next().toLowerCase());
+        }
+    }
+
+    public static String getClassPath() {
+        String path = new File(Configuration.class.getProtectionDomain()
+                .getCodeSource().getLocation().getPath()).getAbsolutePath();
+        try {
+            path = URLDecoder.decode(path, "UTF-8");
+        } catch (final UnsupportedEncodingException ignored) {
+        }
+        return path;
+    }
+
+    public static String getCurrentVerison(final Plugin plugin) {
+        return plugin.getDescription().getVersion();
+    }
+
+    /**
+     * Pings the host.
+     *
+     * @param host
+     *            The host to ping.
+     * @param port
+     *            The port the host is on.
+     * @param timeoutMs
+     *            The time in ms for the maximum ping response.
+     * @return The time in ms the ping took.
+     */
+    public static long ping(final String host, final int port,
+            final int timeoutMs) {
+        long start = -1;
+        long end = -1;
+        long total = -1;
+        final Socket s = new Socket();
+        try {
+            final InetAddress addr = InetAddress.getByName(host.trim());
+            final InetSocketAddress sockaddr = new InetSocketAddress(addr, port);
+            start = System.currentTimeMillis();
+            s.connect(sockaddr, timeoutMs);
+            end = System.currentTimeMillis();
+        } catch (final SocketTimeoutException e) {
+            IRC.log("The socket has timed out when attempting to connect!");
+            IRC.log("Try running /irc reload in a few mins!");
+            start = -1;
+            end = -1;
+            total = -1;
+        } catch (final ConnectException e) {
+            IRC.log("Your connection was refused by the IRC server!");
+            IRC.log("Try running /irc reload in a few mins!");
+            start = -1;
+            end = -1;
+            total = -1;
+        } catch (final IOException e) {
+            IRC.debug(e);
+            start = -1;
+            end = -1;
+            total = -1;
+        } finally {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (final Exception e) {
+                    IRC.debug(e);
+                }
+            }
+            if (start != -1 && end != -1) {
+                total = end - start;
+            }
+        }
+        return total;
+    }
+
+    public static boolean usingMultiverse() {
+        final Plugin p = Bukkit.getServer().getPluginManager()
+                .getPlugin("Multiverse-Core");
+        if (p != null) {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static {
+        IRC.getLogger().setLevel(Level.ALL);
+        final ArrayList<String> dirs = new ArrayList<String>();
+        dirs.add(Paths.PLUGINS);
+        dirs.add(Paths.CHANNELS);
+        for (final String name : dirs) {
+            final File dir = new File(name);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        }
     }
 }

@@ -15,8 +15,13 @@ import org.monstercraft.irc.plugin.Configuration;
 
 public class IRCPluginHandler extends MonsterIRC {
 
+    private static File getPluginsFolder() {
+        return new File(Configuration.Paths.PLUGINS);
+    }
+
     private final HashMap<Integer, IRCPlugin> pluginsToRun = new HashMap<Integer, IRCPlugin>();
     private final HashMap<Integer, Thread> pluginThreads = new HashMap<Integer, Thread>();
+
     private final List<IRCPluginDefinition> plugins;
 
     public IRCPluginHandler(final MonsterIRC plugin) {
@@ -26,24 +31,12 @@ public class IRCPluginHandler extends MonsterIRC {
         for (final IRCPluginDefinition def : plugins) {
             try {
                 IRC.log("Loading IRC plugin " + def.name + ".");
-                runplugin(def.source.load(def));
+                this.runplugin(def.source.load(def));
             } catch (final Exception e) {
                 IRC.debug(e);
             }
         }
 
-    }
-
-    private static File getPluginsFolder() {
-        return new File(Configuration.Paths.PLUGINS);
-    }
-
-    public void runplugin(final IRCPlugin plugin) {
-        final PluginManifest prop = plugin.getClass().getAnnotation(
-                PluginManifest.class);
-        final Thread t = new Thread(plugin, "plugin-" + prop.name());
-        addpluginToPool(plugin, t);
-        t.start();
     }
 
     private void addpluginToPool(final IRCPlugin plugin, final Thread t) {
@@ -52,19 +45,12 @@ public class IRCPluginHandler extends MonsterIRC {
         pluginThreads.put(pluginThreads.size(), t);
     }
 
-    public void stopPlugins() {
-        final Thread curThread = Thread.currentThread();
-        for (int i = 0; i < pluginsToRun.size(); i++) {
-            final IRCPlugin plugin = pluginsToRun.get(i);
-            if (plugin != null && plugin.isActive()) {
-                if (pluginThreads.get(i) == curThread) {
-                    stopPlugin(i);
-                }
-            }
-        }
-        if (curThread == null) {
-            throw new ThreadDeath();
-        }
+    public void runplugin(final IRCPlugin plugin) {
+        final PluginManifest prop = plugin.getClass().getAnnotation(
+                PluginManifest.class);
+        final Thread t = new Thread(plugin, "plugin-" + prop.name());
+        this.addpluginToPool(plugin, t);
+        t.start();
     }
 
     public void stopPlugin(final int id) {
@@ -73,6 +59,21 @@ public class IRCPluginHandler extends MonsterIRC {
             plugin.deactivate(id);
             pluginsToRun.remove(id);
             pluginThreads.remove(id);
+        }
+    }
+
+    public void stopPlugins() {
+        final Thread curThread = Thread.currentThread();
+        for (int i = 0; i < pluginsToRun.size(); i++) {
+            final IRCPlugin plugin = pluginsToRun.get(i);
+            if (plugin != null && plugin.isActive()) {
+                if (pluginThreads.get(i) == curThread) {
+                    this.stopPlugin(i);
+                }
+            }
+        }
+        if (curThread == null) {
+            throw new ThreadDeath();
         }
     }
 }

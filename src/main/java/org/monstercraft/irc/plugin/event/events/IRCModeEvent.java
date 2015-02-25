@@ -6,6 +6,10 @@ import org.monstercraft.irc.plugin.wrappers.IRCChannel;
 
 public class IRCModeEvent extends IRCEvent {
 
+    public static HandlerList getHandlerList() {
+        return IRCModeEvent.handlers;
+    }
+
     public static final String CUSTOM_TYPE = "org.monstercraft.irc.event.events.IRCModeEvent";
 
     private static final HandlerList handlers = new HandlerList();
@@ -26,12 +30,13 @@ public class IRCModeEvent extends IRCEvent {
         this.mode = mode;
     }
 
-    public IRCChannel getIRCChannel() {
-        return channel;
+    @Override
+    public HandlerList getHandlers() {
+        return IRCModeEvent.handlers;
     }
 
-    public String getName() {
-        return name;
+    public IRCChannel getIRCChannel() {
+        return channel;
     }
 
     public String getMessage() {
@@ -42,13 +47,8 @@ public class IRCModeEvent extends IRCEvent {
         return mode;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return IRCModeEvent.handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return IRCModeEvent.handlers;
+    public String getName() {
+        return name;
     }
 
 }

@@ -16,11 +16,6 @@ public class TailLogHandler extends Handler {
     public void flush() {
     }
 
-    @Override
-    public void publish(final LogRecord r) {
-        lastRecords.add(r.getMessage());
-    }
-
     public ArrayList<String> getLastRecords(final int size) {
         final ArrayList<String> temp = new ArrayList<String>(size);
         int iterations = lastRecords.size() - size;
@@ -31,6 +26,11 @@ public class TailLogHandler extends Handler {
             temp.add(lastRecords.get(i));
         }
         return temp;
+    }
+
+    @Override
+    public void publish(final LogRecord r) {
+        lastRecords.add(r.getMessage());
     }
 
 }

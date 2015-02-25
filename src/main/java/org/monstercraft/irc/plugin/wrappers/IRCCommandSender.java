@@ -16,9 +16,9 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 
 /**
  * This class creates an IRCCommand sender.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class IRCCommandSender implements ConsoleCommandSender {
 
@@ -26,7 +26,7 @@ public class IRCCommandSender implements ConsoleCommandSender {
 
     /**
      * Creates an instance of the IRCCommand sender.
-     * 
+     *
      * @param plugin
      *            The plugin.
      * @param sender
@@ -36,113 +36,18 @@ public class IRCCommandSender implements ConsoleCommandSender {
         this.sender = sender;
     }
 
-    /**
-     * Sends a message.
-     */
-
     @Override
-    public void sendMessage(final String message) {
-        IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
+    public void abandonConversation(final Conversation arg0) {
     }
 
-    /**
-     * Fetches the name.
-     * 
-     * @return The name.
-     */
-
     @Override
-    public String getName() {
-        return sender;
+    public void abandonConversation(final Conversation arg0,
+            final ConversationAbandonedEvent arg1) {
     }
 
-    /**
-     * Fetches the server.
-     * 
-     * @return The server.
-     */
-
     @Override
-    public Server getServer() {
-        return Bukkit.getServer();
-    }
+    public void acceptConversationInput(final String arg0) {
 
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        return null;
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public boolean hasPermission(final String arg0) {
-        return true;
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public boolean hasPermission(final Permission arg0) {
-        return true;
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public boolean isPermissionSet(final String arg0) {
-        return true;
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public boolean isPermissionSet(final Permission arg0) {
-        return true;
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public void recalculatePermissions() {
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public void removeAttachment(final PermissionAttachment arg0) {
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public boolean isOp() {
-        return true;
-    }
-
-    /**
-     * Ignored.
-     */
-
-    @Override
-    public void setOp(final boolean op) {
     }
 
     /**
@@ -184,21 +89,57 @@ public class IRCCommandSender implements ConsoleCommandSender {
     }
 
     @Override
-    public void sendMessage(final String[] message) {
-    }
-
-    @Override
-    public void abandonConversation(final Conversation arg0) {
-    }
-
-    @Override
-    public void acceptConversationInput(final String arg0) {
-
-    }
-
-    @Override
     public boolean beginConversation(final Conversation arg0) {
         return false;
+    }
+
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        return null;
+    }
+
+    /**
+     * Fetches the name.
+     *
+     * @return The name.
+     */
+
+    @Override
+    public String getName() {
+        return sender;
+    }
+
+    /**
+     * Fetches the server.
+     *
+     * @return The server.
+     */
+
+    @Override
+    public Server getServer() {
+        return Bukkit.getServer();
+    }
+
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public boolean hasPermission(final Permission arg0) {
+        return true;
+    }
+
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public boolean hasPermission(final String arg0) {
+        return true;
     }
 
     @Override
@@ -206,14 +147,73 @@ public class IRCCommandSender implements ConsoleCommandSender {
         return false;
     }
 
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public boolean isOp() {
+        return true;
+    }
+
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public boolean isPermissionSet(final Permission arg0) {
+        return true;
+    }
+
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public boolean isPermissionSet(final String arg0) {
+        return true;
+    }
+
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public void recalculatePermissions() {
+    }
+
+    /**
+     * Ignored.
+     */
+
+    @Override
+    public void removeAttachment(final PermissionAttachment arg0) {
+    }
+
+    /**
+     * Sends a message.
+     */
+
+    @Override
+    public void sendMessage(final String message) {
+        IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
+    }
+
+    @Override
+    public void sendMessage(final String[] message) {
+    }
+
     @Override
     public void sendRawMessage(final String message) {
         IRC.sendNotice(sender, ColorUtils.formatGametoIRC(message));
     }
 
+    /**
+     * Ignored.
+     */
+
     @Override
-    public void abandonConversation(final Conversation arg0,
-            final ConversationAbandonedEvent arg1) {
+    public void setOp(final boolean op) {
     }
 
 }

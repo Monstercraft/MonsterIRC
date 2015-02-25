@@ -11,35 +11,24 @@ import org.monstercraft.irc.plugin.util.ColorUtils;
 
 public class Help extends GameCommand {
 
-    @Override
-    public String getPermission() {
-        return "irc.help";
-    }
-
-    @Override
-    public boolean canExecute(final CommandSender sender, final String[] split) {
-        return split[0].contains("irc") && split[1].equalsIgnoreCase("help");
-    }
-
-    @Override
-    public boolean execute(final CommandSender sender, final String[] split) {
-        if (sender instanceof Player) {
-            if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
-                if (!MonsterIRC.getHandleManager().getPermissionsHandler()
-                        .hasCommandPerms((Player) sender, this)) {
-                    sender.sendMessage("[IRC] You don't have permission to preform that command.");
-                    return true;
-                } else {
-                    Help.sendMenu((Player) sender);
-                    return true;
-                }
-            }
-            sender.sendMessage("[IRC]  No permissions loaded!");
-            return true;
-        } else {
-            Help.sendMenu((ConsoleCommandSender) sender);
-            return true;
-        }
+    public static void sendMenu(final ConsoleCommandSender sender) {
+        sender.sendMessage("----- MonsterIRCs Commands ----");
+        sender.sendMessage("irc connect - Connects the Bot to the IRC server.");
+        sender.sendMessage("irc disconnect - Disconnects the Bot from the IRC server.");
+        sender.sendMessage("irc join (channel) - Connects the Bot to the channel");
+        sender.sendMessage("irc leave (channel) - Disconnects the bot from the channel.");
+        sender.sendMessage("irc ban (user) - Kicks and Bans a user from the IRC channel if your bot has OP.");
+        sender.sendMessage("irc mute (user) - Stops a IRC users chat from appearing ingame.");
+        sender.sendMessage("irc unmute (user) - Allows a muted IRC users chat to appear ingame.");
+        sender.sendMessage("irc nick (new nick) - Changes the IRC bots nickname in IRC for that session.");
+        sender.sendMessage("irc say (message) - An alternate way to talk to people in IRC.");
+        sender.sendMessage("irc reload - Reloads the configuration file.");
+        sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
+        sender.sendMessage("irc r (message) - Reply to the last pm.");
+        sender.sendMessage("irc names (channel) - List the users connected to the channel.");
+        sender.sendMessage("irc whois (name) - Get the information of an IRC user.");
+        sender.sendMessage("For more info on a certian command type"
+                + ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
     }
 
     public static void sendMenu(final Player sender) {
@@ -137,24 +126,49 @@ public class Help extends GameCommand {
                 + ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
     }
 
-    public static void sendMenu(final ConsoleCommandSender sender) {
-        sender.sendMessage("----- MonsterIRCs Commands ----");
-        sender.sendMessage("irc connect - Connects the Bot to the IRC server.");
-        sender.sendMessage("irc disconnect - Disconnects the Bot from the IRC server.");
-        sender.sendMessage("irc join (channel) - Connects the Bot to the channel");
-        sender.sendMessage("irc leave (channel) - Disconnects the bot from the channel.");
-        sender.sendMessage("irc ban (user) - Kicks and Bans a user from the IRC channel if your bot has OP.");
-        sender.sendMessage("irc mute (user) - Stops a IRC users chat from appearing ingame.");
-        sender.sendMessage("irc unmute (user) - Allows a muted IRC users chat to appear ingame.");
-        sender.sendMessage("irc nick (new nick) - Changes the IRC bots nickname in IRC for that session.");
-        sender.sendMessage("irc say (message) - An alternate way to talk to people in IRC.");
-        sender.sendMessage("irc reload - Reloads the configuration file.");
-        sender.sendMessage("irc pm (user) (message) - PM a user in the IRC channel.");
-        sender.sendMessage("irc r (message) - Reply to the last pm.");
-        sender.sendMessage("irc names (channel) - List the users connected to the channel.");
-        sender.sendMessage("irc whois (name) - Get the information of an IRC user.");
-        sender.sendMessage("For more info on a certian command type"
-                + ColorUtils.WHITE.getMinecraftColor() + "/irc help (command)");
+    @Override
+    public boolean canExecute(final CommandSender sender, final String[] split) {
+        return split[0].contains("irc") && split[1].equalsIgnoreCase("help");
+    }
+
+    public boolean CommandHelp(final LinkedList<GameCommand> gameCommands,
+            final CommandSender sender, final String[] split) {
+        for (final GameCommand c : gameCommands) {
+            if (split[2].equalsIgnoreCase(c.getCommandName())) {
+                for (final String s : c.getHelp()) {
+                    sender.sendMessage(s);
+                }
+                return true;
+            }
+        }
+        sender.sendMessage("Invalid command name!");
+        return true;
+    }
+
+    @Override
+    public boolean execute(final CommandSender sender, final String[] split) {
+        if (sender instanceof Player) {
+            if (MonsterIRC.getHandleManager().getPermissionsHandler() != null) {
+                if (!MonsterIRC.getHandleManager().getPermissionsHandler()
+                        .hasCommandPerms((Player) sender, this)) {
+                    sender.sendMessage("[IRC] You don't have permission to preform that command.");
+                    return true;
+                } else {
+                    Help.sendMenu((Player) sender);
+                    return true;
+                }
+            }
+            sender.sendMessage("[IRC]  No permissions loaded!");
+            return true;
+        } else {
+            Help.sendMenu((ConsoleCommandSender) sender);
+            return true;
+        }
+    }
+
+    @Override
+    public String getCommandName() {
+        return "Help";
     }
 
     @Override
@@ -170,21 +184,7 @@ public class Help extends GameCommand {
     }
 
     @Override
-    public String getCommandName() {
-        return "Help";
-    }
-
-    public boolean CommandHelp(final LinkedList<GameCommand> gameCommands,
-            final CommandSender sender, final String[] split) {
-        for (final GameCommand c : gameCommands) {
-            if (split[2].equalsIgnoreCase(c.getCommandName())) {
-                for (final String s : c.getHelp()) {
-                    sender.sendMessage(s);
-                }
-                return true;
-            }
-        }
-        sender.sendMessage("Invalid command name!");
-        return true;
+    public String getPermission() {
+        return "irc.help";
     }
 }

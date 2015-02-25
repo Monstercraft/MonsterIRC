@@ -25,139 +25,11 @@ import com.gmail.nossr50.util.Users;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class MonsterIRCListener implements Listener {
-    private final MonsterIRC plugin;
-
-    /**
-     * 
-     * @param plugin
-     *            The parent plugin for the listener.
-     */
-    public MonsterIRCListener(final MonsterIRC plugin) {
-        this.plugin = plugin;
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPluginEnable(final PluginEnableEvent event) {
-        final String PluginName = event.getPlugin().getDescription().getName();
-        if (plugin != null) {
-            if (PluginName.equals("Vault")) {
-                MonsterIRC.getHookManager().setPermissionsHook();
-                MonsterIRC.getHandleManager().setPermissionsHandler(
-                        MonsterIRC.getHookManager().getPermissionsHook());
-                MonsterIRC.getHookManager().setChatHook();
-            } else if (PluginName.equals("TownyChat")) {
-                MonsterIRC.getHookManager().setTownyChatHook();
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onChat(final AsyncPlayerChatEvent event) {
-        if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
-            if (!Users.getProfile(event.getPlayer().getName())
-                    .getAdminChatMode()) {
-                if (event.isCancelled()) {
-                    return;
-                }
-            }
-        } else if (event.isCancelled()) {
-            return;
-        }
-        try {
-            final Player player = event.getPlayer();
-            for (final IRCChannel c : MonsterIRC.getChannels()) {
-                if (c.getChatType() == ChatType.MTADMINCHAT) {
-                    continue;
-                }
-                if (c.getChatType() == ChatType.TOWNYCHAT) {
-                    continue;
-                }
-                MonsterIRCListener.handleMessage(player, c, event.getMessage());
-            }
-        } catch (final Exception e) {
-            IRC.debug(e);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerJoin(final PlayerJoinEvent event) {
-        if (event.getJoinMessage() == null) {
-            return;
-        }
-        for (final IRCChannel c : Variables.channels) {
-            if (!c.getBlockedEvents().contains("game_join")) {
-                IRC.sendMessageToChannel(
-                        c.getChannel(),
-                        ColorUtils.formatGametoIRC(event.getPlayer()
-                                .getDisplayName() + " has joined."));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerQuit(final PlayerQuitEvent event) {
-        if (event.getQuitMessage() == null) {
-            return;
-        }
-        for (final IRCChannel c : Variables.channels) {
-            if (!c.getBlockedEvents().contains("game_quit")) {
-                IRC.sendMessageToChannel(
-                        c.getChannel(),
-                        ColorUtils.formatGametoIRC(event.getPlayer()
-                                .getDisplayName() + " has quit."));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerDeath(final PlayerDeathEvent event) {
-        if (event.getDeathMessage() == null) {
-            return;
-        }
-        for (final IRCChannel c : Variables.channels) {
-            if (!c.getBlockedEvents().contains("game_death")) {
-                IRC.sendMessageToChannel(
-                        c.getChannel(),
-                        ColorUtils.formatGametoIRC(event.getEntity()
-                                .getDisplayName() + " has died."));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerKick(final PlayerKickEvent event) {
-        if (event.isCancelled() || event.getLeaveMessage() == null) {
-            return;
-        }
-        for (final IRCChannel c : Variables.channels) {
-            if (!c.getBlockedEvents().contains("game_kick")) {
-                IRC.sendMessageToChannel(
-                        c.getChannel(),
-                        ColorUtils.formatGametoIRC(event.getPlayer()
-                                .getDisplayName()
-
-                        + " has been kicked."));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onServerCommand(final ServerCommandEvent event) {
-        if (Variables.passSay) {
-            if (event.getCommand().startsWith("say")) {
-                for (final IRCChannel c : MonsterIRC.getChannels()) {
-                    MonsterIRCListener.handleMessage(null, c, event
-                            .getCommand().toString().substring(4));
-                }
-            }
-        }
-    }
-
     protected static void handleMessage(final Player player,
             final IRCChannel c, final String message) {
         if (player != null) {
@@ -372,6 +244,134 @@ public class MonsterIRCListener implements Listener {
             Variables.linesToIrc++;
             IRC.sendMessageToChannel(c,
                     ColorUtils.formatGametoIRC(result.toString()));
+        }
+    }
+
+    private final MonsterIRC plugin;
+
+    /**
+     *
+     * @param plugin
+     *            The parent plugin for the listener.
+     */
+    public MonsterIRCListener(final MonsterIRC plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onChat(final AsyncPlayerChatEvent event) {
+        if (Bukkit.getServer().getPluginManager().getPlugin("mcMMO") != null) {
+            if (!Users.getProfile(event.getPlayer().getName())
+                    .getAdminChatMode()) {
+                if (event.isCancelled()) {
+                    return;
+                }
+            }
+        } else if (event.isCancelled()) {
+            return;
+        }
+        try {
+            final Player player = event.getPlayer();
+            for (final IRCChannel c : MonsterIRC.getChannels()) {
+                if (c.getChatType() == ChatType.MTADMINCHAT) {
+                    continue;
+                }
+                if (c.getChatType() == ChatType.TOWNYCHAT) {
+                    continue;
+                }
+                MonsterIRCListener.handleMessage(player, c, event.getMessage());
+            }
+        } catch (final Exception e) {
+            IRC.debug(e);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerDeath(final PlayerDeathEvent event) {
+        if (event.getDeathMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_death")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getEntity()
+                                .getDisplayName() + " has died."));
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerJoin(final PlayerJoinEvent event) {
+        if (event.getJoinMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_join")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getPlayer()
+                                .getDisplayName() + " has joined."));
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerKick(final PlayerKickEvent event) {
+        if (event.isCancelled() || event.getLeaveMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_kick")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getPlayer()
+                                .getDisplayName()
+
+                        + " has been kicked."));
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerQuit(final PlayerQuitEvent event) {
+        if (event.getQuitMessage() == null) {
+            return;
+        }
+        for (final IRCChannel c : Variables.channels) {
+            if (!c.getBlockedEvents().contains("game_quit")) {
+                IRC.sendMessageToChannel(
+                        c.getChannel(),
+                        ColorUtils.formatGametoIRC(event.getPlayer()
+                                .getDisplayName() + " has quit."));
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPluginEnable(final PluginEnableEvent event) {
+        final String PluginName = event.getPlugin().getDescription().getName();
+        if (plugin != null) {
+            if (PluginName.equals("Vault")) {
+                MonsterIRC.getHookManager().setPermissionsHook();
+                MonsterIRC.getHandleManager().setPermissionsHandler(
+                        MonsterIRC.getHookManager().getPermissionsHook());
+                MonsterIRC.getHookManager().setChatHook();
+            } else if (PluginName.equals("TownyChat")) {
+                MonsterIRC.getHookManager().setTownyChatHook();
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onServerCommand(final ServerCommandEvent event) {
+        if (Variables.passSay) {
+            if (event.getCommand().startsWith("say")) {
+                for (final IRCChannel c : MonsterIRC.getChannels()) {
+                    MonsterIRCListener.handleMessage(null, c, event
+                            .getCommand().toString().substring(4));
+                }
+            }
         }
     }
 }

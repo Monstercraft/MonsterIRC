@@ -9,9 +9,9 @@ import org.monstercraft.irc.ircplugin.IRC;
 
 /**
  * This class listens for chat ingame to pass to the IRC.
- * 
+ *
  * @author fletch_to_99 <fletchto99@hotmail.com>
- * 
+ *
  */
 public class VaultChatHook extends MonsterIRC {
 
@@ -20,13 +20,13 @@ public class VaultChatHook extends MonsterIRC {
 
     /**
      * Creates an instance of the VaultChatHook class.
-     * 
+     *
      * @param plugin
      *            The parent plugin.
      */
     public VaultChatHook(final MonsterIRC plugin) {
         this.plugin = plugin;
-        final boolean b = setupChat();
+        final boolean b = this.setupChat();
         if (b) {
             final Plugin permsPlugin = plugin.getServer().getPluginManager()
                     .getPlugin(ChatHook.getName());
@@ -43,6 +43,15 @@ public class VaultChatHook extends MonsterIRC {
         }
     }
 
+    /**
+     * Fetches the hook into Permissions.
+     *
+     * @return The hook into Permissions.
+     */
+    public Chat getHook() {
+        return ChatHook;
+    }
+
     private Boolean setupChat() {
         final RegisteredServiceProvider<Chat> chatProvider = plugin.getServer()
                 .getServicesManager()
@@ -52,15 +61,6 @@ public class VaultChatHook extends MonsterIRC {
         }
 
         return ChatHook != null;
-    }
-
-    /**
-     * Fetches the hook into Permissions.
-     * 
-     * @return The hook into Permissions.
-     */
-    public Chat getHook() {
-        return ChatHook;
     }
 
 }

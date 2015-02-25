@@ -24,7 +24,7 @@ public class Tail extends IRCCommand {
             final IRCChannel channel) {
         int size = 25;
         if (message.length() > 6) {
-            if (validNumber(message.substring(6))) {
+            if (this.validNumber(message.substring(6))) {
                 size = Integer.parseInt(message.substring(6));
             }
         }

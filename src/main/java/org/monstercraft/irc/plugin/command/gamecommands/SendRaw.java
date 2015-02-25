@@ -48,11 +48,6 @@ public class SendRaw extends GameCommand {
     }
 
     @Override
-    public String getPermission() {
-        return "irc.raw";
-    }
-
-    @Override
     public String getCommandName() {
         return "Raw";
     }
@@ -68,6 +63,11 @@ public class SendRaw extends GameCommand {
                 ColorUtils.RED.getMinecraftColor() + "Usage: "
                         + ColorUtils.WHITE.getMinecraftColor()
                         + "/irc raw (message)" };
+    }
+
+    @Override
+    public String getPermission() {
+        return "irc.raw";
     }
 
 }
